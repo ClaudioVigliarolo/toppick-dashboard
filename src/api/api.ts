@@ -9,6 +9,7 @@ import {
   LoggedUser,
   Email,
   ReportResponse,
+  UpdatesResponse,
 } from "../interfaces/Interfaces";
 import { HOSTNAME } from "../config/config";
 
@@ -336,9 +337,11 @@ export const updateCategory = async (
 export const getUpdates = async (
   date: string,
   lang: string
-): Promise<Topic[] | null> => {
+): Promise<UpdatesResponse | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topicks/updates/NULL/EN`);
+    const response = await axios.get(
+      `${HOSTNAME}/topicks/updates/${date}/${lang}`
+    );
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);

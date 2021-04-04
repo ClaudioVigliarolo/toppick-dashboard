@@ -22,3 +22,7 @@ export const getFormattedDate = (inputDate: any): string => {
   }
   return new Date(inputDate).toLocaleString().slice(0, 10);
 };
+
+export const getCurrentTime = (): string => {
+  return new Date().toISOString();
+};

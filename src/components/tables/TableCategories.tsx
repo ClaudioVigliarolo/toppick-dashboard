@@ -1,28 +1,34 @@
-import React from 'react';
+import React from "react";
 import {
   CustomTable,
   StyledEditCell,
   StyledTableRow,
   useStyles,
-} from './TableStyles';
-import { CONSTANTS } from '../../constants/constants';
-import { Category } from '../../interfaces/Interfaces';
-import { addCategory, deleteCategory, updateCategory } from '../../api/api';
-import { getHash } from '../../utils/utils';
-import DeleteDialog from '../dialogs/ConfirmDialog';
-import CategoryAddDialog from '../dialogs/CategoryDialog';
-import CategoryEditDialog from '../dialogs/CategoryDialog';
-import CustomButton from '../buttons/CustomButton';
-import SearchBar from '../input/searchBar';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import TransactionAlert from '../alerts/TransactionAlert';
+} from "./TableStyles";
+import { CONSTANTS } from "../../constants/constants";
+import { Category } from "../../interfaces/Interfaces";
+import {
+  addCategory,
+  deleteCategory,
+  getUpdates,
+  updateCategory,
+} from "../../api/api";
+import { getCurrentTime, getHash } from "../../utils/utils";
+import DeleteDialog from "../dialogs/ConfirmDialog";
+import CategoryAddDialog from "../dialogs/CategoryDialog";
+import CategoryEditDialog from "../dialogs/CategoryDialog";
+import CustomButton from "../buttons/CustomButton";
+import SearchBar from "../input/searchBar";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import TransactionAlert from "../alerts/TransactionAlert";
 
 interface TableCategoriesProps {
   categories: Category[];
   token: string;
   currentLanguage: string;
 }
+const OLD_TIME = getCurrentTime();
 
 export default function TableCategories(props: TableCategoriesProps) {
   const [success, setSuccess] = React.useState(false);
@@ -30,7 +36,7 @@ export default function TableCategories(props: TableCategoriesProps) {
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
-  const [searchText, setSearchText] = React.useState<string>('');
+  const [searchText, setSearchText] = React.useState<string>("");
   const [categoryAddDialog, setCategoryAddDialog] = React.useState<boolean>(
     false
   );
@@ -38,8 +44,8 @@ export default function TableCategories(props: TableCategoriesProps) {
   const [
     currentCategoryTitle,
     setCurrentCategoryTitle,
-  ] = React.useState<string>('');
-
+  ] = React.useState<string>("");
+  const [lastupdate, setLastUpdate] = React.useState(OLD_TIME);
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -144,7 +150,9 @@ export default function TableCategories(props: TableCategoriesProps) {
       }
     });
   };
-
+  {
+    console.log("lllll", lastupdate);
+  }
   return (
     <>
       <div className={classes.headerSection}>
@@ -158,11 +166,20 @@ export default function TableCategories(props: TableCategoriesProps) {
             onClick={() => setCategoryAddDialog(true)}
             title="INSERT NEW CATEGORY"
           />
+
+          <CustomButton
+            onClick={async () => {
+              const a: any = await getUpdates(lastupdate, "EN");
+              console.log(a);
+              a && setLastUpdate(a.last_update);
+            }}
+            title="get time NEW TIME"
+          />
         </div>
       </div>
       <CustomTable
-        columns={['50%']}
-        columnNames={['category']}
+        columns={["50%"]}
+        columnNames={["category"]}
         body={renderRows(categories)}
       />
 
@@ -185,13 +202,13 @@ export default function TableCategories(props: TableCategoriesProps) {
           onCategoryUpdate(currentCategoryId, newTitle);
           setEditDialog(false);
           setCurrentCategoryId(-1);
-          setCurrentCategoryTitle('');
+          setCurrentCategoryTitle("");
         }}
         headerText="Editing Category"
         onRefuse={() => {
           setEditDialog(false);
           setCurrentCategoryId(-1);
-          setCurrentCategoryTitle('');
+          setCurrentCategoryTitle("");
         }}
         category={currentCategoryTitle}
       />

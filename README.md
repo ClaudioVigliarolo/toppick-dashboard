@@ -1,4 +1,4 @@
-# Top Picks app backend
+# Top Picks app frontend
 
-This is the backend of the top picks app (https://github.com/ClaudioVigliarolo/top-picks)
-The backend is based on Express as a framework for the node backend and React for the frontend
+This is the frontend of the top pick dashboard (https://github.com/ClaudioVigliarolo/top-picks-backend)
+The frontend is based on React Framework

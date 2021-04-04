@@ -11,6 +11,7 @@ import CreatePage from "../routes/CreatePage";
 import CustomRoute from "./CustomRoute";
 import Menu from "./Menu";
 import { getUpdates } from "../api/api";
+import { getCurrentTime } from "src/utils/utils";
 
 export const getCondition = (
   userType: string,
@@ -49,11 +50,7 @@ export const Navigation = () => {
     currentLanguage,
   } = React.useContext(AuthContext);
 
-  React.useEffect(() => {
-    (async () => {
-      console.log(await getUpdates("s", currentLanguage));
-    })();
-  }, []);
+  React.useEffect(() => {}, []);
   return (
     <Menu
       userType={userType}

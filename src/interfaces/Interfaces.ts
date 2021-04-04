@@ -100,3 +100,13 @@ export interface Email {
   template: EmailType;
   subject: string;
 }
+
+export interface UpdatesResponse {
+  isUpdated: boolean;
+  categories: any;
+  questions: any;
+  topics: any;
+  last_update: string;
+  category_topics: any;
+  related: any;
+}

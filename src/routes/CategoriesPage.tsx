@@ -1,6 +1,6 @@
 import React from "react";
 import { COLORS } from "../constants/Colors";
-import { addReport, getCategories } from "../api/api";
+import { addReport, getCategories, getUpdates } from "../api/api";
 import { useParams } from "react-router-dom";
 import {
   Category,
@@ -10,6 +10,7 @@ import {
   Topic,
 } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
+import { getCurrentTime } from "src/utils/utils";
 export default function ViewPage({ token, currentLanguage }: PageProps) {
   const [categories, setCategories] = React.useState<Category[]>([]);
   React.useEffect(() => {
