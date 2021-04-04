@@ -1,0 +1,52 @@
+{
+  "name": "bookshelf-react-express-sqlite-app",
+  "version": "1.0.0",
+  "description": "App for collecting books built with React, Express and SQLite.",
+  "author": {
+    "name": "Claudio Vigliarolo"
+  },
+  "homepage": "/",
+  "private": false,
+  "engines": {
+    "node": ">=10.0",
+    "npm": ">=6.0"
+  },
+  "main": "src/index.tsx",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "axios": "0.21.1",
+    "react": "16.13.1",
+    "react-bootstrap": "^1.4.3",
+    "react-dom": "16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-window": "^1.8.6"
+  },
+  "devDependencies": {
+    "@types/react": "16.9.34",
+    "@types/react-dom": "16.9.6",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/react-window": "^1.8.2",
+    "react-scripts": "^4.0.3",
+    "typescript": "3.8.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
