@@ -7,12 +7,7 @@ import {
 } from "./TableStyles";
 import { CONSTANTS } from "../../constants/constants";
 import { Category } from "../../interfaces/Interfaces";
-import {
-  addCategory,
-  deleteCategory,
-  getUpdates,
-  updateCategory,
-} from "../../api/api";
+import { addCategory, deleteCategory, updateCategory } from "../../api/api";
 import { getCurrentTime, getHash } from "../../utils/utils";
 import DeleteDialog from "../dialogs/ConfirmDialog";
 import CategoryAddDialog from "../dialogs/CategoryDialog";
@@ -45,7 +40,6 @@ export default function TableCategories(props: TableCategoriesProps) {
     currentCategoryTitle,
     setCurrentCategoryTitle,
   ] = React.useState<string>("");
-  const [lastupdate, setLastUpdate] = React.useState(OLD_TIME);
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -150,9 +144,6 @@ export default function TableCategories(props: TableCategoriesProps) {
       }
     });
   };
-  {
-    console.log("lllll", lastupdate);
-  }
   return (
     <>
       <div className={classes.headerSection}>
@@ -165,15 +156,6 @@ export default function TableCategories(props: TableCategoriesProps) {
           <CustomButton
             onClick={() => setCategoryAddDialog(true)}
             title="INSERT NEW CATEGORY"
-          />
-
-          <CustomButton
-            onClick={async () => {
-              const a: any = await getUpdates(lastupdate, "EN");
-              console.log(a);
-              a && setLastUpdate(a.last_update);
-            }}
-            title="get time NEW TIME"
           />
         </div>
       </div>
