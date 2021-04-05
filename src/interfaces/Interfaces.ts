@@ -102,7 +102,7 @@ export interface Email {
 }
 
 export interface UpdatesResponse {
-  isUpdated: boolean;
+  is_updated: boolean;
   categories: any;
   questions: any;
   topics: any;

@@ -19,11 +19,14 @@ export const getCategories = async (
 ): Promise<Category[] | null> => {
   console.log("getc ategoris tiktok", token);
   try {
-    const response = await axios.get(`${HOSTNAME}/topicks/categories/` + lang, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const response = await axios.get(
+      `${HOSTNAME}/topicks/get_categories/` + lang,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -52,7 +55,7 @@ export const getTopics = async (
   token: string
 ): Promise<Topic[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topicks/topics/` + lang, {
+    const response = await axios.get(`${HOSTNAME}/topicks/get_topics/` + lang, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -340,7 +343,7 @@ export const getUpdates = async (
 ): Promise<UpdatesResponse | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topicks/updates/${date}/${lang}`
+      `${HOSTNAME}/topicks/get_updates/${date}/${lang}`
     );
     return response.status == 200 ? response.data : null;
   } catch (err) {
@@ -439,11 +442,14 @@ export const getReports = async (
   token: string
 ): Promise<ReportResponse | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topicks/reports/${lang}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const response = await axios.get(
+      `${HOSTNAME}/topicks/get_reports/${lang}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -459,7 +465,7 @@ export const getQuestions = async (
 ): Promise<Question[] | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topicks/questions/${from}/${to}/${lang}`,
+      `${HOSTNAME}/topicks/get_questions/${from}/${to}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,

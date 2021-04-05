@@ -125,6 +125,8 @@ export default function TableTopics(props: TableTopicsProps) {
       }
     });
 
+    console.log("new reelll", newRelated);
+
     const updatedTopic: Topic = {
       id: topicID,
       source: "Top Picks Creator",
@@ -149,7 +151,7 @@ export default function TableTopics(props: TableTopicsProps) {
     newTopics[topicIndex].title = newTitle;
     newTopics[topicIndex].timestamp = new Date();
     newTopics[topicIndex].categories = updatedCategories;
-    newTopics[topicIndex].related = [];
+    newTopics[topicIndex].related = newRelated;
 
     //push new updated arrays
     setTopics([...newTopics]);
