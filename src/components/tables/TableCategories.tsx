@@ -5,13 +5,15 @@ import {
   StyledTableRow,
   useStyles,
 } from "./TableStyles";
-import { CONSTANTS } from "../../constants/constants";
 import { Category } from "../../interfaces/Interfaces";
-import { addCategory, deleteCategory, updateCategory } from "../../api/api";
-import { getCurrentTime, getHash } from "../../utils/utils";
+import {
+  onCategoryAdd,
+  onCategoryDelete,
+  onCategoryUpdate,
+} from "../../utils/topics";
 import DeleteDialog from "../dialogs/ConfirmDialog";
-import CategoryAddDialog from "../dialogs/CategoryDialog";
-import CategoryEditDialog from "../dialogs/CategoryDialog";
+import AddDialog from "../dialogs/CategoryDialog";
+import EditDialog from "../dialogs/CategoryDialog";
 import CustomButton from "../buttons/CustomButton";
 import SearchBar from "../input/searchBar";
 import EditIcon from "@material-ui/icons/Edit";
@@ -22,8 +24,8 @@ interface TableCategoriesProps {
   categories: Category[];
   token: string;
   currentLanguage: string;
+  setLoading: (newVal: boolean) => void;
 }
-const OLD_TIME = getCurrentTime();
 
 export default function TableCategories(props: TableCategoriesProps) {
   const [success, setSuccess] = React.useState(false);
@@ -32,9 +34,7 @@ export default function TableCategories(props: TableCategoriesProps) {
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [searchText, setSearchText] = React.useState<string>("");
-  const [categoryAddDialog, setCategoryAddDialog] = React.useState<boolean>(
-    false
-  );
+  const [addDialog, setAddDialog] = React.useState<boolean>(false);
   const [currentCategoryId, setCurrentCategoryId] = React.useState<number>(-1);
   const [
     currentCategoryTitle,
@@ -45,66 +45,6 @@ export default function TableCategories(props: TableCategoriesProps) {
   React.useEffect(() => {
     setCategories(props.categories);
   }, [props.categories]);
-
-  const onCategoryAdd = async (newTitle: string): Promise<void> => {
-    const categoryHash = getHash(newTitle);
-    const val = await addCategory(
-      newTitle,
-      categoryHash,
-      props.currentLanguage,
-      props.token
-    );
-    const newCategories = categories;
-    if (!val) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-    newCategories.unshift({ title: newTitle, id: categoryHash });
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-
-    setCategories([...newCategories]);
-  };
-
-  const onCategoryDelete = async (id: number): Promise<void> => {
-    const val = await deleteCategory(id, props.currentLanguage, props.token);
-    if (!val) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-    const newCategories = categories.filter(
-      (categ: Category) => categ.id != id
-    );
-    setCategories([...newCategories]);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  };
-
-  const onCategoryUpdate = async (
-    id: number,
-    newTitle: string
-  ): Promise<void> => {
-    const val = await updateCategory(
-      newTitle,
-      id,
-      props.currentLanguage,
-      props.token
-    );
-    if (!val) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-    const newCategories = categories;
-    newCategories.forEach(function (item: Category) {
-      if (item.id == id) item.title = newTitle;
-    });
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-    setCategories([...newCategories]);
-  };
 
   const onEdit = (id: number, title: string) => {
     setCurrentCategoryTitle(title);
@@ -154,7 +94,7 @@ export default function TableCategories(props: TableCategoriesProps) {
         />
         <div>
           <CustomButton
-            onClick={() => setCategoryAddDialog(true)}
+            onClick={() => setAddDialog(true)}
             title="INSERT NEW CATEGORY"
           />
         </div>
@@ -165,26 +105,43 @@ export default function TableCategories(props: TableCategoriesProps) {
         body={renderRows(categories)}
       />
 
-      <CategoryAddDialog
+      <AddDialog
         category=""
         headerText="Add new Category"
-        open={categoryAddDialog}
-        onConfirm={(title: string) => {
-          onCategoryAdd(title);
-          setCategoryAddDialog(false);
+        open={addDialog}
+        onConfirm={(newTitle: string) => {
+          onCategoryAdd(
+            newTitle,
+            categories,
+            props.currentLanguage,
+            props.token,
+            setCategories,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
+          setAddDialog(false);
         }}
         onRefuse={() => {
-          setCategoryAddDialog(false);
+          setAddDialog(false);
         }}
       />
 
-      <CategoryEditDialog
+      <EditDialog
         open={editDialog}
         onConfirm={(newTitle: string) => {
-          onCategoryUpdate(currentCategoryId, newTitle);
+          onCategoryUpdate(
+            currentCategoryId,
+            newTitle,
+            categories,
+            props.currentLanguage,
+            props.token,
+            setCategories,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
           setEditDialog(false);
-          setCurrentCategoryId(-1);
-          setCurrentCategoryTitle("");
         }}
         headerText="Editing Category"
         onRefuse={() => {
@@ -198,7 +155,16 @@ export default function TableCategories(props: TableCategoriesProps) {
       <DeleteDialog
         open={deleteDialog}
         onConfirm={() => {
-          onCategoryDelete(currentCategoryId);
+          onCategoryDelete(
+            currentCategoryId,
+            categories,
+            props.currentLanguage,
+            props.token,
+            setCategories,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
           setDeleteDialog(false);
         }}
         title="Proceed to Delete the question?"
@@ -207,7 +173,6 @@ export default function TableCategories(props: TableCategoriesProps) {
           setDeleteDialog(false);
         }}
       />
-
       <TransactionAlert success={success} error={error} />
     </>
   );

@@ -48,11 +48,14 @@ export const Navigation = () => {
     userLanguages,
     setCurrentLanguage,
     currentLanguage,
+    loading,
+    setLoading,
   } = React.useContext(AuthContext);
 
   React.useEffect(() => {}, []);
   return (
     <Menu
+      loading={loading}
       userType={userType}
       isAuthenticated={isAuthenticated}
       token={userToken}
@@ -74,6 +77,7 @@ export const Navigation = () => {
             isAuthenticated={isAuthenticated}
             token={userToken}
             currentLanguage={currentLanguage}
+            setLoading={setLoading}
           />
 
           <CustomRoute
@@ -83,6 +87,7 @@ export const Navigation = () => {
             Component={CategoriesPage}
             token={userToken}
             currentLanguage={currentLanguage}
+            setLoading={setLoading}
           />
 
           <CustomRoute
@@ -92,6 +97,7 @@ export const Navigation = () => {
             Component={UsersPage}
             token={userToken}
             currentLanguage={currentLanguage}
+            setLoading={setLoading}
           />
 
           <CustomRoute
@@ -101,6 +107,7 @@ export const Navigation = () => {
             Component={TopicsPage}
             token={userToken}
             currentLanguage={currentLanguage}
+            setLoading={setLoading}
           />
 
           <CustomRoute
@@ -110,6 +117,7 @@ export const Navigation = () => {
             Component={QuestionsPage}
             token={userToken}
             currentLanguage={currentLanguage}
+            setLoading={setLoading}
           />
 
           <CustomRoute
@@ -119,6 +127,7 @@ export const Navigation = () => {
             Component={ReportsPage}
             token={userToken}
             currentLanguage={currentLanguage}
+            setLoading={setLoading}
           />
 
           <CustomRoute
@@ -128,6 +137,7 @@ export const Navigation = () => {
             Component={CreatePage}
             token={userToken}
             currentLanguage={currentLanguage}
+            setLoading={setLoading}
           />
         </Switch>
       }

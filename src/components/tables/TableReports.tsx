@@ -6,9 +6,7 @@ import {
   useStyles,
   StyledTableCell,
 } from "./TableStyles";
-import { CONSTANTS } from "../../constants/constants";
 import { Report, ReportHandled, Topic } from "../../interfaces/Interfaces";
-import { deleteQuestion, deleteReport, updateQuestion } from "../../api/api";
 import DeleteDialog from "../dialogs/ConfirmDialog";
 import EditDialog from "../dialogs/EditDialog";
 import Select from "../select/Select";
@@ -16,15 +14,21 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import TransactionAlert from "../alerts/TransactionAlert";
 import SearchBar from "../input/searchBar";
+import {
+  onQuestionDelete,
+  onQuestionUpdate,
+  onReportDelete,
+} from "src/utils/topics";
 
 interface TableReportsProps {
   reports: ReportHandled[];
   token: string;
-  topics: string[];
+  topics: Topic[];
   currentLanguage: string;
+  setLoading: (val: boolean) => void;
 }
 
-const NO_TOPIC = "Filter by question";
+const NO_TOPIC = "Filter by topic";
 
 const DEFAULT_REPORT: ReportHandled = {
   question_id: -1,
@@ -45,101 +49,20 @@ export default function TableCategories(props: TableReportsProps) {
   const [currentReport, setCurrentReport] = React.useState<ReportHandled>(
     DEFAULT_REPORT
   );
-  const [topics, setTopics] = React.useState<string[]>([]);
+  const [topicTitles, setsetTopicTitles] = React.useState<string[]>([]);
   const [searchText, setSearchText] = React.useState<string>("");
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     setReports(props.reports);
-    setTopics(props.topics);
-  }, [props.reports]);
+    setsetTopicTitles(props.topics.map((t) => t.title));
+  }, [props.reports, props.topics]);
 
   const classes = useStyles();
 
   const handleTopicChange = (event: React.ChangeEvent<{ value: string }>) => {
     setFilterTopic(event.target.value);
-  };
-
-  const onReportEdit = async (id: number, newQuestion: string) => {
-    //1 delete report
-    const val1 = await deleteReport(id, props.currentLanguage, props.token);
-
-    //2 update the question with new content
-    const val2 = await updateQuestion(
-      {
-        id: currentReport.question_id,
-        timestamp: new Date(),
-        title: newQuestion,
-        topic_id: currentReport.topic_id,
-        topic_title: currentReport.topic_title,
-      },
-      props.currentLanguage,
-      props.token
-    );
-
-    if (!val1 || !val2) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-
-    //update locally
-    const newReports = reports.filter(function (item: ReportHandled) {
-      return item.id != id;
-    });
-
-    setReports([...newReports]);
-
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  };
-
-  const onQuestionDelete = async (id: number, questionID: number) => {
-    //1 delete report
-    const val1 = await deleteReport(id, props.currentLanguage, props.token);
-
-    //2 delete the question
-    const val2 = await deleteQuestion(
-      questionID,
-      props.currentLanguage,
-      props.token
-    );
-
-    if (!val1 || !val2) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-
-    //update locally
-    const newReports = reports.filter(function (item: ReportHandled) {
-      return item.id != id;
-    });
-
-    setReports([...newReports]);
-
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  };
-
-  const onReportDelete = async (id: number) => {
-    const val = await deleteReport(id, props.currentLanguage, props.token);
-
-    if (!val) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-
-    //update locally
-    const newReports = reports.filter(function (item: ReportHandled) {
-      return item.id != id;
-    });
-
-    setReports([...newReports]);
-
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   };
 
   const onEdit = (report: ReportHandled) => {
@@ -153,7 +76,16 @@ export default function TableCategories(props: TableReportsProps) {
   };
 
   const onIgnore = (report: ReportHandled) => {
-    onReportDelete(report.id);
+    onReportDelete(
+      report.id,
+      reports,
+      setReports,
+      props.currentLanguage,
+      props.token,
+      props.setLoading,
+      setSuccess,
+      setError
+    );
   };
 
   const renderRows = (reports: ReportHandled[]) => {
@@ -198,9 +130,6 @@ export default function TableCategories(props: TableReportsProps) {
       }
     });
   };
-  {
-    console.log("mmeeeeeee", topics);
-  }
   return (
     <>
       <div className={classes.headerSection}>
@@ -213,7 +142,7 @@ export default function TableCategories(props: TableReportsProps) {
           <Select
             handleChange={handleTopicChange}
             value={filterTopic}
-            values={topics}
+            values={topicTitles}
             defaultValue={NO_TOPIC}
           />
         </div>
@@ -231,8 +160,28 @@ export default function TableCategories(props: TableReportsProps) {
       )}
       <DeleteDialog
         open={deleteDialog}
-        onConfirm={() => {
-          onQuestionDelete(currentReport.id, currentReport.question_id);
+        onConfirm={async () => {
+          // delete report, delete question
+          await onReportDelete(
+            currentReport.id,
+            reports,
+            setReports,
+            props.currentLanguage,
+            props.token,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
+          await onQuestionDelete(
+            currentReport.id,
+            [],
+            props.currentLanguage,
+            props.token,
+            () => {},
+            props.setLoading,
+            setSuccess,
+            setError
+          );
           setCurrentReport(DEFAULT_REPORT);
           setDeleteDialog(false);
         }}
@@ -246,8 +195,31 @@ export default function TableCategories(props: TableReportsProps) {
 
       <EditDialog
         open={editDialog}
-        onConfirm={(newQuestion: string) => {
-          onReportEdit(currentReport.id, newQuestion);
+        onConfirm={async (newQuestion: string) => {
+          await onReportDelete(
+            currentReport.id,
+            reports,
+            setReports,
+            props.currentLanguage,
+            props.token,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
+          await onQuestionUpdate(
+            currentReport.id,
+            newQuestion,
+            currentReport.topic_title,
+            [],
+            props.topics,
+            props.currentLanguage,
+            props.token,
+            () => {},
+            props.setLoading,
+            setSuccess,
+            setError
+          );
+
           setCurrentReport(DEFAULT_REPORT);
           setEditDialog(false);
         }}

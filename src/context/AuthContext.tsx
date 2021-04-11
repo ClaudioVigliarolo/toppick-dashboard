@@ -3,6 +3,8 @@ import { getUser } from "../api/api";
 
 export const AuthContext = React.createContext({
   isAuthenticated: false,
+  loading: false,
+  setLoading: (newVal: boolean) => {},
   setIsAuthenticated: (newVal: boolean) => {},
   setUserType: (newVal: string) => {},
   userType: "",
@@ -20,6 +22,7 @@ export const AuthContext = React.createContext({
 
 export const AuthProvider = ({ children }: { children: any }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [userLanguages, setUserLanguages] = React.useState<string[]>([]);
   const [currentLanguage, setCurrentLanguage] = React.useState<string>("");
   const [userType, setUserType] = React.useState<string>("");
@@ -67,6 +70,10 @@ export const AuthProvider = ({ children }: { children: any }) => {
     setEmail(newVal);
   };
 
+  const onSetLoading = (newVal: boolean) => {
+    setLoading(newVal);
+  };
+
   const onSetCurrentLanguage = (newLang: string) => {
     localStorage.setItem("language", newLang);
     setCurrentLanguage(newLang);
@@ -83,6 +90,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        loading,
+        setLoading: onSetLoading,
         setIsAuthenticated: onSetIsAuthenticated,
         setUserType: onSetUserType,
         userType,

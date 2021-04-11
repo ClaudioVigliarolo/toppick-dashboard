@@ -9,6 +9,7 @@ import {
 import { CONSTANTS } from "../../constants/constants";
 
 import { CreatedUser, EmailType } from "../../interfaces/Interfaces";
+import { onUserDelete, onUserUpdate, onUserAdd } from "../../utils/users";
 import { addUser, deleteUser, emailUser, updateUser } from "../../api/api";
 import { getHash } from "../../utils/utils";
 import DeleteDialog from "../dialogs/ConfirmDialog";
@@ -25,191 +26,46 @@ interface TableUsersProps {
   token: string;
   languages: string[];
   email: string;
+  setLoading: (newVal: boolean) => void;
 }
 
+const DEFAULT_USER: CreatedUser = {
+  id: -1,
+  username: "",
+  email: "",
+  languages: [],
+  password: "",
+  type: "",
+};
+
 export default function TableUsers(props: TableUsersProps) {
+  const [users, setUsers] = React.useState<CreatedUser[]>([]);
+  const [currentUser, setCurrentUser] = React.useState<CreatedUser>(
+    DEFAULT_USER
+  );
   const [success, setSuccess] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
-  const [users, setUsers] = React.useState<CreatedUser[]>([]);
   const [searchText, setSearchText] = React.useState<string>("");
   const [userAddDialog, setUserAddDialog] = React.useState<boolean>(false);
-  const [currentuser_id, setCurrentuser_id] = React.useState<number>(-1);
-  const [currentUserEmail, setCurrentUserEmail] = React.useState<string>("");
-  const [currentUserTpe, setCurrentUserType] = React.useState<string>("");
-  const [currentUserLanguages, setCurrentUserLanguages] = React.useState<
-    string[]
-  >([]);
-  const [currentUserUsername, setCurrentUserUsername] = React.useState<string>(
-    ""
-  );
-
   const classes = useStyles();
 
   React.useEffect(() => {
     setUsers(props.users);
   }, [props.users]);
 
-  const onUserAdd = async (
-    newuser_id: number,
-    username: string,
-    email: string,
-    password: string,
-    type: string,
-    languages: string[]
-  ): Promise<void> => {
-    const newUser: CreatedUser = {
-      id: newuser_id,
-      username,
-      email,
-      password,
-      type,
-      languages,
-    };
-
-    const val1 = await addUser(newUser, props.token);
-
-    const val2 = await emailUser(
-      {
-        username,
-        email,
-        password,
-        languages,
-        subject: "Registration",
-        template: EmailType.Registration,
-      },
-      props.email,
-      props.token
-    );
-
-    if (!val1 || !val2) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-
-    const newUsers = users;
-    newUsers.unshift(newUser);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-
-    setUsers([...newUsers]);
-  };
-
-  const onUserDelete = async (id: number): Promise<void> => {
-    const val1 = await deleteUser(id, props.token);
-    alert(currentUserEmail);
-    const val2 = await emailUser(
-      {
-        username: currentUserUsername,
-        email: currentUserEmail,
-        password: "",
-        languages: currentUserLanguages,
-        subject: "Account Removal",
-        template: EmailType.Removal,
-      },
-      props.email,
-      props.token
-    );
-
-    if (!val1 || !val2) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-    const newUsers = users.filter((user: CreatedUser) => user.id != id);
-    setUsers([...newUsers]);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  };
-
-  const onUserUpdate = async (
-    updateduser_id: number,
-    username: string,
-    email: string,
-    password: string,
-    type: string,
-    languages: string[]
-  ): Promise<void> => {
-    const updatedUser: CreatedUser = {
-      id: updateduser_id,
-      username,
-      email,
-      password,
-      type,
-      languages,
-    };
-
-    const val1 = await updateUser(updatedUser, props.token);
-
-    const val2 = await emailUser(
-      {
-        username,
-        email,
-        password,
-        languages,
-        subject: "Updated Credentials",
-        template: EmailType.Update,
-      },
-      props.email,
-      props.token
-    );
-
-    if (!val1 || !val2) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-    const newUsers = users;
-    newUsers.forEach(function (u: CreatedUser) {
-      if (u.id == updateduser_id) {
-        (u.username = username),
-          (u.email = email),
-          (u.password = password),
-          (u.type = type),
-          (u.languages = languages);
-      }
-    });
-
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-
-    setUsers([...newUsers]);
-  };
-
-  const onEdit = (
-    id: number,
-    username: string,
-    email: string,
-    languages: string[],
-    type: string
-  ) => {
-    setCurrentUserUsername(username);
-    setCurrentuser_id(id);
-    setCurrentUserLanguages(languages);
-    setCurrentUserType(type);
-    setCurrentUserEmail(email);
+  const onEdit = (user: CreatedUser) => {
+    setCurrentUser(user);
     setEditDialog(true);
   };
 
-  const onDelete = (
-    id: number,
-    username: string,
-    email: string,
-    languages: string[],
-    type: string
-  ) => {
-    setCurrentUserUsername(username);
-    setCurrentuser_id(id);
-    setCurrentUserLanguages(languages);
-    setCurrentUserType(type);
-    setCurrentUserEmail(email);
+  const onDelete = (user: CreatedUser) => {
+    setCurrentUser(user);
     setDeleteDialog(true);
   };
 
   const renderRows = (users: CreatedUser[]) => {
-    console.log("us2", users);
     return users.map((user: CreatedUser, index: number) => {
       if (user.username.toLowerCase().includes(searchText.toLowerCase())) {
         return (
@@ -225,24 +81,12 @@ export default function TableUsers(props: TableUsersProps) {
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
-                    onEdit(
-                      user.id,
-                      user.username,
-                      user.email,
-                      user.languages,
-                      user.type
-                    );
+                    onEdit(user);
                   }}
                 />
                 <DeleteIcon
                   onClick={() => {
-                    onDelete(
-                      user.id,
-                      user.username,
-                      user.email,
-                      user.languages,
-                      user.type
-                    );
+                    onDelete(user);
                   }}
                   className={classes.deleteIcon}
                 />
@@ -289,15 +133,24 @@ export default function TableUsers(props: TableUsersProps) {
           email: string,
           password: string,
           languages: string[],
-          usertype: string = CONSTANTS.DEFAULT_USER_TYPE
+          type: string = CONSTANTS.DEFAULT_USER_TYPE
         ) => {
           onUserAdd(
-            getHash(username),
-            username,
-            email,
-            password,
-            usertype,
-            languages
+            {
+              username,
+              email,
+              id: getHash(username),
+              languages,
+              password,
+              type,
+            },
+            users,
+            setUsers,
+            props.email,
+            props.token,
+            props.setLoading,
+            setSuccess,
+            setError
           );
           setUserAddDialog(false);
         }}
@@ -307,43 +160,45 @@ export default function TableUsers(props: TableUsersProps) {
       />
 
       <UserEditDialog
-        email={currentUserEmail}
+        email={currentUser.email}
         password=""
-        username={currentUserUsername}
-        type={currentUserTpe}
+        username={currentUser.username}
+        type={currentUser.type}
         open={editDialog}
         languages={props.languages}
-        selectedLanguages={currentUserLanguages}
+        selectedLanguages={currentUser.languages}
         onConfirm={(
           username: string,
           email: string,
           password: string,
           languages: string[],
-          usertype: string = CONSTANTS.DEFAULT_USER_TYPE
+          type: string = CONSTANTS.DEFAULT_USER_TYPE
         ) => {
           onUserUpdate(
-            currentuser_id,
-            username,
-            email,
-            password,
-            usertype,
-            languages
+            {
+              username,
+              email,
+              id: currentUser.id,
+              languages,
+              password,
+              type,
+            },
+            users,
+            setUsers,
+            props.email,
+            props.token,
+            props.setLoading,
+            setSuccess,
+            setError
           );
+
           setEditDialog(false);
-          setCurrentUserUsername("");
-          setCurrentuser_id(-1);
-          setCurrentUserLanguages([]);
-          setCurrentUserType("");
-          setCurrentUserEmail("");
+          setCurrentUser(DEFAULT_USER);
         }}
         headerText="Editing User"
         onRefuse={() => {
           setEditDialog(false);
-          setCurrentUserUsername("");
-          setCurrentuser_id(-1);
-          setCurrentUserLanguages([]);
-          setCurrentUserType("");
-          setCurrentUserEmail("");
+          setCurrentUser(DEFAULT_USER);
         }}
         //user={currentUserTitle}
       />
@@ -351,7 +206,16 @@ export default function TableUsers(props: TableUsersProps) {
       <DeleteDialog
         open={deleteDialog}
         onConfirm={() => {
-          onUserDelete(currentuser_id);
+          onUserDelete(
+            currentUser,
+            users,
+            setUsers,
+            props.email,
+            props.token,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
           setDeleteDialog(false);
         }}
         title="Proceed to Delete this User?"

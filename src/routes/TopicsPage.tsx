@@ -11,24 +11,29 @@ import {
 } from "../interfaces/Interfaces";
 import TableTopics from "../components/tables/TableTopics";
 
-export default function TopicsPage({ token, currentLanguage }: PageProps) {
+export default function TopicsPage({
+  token,
+  currentLanguage,
+  setLoading,
+}: PageProps) {
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   React.useEffect(() => {
+    setLoading(true);
     (async () => {
       const retrievedTopics = await getTopics(currentLanguage, token);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
     })();
-
     (async () => {
       const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
     })();
+    setLoading(false);
   }, [currentLanguage]);
 
   return (
@@ -37,6 +42,7 @@ export default function TopicsPage({ token, currentLanguage }: PageProps) {
       categories={categories}
       token={token}
       currentLanguage={currentLanguage}
+      setLoading={setLoading}
     />
   );
 }

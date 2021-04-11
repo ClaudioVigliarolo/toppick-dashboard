@@ -6,15 +6,9 @@ import {
   StyledTableRow,
   useStyles,
 } from "./TableStyles";
-import { CONSTANTS } from "../../constants/constants";
 import { Question, Topic } from "../../interfaces/Interfaces";
-import {
-  addQuestion,
-  deleteQuestion,
-  getQuestions,
-  updateQuestion,
-} from "../../api/api";
-import { getFormattedDate, getHash } from "../../utils/utils";
+import { getQuestions } from "../../api/api";
+import { getFormattedDate } from "../../utils/utils";
 import DeleteDialog from "../dialogs/ConfirmDialog";
 import QuestionAddDialog from "../dialogs/QuestionDialog";
 import QuestionEditDialog from "../dialogs/QuestionDialog";
@@ -23,11 +17,17 @@ import SearchBar from "../input/searchBar";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import TransactionAlert from "../alerts/TransactionAlert";
+import {
+  onQuestionAdd,
+  onQuestionDelete,
+  onQuestionUpdate,
+} from "src/utils/topics";
 
 interface TableQuestionsProps {
   topics: Topic[];
   token: string;
   currentLanguage: string;
+  setLoading: (newVal: boolean) => void;
 }
 
 const DEFAULT_QUESTION: Question = {
@@ -102,101 +102,6 @@ export default function TableQuestions(props: TableQuestionsProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollTop, props.currentLanguage]);
 
-  const onQuestionAdd = async (
-    newTitle: string,
-    selectedTopicTitle: string
-  ): Promise<void> => {
-    //find id of selectedTopicTitle
-    const selectedTopic = props.topics.find((topic: Topic) => {
-      if (topic.title == selectedTopicTitle) {
-        return topic.id;
-      }
-    });
-    if (!selectedTopic) return;
-
-    const newQuestion: Question = {
-      id: getHash(newTitle + "*" + newTitle),
-      title: newTitle,
-      topic_id: selectedTopic.id,
-      timestamp: new Date(),
-      topic_title: selectedTopic.title,
-    };
-    const val = await addQuestion(
-      newQuestion,
-      props.currentLanguage,
-      props.token
-    );
-    const newQuestions = questions;
-
-    if (!val) {
-      alert("no!!!");
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-
-    newQuestions.unshift(newQuestion);
-    setQuestions([...newQuestions]);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  };
-
-  const onQuestionDelete = async (id: number): Promise<void> => {
-    const val = await deleteQuestion(id, props.currentLanguage, props.token);
-    if (!val) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-    const newQuestions = questions.filter((categ: Question) => categ.id != id);
-    setQuestions([...newQuestions]);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  };
-  const onQuestionUpdate = async (
-    id: number,
-    newTitle: string,
-    selectedTopicTitle: string
-  ): Promise<void> => {
-    //find id of selectedTopicTitle
-    const selectedTopic = props.topics.find((topic: Topic) => {
-      if (topic.title == selectedTopicTitle) {
-        return topic.id;
-      }
-    });
-    if (!selectedTopic) return;
-
-    console.log("sele", selectedTopic, "tt", newTitle);
-    const val = await updateQuestion(
-      {
-        id,
-        timestamp: new Date(),
-        title: newTitle,
-        topic_id: selectedTopic.id,
-        topic_title: selectedTopic.title,
-      },
-      props.currentLanguage,
-      props.token
-    );
-    if (!val) {
-      setError(true);
-      setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-      return;
-    }
-    const newQuestions = questions;
-    newQuestions.forEach(function (item: Question) {
-      if (item.id == id) {
-        item.title = newTitle;
-        item.topic_id = selectedTopic.id;
-        item.topic_title = selectedTopic.title;
-        item.timestamp = new Date();
-      }
-    });
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-    setQuestions([...newQuestions]);
-  };
-
   const onEdit = (q: Question) => {
     setCurrentQuestion(q);
     setEditDialog(true);
@@ -267,7 +172,16 @@ export default function TableQuestions(props: TableQuestionsProps) {
       <DeleteDialog
         open={deleteDialog}
         onConfirm={() => {
-          onQuestionDelete(currentQuestion.id);
+          onQuestionDelete(
+            currentQuestion.id,
+            questions,
+            props.currentLanguage,
+            props.token,
+            setQuestions,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
           setDeleteDialog(false);
         }}
         title="Proceed to Delete the question?"
@@ -280,8 +194,21 @@ export default function TableQuestions(props: TableQuestionsProps) {
       <QuestionEditDialog
         open={editDialog}
         topics={props.topics.map((t) => t.title)}
-        onConfirm={(newQuestionTitle: string, topicTitle: string) => {
-          onQuestionUpdate(currentQuestion.id, newQuestionTitle, topicTitle);
+        onConfirm={(newTitle: string, topicTitle: string) => {
+          onQuestionUpdate(
+            currentQuestion.id,
+            newTitle,
+            topicTitle,
+            questions,
+            props.topics,
+            props.currentLanguage,
+            props.token,
+            setQuestions,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
+
           setCurrentQuestion(DEFAULT_QUESTION);
           setEditDialog(false);
         }}
@@ -301,7 +228,18 @@ export default function TableQuestions(props: TableQuestionsProps) {
         question=""
         open={questionAddDialog}
         onConfirm={(newTitle: string, topicTitle: string) => {
-          onQuestionAdd(newTitle, topicTitle);
+          onQuestionAdd(
+            newTitle,
+            topicTitle,
+            questions,
+            props.topics,
+            props.currentLanguage,
+            props.token,
+            setQuestions,
+            props.setLoading,
+            setSuccess,
+            setError
+          );
           setCurrentQuestion(DEFAULT_QUESTION);
           setQuestionAddDialog(false);
         }}

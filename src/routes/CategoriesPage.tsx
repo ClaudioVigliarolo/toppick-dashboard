@@ -2,32 +2,22 @@ import React from "react";
 import { COLORS } from "../constants/Colors";
 import { addReport, getCategories, getUpdates } from "../api/api";
 import { useParams } from "react-router-dom";
-import {
-  Category,
-  PageProps,
-  Question,
-  Report,
-  Topic,
-} from "../interfaces/Interfaces";
+import { Category, PageProps } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
-import { getCurrentTime } from "src/utils/utils";
-export default function ViewPage({ token, currentLanguage }: PageProps) {
+export default function ViewPage({
+  token,
+  currentLanguage,
+  setLoading,
+}: PageProps) {
   const [categories, setCategories] = React.useState<Category[]>([]);
   React.useEffect(() => {
+    setLoading(true);
     (async () => {
-      /* addReport(
-        {
-          question_id: 349649,
-          reason: "BRUTTA",
-          user_id: "COGLION",
-        },
-        "EN"
-      );*/
-
       const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
+      setLoading(false);
     })();
   }, [currentLanguage]);
   return (
@@ -35,6 +25,7 @@ export default function ViewPage({ token, currentLanguage }: PageProps) {
       token={token}
       categories={categories}
       currentLanguage={currentLanguage}
+      setLoading={setLoading}
     />
   );
 }

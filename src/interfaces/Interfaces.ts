@@ -44,7 +44,7 @@ export interface Related {
 }
 
 export interface ReportResponse {
-  topics: string[];
+  topics: Topic[];
   reports: ReportHandled[];
 }
 export interface Question {
@@ -84,6 +84,7 @@ export interface PageProps {
   navigationProps: React.ComponentType<RouteProps>;
   token: string;
   currentLanguage: string;
+  setLoading: (newVal: boolean) => void;
 }
 
 export enum EmailType {

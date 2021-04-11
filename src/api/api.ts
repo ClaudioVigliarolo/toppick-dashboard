@@ -20,7 +20,7 @@ export const getCategories = async (
   console.log("getc ategoris tiktok", token);
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topicks/get_categories/` + lang,
+      `${HOSTNAME}/topick/get_categories/` + lang,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -55,7 +55,7 @@ export const getTopics = async (
   token: string
 ): Promise<Topic[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topicks/get_topics/` + lang, {
+    const response = await axios.get(`${HOSTNAME}/topick/get_topics/` + lang, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -74,7 +74,7 @@ export const addTopic = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topicks/add_topic`,
+      `${HOSTNAME}/topick/add_topic`,
       {
         topic,
         lang,
@@ -99,7 +99,7 @@ export const updateTopic = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/topicks/update_topic`,
+      `${HOSTNAME}/topick/update_topic`,
       {
         topic,
         lang,
@@ -123,7 +123,7 @@ export const deleteTopic = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topicks/delete_topic`, {
+    const response = await axios.delete(`${HOSTNAME}/topick/delete_topic`, {
       data: {
         id,
         lang,
@@ -241,7 +241,7 @@ export const deleteCategory = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topicks/delete_category`, {
+    const response = await axios.delete(`${HOSTNAME}/topick/delete_category`, {
       data: {
         id,
         lang,
@@ -265,9 +265,34 @@ export const addQuestion = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topicks/add_question`,
+      `${HOSTNAME}/topick/add_question`,
       {
         question,
+        lang,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+export const addQuestions = async (
+  questions: Question[],
+  lang: string,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.post(
+      `${HOSTNAME}/topick/add_questions`,
+      {
+        questions,
         lang,
       },
       {
@@ -291,7 +316,7 @@ export const addCategory = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topicks/add_category`,
+      `${HOSTNAME}/topick/add_category`,
       {
         title,
         id,
@@ -318,7 +343,7 @@ export const updateCategory = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/topicks/update_category`,
+      `${HOSTNAME}/topick/update_category`,
       {
         title,
         id,
@@ -343,7 +368,7 @@ export const getUpdates = async (
 ): Promise<UpdatesResponse | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topicks/get_updates/${date}/${lang}`
+      `${HOSTNAME}/topick/get_updates/${date}/${lang}`
     );
     return response.status == 200 ? response.data : null;
   } catch (err) {
@@ -357,7 +382,7 @@ export const addReport = async (
   lang: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.post(`${HOSTNAME}/topicks/add_report`, {
+    const response = await axios.post(`${HOSTNAME}/topick/add_report`, {
       report,
       lang,
     });
@@ -375,7 +400,7 @@ export const updateQuestion = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/topicks/update_question`,
+      `${HOSTNAME}/topick/update_question`,
       {
         question,
         lang,
@@ -399,7 +424,7 @@ export const deleteReport = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topicks/delete_report`, {
+    const response = await axios.delete(`${HOSTNAME}/topick/delete_report`, {
       data: {
         id,
         lang,
@@ -421,7 +446,7 @@ export const deleteQuestion = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topicks/delete_question`, {
+    const response = await axios.delete(`${HOSTNAME}/topick/delete_question`, {
       data: {
         id,
         lang,
@@ -442,14 +467,11 @@ export const getReports = async (
   token: string
 ): Promise<ReportResponse | null> => {
   try {
-    const response = await axios.get(
-      `${HOSTNAME}/topicks/get_reports/${lang}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const response = await axios.get(`${HOSTNAME}/topick/get_reports/${lang}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -465,7 +487,7 @@ export const getQuestions = async (
 ): Promise<Question[] | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topicks/get_questions/${from}/${to}/${lang}`,
+      `${HOSTNAME}/topick/get_questions/${from}/${to}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
