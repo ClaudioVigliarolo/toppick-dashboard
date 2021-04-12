@@ -65,6 +65,12 @@ export interface EditItem {
   text: string;
 }
 
+export interface LocalsEmail {
+  username: string;
+  email: string;
+  password: string;
+}
+
 export interface User {
   type: string;
   username: string;
@@ -110,4 +116,11 @@ export interface UpdatesResponse {
   last_update: string;
   category_topics: any;
   related: any;
+}
+
+export interface EmailInfo {
+  email: string;
+  fromEmail: string;
+  fromName: string;
+  subject: string;
 }

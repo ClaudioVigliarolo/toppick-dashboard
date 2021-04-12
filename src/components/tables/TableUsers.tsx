@@ -10,7 +10,6 @@ import { CONSTANTS } from "../../constants/constants";
 
 import { CreatedUser, EmailType } from "../../interfaces/Interfaces";
 import { onUserDelete, onUserUpdate, onUserAdd } from "../../utils/users";
-import { addUser, deleteUser, emailUser, updateUser } from "../../api/api";
 import { getHash } from "../../utils/utils";
 import DeleteDialog from "../dialogs/ConfirmDialog";
 import UserAddDialog from "../dialogs/UserDialog";
@@ -137,16 +136,22 @@ export default function TableUsers(props: TableUsersProps) {
         ) => {
           onUserAdd(
             {
-              username,
               email,
-              id: getHash(username),
-              languages,
               password,
+              languages,
+              id: getHash(username),
               type,
+              username,
             },
             users,
             setUsers,
-            props.email,
+            EmailType.Registration,
+            {
+              email,
+              fromEmail: props.email,
+              fromName: "Top Picks",
+              subject: "Registration",
+            },
             props.token,
             props.setLoading,
             setSuccess,
@@ -185,7 +190,13 @@ export default function TableUsers(props: TableUsersProps) {
             },
             users,
             setUsers,
-            props.email,
+            EmailType.Update,
+            {
+              email,
+              fromEmail: props.email,
+              fromName: "Top Picks",
+              subject: "Updated Credentials",
+            },
             props.token,
             props.setLoading,
             setSuccess,
@@ -200,7 +211,6 @@ export default function TableUsers(props: TableUsersProps) {
           setEditDialog(false);
           setCurrentUser(DEFAULT_USER);
         }}
-        //user={currentUserTitle}
       />
 
       <DeleteDialog
@@ -210,7 +220,13 @@ export default function TableUsers(props: TableUsersProps) {
             currentUser,
             users,
             setUsers,
-            props.email,
+            EmailType.Removal,
+            {
+              email: currentUser.email,
+              fromEmail: props.email,
+              fromName: "Top Picks",
+              subject: "Account Removal",
+            },
             props.token,
             props.setLoading,
             setSuccess,

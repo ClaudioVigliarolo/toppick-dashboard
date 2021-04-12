@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
       const prevLanguage = localStorage.getItem("language");
 
       if (storedJwt != null) {
-        console.log("ecco er token", storedJwt);
         const retrievedUser = await getUser(storedJwt);
         if (retrievedUser) {
           //the user was already authenticated, set up his data

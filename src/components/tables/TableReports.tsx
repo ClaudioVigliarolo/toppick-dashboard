@@ -206,12 +206,16 @@ export default function TableCategories(props: TableReportsProps) {
             setSuccess,
             setError
           );
+
           await onQuestionUpdate(
-            currentReport.id,
-            newQuestion,
-            currentReport.topic_title,
+            {
+              id: currentReport.id,
+              title: newQuestion,
+              timestamp: new Date(),
+              topic_id: currentReport.topic_id,
+              topic_title: currentReport.topic_title,
+            },
             [],
-            props.topics,
             props.currentLanguage,
             props.token,
             () => {},

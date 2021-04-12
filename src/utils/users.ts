@@ -1,59 +1,22 @@
-/* utils for inserting, modifing, removing topics  */
-import {
-  Category,
-  CreatedUser,
-  EmailType,
-  Question,
-  Related,
-  Report,
-  ReportHandled,
-  Topic,
-  User,
-} from "../interfaces/Interfaces";
-import {
-  addCategory,
-  addQuestion,
-  addQuestions,
-  addTopic,
-  addUser,
-  deleteCategory,
-  deleteQuestion,
-  deleteReport,
-  deleteTopic,
-  deleteUser,
-  emailUser,
-  updateCategory,
-  updateQuestion,
-  updateTopic,
-  updateUser,
-} from "../api/api";
-import { getCurrentTime, getHash } from "../utils/utils";
+/* utils for inserting, modifing, removing users  */
+import { CreatedUser, EmailInfo, EmailType } from "../interfaces/Interfaces";
+import { addUser, deleteUser, emailUser, updateUser } from "../api/api";
 import { CONSTANTS } from "../constants/constants";
 
 export const onUserDelete = async (
-  updatedUser: CreatedUser,
+  deletedUser: CreatedUser,
   users: CreatedUser[],
   setUsers: (users: CreatedUser[]) => void,
-  email: string,
+  emailtype: EmailType,
+  emailinfo: EmailInfo,
   token: string,
   setLoading: (val: boolean) => void,
   setSuccess: (val: boolean) => void,
   setError: (val: boolean) => void
 ): Promise<void> => {
   setLoading(true);
-  const val1 = await deleteUser(updatedUser.id, token);
-  const val2 = await emailUser(
-    {
-      username: updatedUser.username,
-      email: updatedUser.email,
-      password: "",
-      languages: updatedUser.languages,
-      subject: "Account Removal",
-      template: EmailType.Removal,
-    },
-    email,
-    token
-  );
+  const val1 = await deleteUser(deletedUser.id, token);
+  const val2 = await emailUser(emailtype, emailinfo, deletedUser, token);
 
   if (!val1 || !val2) {
     setError(true);
@@ -61,7 +24,7 @@ export const onUserDelete = async (
     return;
   }
   const newUsers = users.filter(
-    (user: CreatedUser) => user.id != updatedUser.id
+    (user: CreatedUser) => user.id != deletedUser.id
   );
   setUsers([...newUsers]);
   setSuccess(true);
@@ -73,7 +36,8 @@ export const onUserUpdate = async (
   updatedUser: CreatedUser,
   users: CreatedUser[],
   setUsers: (users: CreatedUser[]) => void,
-  email: string,
+  emailtype: EmailType,
+  emailinfo: EmailInfo,
   token: string,
   setLoading: (val: boolean) => void,
   setSuccess: (val: boolean) => void,
@@ -83,18 +47,7 @@ export const onUserUpdate = async (
 
   const val1 = await updateUser(updatedUser, token);
 
-  const val2 = await emailUser(
-    {
-      username: updatedUser.username,
-      email: updatedUser.email,
-      password: updatedUser.password,
-      languages: updatedUser.languages,
-      subject: "Updated Credentials",
-      template: EmailType.Update,
-    },
-    email,
-    token
-  );
+  const val2 = await emailUser(emailtype, emailinfo, updatedUser, token);
 
   if (!val1 || !val2) {
     setLoading(false);
@@ -123,7 +76,8 @@ export const onUserAdd = async (
   newUser: CreatedUser,
   users: CreatedUser[],
   setUsers: (users: CreatedUser[]) => void,
-  email: string,
+  emailtype: EmailType,
+  emailinfo: EmailInfo,
   token: string,
   setLoading: (val: boolean) => void,
   setSuccess: (val: boolean) => void,
@@ -132,18 +86,7 @@ export const onUserAdd = async (
   setLoading(true);
   const val1 = await addUser(newUser, token);
 
-  const val2 = await emailUser(
-    {
-      username: newUser.username,
-      email: newUser.email,
-      password: newUser.password,
-      languages: newUser.languages,
-      subject: "Registration",
-      template: EmailType.Registration,
-    },
-    email,
-    token
-  );
+  const val2 = await emailUser(emailtype, emailinfo, newUser, token);
 
   if (!val1 || !val2) {
     setLoading(false);

@@ -10,6 +10,9 @@ import {
   Email,
   ReportResponse,
   UpdatesResponse,
+  EmailType,
+  LocalsEmail,
+  EmailInfo,
 } from "../interfaces/Interfaces";
 import { HOSTNAME } from "../config/config";
 
@@ -210,16 +213,18 @@ export const updateUser = async (
 };
 
 export const emailUser = async (
-  email: Email,
-  sender: string,
+  emailtype: EmailType,
+  emailinfo: EmailInfo,
+  user: CreatedUser,
   token: string
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
       `${HOSTNAME}/users/mail`,
       {
-        email,
-        sender,
+        emailinfo,
+        user,
+        emailtype,
       },
       {
         headers: {
@@ -309,8 +314,7 @@ export const addQuestions = async (
 };
 
 export const addCategory = async (
-  title: string,
-  id: number,
+  category: Category,
   lang: string,
   token: string
 ): Promise<boolean> => {
@@ -318,8 +322,7 @@ export const addCategory = async (
     const response = await axios.post(
       `${HOSTNAME}/topick/add_category`,
       {
-        title,
-        id,
+        category,
         lang,
       },
       {
@@ -336,8 +339,7 @@ export const addCategory = async (
 };
 
 export const updateCategory = async (
-  title: string,
-  id: number,
+  category: Category,
   lang: string,
   token: string
 ): Promise<boolean> => {
@@ -345,8 +347,7 @@ export const updateCategory = async (
     const response = await axios.put(
       `${HOSTNAME}/topick/update_category`,
       {
-        title,
-        id,
+        category,
         lang,
       },
       {

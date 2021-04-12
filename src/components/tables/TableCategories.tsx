@@ -19,6 +19,7 @@ import SearchBar from "../input/searchBar";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import TransactionAlert from "../alerts/TransactionAlert";
+import { getHash } from "src/utils/utils";
 
 interface TableCategoriesProps {
   categories: Category[];
@@ -111,7 +112,10 @@ export default function TableCategories(props: TableCategoriesProps) {
         open={addDialog}
         onConfirm={(newTitle: string) => {
           onCategoryAdd(
-            newTitle,
+            {
+              id: getHash(newTitle),
+              title: newTitle,
+            },
             categories,
             props.currentLanguage,
             props.token,
@@ -131,8 +135,10 @@ export default function TableCategories(props: TableCategoriesProps) {
         open={editDialog}
         onConfirm={(newTitle: string) => {
           onCategoryUpdate(
-            currentCategoryId,
-            newTitle,
+            {
+              id: currentCategoryId,
+              title: newTitle,
+            },
             categories,
             props.currentLanguage,
             props.token,

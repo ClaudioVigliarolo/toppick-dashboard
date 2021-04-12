@@ -8,7 +8,7 @@ import {
 } from "./TableStyles";
 import { Question, Topic } from "../../interfaces/Interfaces";
 import { getQuestions } from "../../api/api";
-import { getFormattedDate } from "../../utils/utils";
+import { getFormattedDate, getHash } from "../../utils/utils";
 import DeleteDialog from "../dialogs/ConfirmDialog";
 import QuestionAddDialog from "../dialogs/QuestionDialog";
 import QuestionEditDialog from "../dialogs/QuestionDialog";
@@ -18,6 +18,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import TransactionAlert from "../alerts/TransactionAlert";
 import {
+  getSelectedTopicIdFromTitle,
   onQuestionAdd,
   onQuestionDelete,
   onQuestionUpdate,
@@ -196,11 +197,14 @@ export default function TableQuestions(props: TableQuestionsProps) {
         topics={props.topics.map((t) => t.title)}
         onConfirm={(newTitle: string, topicTitle: string) => {
           onQuestionUpdate(
-            currentQuestion.id,
-            newTitle,
-            topicTitle,
+            {
+              id: currentQuestion.id,
+              title: newTitle,
+              topic_id: getSelectedTopicIdFromTitle(props.topics, topicTitle),
+              timestamp: new Date(),
+              topic_title: topicTitle,
+            },
             questions,
-            props.topics,
             props.currentLanguage,
             props.token,
             setQuestions,
@@ -208,7 +212,6 @@ export default function TableQuestions(props: TableQuestionsProps) {
             setSuccess,
             setError
           );
-
           setCurrentQuestion(DEFAULT_QUESTION);
           setEditDialog(false);
         }}
@@ -229,10 +232,14 @@ export default function TableQuestions(props: TableQuestionsProps) {
         open={questionAddDialog}
         onConfirm={(newTitle: string, topicTitle: string) => {
           onQuestionAdd(
-            newTitle,
-            topicTitle,
+            {
+              id: getHash(newTitle + "*" + topicTitle),
+              title: newTitle,
+              topic_id: getSelectedTopicIdFromTitle(props.topics, topicTitle),
+              timestamp: new Date(),
+              topic_title: topicTitle,
+            },
             questions,
-            props.topics,
             props.currentLanguage,
             props.token,
             setQuestions,

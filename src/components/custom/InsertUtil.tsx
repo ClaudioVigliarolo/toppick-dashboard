@@ -1,21 +1,18 @@
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import {
-  Category,
-  Question,
-  Related,
-  Topic,
-} from "../../interfaces/Interfaces";
+import { Category, Topic } from "../../interfaces/Interfaces";
 import TransactionAlert from "../alerts/TransactionAlert";
 import CustomButton from "../buttons/CustomButton";
 import TopicAddDialog from "../dialogs/TopicDialog";
-import { getHash } from "../../utils/utils";
-import { addTopic } from "../../api/api";
-import { CONSTANTS } from "../../constants/constants";
 import Select from "../select/Select";
 import TextArea from "../input/NumberedTextarea";
 import QuestionsList from "../lists/QuestionsList";
-import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
+import {
+  getCategoriesFromTitles,
+  getRelatedFromTitle,
+  onQuestionsAdd,
+  onTopicAdd,
+} from "src/utils/topics";
 import { COLORS } from "src/constants/Colors";
 
 const MIN_QUESTIONS = -1;
@@ -243,16 +240,23 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
         headerText="Add New Topic"
         topic=""
         onConfirm={(
-          topicTitle: string,
-          selectedCategoriesTitle: string[],
+          newTitle: string,
+          selectedCategoriesTitles: string[],
           selectedRelatedTitles: string[]
         ) => {
           onTopicAdd(
-            topicTitle,
-            selectedCategoriesTitle,
-            selectedRelatedTitles,
+            {
+              id: currentTopic.id,
+              title: newTitle,
+              related: getRelatedFromTitle(topics, selectedRelatedTitles),
+              source: "TopPicks Creators",
+              timestamp: new Date(),
+              categories: getCategoriesFromTitles(
+                props.categories,
+                selectedCategoriesTitles
+              ),
+            },
             topics,
-            props.categories,
             props.currentLanguage,
             props.token,
             setTopics,
@@ -260,6 +264,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
             setSuccess,
             setError
           );
+
           setCurrentTopic(DEFAULT_TOPIC);
           setTopicAddDialog(false);
         }}

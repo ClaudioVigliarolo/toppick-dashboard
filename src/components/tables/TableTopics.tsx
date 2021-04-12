@@ -16,7 +16,13 @@ import TransactionAlert from "../alerts/TransactionAlert";
 import { getFormattedDate } from "../../utils/utils";
 import SearchBar from "../input/searchBar";
 import CustomButton from "../buttons/CustomButton";
-import { onTopicAdd, onTopicDelete, onTopicUpdate } from "src/utils/topics";
+import {
+  getCategoriesFromTitles,
+  getRelatedFromTitle,
+  onTopicAdd,
+  onTopicDelete,
+  onTopicUpdate,
+} from "src/utils/topics";
 
 interface TableTopicsProps {
   topics: Topic[];
@@ -128,16 +134,22 @@ export default function TableTopics(props: TableTopicsProps) {
         categories={categories.map((categ) => categ.title)}
         onConfirm={(
           newTitle: string,
-          selectedCategoriesTitle: string[],
+          selectedCategoriesTitles: string[],
           selectedRelatedTitles: string[]
         ) => {
           onTopicUpdate(
-            currentTopic.id,
-            newTitle,
-            selectedCategoriesTitle,
-            selectedRelatedTitles,
+            {
+              id: currentTopic.id,
+              title: newTitle,
+              related: getRelatedFromTitle(topics, selectedRelatedTitles),
+              source: "TopPicks Creators",
+              timestamp: new Date(),
+              categories: getCategoriesFromTitles(
+                categories,
+                selectedCategoriesTitles
+              ),
+            },
             topics,
-            categories,
             props.currentLanguage,
             props.token,
             setTopics,
@@ -166,16 +178,23 @@ export default function TableTopics(props: TableTopicsProps) {
         headerText="Add New Topic"
         topic=""
         onConfirm={(
-          topicTitle: string,
-          selectedCategoriesTitle: string[],
+          newTitle: string,
+          selectedCategoriesTitles: string[],
           selectedRelatedTitles: string[]
         ) => {
           onTopicAdd(
-            topicTitle,
-            selectedCategoriesTitle,
-            selectedRelatedTitles,
+            {
+              id: currentTopic.id,
+              title: newTitle,
+              related: getRelatedFromTitle(topics, selectedRelatedTitles),
+              source: "TopPicks Creators",
+              timestamp: new Date(),
+              categories: getCategoriesFromTitles(
+                categories,
+                selectedCategoriesTitles
+              ),
+            },
             topics,
-            categories,
             props.currentLanguage,
             props.token,
             setTopics,
