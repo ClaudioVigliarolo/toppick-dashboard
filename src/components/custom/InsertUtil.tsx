@@ -91,15 +91,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const DEFAULT_TOPIC: Topic = {
-  categories: [],
-  id: -1,
-  related: [],
-  source: "",
-  timestamp: new Date(),
-  title: "",
-};
-
 interface InsertTopicsPageProps {
   topics: Topic[];
   categories: Category[];
@@ -108,8 +99,7 @@ interface InsertTopicsPageProps {
   setLoading: (newVal: boolean) => void;
 }
 export default function InsertTopicsPage(props: InsertTopicsPageProps) {
-  const [currentTopic, setCurrentTopic] = React.useState<Topic>(DEFAULT_TOPIC);
-  const [selectTopic, setSelectTopic] = React.useState<string>(NO_TOPIC);
+  const [selectedTopic, setSelectedTopic] = React.useState<string>(NO_TOPIC);
   const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
   const [questionsText, setQuestionsText] = React.useState<string>("");
   const [questionsArray, setQuestionsArray] = React.useState<string[]>([]);
@@ -121,8 +111,6 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
 
   React.useEffect(() => {
     setTopics(props.topics);
-    console.log("salve", getQuestionsByTopic(currentTopic.id, props.token));
-    //questionsByTopic(topicid)
   }, [props.topics, props.categories]);
 
   const onSubmitReview = (): void => {
@@ -134,16 +122,15 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
   const handleTopicChange = async (
     event: React.ChangeEvent<{ value: any }>
   ) => {
-    setSelectTopic(event.target.value);
+    setSelectedTopic(event.target.value);
     if (event.target.value !== NO_TOPIC) {
       props.setLoading(true);
       const retrievedQuestions = await getQuestionsByTopic(
         getTopicIdFromTitle(topics, event.target.value),
         props.token
       );
-      console.log("rr", retrievedQuestions);
       if (retrievedQuestions !== null) {
-        setQuestionsText(retrievedQuestions.map((q) => q.title).join(""));
+        setQuestionsText(retrievedQuestions.map((q) => q.title).join("\n"));
       }
       props.setLoading(false);
     }
@@ -153,12 +140,12 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
     const linesArr = questionsText.match(/[^\r\n]+/g);
     if (!linesArr) return false;
     return (
-      !isReview && selectTopic != NO_TOPIC && linesArr.length > MIN_QUESTIONS
+      !isReview && selectedTopic != NO_TOPIC && linesArr.length > MIN_QUESTIONS
     );
   };
 
   const isTextareaVisible = () => {
-    return selectTopic != NO_TOPIC && !isReview;
+    return selectedTopic != NO_TOPIC && !isReview;
   };
 
   const isReviewListVisible = () => {
@@ -172,9 +159,9 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
   const renderHeaderText = () => {
     if (isReview) {
       return "Step 3: Proofread before submitting  ";
-    } else if (selectTopic !== NO_TOPIC) {
+    } else if (selectedTopic !== NO_TOPIC) {
       return "Step 2: Insert each question in a row ";
-    } else if (selectTopic === NO_TOPIC) {
+    } else if (selectedTopic === NO_TOPIC) {
       return "Step 1: Select A topic ";
     }
   };
@@ -186,7 +173,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
         <div className={classes.headerContainer}>
           <Select
             handleChange={handleTopicChange}
-            value={selectTopic}
+            value={selectedTopic}
             values={props.topics.map((t) => t.title)}
             defaultValue={NO_TOPIC}
           />
@@ -220,10 +207,10 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
                   title="Revert, change something"
                 />
                 <CustomButton
-                  onClick={() => {
-                    onQuestionsAdd(
+                  onClick={async () => {
+                    await onQuestionsAdd(
                       questionsArray,
-                      selectTopic,
+                      selectedTopic,
                       topics,
                       props.currentLanguage,
                       props.token,
@@ -231,6 +218,9 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
                       setSuccess,
                       setError
                     );
+                    window.scrollTo(0, 0);
+                    setReview(false);
+                    setSelectedTopic(NO_TOPIC);
                   }}
                   color={COLORS.blue}
                   title="Submit, everything's fine"
@@ -254,7 +244,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
         categories={props.categories.map((categ) => categ.title)}
         related={topics
           .map((topic) => topic.title)
-          .filter((s) => s != currentTopic.title)}
+          .filter((s) => s != selectedTopic)}
         headerText="Add New Topic"
         topic=""
         onConfirm={(
@@ -264,7 +254,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
         ) => {
           onTopicAdd(
             {
-              id: currentTopic.id,
+              id: getTopicIdFromTitle(topics, selectedTopic),
               title: newTitle,
               related: getRelatedFromTitle(topics, selectedRelatedTitles),
               source: "TopPicks Creators",
@@ -283,11 +273,11 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
             setError
           );
 
-          setCurrentTopic(DEFAULT_TOPIC);
+          setSelectedTopic(NO_TOPIC);
           setTopicAddDialog(false);
         }}
         onRefuse={() => {
-          setCurrentTopic(DEFAULT_TOPIC);
+          setSelectedTopic(NO_TOPIC);
           setTopicAddDialog(false);
         }}
       />

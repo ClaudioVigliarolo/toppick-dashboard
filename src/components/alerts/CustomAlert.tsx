@@ -15,7 +15,7 @@ export default function CustomAlert({
       style={{
         display: visible ? "flex" : "none",
         alignSelf: "center",
-        position: "absolute",
+        position: "fixed",
         bottom: 50,
       }}
     >
