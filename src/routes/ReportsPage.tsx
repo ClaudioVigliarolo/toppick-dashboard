@@ -28,8 +28,8 @@ export default function ReportsPage({
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
+      setLoading(false);
     })();
-    setLoading(false);
   }, [currentLanguage]);
 
   return (

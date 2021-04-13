@@ -41,6 +41,7 @@ const DEFAULT_QUESTION: Question = {
 
 const SCROLL_THRESHOLD = 200;
 const DIVIDING_FACTOR = 10;
+const ITEMS_PER_SCROLL = 50;
 
 export default function TableQuestions(props: TableQuestionsProps) {
   const [success, setSuccess] = React.useState(false);
@@ -92,7 +93,7 @@ export default function TableQuestions(props: TableQuestionsProps) {
           props.currentLanguage,
           props.token,
           lastScrollUpdate / DIVIDING_FACTOR,
-          SCROLL_THRESHOLD / DIVIDING_FACTOR
+          lastScrollUpdate / DIVIDING_FACTOR + ITEMS_PER_SCROLL
         );
         if (retrievedQuestions != null) {
           setQuestions([...questions, ...retrievedQuestions]);

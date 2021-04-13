@@ -20,20 +20,18 @@ export default function TopicsPage({
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   React.useEffect(() => {
-    setLoading(true);
     (async () => {
+      setLoading(true);
       const retrievedTopics = await getTopics(currentLanguage, token);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
-    })();
-    (async () => {
       const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
+      setLoading(false);
     })();
-    setLoading(false);
   }, [currentLanguage]);
 
   return (

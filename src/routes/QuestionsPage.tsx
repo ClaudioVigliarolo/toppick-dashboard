@@ -24,8 +24,8 @@ export default function TopicsPage({
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
+      setLoading(false);
     })();
-    setLoading(false);
   }, [currentLanguage]);
 
   return (

@@ -11,8 +11,8 @@ export default function ViewPage({
 }: PageProps) {
   const [categories, setCategories] = React.useState<Category[]>([]);
   React.useEffect(() => {
-    setLoading(true);
     (async () => {
+      setLoading(true);
       const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);

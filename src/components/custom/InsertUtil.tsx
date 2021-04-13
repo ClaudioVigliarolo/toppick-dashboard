@@ -162,7 +162,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
     } else if (selectedTopic !== NO_TOPIC) {
       return "Step 2: Insert each question in a row ";
     } else if (selectedTopic === NO_TOPIC) {
-      return "Step 1: Select A topic ";
+      return "Let's start by picking a Topic ";
     }
   };
   return (
