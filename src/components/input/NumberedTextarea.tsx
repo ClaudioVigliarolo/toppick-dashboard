@@ -15,17 +15,17 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundRepeat: "no-repeat",
       paddingTop: 10,
       padding: 5,
-      fontSize: 15,
+      fontSize: 14,
       borderColor: "orange",
       borderWidth: 0,
       borderBottom: 0,
-      minWidth: "70vw",
+      minWidth: "60vw",
       height: "50vh",
       backgroundAttachment: "local",
       outlineColor: "white",
     },
     root: {
-      padding: "2px 4px",
+      padding: "2px 8px",
       display: "flex",
       alignItems: "center",
       width: 300,
@@ -42,7 +42,7 @@ export default function TextArea({
   const classes = useStyles();
 
   return (
-    <div style={{ backgroundColor: "white" }}>
+    <div style={{ backgroundColor: "white", transform: "scale(1.2)" }}>
       <textarea
         className={classes.textArea}
         value={value}

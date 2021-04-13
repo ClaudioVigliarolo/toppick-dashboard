@@ -10,10 +10,12 @@ import QuestionsList from "../lists/QuestionsList";
 import {
   getCategoriesFromTitles,
   getRelatedFromTitle,
+  getTopicIdFromTitle,
   onQuestionsAdd,
   onTopicAdd,
 } from "src/utils/topics";
 import { COLORS } from "src/constants/Colors";
+import { getQuestionsByTopic } from "src/api/api";
 
 const MIN_QUESTIONS = -1;
 const NO_TOPIC = "Select A Topic";
@@ -76,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     buttonContainer: {
-      marginTop: 25,
+      marginTop: 100,
       display: "flex",
       flexDirection: "row",
       width: 600,
@@ -119,6 +121,8 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
 
   React.useEffect(() => {
     setTopics(props.topics);
+    console.log("salve", getQuestionsByTopic(currentTopic.id, props.token));
+    //questionsByTopic(topicid)
   }, [props.topics, props.categories]);
 
   const onSubmitReview = (): void => {
@@ -127,8 +131,22 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
     questionsArray && setQuestionsArray(questionsArray);
   };
 
-  const handleTopicChange = (event: React.ChangeEvent<{ value: any }>) => {
+  const handleTopicChange = async (
+    event: React.ChangeEvent<{ value: any }>
+  ) => {
     setSelectTopic(event.target.value);
+    if (event.target.value !== NO_TOPIC) {
+      props.setLoading(true);
+      const retrievedQuestions = await getQuestionsByTopic(
+        getTopicIdFromTitle(topics, event.target.value),
+        props.token
+      );
+      console.log("rr", retrievedQuestions);
+      if (retrievedQuestions !== null) {
+        setQuestionsText(retrievedQuestions.map((q) => q.title).join(""));
+      }
+      props.setLoading(false);
+    }
   };
 
   const isReviewButtonVisible = () => {

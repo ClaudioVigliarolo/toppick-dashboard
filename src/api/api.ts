@@ -548,3 +548,23 @@ export const logoutUser = async (token: string): Promise<string[] | null> => {
     return null;
   }
 };
+
+export const getQuestionsByTopic = async (
+  id: number,
+  token: string
+): Promise<Question[] | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/topick/get_topic_questions/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};

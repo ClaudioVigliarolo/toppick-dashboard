@@ -252,7 +252,7 @@ export const getRelatedFromTitle = (
   return newRelated;
 };
 
-export const getSelectedTopicIdFromTitle = (
+export const getTopicIdFromTitle = (
   topics: Topic[],
   selectedTopicTitle: string
 ): number => {
@@ -417,7 +417,10 @@ export const onQuestionsAdd = async (
   setLoading(true);
 
   const topic = topics.find((t) => t.title == selectTopic);
-  if (!topic || questionsArray.length < 0) return;
+  if (!topic || questionsArray.length < 0) {
+    setLoading(false);
+    return;
+  }
 
   const newQuestions: Question[] = questionsArray.map(
     (questionTitle: string) => ({

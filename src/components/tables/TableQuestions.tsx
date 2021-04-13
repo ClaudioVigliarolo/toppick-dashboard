@@ -18,7 +18,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import TransactionAlert from "../alerts/TransactionAlert";
 import {
-  getSelectedTopicIdFromTitle,
+  getTopicIdFromTitle,
   onQuestionAdd,
   onQuestionDelete,
   onQuestionUpdate,
@@ -200,7 +200,7 @@ export default function TableQuestions(props: TableQuestionsProps) {
             {
               id: currentQuestion.id,
               title: newTitle,
-              topic_id: getSelectedTopicIdFromTitle(props.topics, topicTitle),
+              topic_id: getTopicIdFromTitle(props.topics, topicTitle),
               timestamp: new Date(),
               topic_title: topicTitle,
             },
@@ -235,7 +235,7 @@ export default function TableQuestions(props: TableQuestionsProps) {
             {
               id: getHash(newTitle + "*" + topicTitle),
               title: newTitle,
-              topic_id: getSelectedTopicIdFromTitle(props.topics, topicTitle),
+              topic_id: getTopicIdFromTitle(props.topics, topicTitle),
               timestamp: new Date(),
               topic_title: topicTitle,
             },
