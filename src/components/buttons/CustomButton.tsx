@@ -3,20 +3,25 @@ import { COLORS } from "../../constants/Colors";
 
 import React from "react";
 
-export default function CustomAlert({
-  color = COLORS.primaryOrange,
-  title,
-  onClick,
-  submit,
-}: {
+interface CustomButtonProps {
   color?: string;
   title: string;
   onClick: any;
   submit?: boolean;
-}) {
+  disabled?: boolean;
+}
+
+export default function CustomButton({
+  color = COLORS.primaryOrange,
+  title,
+  onClick,
+  submit,
+  disabled = false,
+}: CustomButtonProps) {
   return (
     <Button
       variant="contained"
+      disabled={disabled}
       style={{
         backgroundColor: color,
         color: "white",

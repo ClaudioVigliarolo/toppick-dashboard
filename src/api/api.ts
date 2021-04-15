@@ -20,7 +20,7 @@ export const getCategories = async (
   lang: string,
   token: string
 ): Promise<Category[] | null> => {
-  console.log("getc ategoris tiktok", token);
+  console.log("getc ategoris tiktok", lang);
   try {
     const response = await axios.get(
       `${HOSTNAME}/topick/get_categories/` + lang,
@@ -365,11 +365,12 @@ export const updateCategory = async (
 
 export const getUpdates = async (
   date: string,
-  lang: string
+  lang: string,
+  id: number
 ): Promise<UpdatesResponse | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topick/get_updates/${date}/${lang}`
+      `${HOSTNAME}/topick/get_updates/${id}/${date}/${lang}`
     );
     return response.status == 200 ? response.data : null;
   } catch (err) {

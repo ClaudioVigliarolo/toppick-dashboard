@@ -1,5 +1,6 @@
 import React from "react";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import { COLORS } from "src/constants/Colors";
 
 interface TextAreaProps {
   handleChange: (text: string) => void;
@@ -16,8 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: 10,
       padding: 5,
       fontSize: 14,
-      borderColor: "orange",
-      borderWidth: 0,
+      borderColor: "white",
+      borderWidth: 2,
       borderBottom: 0,
       minWidth: "60vw",
       height: "50vh",

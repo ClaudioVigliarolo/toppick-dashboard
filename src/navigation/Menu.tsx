@@ -83,6 +83,20 @@ const routers = [
   },
 
   {
+    key: "stats",
+    path: "/stats",
+    sidebarName: "statistics",
+    navbarName: "Overview",
+  },
+
+  {
+    key: "translate",
+    path: "/translate",
+    sidebarName: "translate",
+    navbarName: "translate",
+  },
+
+  {
     key: "create",
     path: "/create",
     sidebarName: "create",

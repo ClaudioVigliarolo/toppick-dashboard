@@ -8,6 +8,9 @@ import TopicsPage from "../routes/TopicsPage";
 import QuestionsPage from "../routes/QuestionsPage";
 import LoginPage from "../routes/LoginPage";
 import CreatePage from "../routes/CreatePage";
+import TranslatePage from "../routes/TranslatePage";
+import StatisticsPage from "../routes/StatisticsPage";
+
 import CustomRoute from "./CustomRoute";
 import Menu from "./Menu";
 import { getUpdates } from "../api/api";
@@ -23,6 +26,14 @@ export const getCondition = (
       return !isAuthenticated;
     case "/users":
       return isAuthenticated && userType == "root";
+    case "/stats":
+      return isAuthenticated && userType == "root";
+
+    case "/translate":
+      return (
+        (isAuthenticated && userType == "translated") || userType == "root"
+      );
+
     case "/categories":
       return isAuthenticated;
     case "/topics":
@@ -52,7 +63,9 @@ export const Navigation = () => {
     setLoading,
   } = React.useContext(AuthContext);
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    console.log("ggg", getUpdates("Sun May 11,2014", "en", 1234));
+  }, []);
   return (
     <Menu
       loading={loading}
@@ -78,6 +91,7 @@ export const Navigation = () => {
             token={userToken}
             currentLanguage={currentLanguage}
             setLoading={setLoading}
+            loading={loading}
           />
 
           <CustomRoute
@@ -88,6 +102,7 @@ export const Navigation = () => {
             token={userToken}
             currentLanguage={currentLanguage}
             setLoading={setLoading}
+            loading={loading}
           />
 
           <CustomRoute
@@ -98,6 +113,7 @@ export const Navigation = () => {
             token={userToken}
             currentLanguage={currentLanguage}
             setLoading={setLoading}
+            loading={loading}
           />
 
           <CustomRoute
@@ -108,6 +124,7 @@ export const Navigation = () => {
             token={userToken}
             currentLanguage={currentLanguage}
             setLoading={setLoading}
+            loading={loading}
           />
 
           <CustomRoute
@@ -118,6 +135,7 @@ export const Navigation = () => {
             token={userToken}
             currentLanguage={currentLanguage}
             setLoading={setLoading}
+            loading={loading}
           />
 
           <CustomRoute
@@ -128,6 +146,7 @@ export const Navigation = () => {
             token={userToken}
             currentLanguage={currentLanguage}
             setLoading={setLoading}
+            loading={loading}
           />
 
           <CustomRoute
@@ -138,6 +157,29 @@ export const Navigation = () => {
             token={userToken}
             currentLanguage={currentLanguage}
             setLoading={setLoading}
+            loading={loading}
+          />
+
+          <CustomRoute
+            condition={getCondition(userType, "/stats", isAuthenticated)}
+            path="/stats"
+            isAuthenticated={isAuthenticated}
+            Component={StatisticsPage}
+            token={userToken}
+            currentLanguage={currentLanguage}
+            setLoading={setLoading}
+            loading={loading}
+          />
+
+          <CustomRoute
+            condition={getCondition(userType, "/translate", isAuthenticated)}
+            path="/translate"
+            isAuthenticated={isAuthenticated}
+            Component={TranslatePage}
+            token={userToken}
+            currentLanguage={currentLanguage}
+            setLoading={setLoading}
+            loading={loading}
           />
         </Switch>
       }

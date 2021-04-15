@@ -90,6 +90,7 @@ export interface PageProps {
   navigationProps: React.ComponentType<RouteProps>;
   token: string;
   currentLanguage: string;
+  loading: boolean;
   setLoading: (newVal: boolean) => void;
 }
 

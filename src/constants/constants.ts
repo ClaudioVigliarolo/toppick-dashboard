@@ -1,8 +1,8 @@
 import { Language } from "../interfaces/Interfaces";
 
 const languages: Language[] = [
-  { label: "italian", value: "IT" },
-  { label: "english", value: "EN" },
+  { label: "italian", value: "it" },
+  { label: "english", value: "en" },
 ];
 
 export const CONSTANTS = {

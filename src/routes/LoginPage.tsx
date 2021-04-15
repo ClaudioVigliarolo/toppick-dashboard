@@ -14,6 +14,7 @@ export default function LoginPage({ setLoading }: PageProps) {
     setCurrentLanguage,
     userToken,
     setEmail,
+    loading,
   } = React.useContext(AuthContext);
 
   //renamed  setEmail to setEmailState for context function ovverriding problem
@@ -52,6 +53,7 @@ export default function LoginPage({ setLoading }: PageProps) {
       <Form
         onSubmit={onSubmit}
         height="40ch"
+        loading={loading}
         children={
           <>
             <TextField

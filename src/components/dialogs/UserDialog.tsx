@@ -5,8 +5,6 @@ import { CONSTANTS as USER_CONSTANTS } from "../../constants/constants";
 import { addUser } from "../../api/api";
 import Chip from "../select/Chip";
 import { Form, useStyles } from "../input/Form";
-import { CONSTANTS } from "../../constants/constants";
-import { getHash } from "../../utils/utils";
 
 interface UserDialogProps {
   open: boolean;
@@ -51,8 +49,6 @@ export default function UserDialog({
   const [error, setError] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    //setLanguages(CONSTANTS.languages.map((language) => language.label));
-    console.log("ccaled EFFF");
     setUsernameState(username);
     setSelectedLanguagesState(selectedLanguages);
     setEmailState(email);

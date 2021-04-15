@@ -9,6 +9,7 @@ interface CustomRouteProps {
   isAuthenticated: boolean;
   currentLanguage: string;
   setLoading: (newVal: boolean) => void;
+  loading: boolean;
 }
 
 const CustomRoute = ({
@@ -19,6 +20,7 @@ const CustomRoute = ({
   isAuthenticated,
   currentLanguage,
   setLoading,
+  loading,
 }: CustomRouteProps) => {
   return condition ? (
     <Route
@@ -29,6 +31,7 @@ const CustomRoute = ({
           token={token}
           currentLanguage={currentLanguage}
           setLoading={setLoading}
+          loading={loading}
         />
       )}
     />
