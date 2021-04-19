@@ -8,5 +8,5 @@ const languages: Language[] = [
 export const CONSTANTS = {
   ALERT_TIME: 3000,
   languages,
-  DEFAULT_USER_TYPE: "creator",
+  NO_USER_TYPE: "creator",
 };

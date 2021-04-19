@@ -14,12 +14,14 @@ import StatisticsPage from "../routes/StatisticsPage";
 import CustomRoute from "./CustomRoute";
 import Menu from "./Menu";
 import { getUpdates } from "../api/api";
-import { getCurrentTime } from "src/utils/utils";
+import { Lang } from "src/interfaces/Interfaces";
+import { StatusContext } from "src/context/StatusContext";
 
 export const getCondition = (
   userType: string,
   path: string,
-  isAuthenticated: boolean
+  isAuthenticated: boolean,
+  lang?: Lang
 ) => {
   switch (path) {
     case "/login":
@@ -29,10 +31,8 @@ export const getCondition = (
     case "/stats":
       return isAuthenticated && userType == "root";
 
-    case "/translate":
-      return (
-        (isAuthenticated && userType == "translated") || userType == "root"
-      );
+    case "/translate": //userType == "translated"
+      return isAuthenticated && lang !== Lang.EN && userType == "root";
 
     case "/categories":
       return isAuthenticated;
@@ -56,15 +56,22 @@ export const Navigation = () => {
     userType,
     userToken,
     username,
-    userLanguages,
+    languages,
     setCurrentLanguage,
     currentLanguage,
-    loading,
-    setLoading,
   } = React.useContext(AuthContext);
 
+  const {
+    setLoading,
+    loading,
+    onError,
+    onSuccess,
+    error,
+    success,
+  } = React.useContext(StatusContext);
+
   React.useEffect(() => {
-    console.log("ggg", getUpdates("Sun May 11,2014", "en", 1234));
+    //console.log("ggg", getUpdates("Sun May 11,2014", "en", 1234));
   }, []);
   return (
     <Menu
@@ -74,7 +81,7 @@ export const Navigation = () => {
       token={userToken}
       username={username}
       setCurrentLanguage={setCurrentLanguage}
-      languages={userLanguages}
+      languages={languages}
       currentLanguage={currentLanguage}
       children={
         <Switch>
@@ -92,6 +99,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
@@ -103,6 +114,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
@@ -114,6 +129,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
@@ -125,6 +144,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
@@ -136,6 +159,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
@@ -147,6 +174,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
@@ -158,6 +189,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
@@ -169,10 +204,19 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
 
           <CustomRoute
-            condition={getCondition(userType, "/translate", isAuthenticated)}
+            condition={getCondition(
+              userType,
+              "/translate",
+              isAuthenticated,
+              currentLanguage
+            )}
             path="/translate"
             isAuthenticated={isAuthenticated}
             Component={TranslatePage}
@@ -180,6 +224,10 @@ export const Navigation = () => {
             currentLanguage={currentLanguage}
             setLoading={setLoading}
             loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
           />
         </Switch>
       }

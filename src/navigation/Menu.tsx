@@ -18,6 +18,7 @@ import LanguageSelect from "../components/select/LanguageSelect";
 import HeaderSection from "../components/layout/HeaderSection";
 import { getCondition } from "./Index";
 import { logoutUser } from "../api/api";
+import { Lang } from "src/interfaces/Interfaces";
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -158,9 +159,9 @@ export default function PersistentDrawerLeft({
   isAuthenticated: boolean;
   token: string;
   username: string;
-  languages: string[];
-  setCurrentLanguage: (newVal: string) => void;
-  currentLanguage: string;
+  languages: Lang[];
+  setCurrentLanguage: (newLang: Lang) => void;
+  currentLanguage: Lang;
   loading: boolean;
 }) {
   const classes = useStyles();
@@ -197,13 +198,15 @@ export default function PersistentDrawerLeft({
           <Typography variant="h6" noWrap>
             TOP Picks
           </Typography>
-          <div style={{ position: "absolute", right: 20, top: 0 }}>
-            <LanguageSelect
-              languages={languages}
-              currentLanguage={currentLanguage}
-              onLanguageChange={setCurrentLanguage}
-            />
-          </div>
+          {isAuthenticated && (
+            <div style={{ position: "absolute", right: 20, top: 0 }}>
+              <LanguageSelect
+                languages={languages}
+                currentLanguage={currentLanguage}
+                onLanguageChange={setCurrentLanguage}
+              />
+            </div>
+          )}
         </Toolbar>
         {loading && (
           <LinearProgress
@@ -228,7 +231,12 @@ export default function PersistentDrawerLeft({
         <List>
           {routers.map(
             (prop: any, key: number) =>
-              getCondition(userType, prop.path, isAuthenticated) && (
+              getCondition(
+                userType,
+                prop.path,
+                isAuthenticated,
+                currentLanguage
+              ) && (
                 <Link
                   to={prop.path}
                   style={{ textDecoration: "none" }}

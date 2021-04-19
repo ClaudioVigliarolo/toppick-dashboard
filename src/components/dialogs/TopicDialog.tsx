@@ -6,6 +6,7 @@ import { Category } from "../../interfaces/Interfaces";
 interface TopicDialogProps {
   topic: string;
   open: boolean;
+  placeholder?: string;
   onConfirm: (
     topicTitle: string,
     selectedCategoriesTitles: string[],
@@ -65,6 +66,7 @@ export default function TopicDialog(props: TopicDialogProps) {
             <TextField
               error={error}
               autoFocus
+              placeholder={props.placeholder}
               InputLabelProps={{ shrink: true }}
               margin="dense"
               label="text"

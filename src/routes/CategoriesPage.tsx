@@ -1,15 +1,43 @@
 import React from "react";
-import { COLORS } from "../constants/Colors";
-import { addReport, getCategories, getUpdates } from "../api/api";
-import { useParams } from "react-router-dom";
+import { getCategories } from "../api/api";
 import { Category, PageProps } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
+import CustomButton from "src/components/buttons/CustomButton";
+import SearchBar from "src/components/input/searchBar";
+import AddDialog from "../components/dialogs/CategoryDialog";
+import EditDialog from "../components/dialogs/CategoryDialog";
+import DeleteDialog from "../components/dialogs/ConfirmDialog";
+import { useAppStyles } from "../styles/common";
+
+import {
+  onCategoryAdd,
+  onCategoryDelete,
+  onCategoryUpdate,
+} from "src/utils/topics";
+import { getHash } from "src/utils/utils";
+
+const NO_CATEGORY: Category = {
+  id: -1,
+  title: "",
+};
+
 export default function ViewPage({
   token,
   currentLanguage,
   setLoading,
+  onError,
+  onSuccess,
 }: PageProps) {
   const [categories, setCategories] = React.useState<Category[]>([]);
+  const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
+  const [editDialog, setEditDialog] = React.useState<boolean>(false);
+  const [searchText, setSearchText] = React.useState<string>("");
+  const [addDialog, setAddDialog] = React.useState<boolean>(false);
+  const [currentCategory, setCurrentCategory] = React.useState<Category>(
+    NO_CATEGORY
+  );
+  const classes = useAppStyles();
+
   React.useEffect(() => {
     (async () => {
       setLoading(true);
@@ -20,12 +48,116 @@ export default function ViewPage({
       setLoading(false);
     })();
   }, [currentLanguage]);
+
+  const onEdit = (categ: Category) => {
+    setCurrentCategory(categ);
+    setEditDialog(true);
+  };
+
+  const onDelete = (categ: Category) => {
+    setCurrentCategory(categ);
+    setDeleteDialog(true);
+  };
+
   return (
-    <TableCategories
-      token={token}
-      categories={categories}
-      currentLanguage={currentLanguage}
-      setLoading={setLoading}
-    />
+    <>
+      <div className={classes.headerSection}>
+        <SearchBar
+          placeholder="Filter Topics"
+          setSearchText={(text) => setSearchText(text)}
+          searchText={searchText}
+        />
+        <div>
+          <CustomButton
+            onClick={() => setAddDialog(true)}
+            title="INSERT NEW CATEGORY"
+          />
+        </div>
+      </div>
+      <TableCategories
+        token={token}
+        categories={categories}
+        currentLanguage={currentLanguage}
+        searchText={searchText}
+        onDelete={onDelete}
+        onEdit={onEdit}
+      />
+
+      <AddDialog
+        category=""
+        headerText="Add new Category"
+        open={addDialog}
+        onConfirm={async (newTitle: string) => {
+          await onCategoryAdd(
+            {
+              id: getHash(newTitle),
+              title: newTitle,
+            },
+            categories,
+            currentLanguage,
+            token,
+            setCategories,
+            setLoading,
+            onSuccess,
+            onError
+          );
+          setEditDialog(false);
+          setCurrentCategory(NO_CATEGORY);
+        }}
+        onRefuse={() => {
+          setEditDialog(false);
+          setCurrentCategory(NO_CATEGORY);
+        }}
+      />
+
+      <EditDialog
+        open={editDialog}
+        onConfirm={(newTitle: string) => {
+          onCategoryUpdate(
+            {
+              title: newTitle,
+              id: currentCategory.id,
+            },
+            categories,
+            currentLanguage,
+            token,
+            setCategories,
+            setLoading,
+            onSuccess,
+            onError
+          );
+          setEditDialog(false);
+          setCurrentCategory(NO_CATEGORY);
+        }}
+        headerText="Editing Category"
+        onRefuse={() => {
+          setEditDialog(false);
+          setCurrentCategory(NO_CATEGORY);
+        }}
+        category={currentCategory.title}
+      />
+
+      <DeleteDialog
+        open={deleteDialog}
+        onConfirm={() => {
+          onCategoryDelete(
+            currentCategory.id,
+            categories,
+            currentLanguage,
+            token,
+            setCategories,
+            setLoading,
+            onSuccess,
+            onError
+          );
+          setDeleteDialog(false);
+        }}
+        title="Proceed to Delete the question?"
+        description="The question record will be removed from the main database. You cannot undo this operation"
+        onRefuse={() => {
+          setDeleteDialog(false);
+        }}
+      />
+    </>
   );
 }

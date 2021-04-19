@@ -1,10 +1,11 @@
-import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
+import React from "react";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import Button from "@material-ui/core/Button";
+import { Lang } from "src/interfaces/Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,17 +15,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
     select: {
       marginTop: theme.spacing(2),
-      color: 'orange',
+      color: "orange",
       fontSize: 22,
-      '&:before': {
-        borderColor: 'white',
+      "&:before": {
+        borderColor: "white",
       },
-      '&:after': {
-        borderColor: 'white',
+      "&:after": {
+        borderColor: "white",
       },
     },
     icon: {
-      fill: 'white',
+      fill: "white",
     },
   })
 );
@@ -34,12 +35,12 @@ export default function LanguageSelect({
   onLanguageChange,
   currentLanguage,
 }: {
-  languages: string[];
+  languages: Lang[];
   onLanguageChange(newLang: any): void;
-  currentLanguage: string;
+  currentLanguage: Lang;
 }) {
   const classes = useStyles();
-  const [language, setLanguage] = React.useState<string>('');
+  const [language, setLanguage] = React.useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
     setLanguage(event.target.value);
@@ -56,7 +57,7 @@ export default function LanguageSelect({
           displayEmpty
           className={classes.select}
           inputProps={{
-            'aria-label': 'Without label',
+            "aria-label": "Without label",
             classes: {
               icon: classes.icon,
             },
@@ -64,7 +65,7 @@ export default function LanguageSelect({
         >
           {languages.map((language: string) => (
             <MenuItem key={language} value={language}>
-              {language}
+              {language.toUpperCase()}
             </MenuItem>
           ))}
         </Select>

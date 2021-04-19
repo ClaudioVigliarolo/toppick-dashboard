@@ -1,5 +1,11 @@
 import React from "react";
-import { InputLabel, MenuItem, Select } from "@material-ui/core";
+import {
+  Icon,
+  InputLabel,
+  ListItemIcon,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 
 interface CustomSelectProps {
   value: string;
@@ -8,26 +14,35 @@ interface CustomSelectProps {
   values: string[];
   color?: string;
   header?: string;
+  width?: number;
 }
-export default function CustomSelect(props: CustomSelectProps) {
+export default function CustomSelect({
+  value,
+  defaultValue,
+  handleChange,
+  values,
+  color = "#fff",
+  header,
+  width = 200,
+}: CustomSelectProps) {
   return (
     <>
-      <InputLabel id="demo-mutiple-chip-label">{props.header}</InputLabel>
+      <InputLabel id="demo-mutiple-chip-label">{header}</InputLabel>
       <Select
         style={{
           textTransform: "capitalize",
-          width: 200,
+          width,
           fontSize: 20,
-          color: props.color ? props.color : "#fff",
+          color: color,
         }}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={props.value}
-        onChange={props.handleChange}
+        value={value}
+        onChange={handleChange}
         defaultValue=""
       >
-        <MenuItem value={props.defaultValue}>{props.defaultValue}</MenuItem>
-        {props.values.map((val: string, index: number) => (
+        <MenuItem value={defaultValue}>{defaultValue}</MenuItem>
+        {values.map((val: string, index: number) => (
           <MenuItem key={index} value={val}>
             {val}
           </MenuItem>

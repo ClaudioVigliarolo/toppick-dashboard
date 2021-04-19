@@ -1,48 +1,46 @@
 import React from "react";
+import { Lang } from "src/interfaces/Interfaces";
 import { getUser } from "../api/api";
+import { StatusContext } from "./StatusContext";
 
 export const AuthContext = React.createContext({
   isAuthenticated: false,
-  loading: false,
-  setLoading: (newVal: boolean) => {},
   setIsAuthenticated: (newVal: boolean) => {},
   setUserType: (newVal: string) => {},
   userType: "",
   setUsername: (newVal: string) => {},
   setEmail: (newVal: string) => {},
-  setUserLanguages: (newVals: string[]) => {},
+  setUserLanguages: (newLangs: Lang[]) => {},
   setUserToken: (newVal: string) => {},
-  setCurrentLanguage: (newVal: string) => {},
+  setCurrentLanguage: (newLang: Lang) => {},
   userToken: "",
   username: "",
   email: "",
-  userLanguages: [""],
-  currentLanguage: "",
+  languages: [Lang.EN],
+  currentLanguage: Lang.EN,
 });
 
 export const AuthProvider = ({ children }: { children: any }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [userLanguages, setUserLanguages] = React.useState<string[]>([]);
-  const [currentLanguage, setCurrentLanguage] = React.useState<string>("");
+  const [languages, setUserLanguages] = React.useState<Lang[]>([]);
+  const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(Lang.EN);
   const [userType, setUserType] = React.useState<string>("");
   const [username, setUsername] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [userToken, setUserToken] = React.useState<string>("");
+  const { setLoading } = React.useContext(StatusContext);
 
   React.useEffect(() => {
     (async () => {
+      setLoading(true);
       const storedJwt = localStorage.getItem("token");
-      const prevLanguage = localStorage.getItem("language");
-
-      if (storedJwt != null) {
+      const prevLanguage: any = localStorage.getItem("language");
+      if (storedJwt !== null && prevLanguage !== null) {
         const retrievedUser = await getUser(storedJwt);
         if (retrievedUser) {
           //the user was already authenticated, set up his data
           setUserLanguages(retrievedUser.languages);
-          setCurrentLanguage(
-            prevLanguage ? prevLanguage : retrievedUser.languages[0]
-          );
+          setCurrentLanguage(prevLanguage);
           setUsername(retrievedUser.username);
           setEmail(retrievedUser.email);
           setUserToken(retrievedUser.token);
@@ -50,6 +48,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
           setIsAuthenticated(true);
         }
       }
+      setLoading(false);
     })();
   }, []);
 
@@ -73,12 +72,12 @@ export const AuthProvider = ({ children }: { children: any }) => {
     setLoading(newVal);
   };
 
-  const onSetCurrentLanguage = (newLang: string) => {
+  const onSetCurrentLanguage = (newLang: Lang) => {
     localStorage.setItem("language", newLang);
     setCurrentLanguage(newLang);
   };
 
-  const onSetUserLangs = (newVals: string[]) => {
+  const onSetUserLangs = (newVals: Lang[]) => {
     setUserLanguages(newVals);
   };
   const onSetUserToken = (newVal: string) => {
@@ -89,8 +88,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        loading,
-        setLoading: onSetLoading,
         setIsAuthenticated: onSetIsAuthenticated,
         setUserType: onSetUserType,
         userType,
@@ -103,7 +100,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
         currentLanguage,
         username,
         email,
-        userLanguages,
+        languages,
       }}
     >
       {children}

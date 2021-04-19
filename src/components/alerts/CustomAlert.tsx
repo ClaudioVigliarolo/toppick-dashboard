@@ -17,6 +17,7 @@ export default function CustomAlert({
         alignSelf: "center",
         position: "fixed",
         bottom: 50,
+        left: "50%",
       }}
     >
       <Alert severity={type} variant="filled">

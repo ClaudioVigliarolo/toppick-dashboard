@@ -5,6 +5,7 @@ import { CONSTANTS as USER_CONSTANTS } from "../../constants/constants";
 import { addUser } from "../../api/api";
 import Chip from "../select/Chip";
 import { Form, useStyles } from "../input/Form";
+import { Lang } from "src/interfaces/Interfaces";
 
 interface UserDialogProps {
   open: boolean;
@@ -12,7 +13,7 @@ interface UserDialogProps {
     username: string,
     email: string,
     password: string,
-    languages: string[],
+    languages: Lang[],
     usertype?: string
   ) => void;
   onRefuse: any;
@@ -21,8 +22,8 @@ interface UserDialogProps {
   password: string;
   type: string;
   headerText: string;
-  languages: string[];
-  selectedLanguages: string[];
+  languages: Lang[];
+  selectedLanguages: Lang[];
 }
 
 export default function UserDialog({
@@ -43,7 +44,7 @@ export default function UserDialog({
   const [passwordState, setPasswordState] = React.useState<string>("");
 
   const [selectedLanguagesState, setSelectedLanguagesState] = React.useState<
-    string[]
+    Lang[]
   >([]);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -70,7 +71,7 @@ export default function UserDialog({
     onConfirm(usernameState, emailState, passwordState, selectedLanguagesState);
   };
 
-  const handleChange = (event: React.ChangeEvent<{ value: string[] }>) => {
+  const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
     setSelectedLanguagesState(event.target.value);
   };
 

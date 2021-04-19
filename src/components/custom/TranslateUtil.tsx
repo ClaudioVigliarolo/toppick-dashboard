@@ -1,24 +1,37 @@
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { Category, Topic } from "../../interfaces/Interfaces";
-import TransactionAlert from "../alerts/TransactionAlert";
+import {
+  Category,
+  Lang,
+  Topic,
+  ToTranslateTopic,
+} from "../../interfaces/Interfaces";
+
 import CustomButton from "../buttons/CustomButton";
 import TopicAddDialog from "../dialogs/TopicDialog";
-import Select from "../select/Select";
+import Select from "../select/TranslateSelect";
 import TextArea from "../input/NumberedTextarea";
 import QuestionsList from "../lists/QuestionsList";
 import {
   getCategoriesFromTitles,
   getRelatedFromTitle,
-  getTopicIdFromTitle,
+  ondeleteToTranslateTopic,
   onQuestionsAdd,
   onTopicAdd,
+  onTranslateQuestions,
 } from "src/utils/topics";
 import { COLORS } from "src/constants/Colors";
-import { getQuestionsByTopic } from "src/api/api";
+import { getHash } from "src/utils/utils";
+import { FormControlLabel, Switch } from "@material-ui/core";
 
 const MIN_QUESTIONS = -1;
-const NO_TOPIC = "Select A Topic";
+const NO_TOPIC_SELECTED = {
+  dest_lang: Lang.EN,
+  id: -1,
+  source_questions: [],
+  source_title: "Select a Topic To Translate",
+  topic_id: -1,
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,8 +79,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "space-between",
       flexDirection: "row",
-      width: 600,
-      marginBottom: 80,
     },
 
     headerText: {
@@ -89,80 +100,96 @@ const useStyles = makeStyles((theme: Theme) =>
     questionsListContainer: {
       marginTop: 50,
     },
+    switchContainer: {
+      marginBottom: 100,
+    },
   })
 );
 
 interface InsertTopicsPageProps {
   topics: Topic[];
   categories: Category[];
-  currentLanguage: string;
+  toTranslateTopics: ToTranslateTopic[];
+  currentLanguage: Lang;
   token: string;
   setLoading: (newVal: boolean) => void;
+  onSuccess: () => void;
+  onError: () => void;
 }
 export default function InsertTopicsPage(props: InsertTopicsPageProps) {
-  const [selectedTopic, setSelectedTopic] = React.useState<string>(NO_TOPIC);
+  const [
+    selectedTopicToTranslate,
+    setselectedTopicToTranslate,
+  ] = React.useState<ToTranslateTopic>(NO_TOPIC_SELECTED);
   const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
   const [questionsText, setQuestionsText] = React.useState<string>("");
   const [questionsArray, setQuestionsArray] = React.useState<string[]>([]);
+  const [toTranslateTopics, setToTranslateTopics] = React.useState<
+    ToTranslateTopic[]
+  >([]);
+
   const [error, setError] = React.useState(false);
-  const [isReview, setReview] = React.useState(false);
+  const [showGoogleTranslation, setShowGoogleTranslation] = React.useState(
+    false
+  );
+  const [googleTranslations, setGoogleTranslations] = React.useState<string>(
+    ""
+  );
+  const [isQuestionsTranslate, setIsQuestionsTraslate] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const classes = useStyles();
   const [topics, setTopics] = React.useState<Topic[]>([]);
 
   React.useEffect(() => {
     setTopics(props.topics);
-  }, [props.topics, props.categories]);
+    setToTranslateTopics(props.toTranslateTopics);
+  }, [props.toTranslateTopics, props.topics]);
 
   const onSubmitReview = (): void => {
     const questionsArray = questionsText.match(/[^\r\n]+/g);
-    setReview(true);
+    setIsQuestionsTraslate(true);
     questionsArray && setQuestionsArray(questionsArray);
   };
 
-  const handleTopicChange = async (
-    event: React.ChangeEvent<{ value: any }>
-  ) => {
-    setSelectedTopic(event.target.value);
-    if (event.target.value !== NO_TOPIC) {
-      props.setLoading(true);
-      const retrievedQuestions = await getQuestionsByTopic(
-        getTopicIdFromTitle(topics, event.target.value),
-        props.token
-      );
-      if (retrievedQuestions !== null) {
-        setQuestionsText(retrievedQuestions.map((q) => q.title).join("\n"));
-      }
-      props.setLoading(false);
-    }
+  const onSelectTranslate = (index: number) => {
+    setselectedTopicToTranslate(toTranslateTopics[index]);
+    setTopicAddDialog(true);
   };
 
-  const isReviewButtonVisible = () => {
+  const loadTranslations = (topicID: number) => {};
+
+  const isQuestionsTranslateButtonVisible = () => {
     const linesArr = questionsText.match(/[^\r\n]+/g);
     if (!linesArr) return false;
     return (
-      !isReview && selectedTopic != NO_TOPIC && linesArr.length > MIN_QUESTIONS
+      !isQuestionsTranslate &&
+      selectedTopicToTranslate != NO_TOPIC_SELECTED &&
+      linesArr.length > MIN_QUESTIONS
     );
   };
 
   const isTextareaVisible = () => {
-    return selectedTopic != NO_TOPIC && !isReview;
+    return isQuestionsTranslate;
   };
 
-  const isReviewListVisible = () => {
-    return isReview;
+  const isTranslationSwitchVisible = () => {
+    return isQuestionsTranslate;
   };
 
-  const isHeaderContainerVisible = () => {
-    return !isReview;
+  const isQuestionsTranslateListVisible = () => {
+    return isQuestionsTranslate;
+  };
+
+  const isSelectToTranslateVisible = () => {
+    return !isQuestionsTranslate;
   };
 
   const renderHeaderText = () => {
-    if (isReview) {
-      return "Step 3: Proofread before submitting  ";
-    } else if (selectedTopic !== NO_TOPIC) {
-      return "Step 2: Copy the text, take your time to translate it, when you are ready click the ready button ";
-    } else if (selectedTopic === NO_TOPIC) {
+    if (isQuestionsTranslate) {
+      return "Step 3: Now, translate the questions. When you are ready click Review";
+    } else if (selectedTopicToTranslate !== NO_TOPIC_SELECTED) {
+      return "Step 2: Translate the topic in the (target) language";
+    } else if (selectedTopicToTranslate === NO_TOPIC_SELECTED) {
       return "Let's start by selecting a Topic to translate ";
     }
   };
@@ -170,31 +197,63 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
     <div className={classes.container}>
       <h1 className={classes.headerText}>{renderHeaderText()}</h1>
 
-      {isHeaderContainerVisible() && (
+      {isSelectToTranslateVisible() && (
         <div className={classes.headerContainer}>
           <Select
-            handleChange={handleTopicChange}
-            value={selectedTopic}
-            values={props.topics.map((t) => t.title)}
-            defaultValue={NO_TOPIC}
-          />
-
-          <CustomButton
-            onClick={() => setTopicAddDialog(true)}
-            title="Create new Topic"
+            width={500}
+            onDelete={(i: number) =>
+              ondeleteToTranslateTopic(
+                toTranslateTopics[i].id,
+                toTranslateTopics,
+                setToTranslateTopics,
+                props.currentLanguage,
+                props.token
+              )
+            }
+            onSelect={onSelectTranslate}
+            value={selectedTopicToTranslate.source_title}
+            values={toTranslateTopics.map(
+              (t) => t.source_title + " (" + t.dest_lang.toUpperCase() + ")"
+            )}
+            defaultValue={NO_TOPIC_SELECTED.source_title}
           />
         </div>
       )}
-      {isTextareaVisible() && (
-        <TextArea
-          handleChange={(text) => {
-            setQuestionsText(text);
-          }}
-          placeholder="Type or paste your questions here (min: 10 lines)"
-          value={questionsText}
-        />
+
+      {isTranslationSwitchVisible() && (
+        <div className={classes.switchContainer}>
+          <FormControlLabel
+            value={showGoogleTranslation}
+            control={<Switch style={{ color: "white" }} />}
+            label="Show Original Text"
+            style={{
+              color: "white",
+            }}
+            onChange={() => setShowGoogleTranslation(!showGoogleTranslation)}
+          />
+        </div>
       )}
-      {isReviewListVisible() && (
+
+      {isTextareaVisible() &&
+        (showGoogleTranslation ? (
+          <TextArea
+            placeholder="Type or paste your questions here (min: 10 lines)"
+            value={googleTranslations}
+            handleChange={(text) => {
+              setGoogleTranslations(text);
+            }}
+          />
+        ) : (
+          <TextArea
+            handleChange={(text) => {
+              //cannot change the value of source text
+            }}
+            placeholder="Source text"
+            value={selectedTopicToTranslate.source_questions.join("\n")}
+          />
+        ))}
+
+      {isQuestionsTranslateListVisible() && (
         <div className={classes.questionsListContainer}>
           <QuestionsList
             questions={questionsArray}
@@ -202,7 +261,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
               <div className={classes.buttonContainer}>
                 <CustomButton
                   onClick={() => {
-                    setReview(false);
+                    setIsQuestionsTraslate(false);
                   }}
                   color="red"
                   title="Revert, change something"
@@ -211,17 +270,17 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
                   onClick={async () => {
                     await onQuestionsAdd(
                       questionsArray,
-                      selectedTopic,
+                      selectedTopicToTranslate.source_title,
                       topics,
                       props.currentLanguage,
                       props.token,
                       props.setLoading,
-                      setSuccess,
-                      setError
+                      props.onSuccess,
+                      props.onError
                     );
                     window.scrollTo(0, 0);
-                    setReview(false);
-                    setSelectedTopic(NO_TOPIC);
+                    setIsQuestionsTraslate(false);
+                    setselectedTopicToTranslate(NO_TOPIC_SELECTED);
                   }}
                   color={COLORS.blue}
                   title="Submit, everything's fine"
@@ -232,7 +291,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
         </div>
       )}
 
-      {isReviewButtonVisible() && (
+      {isQuestionsTranslateButtonVisible() && (
         <div className={classes.buttonContainer}>
           <CustomButton onClick={onSubmitReview} title="Submit For Review" />
         </div>
@@ -245,9 +304,10 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
         categories={props.categories.map((categ) => categ.title)}
         related={topics
           .map((topic) => topic.title)
-          .filter((s) => s != selectedTopic)}
+          .filter((s) => s != selectedTopicToTranslate.source_title)}
         headerText="Add New Topic"
         topic=""
+        placeholder={selectedTopicToTranslate.source_title}
         onConfirm={(
           newTitle: string,
           selectedCategoriesTitles: string[],
@@ -255,7 +315,7 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
         ) => {
           onTopicAdd(
             {
-              id: getTopicIdFromTitle(topics, selectedTopic),
+              id: getHash(newTitle),
               title: newTitle,
               related: getRelatedFromTitle(topics, selectedRelatedTitles),
               source: "TopPicks Creators",
@@ -270,19 +330,34 @@ export default function InsertTopicsPage(props: InsertTopicsPageProps) {
             props.token,
             setTopics,
             props.setLoading,
-            setSuccess,
-            setError
+            props.onSuccess,
+            props.onError
           );
 
-          setSelectedTopic(NO_TOPIC);
+          ondeleteToTranslateTopic(
+            selectedTopicToTranslate.id,
+            toTranslateTopics,
+            setToTranslateTopics,
+            props.currentLanguage,
+            props.token
+          );
+
+          onTranslateQuestions(
+            selectedTopicToTranslate.topic_id,
+            setGoogleTranslations,
+            props.currentLanguage,
+            props.token
+          );
+
+          setIsQuestionsTraslate(true);
+          setselectedTopicToTranslate(NO_TOPIC_SELECTED);
           setTopicAddDialog(false);
         }}
         onRefuse={() => {
-          setSelectedTopic(NO_TOPIC);
+          setselectedTopicToTranslate(NO_TOPIC_SELECTED);
           setTopicAddDialog(false);
         }}
       />
-      <TransactionAlert success={success} error={error} />
     </div>
   );
 }

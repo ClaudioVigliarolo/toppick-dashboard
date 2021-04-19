@@ -1,3 +1,5 @@
+import { CONSTANTS } from "src/constants/constants";
+
 export const getHash = (str: string) => {
   var hash = 0,
     i,

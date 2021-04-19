@@ -23,9 +23,11 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "axios": "0.21.1",
+    "d3-scale-chromatic": "2.0.0",
     "react": "16.13.1",
     "react-bootstrap": "^1.4.3",
     "react-dom": "16.13.1",
+    "react-jss": "10.6.0",
     "react-loading-overlay": "1.0.1",
     "react-router-dom": "^5.2.0",
     "react-window": "^1.8.6"

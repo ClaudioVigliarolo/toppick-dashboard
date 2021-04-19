@@ -2,11 +2,13 @@
 
 import {
   Category,
+  Lang,
   Question,
   Related,
   Report,
   ReportHandled,
   Topic,
+  ToTranslateTopic,
 } from "../interfaces/Interfaces";
 import {
   addCategory,
@@ -17,6 +19,8 @@ import {
   deleteQuestion,
   deleteReport,
   deleteTopic,
+  deleteToTranslateTopic,
+  getTranslatedQuestions,
   updateCategory,
   updateQuestion,
   updateTopic,
@@ -27,28 +31,25 @@ import { CONSTANTS } from "../constants/constants";
 export const onCategoryAdd = async (
   newCategory: Category,
   categories: Category[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setCategories: (categories: Category[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
   const val = await addCategory(newCategory, currentLanguage, token);
   const newCategories = categories;
   if (!val) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
+    onError();
     return;
   }
   newCategories.unshift(newCategory);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-
   setCategories([...newCategories]);
   setLoading(false);
+  onSuccess();
 };
 
 export const onCategoryUpdate = async (
@@ -58,25 +59,23 @@ export const onCategoryUpdate = async (
   token: string,
   setCategories: (categories: Category[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ) => {
   setLoading(true);
   const val = await updateCategory(category, currentLanguage, token);
   if (!val) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
+    onError();
     return;
   }
   const newCategories = categories;
   newCategories.forEach(function (item: Category) {
     if (item.id == category.id) item.title = category.title;
   });
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setCategories([...newCategories]);
   setLoading(false);
+  onSuccess();
 };
 
 export const onCategoryDelete = async (
@@ -86,22 +85,20 @@ export const onCategoryDelete = async (
   token: string,
   setCategories: (categories: Category[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ) => {
   setLoading(true);
   const val = await deleteCategory(id, currentLanguage, token);
   if (!val) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
+    onError();
     return;
   }
   const newCategories = categories.filter((categ: Category) => categ.id != id);
   setCategories([...newCategories]);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const onQuestionAdd = async (
@@ -111,8 +108,8 @@ export const onQuestionAdd = async (
   token: string,
   setQuestions: (categories: Question[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ) => {
   setLoading(true);
 
@@ -121,15 +118,13 @@ export const onQuestionAdd = async (
 
   if (!val) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
+    onError();
     return;
   }
   newQuestions.unshift(newQuestion);
   setQuestions([...newQuestions]);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const onQuestionUpdate = async (
@@ -139,16 +134,14 @@ export const onQuestionUpdate = async (
   token: string,
   setQuestions: (categories: Question[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ) => {
   setLoading(true);
   const val = await updateQuestion(question, currentLanguage, token);
   if (!val) {
-    setError(true);
     setLoading(false);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    return onError();
   }
   const newQuestions = questions;
   newQuestions.forEach(function (item: Question) {
@@ -159,11 +152,9 @@ export const onQuestionUpdate = async (
       item.timestamp = new Date();
     }
   });
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setQuestions([...newQuestions]);
-
   setLoading(false);
+  onSuccess();
 };
 
 export const onQuestionDelete = async (
@@ -173,22 +164,19 @@ export const onQuestionDelete = async (
   token: string,
   setQuestions: (categories: Question[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
   const val = await deleteQuestion(id, currentLanguage, token);
   if (!val) {
-    setError(true);
     setLoading(false);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    return onError();
   }
   const newQuestions = questions.filter((categ: Question) => categ.id != id);
   setQuestions([...newQuestions]);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const onTopicAdd = async (
@@ -198,17 +186,14 @@ export const onTopicAdd = async (
   token: string,
   setTopics: (topics: Topic[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
-
   const val = await addTopic(newTopic, currentLanguage, token);
   if (!val) {
-    setError(true);
     setLoading(false);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    return onError();
   }
   //new topic added successfully, add locally
   const newTopics = topics;
@@ -219,9 +204,8 @@ export const onTopicAdd = async (
   //push new updated arrays
   setTopics([...newTopics]);
 
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const getCategoriesFromTitles = (
@@ -261,7 +245,6 @@ export const getTopicIdFromTitle = (
       return topic.id;
     }
   });
-
   return selectedTopic ? selectedTopic.id : -1;
 };
 
@@ -272,16 +255,14 @@ export const onTopicUpdate = async (
   token: string,
   setTopics: (topics: Topic[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
   const val = await updateTopic(updatedTopic, currentLanguage, token);
   if (!val) {
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
     setLoading(false);
-    return;
+    return onError();
   }
   //new topic updated successfully, update locally
   const newTopics = topics;
@@ -297,9 +278,8 @@ export const onTopicUpdate = async (
   setTopics([...newTopics]);
 
   //newTopics.push({ title: topicTitle, id: categoryHash });
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const onTopicDelete = async (
@@ -309,24 +289,19 @@ export const onTopicDelete = async (
   token: string,
   setTopics: (topics: Topic[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
   const val = await deleteTopic(id, currentLanguage, token);
   if (!val) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    return onError();
   }
   const newTopics = topics.filter((topic: Topic) => topic.id != id);
   setTopics([...newTopics]);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const onReportEdit = async (
@@ -338,8 +313,8 @@ export const onReportEdit = async (
   token: string,
   setReports: (topics: ReportHandled[]) => void,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
   const val1 = await deleteReport(id, currentLanguage, token);
@@ -358,9 +333,8 @@ export const onReportEdit = async (
   );
 
   if (!val1 || !val2) {
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    setLoading(false);
+    return onError();
   }
 
   //update locally
@@ -370,8 +344,8 @@ export const onReportEdit = async (
 
   setReports([...newReports]);
 
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
+  setLoading(false);
+  onSuccess();
 };
 
 export const onReportDelete = async (
@@ -381,17 +355,15 @@ export const onReportDelete = async (
   currentLanguage: string,
   token: string,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ) => {
   setLoading(true);
   const val = await deleteReport(id, currentLanguage, token);
 
   if (!val) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    return onError();
   }
   //update locally
   const newReports = reports.filter(function (item: ReportHandled) {
@@ -399,9 +371,8 @@ export const onReportDelete = async (
   });
 
   setReports([...newReports]);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const onQuestionsAdd = async (
@@ -411,15 +382,15 @@ export const onQuestionsAdd = async (
   currentLanguage: string,
   token: string,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ) => {
   setLoading(true);
 
   const topic = topics.find((t) => t.title == selectTopic);
   if (!topic || questionsArray.length < 0) {
     setLoading(false);
-    return;
+    return onError();
   }
 
   const newQuestions: Question[] = questionsArray.map(
@@ -436,11 +407,47 @@ export const onQuestionsAdd = async (
 
   if (!val) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
+    return onError();
+  }
+
+  setLoading(false);
+  onSuccess();
+};
+
+export const ondeleteToTranslateTopic = async (
+  id: number,
+  toTranslateTopics: ToTranslateTopic[],
+  setToTranslateTopics: (toTranslateTopics: ToTranslateTopic[]) => void,
+  lang: Lang,
+  token: string
+) => {
+  const val = await deleteToTranslateTopic(id, lang, token);
+
+  if (!val) {
+    //unnecessary further error handling
     return;
   }
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-  setLoading(false);
+  //update locally
+  const newToTranslateTopics = toTranslateTopics.filter(function (
+    item: ToTranslateTopic
+  ) {
+    return item.id != id;
+  });
+
+  setToTranslateTopics([...newToTranslateTopics]);
+};
+
+export const onTranslateQuestions = async (
+  topicID: number,
+  setGoogleTranslations: (translatedQuestionsText: string) => void,
+  lang: Lang,
+  token: string
+) => {
+  const translations = await getTranslatedQuestions(topicID, lang, token);
+
+  if (!translations) {
+    //unnecessary further error handling
+    return;
+  }
+  setGoogleTranslations(translations.join("\n"));
 };

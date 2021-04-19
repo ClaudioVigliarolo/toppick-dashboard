@@ -11,25 +11,23 @@ export const onUserDelete = async (
   emailinfo: EmailInfo,
   token: string,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
   const val1 = await deleteUser(deletedUser.id, token);
   const val2 = await emailUser(emailtype, emailinfo, deletedUser, token);
 
   if (!val1 || !val2) {
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    setLoading(false);
+    return onError();
   }
   const newUsers = users.filter(
     (user: CreatedUser) => user.id != deletedUser.id
   );
   setUsers([...newUsers]);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setLoading(false);
+  onSuccess();
 };
 
 export const onUserUpdate = async (
@@ -40,8 +38,8 @@ export const onUserUpdate = async (
   emailinfo: EmailInfo,
   token: string,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
 
@@ -51,9 +49,7 @@ export const onUserUpdate = async (
 
   if (!val1 || !val2) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    return onError();
   }
   const newUsers = users;
   newUsers.forEach(function (u: CreatedUser) {
@@ -66,10 +62,9 @@ export const onUserUpdate = async (
     }
   });
 
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
   setUsers([...newUsers]);
   setLoading(false);
+  onSuccess();
 };
 
 export const onUserAdd = async (
@@ -80,27 +75,21 @@ export const onUserAdd = async (
   emailinfo: EmailInfo,
   token: string,
   setLoading: (val: boolean) => void,
-  setSuccess: (val: boolean) => void,
-  setError: (val: boolean) => void
+  onSuccess: () => void,
+  onError: () => void
 ): Promise<void> => {
   setLoading(true);
   const val1 = await addUser(newUser, token);
-
   const val2 = await emailUser(emailtype, emailinfo, newUser, token);
 
   if (!val1 || !val2) {
     setLoading(false);
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
-    return;
+    return onError();
   }
 
   const newUsers = users;
   newUsers.unshift(newUser);
-  setSuccess(true);
-  setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
-
   setUsers([...newUsers]);
-
   setLoading(false);
+  onSuccess();
 };

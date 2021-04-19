@@ -1,11 +1,17 @@
 import React from "react";
 import { login } from "../api/api";
-import TransactionAlert from "../components/alerts/TransactionAlert";
 import { Form, useStyles } from "../components/input/Form";
 import { AuthContext } from "../context/AuthContext";
 import { TextField } from "@material-ui/core";
 import { PageProps } from "../interfaces/Interfaces";
-export default function LoginPage({ setLoading }: PageProps) {
+export default function LoginPage({
+  setLoading,
+  onError,
+  onSuccess,
+  error,
+  loading,
+  success,
+}: PageProps) {
   const {
     setIsAuthenticated,
     setUserType,
@@ -14,20 +20,17 @@ export default function LoginPage({ setLoading }: PageProps) {
     setCurrentLanguage,
     userToken,
     setEmail,
-    loading,
   } = React.useContext(AuthContext);
 
   //renamed  setEmail to setEmailState for context function ovverriding problem
   const [emailState, setEmailState] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-  const [success, setSuccess] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<boolean>(false);
 
   const classes = useStyles();
 
   const onSubmit = async (): Promise<void> => {
     if (!emailState || !password) {
-      setError(true);
+      onError();
       return;
     }
     setLoading(true);
@@ -43,7 +46,7 @@ export default function LoginPage({ setLoading }: PageProps) {
       setIsAuthenticated(true);
       setLoading(false);
     } else {
-      setError(true);
+      onError();
       setLoading(false);
     }
   };
@@ -77,12 +80,6 @@ export default function LoginPage({ setLoading }: PageProps) {
             />
           </>
         }
-      />
-
-      <TransactionAlert
-        success={success}
-        error={error}
-        messageError="Authentication Failed"
       />
     </>
   );

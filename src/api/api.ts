@@ -8,11 +8,12 @@ import {
   Topic,
   LoggedUser,
   Email,
-  ReportResponse,
   UpdatesResponse,
   EmailType,
   LocalsEmail,
   EmailInfo,
+  ToTranslateTopic,
+  Lang,
 } from "../interfaces/Interfaces";
 import { HOSTNAME } from "../config/config";
 
@@ -64,6 +65,26 @@ export const getTopics = async (
       },
     });
     return response.status == 200 ? response.data.topics : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export const getToTranslateTopics = async (
+  lang: string,
+  token: string
+): Promise<ToTranslateTopic[] | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/topick/get_totranslate_topics/` + lang,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data.toTranslate : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -136,6 +157,32 @@ export const deleteTopic = async (
         Authorization: "Bearer " + token,
       },
     });
+    return response.status == 200;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+export const deleteToTranslateTopic = async (
+  id: number,
+  lang: Lang,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.delete(
+      `${HOSTNAME}/topick/delete_totranslate_topic`,
+      {
+        data: {
+          id,
+          lang,
+        },
+
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.status == 200;
   } catch (err) {
     console.log(err);
@@ -467,14 +514,14 @@ export const deleteQuestion = async (
 export const getReports = async (
   lang: string,
   token: string
-): Promise<ReportResponse | null> => {
+): Promise<ReportHandled[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/topick/get_reports/${lang}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status == 200 ? response.data.reports : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -567,5 +614,51 @@ export const getQuestionsByTopic = async (
   } catch (err) {
     console.error(err);
     return null;
+  }
+};
+
+export const getTranslatedQuestions = async (
+  id: number,
+  lang: string,
+  token: string
+): Promise<string[] | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/topick/get_translated_questions/${id}/${lang}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data.translations : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export const addToTranslateTopic = async (
+  id: number,
+  lang: string,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.post(
+      `${HOSTNAME}/topick/add_totranslate_topic`,
+      {
+        id,
+        lang,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200;
+  } catch (err) {
+    console.log(err);
+    return false;
   }
 };

@@ -10,6 +10,10 @@ interface CustomRouteProps {
   currentLanguage: string;
   setLoading: (newVal: boolean) => void;
   loading: boolean;
+  onError: () => void;
+  onSuccess: () => void;
+  error: boolean;
+  success: boolean;
 }
 
 const CustomRoute = ({
@@ -21,6 +25,10 @@ const CustomRoute = ({
   currentLanguage,
   setLoading,
   loading,
+  onError,
+  onSuccess,
+  error,
+  success,
 }: CustomRouteProps) => {
   return condition ? (
     <Route
@@ -32,6 +40,10 @@ const CustomRoute = ({
           currentLanguage={currentLanguage}
           setLoading={setLoading}
           loading={loading}
+          onError={onError}
+          onSuccess={onSuccess}
+          error={error}
+          success={success}
         />
       )}
     />

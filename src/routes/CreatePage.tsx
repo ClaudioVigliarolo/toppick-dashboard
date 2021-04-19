@@ -1,14 +1,44 @@
 import React from "react";
-import { getCategories, getTopics } from "../api/api";
+import {
+  addToTranslateTopic,
+  getCategories,
+  getQuestionsByTopic,
+  getTopics,
+} from "../api/api";
 import { Category, PageProps, Topic } from "../interfaces/Interfaces";
-import InsertUtil from "../components/custom/InsertUtil";
+import TopicAddDialog from "../components/dialogs/TopicDialog";
+import { useAppStyles } from "../styles/common";
+import Select from "src/components/select/Select";
+import CustomButton from "src/components/buttons/CustomButton";
+import TextArea from "src/components/input/NumberedTextarea";
+import QuestionsList from "src/components/lists/QuestionsList";
+import {
+  getCategoriesFromTitles,
+  getRelatedFromTitle,
+  getTopicIdFromTitle,
+  onQuestionsAdd,
+  onTopicAdd,
+} from "src/utils/topics";
+import { getHash } from "src/utils/utils";
+import { COLORS } from "src/constants/Colors";
+
+const MIN_QUESTIONS = -1;
+const NO_TOPIC = "Select A Topic";
 export default function CreatePage({
   token,
   currentLanguage,
   setLoading,
+  onError,
+  onSuccess,
 }: PageProps) {
+  const [selectedTopic, setSelectedTopic] = React.useState<string>(NO_TOPIC);
+  const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
+  const [questionsText, setQuestionsText] = React.useState<string>("");
+  const [questionsArray, setQuestionsArray] = React.useState<string[]>([]);
+  const [isReview, setReview] = React.useState(false);
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
+  const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
@@ -26,15 +56,183 @@ export default function CreatePage({
     })();
   }, [currentLanguage]);
 
+  const onSubmitReview = (): void => {
+    const questionsArray = questionsText.match(/[^\r\n]+/g);
+    setReview(true);
+    questionsArray && setQuestionsArray(questionsArray);
+  };
+
+  const handleTopicChange = async (
+    event: React.ChangeEvent<{ value: any }>
+  ) => {
+    setSelectedTopic(event.target.value);
+    if (event.target.value !== NO_TOPIC) {
+      setLoading(true);
+      const retrievedQuestions = await getQuestionsByTopic(
+        getTopicIdFromTitle(topics, event.target.value),
+        token
+      );
+      if (retrievedQuestions !== null) {
+        setQuestionsText(retrievedQuestions.map((q) => q.title).join("\n"));
+      }
+      setLoading(false);
+    }
+  };
+
+  const isReviewButtonVisible = () => {
+    const linesArr = questionsText.match(/[^\r\n]+/g);
+    if (!linesArr) return false;
+    return (
+      !isReview && selectedTopic != NO_TOPIC && linesArr.length > MIN_QUESTIONS
+    );
+  };
+
+  const isTextareaVisible = () => {
+    return selectedTopic != NO_TOPIC && !isReview;
+  };
+
+  const isReviewListVisible = () => {
+    return isReview;
+  };
+
+  const isHeaderSectionVisible = () => {
+    return !isReview;
+  };
+
+  const renderHeaderText = () => {
+    if (isReview) {
+      return "Step 3: Proofread before submitting  ";
+    } else if (selectedTopic !== NO_TOPIC) {
+      return "Step 2: Insert each question in a row ";
+    } else if (selectedTopic === NO_TOPIC) {
+      return "Let's start by picking a Topic ";
+    }
+  };
+
   return (
-    <>
-      <InsertUtil
-        setLoading={setLoading}
-        topics={topics}
-        categories={categories}
-        currentLanguage={currentLanguage}
-        token={token}
+    <div className={classes.container}>
+      <h1 className={classes.headerText}>{renderHeaderText()}</h1>
+
+      {isHeaderSectionVisible() && (
+        <div className={classes.headerSection}>
+          <Select
+            handleChange={handleTopicChange}
+            value={selectedTopic}
+            values={topics.map((t) => t.title)}
+            defaultValue={NO_TOPIC}
+          />
+
+          <CustomButton
+            onClick={() => setTopicAddDialog(true)}
+            title="Create new Topic"
+          />
+        </div>
+      )}
+      {isTextareaVisible() && (
+        <TextArea
+          handleChange={(text) => {
+            setQuestionsText(text);
+          }}
+          placeholder="Type or paste your questions here (min: 10 lines)"
+          value={questionsText}
+        />
+      )}
+      {isReviewListVisible() && (
+        <div className={classes.questionsListContainer}>
+          <QuestionsList
+            questions={questionsArray}
+            children={
+              <div className={classes.buttonContainer}>
+                <CustomButton
+                  onClick={() => {
+                    setReview(false);
+                  }}
+                  color="red"
+                  title="Revert, change something"
+                />
+                <CustomButton
+                  onClick={async () => {
+                    await onQuestionsAdd(
+                      questionsArray,
+                      selectedTopic,
+                      topics,
+                      currentLanguage,
+                      token,
+                      setLoading,
+                      async () => {
+                        await addToTranslateTopic(
+                          getTopicIdFromTitle(topics, selectedTopic),
+                          currentLanguage,
+                          token
+                        );
+                        onSuccess();
+                      },
+                      onError
+                    );
+                    //add translations
+                    window.scrollTo(0, 0);
+                    setReview(false);
+                    setSelectedTopic(NO_TOPIC);
+                  }}
+                  color={COLORS.blue}
+                  title="Submit, everything's fine"
+                />
+              </div>
+            }
+          />
+        </div>
+      )}
+
+      {isReviewButtonVisible() && (
+        <div className={classes.buttonContainer}>
+          <CustomButton onClick={onSubmitReview} title="Submit For Review" />
+        </div>
+      )}
+
+      <TopicAddDialog
+        open={topicAddDialog}
+        preselectedCategories={[]}
+        preselectedRelated={[]}
+        categories={categories.map((categ) => categ.title)}
+        related={topics
+          .map((topic) => topic.title)
+          .filter((s) => s != selectedTopic)}
+        headerText="Add New Topic"
+        topic=""
+        onConfirm={async (
+          newTitle: string,
+          selectedCategoriesTitles: string[],
+          selectedRelatedTitles: string[]
+        ) => {
+          await onTopicAdd(
+            {
+              id: getHash(newTitle),
+              title: newTitle,
+              related: getRelatedFromTitle(topics, selectedRelatedTitles),
+              source: "TopPicks Creators",
+              timestamp: new Date(),
+              categories: getCategoriesFromTitles(
+                categories,
+                selectedCategoriesTitles
+              ),
+            },
+            topics,
+            currentLanguage,
+            token,
+            setTopics,
+            setLoading,
+            onSuccess,
+            onError
+          );
+
+          setSelectedTopic(NO_TOPIC);
+          setTopicAddDialog(false);
+        }}
+        onRefuse={() => {
+          setSelectedTopic(NO_TOPIC);
+          setTopicAddDialog(false);
+        }}
       />
-    </>
+    </div>
   );
 }

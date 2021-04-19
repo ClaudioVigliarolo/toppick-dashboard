@@ -43,10 +43,6 @@ export interface Related {
   title: string;
 }
 
-export interface ReportResponse {
-  topics: Topic[];
-  reports: ReportHandled[];
-}
 export interface Question {
   id: number;
   topic_id: number;
@@ -75,7 +71,7 @@ export interface User {
   type: string;
   username: string;
   email: string;
-  languages: string[];
+  languages: Lang[];
 }
 export interface LoggedUser extends User {
   token: string;
@@ -89,9 +85,13 @@ export interface CreatedUser extends User {
 export interface PageProps {
   navigationProps: React.ComponentType<RouteProps>;
   token: string;
-  currentLanguage: string;
+  currentLanguage: Lang;
   loading: boolean;
   setLoading: (newVal: boolean) => void;
+  onError: () => void;
+  onSuccess: () => void;
+  error: boolean;
+  success: boolean;
 }
 
 export enum EmailType {
@@ -124,4 +124,17 @@ export interface EmailInfo {
   fromEmail: string;
   fromName: string;
   subject: string;
+}
+
+export enum Lang {
+  IT = "it",
+  EN = "en",
+}
+
+export interface ToTranslateTopic {
+  id: number;
+  topic_id: number;
+  dest_lang: Lang;
+  source_title: string;
+  source_questions: string[];
 }

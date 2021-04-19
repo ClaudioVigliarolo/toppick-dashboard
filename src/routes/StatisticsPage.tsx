@@ -2,7 +2,7 @@
 import React from "react";
 import { getCategories, getTopics } from "../api/api";
 import { Category, PageProps, Topic } from "../interfaces/Interfaces";
-import TranslateUtil from "../components/custom/TranslateUtil";
+import PieChart from "../components/custom/PieChart";
 export default function CreatePage({
   token,
   currentLanguage,
@@ -29,13 +29,7 @@ export default function CreatePage({
 
   return (
     <>
-      <TranslateUtil
-        setLoading={setLoading}
-        topics={topics}
-        categories={categories}
-        currentLanguage={currentLanguage}
-        token={token}
-      />
+      <PieChart />
     </>
   );
 }

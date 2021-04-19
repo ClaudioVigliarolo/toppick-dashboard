@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 
 import {
   withStyles,
   Theme,
   createStyles,
   makeStyles,
-} from '@material-ui/core/styles';
+} from "@material-ui/core/styles";
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import { COLORS } from '../../constants/Colors';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import { COLORS } from "../../constants/Colors";
 
 interface CommonStylesProps {
   body: any;
@@ -25,15 +25,15 @@ interface CommonStylesProps {
 export const StyledEditCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
-      backgroundColor: 'orange',
-      width: '100%',
+      backgroundColor: "orange",
+      width: "100%",
       color: theme.palette.common.white,
     },
     body: {
       fontSize: 18,
-      color: 'black',
-      position: 'relative',
-      paddingRight: '10%',
+      color: "black",
+      position: "relative",
+      paddingRight: "10%",
     },
   })
 )(TableCell);
@@ -41,7 +41,7 @@ export const StyledEditCell = withStyles((theme: Theme) =>
 export const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      '&:nth-of-type(odd)': {
+      "&:nth-of-type(odd)": {
         backgroundColor: theme.palette.action.hover,
       },
     },
@@ -51,8 +51,8 @@ export const StyledTableRow = withStyles((theme: Theme) =>
 export const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
-      backgroundColor: 'orange',
-      width: '100%',
+      backgroundColor: "orange",
+      width: "100%",
       color: theme.palette.common.white,
     },
     body: {
@@ -64,49 +64,44 @@ export const StyledTableCell = withStyles((theme: Theme) =>
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     table: {
-      width: '85%',
-      alignSelf: 'center',
-      backgroundColor: 'white',
+      width: "85%",
+      alignSelf: "center",
+      backgroundColor: "white",
     },
     root: {
-      padding: '2px 4px',
-      display: 'flex',
-      alignItems: 'center',
+      padding: "2px 4px",
+      display: "flex",
+      alignItems: "center",
       width: 300,
-      backgroundColor: 'white',
+      backgroundColor: "white",
     },
     editIcon: {
-      cursor: 'pointer',
+      cursor: "pointer",
       color: COLORS.primaryOrange,
     },
     ignoreIcon: {
-      cursor: 'pointer',
+      cursor: "pointer",
       color: COLORS.blue,
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
+      fontWeight: "bold",
+      textTransform: "uppercase",
     },
 
-    noItemsAlert: {
-      fontSize: 50,
-      color: '#fff',
-      textAlign: 'center',
-    },
     headerSection: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignSelf: 'center',
-      justifyContent: 'space-between',
+      display: "flex",
+      flexDirection: "row",
+      alignSelf: "center",
+      justifyContent: "space-between",
       marginBottom: 100,
       width: 700,
       padding: 20,
       borderRadius: 10,
       borderWidth: 5,
-      borderColor: 'transparent',
-      borderStyle: 'solid',
+      borderColor: "transparent",
+      borderStyle: "solid",
     },
 
     deleteIcon: {
-      cursor: 'pointer',
+      cursor: "pointer",
       color: COLORS.darkerOrange,
     },
 
@@ -123,15 +118,15 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
 
     iconsContainer: {
-      position: 'absolute',
+      position: "absolute",
       right: 30,
-      color: 'orange',
-      top: '30%',
-      cursor: 'pointer',
+      color: "orange",
+      top: "30%",
+      cursor: "pointer",
       width: 80,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
     },
   })
 );
@@ -143,9 +138,9 @@ export const CustomTable = (props: CommonStylesProps) => {
       <TableContainer
         component={Paper}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'column',
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
           backgroundColor: COLORS.primaryBackground,
         }}
       >
@@ -159,7 +154,7 @@ export const CustomTable = (props: CommonStylesProps) => {
           <TableHead>
             <TableRow
               style={{
-                color: '#fff',
+                color: "#fff",
                 backgroundColor: COLORS.darkerOrange,
               }}
             >
@@ -167,9 +162,9 @@ export const CustomTable = (props: CommonStylesProps) => {
                 <TableCell
                   key={index}
                   style={{
-                    color: '#fff',
+                    color: "#fff",
                     fontSize: 16,
-                    textTransform: 'uppercase',
+                    textTransform: "uppercase",
                   }}
                 >
                   {colName}
