@@ -6,6 +6,7 @@ interface TextAreaProps {
   handleChange: (text: string) => void;
   value: string;
   placeholder: string;
+  readOnly?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,12 +40,14 @@ export default function TextArea({
   placeholder,
   value,
   handleChange,
+  readOnly = false,
 }: TextAreaProps) {
   const classes = useStyles();
 
   return (
     <div style={{ backgroundColor: "white", transform: "scale(1.2)" }}>
       <textarea
+        readOnly={readOnly}
         className={classes.textArea}
         value={value}
         onChange={(e) => {

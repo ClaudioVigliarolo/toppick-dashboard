@@ -142,14 +142,14 @@ export const updateTopic = async (
 };
 
 export const deleteTopic = async (
-  id: number,
+  ref_id: number,
   lang: string,
   token: string
 ): Promise<boolean> => {
   try {
     const response = await axios.delete(`${HOSTNAME}/topick/delete_topic`, {
       data: {
-        id,
+        ref_id,
         lang,
       },
 
@@ -288,14 +288,14 @@ export const emailUser = async (
 };
 
 export const deleteCategory = async (
-  id: number,
+  ref_id: number,
   lang: string,
   token: string
 ): Promise<boolean> => {
   try {
     const response = await axios.delete(`${HOSTNAME}/topick/delete_category`, {
       data: {
-        id,
+        ref_id,
         lang,
       },
 
@@ -468,14 +468,14 @@ export const updateQuestion = async (
 };
 
 export const deleteReport = async (
-  id: number,
+  question_id: number,
   lang: string,
   token: string
 ): Promise<boolean> => {
   try {
     const response = await axios.delete(`${HOSTNAME}/topick/delete_report`, {
       data: {
-        id,
+        question_id,
         lang,
       },
       headers: {
@@ -617,14 +617,14 @@ export const getQuestionsByTopic = async (
   }
 };
 
-export const getTranslatedQuestions = async (
+export const getGoogleTranslatedQuestions = async (
   id: number,
   lang: string,
   token: string
 ): Promise<string[] | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topick/get_translated_questions/${id}/${lang}`,
+      `${HOSTNAME}/topick/get_google_translated_questions/${id}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,

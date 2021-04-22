@@ -1,6 +1,6 @@
 import React from "react";
-import { getCategories } from "../api/api";
-import { Category, PageProps } from "../interfaces/Interfaces";
+import { addReport, getCategories } from "../api/api";
+import { Category, PageProps, Report } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
 import CustomButton from "src/components/buttons/CustomButton";
 import SearchBar from "src/components/input/searchBar";
@@ -18,6 +18,7 @@ import { getHash } from "src/utils/utils";
 
 const NO_CATEGORY: Category = {
   id: -1,
+  ref_id: -1,
   title: "",
 };
 
@@ -38,6 +39,12 @@ export default function ViewPage({
   );
   const classes = useAppStyles();
 
+  const newReport: Report = {
+    question_id: 400347,
+    reason: "sudicio",
+    client_id: "1324243",
+  };
+
   React.useEffect(() => {
     (async () => {
       setLoading(true);
@@ -46,6 +53,7 @@ export default function ViewPage({
         setCategories(retrievedCategories);
       }
       setLoading(false);
+      addReport(newReport, "en");
     })();
   }, [currentLanguage]);
 
@@ -90,8 +98,9 @@ export default function ViewPage({
         onConfirm={async (newTitle: string) => {
           await onCategoryAdd(
             {
-              id: getHash(newTitle),
+              id: getHash(newTitle, currentLanguage),
               title: newTitle,
+              ref_id: getHash(newTitle, currentLanguage),
             },
             categories,
             currentLanguage,
@@ -117,6 +126,7 @@ export default function ViewPage({
             {
               title: newTitle,
               id: currentCategory.id,
+              ref_id: currentCategory.ref_id,
             },
             categories,
             currentLanguage,
@@ -141,7 +151,7 @@ export default function ViewPage({
         open={deleteDialog}
         onConfirm={() => {
           onCategoryDelete(
-            currentCategory.id,
+            currentCategory.ref_id,
             categories,
             currentLanguage,
             token,

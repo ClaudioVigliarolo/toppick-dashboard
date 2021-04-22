@@ -20,7 +20,7 @@ import {
   deleteReport,
   deleteTopic,
   deleteToTranslateTopic,
-  getTranslatedQuestions,
+  getGoogleTranslatedQuestions,
   updateCategory,
   updateQuestion,
   updateTopic,
@@ -79,7 +79,7 @@ export const onCategoryUpdate = async (
 };
 
 export const onCategoryDelete = async (
-  id: number,
+  ref_id: number,
   categories: Category[],
   currentLanguage: string,
   token: string,
@@ -89,13 +89,15 @@ export const onCategoryDelete = async (
   onError: () => void
 ) => {
   setLoading(true);
-  const val = await deleteCategory(id, currentLanguage, token);
+  const val = await deleteCategory(ref_id, currentLanguage, token);
   if (!val) {
     setLoading(false);
     onError();
     return;
   }
-  const newCategories = categories.filter((categ: Category) => categ.id != id);
+  const newCategories = categories.filter(
+    (categ: Category) => categ.ref_id !== ref_id
+  );
   setCategories([...newCategories]);
   setLoading(false);
   onSuccess();
@@ -214,9 +216,13 @@ export const getCategoriesFromTitles = (
 ) => {
   const updatedCategories: Category[] = [];
   selectedCategoriesTitles.forEach((title: string) => {
-    const id = categories.find((x) => x.title === title)?.id;
-    if (id) {
-      updatedCategories.push({ id, title });
+    const category = categories.find((x) => x.title === title);
+    if (category) {
+      updatedCategories.push({
+        id: category.id,
+        title: category.title,
+        ref_id: category.ref_id,
+      });
     }
   });
   return updatedCategories;
@@ -228,9 +234,13 @@ export const getRelatedFromTitle = (
 ) => {
   const newRelated: Related[] = [];
   selectedRelatedTitles.forEach((title: string) => {
-    const id = topics.find((x) => x.title === title)?.id;
-    if (id) {
-      newRelated.push({ id, title });
+    const topic = topics.find((x) => x.title === title);
+    if (topic) {
+      newRelated.push({
+        id: topic.id,
+        title: topic.title,
+        ref_id: topic.ref_id,
+      });
     }
   });
   return newRelated;
@@ -283,7 +293,7 @@ export const onTopicUpdate = async (
 };
 
 export const onTopicDelete = async (
-  id: number,
+  ref_id: number,
   topics: Topic[],
   currentLanguage: string,
   token: string,
@@ -293,63 +303,19 @@ export const onTopicDelete = async (
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
-  const val = await deleteTopic(id, currentLanguage, token);
+  const val = await deleteTopic(ref_id, currentLanguage, token);
   if (!val) {
     setLoading(false);
     return onError();
   }
-  const newTopics = topics.filter((topic: Topic) => topic.id != id);
+  const newTopics = topics.filter((topic: Topic) => topic.ref_id != ref_id);
   setTopics([...newTopics]);
   setLoading(false);
   onSuccess();
 };
 
-export const onReportEdit = async (
-  currentReport: any,
-  id: number,
-  reports: ReportHandled[],
-  newQuestion: string,
-  currentLanguage: string,
-  token: string,
-  setReports: (topics: ReportHandled[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-): Promise<void> => {
-  setLoading(true);
-  const val1 = await deleteReport(id, currentLanguage, token);
-
-  //2 update the question with new content
-  const val2 = await updateQuestion(
-    {
-      id: currentReport.question_id,
-      timestamp: new Date(),
-      title: newQuestion,
-      topic_id: currentReport.topic_id,
-      topic_title: currentReport.topic_title,
-    },
-    currentLanguage,
-    token
-  );
-
-  if (!val1 || !val2) {
-    setLoading(false);
-    return onError();
-  }
-
-  //update locally
-  const newReports = reports.filter(function (item: ReportHandled) {
-    return item.id != id;
-  });
-
-  setReports([...newReports]);
-
-  setLoading(false);
-  onSuccess();
-};
-
 export const onReportDelete = async (
-  id: number,
+  question_id: number,
   reports: ReportHandled[],
   setReports: (reports: ReportHandled[]) => void,
   currentLanguage: string,
@@ -359,7 +325,7 @@ export const onReportDelete = async (
   onError: () => void
 ) => {
   setLoading(true);
-  const val = await deleteReport(id, currentLanguage, token);
+  const val = await deleteReport(question_id, currentLanguage, token);
 
   if (!val) {
     setLoading(false);
@@ -367,7 +333,7 @@ export const onReportDelete = async (
   }
   //update locally
   const newReports = reports.filter(function (item: ReportHandled) {
-    return item.id != id;
+    return item.question_id != question_id;
   });
 
   setReports([...newReports]);
@@ -435,19 +401,4 @@ export const ondeleteToTranslateTopic = async (
   });
 
   setToTranslateTopics([...newToTranslateTopics]);
-};
-
-export const onTranslateQuestions = async (
-  topicID: number,
-  setGoogleTranslations: (translatedQuestionsText: string) => void,
-  lang: Lang,
-  token: string
-) => {
-  const translations = await getTranslatedQuestions(topicID, lang, token);
-
-  if (!translations) {
-    //unnecessary further error handling
-    return;
-  }
-  setGoogleTranslations(translations.join("\n"));
 };

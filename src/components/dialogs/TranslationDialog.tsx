@@ -2,9 +2,14 @@ import React from "react";
 import { CustomDialog } from "./DialogStyles";
 import Chip from "../select/Chip";
 import { TextField } from "@material-ui/core";
+
 interface TopicDialogProps {
   topic: string;
   open: boolean;
+  placeholderTitle?: string;
+  placeholderCategories?: string;
+  placeholderRelated?: string;
+
   onConfirm: (
     topicTitle: string,
     selectedCategoriesTitles: string[],
@@ -16,10 +21,6 @@ interface TopicDialogProps {
   preselectedRelated: string[];
   headerText: string;
   related: string[];
-
-  placeholderTitle?: string;
-  placeholderCategories?: string;
-  placeholderRelated?: string;
 }
 
 export default function TopicDialog(props: TopicDialogProps) {
@@ -81,11 +82,7 @@ export default function TopicDialog(props: TopicDialogProps) {
               width={300}
               selectedValues={selectedCategories}
               values={props.categories}
-              header={
-                props.placeholderCategories
-                  ? props.placeholderCategories
-                  : "Related Categories"
-              }
+              header="Related Categories"
               error={error}
               handleChange={handleCategoriesChange}
             />
@@ -94,11 +91,7 @@ export default function TopicDialog(props: TopicDialogProps) {
               width={300}
               selectedValues={selectedRelated}
               values={props.related}
-              header={
-                props.placeholderRelated
-                  ? props.placeholderRelated
-                  : "Related Topics"
-              }
+              header="Related Topics"
               error={error}
               handleChange={handleRelatedChange}
             />

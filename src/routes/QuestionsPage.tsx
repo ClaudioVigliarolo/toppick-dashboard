@@ -123,10 +123,12 @@ export default function ViewPage({
           setSearchText={(text) => setSearchText(text)}
           searchText={searchText}
         />
-        <CustomButton
-          onClick={() => setQuestionAddDialog(true)}
-          title="INSERT NEW QUESTION"
-        />
+        <div>
+          <CustomButton
+            onClick={() => setQuestionAddDialog(true)}
+            title="INSERT NEW QUESTION"
+          />
+        </div>
       </div>
 
       <TableQuestions

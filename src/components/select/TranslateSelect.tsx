@@ -45,7 +45,7 @@ export default function TranslateSelect({
               onSelect(index);
             }}
           >
-            {val}(
+            {val}
             <ListItemText
               onClick={(e) => {
                 onDelete(index);
@@ -65,7 +65,6 @@ export default function TranslateSelect({
             >
               Remove
             </ListItemText>
-            )
           </MenuItem>
         ))}
       </Select>

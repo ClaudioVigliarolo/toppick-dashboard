@@ -22,8 +22,8 @@ const NO_REPORT: ReportHandled = {
   timestamp: new Date(),
   question_title: "",
   topic_title: "",
-  user_id: "",
-  id: -1,
+  client_id: "",
+  username: "",
   topic_id: -1,
 };
 
@@ -80,7 +80,7 @@ export default function ReportsPage({
 
   const onIgnore = (report: ReportHandled) => {
     onReportDelete(
-      report.id,
+      report.question_id,
       reports,
       setReports,
       currentLanguage,
@@ -112,7 +112,7 @@ export default function ReportsPage({
         <TableReports
           reports={reports}
           topics={topics}
-          filterTopic={filterTopic}
+          filterTopic={filterTopic === NO_TOPIC ? "" : filterTopic}
           onDelete={onDelete}
           onEdit={onEdit}
           searchText={searchText}
@@ -127,7 +127,7 @@ export default function ReportsPage({
         onConfirm={async () => {
           // delete report, delete question
           await onReportDelete(
-            currentReport.id,
+            currentReport.question_id,
             reports,
             setReports,
             currentLanguage,
@@ -137,7 +137,7 @@ export default function ReportsPage({
             onError
           );
           await onQuestionDelete(
-            currentReport.id,
+            currentReport.question_id,
             [],
             currentLanguage,
             token,
@@ -161,7 +161,7 @@ export default function ReportsPage({
         open={editDialog}
         onConfirm={async (newQuestion: string) => {
           await onReportDelete(
-            currentReport.id,
+            currentReport.question_id,
             reports,
             setReports,
             currentLanguage,
@@ -173,7 +173,7 @@ export default function ReportsPage({
 
           await onQuestionUpdate(
             {
-              id: currentReport.id,
+              id: currentReport.question_id,
               title: newQuestion,
               timestamp: new Date(),
               topic_id: currentReport.topic_id,
@@ -191,7 +191,7 @@ export default function ReportsPage({
           setCurrentReport(NO_REPORT);
           setEditDialog(false);
         }}
-        id={currentReport.id}
+        id={currentReport.question_id}
         header="Editing question"
         title={currentReport.question_title}
         onRefuse={() => {

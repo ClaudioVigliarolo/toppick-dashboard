@@ -1,6 +1,7 @@
 import { CONSTANTS } from "src/constants/constants";
 
-export const getHash = (str: string) => {
+export const getHash = (str1: string, str2: string = "") => {
+  const str = str1 + "*" + str2;
   var hash = 0,
     i,
     chr;
@@ -27,4 +28,23 @@ export const getFormattedDate = (inputDate: any): string => {
 
 export const getCurrentTime = (): string => {
   return new Date().toISOString();
+};
+
+export const countTextLines = (inputText: string): number => {
+  if (!inputText) return 0;
+  const lines = inputText.match(/[^\r\n]+/g);
+  return lines ? lines.length : 0;
+};
+
+export const getLinesFromText = (inputText: string): string[] => {
+  if (!inputText) return [];
+  const lines = inputText.match(/[^\r\n]+/g);
+  return lines ? lines : [];
+};
+
+export const getTextFromLines = (inputText: string[]): string => {
+  return "";
+  /*if (!inputText) return [];
+  const lines = inputText.match(/[^\r\n]+/g);
+  return lines ? lines : [];*/
 };

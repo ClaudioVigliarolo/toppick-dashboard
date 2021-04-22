@@ -27,6 +27,7 @@ interface TableReportsProps {
   onIgnore: (report: ReportHandled) => void;
   searchText: string;
 }
+const NO_TOPIC = "Filter by topic";
 
 export default function TableCategories({
   searchText,
@@ -44,13 +45,14 @@ export default function TableCategories({
       if (
         report.question_title
           .toLowerCase()
-          .includes(searchText.toLowerCase()) ||
-        report.topic_title == filterTopic
+          .includes(searchText.toLowerCase()) &&
+        report.topic_title.includes(filterTopic)
       ) {
         return (
           <StyledTableRow key={index}>
             <StyledTableCell>{report.topic_title}</StyledTableCell>
             <StyledTableCell>{report.question_title}</StyledTableCell>
+            <StyledTableCell>{report.username}</StyledTableCell>
             <StyledEditCell>
               {report.reason}
               <div style={{ width: 150 }} className={classes.iconsContainer}>
@@ -83,8 +85,8 @@ export default function TableCategories({
   };
   return (
     <CustomTable
-      columns={["25%", "50%", "25%"]}
-      columnNames={["topic", "question", "reason"]}
+      columns={["15%", "35%", "25%", "25%"]}
+      columnNames={["topic", "question", "username", "reason"]}
       body={renderRows(reports)}
     />
   );

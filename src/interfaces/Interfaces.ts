@@ -1,36 +1,36 @@
 import { RouteProps } from "react-router-dom";
 
 export interface Topic {
-  title: string;
   id: number;
+  ref_id: number;
+  title: string;
   source: string;
   timestamp: Date;
-  related: Related[];
   categories: Category[];
+  related: Related[];
 }
 
 export interface Category {
   title: string;
   id: number;
+  ref_id: number;
 }
 
 //report coming from the external world
 export interface Report {
-  user_id: string;
+  client_id: string;
   question_id: number;
   reason: string;
 }
 
 //report handled by the app
 export interface ReportHandled extends Report {
+  username: string;
   question_title: string;
-  topic_title: string;
   timestamp: Date;
-  id: number;
   topic_id: number;
+  topic_title: string;
 }
-
-export interface TopicRespo {}
 
 export interface CategoryTopic {
   category_id: number;
@@ -41,6 +41,7 @@ export interface CategoryTopic {
 export interface Related {
   id: number;
   title: string;
+  ref_id: number;
 }
 
 export interface Question {
@@ -133,8 +134,10 @@ export enum Lang {
 
 export interface ToTranslateTopic {
   id: number;
+  ref_id: number;
   topic_id: number;
   dest_lang: Lang;
   source_title: string;
-  source_questions: string[];
+  source_related: Related[];
+  source_categories: Category[];
 }

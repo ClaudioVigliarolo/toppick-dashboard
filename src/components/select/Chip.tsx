@@ -74,6 +74,7 @@ export default function CustomChip(props: CustomChipProps) {
           style={{ width: props.width }}
           value={props.selectedValues}
           onChange={props.handleChange}
+          placeholder="cazzo amaro"
           input={<Input id="select-multiple-chip" />}
           renderValue={(selected: any) => (
             <div className={classes.chips}>

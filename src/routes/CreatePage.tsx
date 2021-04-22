@@ -19,7 +19,7 @@ import {
   onQuestionsAdd,
   onTopicAdd,
 } from "src/utils/topics";
-import { getHash } from "src/utils/utils";
+import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";
 
 const MIN_QUESTIONS = -1;
@@ -53,13 +53,13 @@ export default function CreatePage({
         setTopics(retrievedTopics);
       }
       setLoading(false);
+      setSelectedTopic(NO_TOPIC);
     })();
   }, [currentLanguage]);
 
   const onSubmitReview = (): void => {
-    const questionsArray = questionsText.match(/[^\r\n]+/g);
     setReview(true);
-    questionsArray && setQuestionsArray(questionsArray);
+    setQuestionsArray(getLinesFromText(questionsText));
   };
 
   const handleTopicChange = async (
@@ -80,10 +80,10 @@ export default function CreatePage({
   };
 
   const isReviewButtonVisible = () => {
-    const linesArr = questionsText.match(/[^\r\n]+/g);
-    if (!linesArr) return false;
     return (
-      !isReview && selectedTopic != NO_TOPIC && linesArr.length > MIN_QUESTIONS
+      !isReview &&
+      selectedTopic != NO_TOPIC &&
+      countTextLines(questionsText) > MIN_QUESTIONS
     );
   };
 
@@ -108,7 +108,9 @@ export default function CreatePage({
       return "Let's start by picking a Topic ";
     }
   };
-
+  {
+    console.log("suso", selectedTopic);
+  }
   return (
     <div className={classes.container}>
       <h1 className={classes.headerText}>{renderHeaderText()}</h1>
@@ -206,27 +208,29 @@ export default function CreatePage({
         ) => {
           await onTopicAdd(
             {
-              id: getHash(newTitle),
+              id: getHash(newTitle, currentLanguage),
               title: newTitle,
               related: getRelatedFromTitle(topics, selectedRelatedTitles),
-              source: "TopPicks Creators",
+              source: "TopPicks, " + "username",
               timestamp: new Date(),
               categories: getCategoriesFromTitles(
                 categories,
                 selectedCategoriesTitles
               ),
+              ref_id: getHash(newTitle, currentLanguage),
             },
             topics,
             currentLanguage,
             token,
             setTopics,
             setLoading,
-            onSuccess,
+            () => {
+              setSelectedTopic(newTitle);
+              setTopicAddDialog(false);
+              onSuccess();
+            },
             onError
           );
-
-          setSelectedTopic(NO_TOPIC);
-          setTopicAddDialog(false);
         }}
         onRefuse={() => {
           setSelectedTopic(NO_TOPIC);

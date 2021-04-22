@@ -25,6 +25,7 @@ const NO_TOPIC: Topic = {
   source: "",
   timestamp: new Date(),
   title: "",
+  ref_id: -1,
 };
 
 export default function ViewPage({
@@ -117,6 +118,7 @@ export default function ViewPage({
                 categories,
                 selectedCategoriesTitles
               ),
+              ref_id: currentTopic.ref_id,
             },
             topics,
             currentLanguage,
@@ -153,7 +155,7 @@ export default function ViewPage({
         ) => {
           onTopicAdd(
             {
-              id: getHash(newTitle),
+              id: getHash(newTitle, currentLanguage),
               title: newTitle,
               related: getRelatedFromTitle(topics, selectedRelatedTitles),
               source: "TopPicks Creators",
@@ -162,6 +164,7 @@ export default function ViewPage({
                 categories,
                 selectedCategoriesTitles
               ),
+              ref_id: getHash(newTitle, currentLanguage),
             },
             topics,
             currentLanguage,
@@ -183,7 +186,7 @@ export default function ViewPage({
         open={deleteDialog}
         onConfirm={() => {
           onTopicDelete(
-            currentTopic.id,
+            currentTopic.ref_id,
             topics,
             currentLanguage,
             token,

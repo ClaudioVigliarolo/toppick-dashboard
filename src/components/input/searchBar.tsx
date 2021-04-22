@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import { COLORS } from '../../constants/Colors';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import { Paper } from '@material-ui/core';
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import { COLORS } from "../../constants/Colors";
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+import { Paper } from "@material-ui/core";
 
 interface SearchBarProps {
   setSearchText: (text: string) => void;
@@ -16,20 +16,20 @@ interface SearchBarProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     table: {
-      width: '85%',
-      alignSelf: 'center',
-      backgroundColor: 'white',
+      width: "85%",
+      alignSelf: "center",
+      backgroundColor: "white",
     },
     root: {
-      padding: '2px 4px',
-      display: 'flex',
-      alignItems: 'center',
+      padding: "2px 4px",
+      display: "flex",
+      alignItems: "center",
       width: 300,
-      backgroundColor: 'white',
+      backgroundColor: "white",
     },
 
     deleteIcon: {
-      cursor: 'pointer',
+      cursor: "pointer",
       color: COLORS.darkerOrange,
     },
 
@@ -53,11 +53,7 @@ export default function SearchBar(props: SearchBarProps) {
   return (
     <Paper component="form" className={classes.root}>
       <div>
-        <IconButton
-          type="submit"
-          className={classes.iconButton}
-          aria-label="search"
-        >
+        <IconButton className={classes.iconButton} aria-label="search">
           <SearchIcon />
         </IconButton>
         <InputBase
@@ -65,7 +61,7 @@ export default function SearchBar(props: SearchBarProps) {
           placeholder={props.placeholder}
           value={props.searchText}
           onChange={(e) => props.setSearchText(e.currentTarget.value)}
-          inputProps={{ 'aria-label': 'search google maps' }}
+          inputProps={{ "aria-label": "search google maps" }}
         />
       </div>
     </Paper>
