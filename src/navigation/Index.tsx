@@ -71,8 +71,11 @@ export const Navigation = () => {
   } = React.useContext(StatusContext);
 
   React.useEffect(() => {
-    //console.log("ggg", getUpdates("Sun May 11,2014", "en", 1234));
+    (async () => {
+      console.log("ggg", await getUpdates("Sun May 11,2014", "it", 1234));
+    })();
   }, []);
+
   return (
     <Menu
       loading={loading}

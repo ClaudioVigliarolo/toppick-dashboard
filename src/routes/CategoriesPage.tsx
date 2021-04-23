@@ -39,12 +39,6 @@ export default function ViewPage({
   );
   const classes = useAppStyles();
 
-  const newReport: Report = {
-    question_id: 400347,
-    reason: "sudicio",
-    client_id: "1324243",
-  };
-
   React.useEffect(() => {
     (async () => {
       setLoading(true);
@@ -53,7 +47,6 @@ export default function ViewPage({
         setCategories(retrievedCategories);
       }
       setLoading(false);
-      addReport(newReport, "en");
     })();
   }, [currentLanguage]);
 
