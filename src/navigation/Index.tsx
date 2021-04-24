@@ -32,7 +32,7 @@ export const getCondition = (
       return isAuthenticated && userType == "root";
 
     case "/translate": //userType == "translated"
-      return isAuthenticated && lang !== Lang.EN && userType == "root";
+      return isAuthenticated && lang !== Lang.EN;
 
     case "/categories":
       return isAuthenticated;
