@@ -117,7 +117,7 @@ export default function UsersPage({
             EmailType.Registration,
             {
               email,
-              fromEmail: email,
+              fromEmail: "claudio.vigliarolo.dev@gmail.com",
               fromName: "Top Picks",
               subject: "Registration",
             },
