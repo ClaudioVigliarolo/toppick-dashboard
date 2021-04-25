@@ -63,10 +63,27 @@ export const StyledTableCell = withStyles((theme: Theme) =>
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    tableContainer: {
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      backgroundColor: COLORS.primaryBackground,
+    },
     table: {
       width: "85%",
       alignSelf: "center",
       backgroundColor: "white",
+      minWidth: 900,
+      "@media (max-width: 1400px)": {
+        marginLeft: 100,
+        marginRight: 100,
+        paddingLeft: 50,
+        paddingRight: 50,
+      },
+      "@media (max-width: 500px)": {
+        marginLeft: 600,
+        marginRight: 200,
+      },
     },
     root: {
       padding: "2px 4px",
@@ -135,15 +152,7 @@ export const CustomTable = (props: CommonStylesProps) => {
   const classes = useStyles();
   return (
     <>
-      <TableContainer
-        component={Paper}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "column",
-          backgroundColor: COLORS.primaryBackground,
-        }}
-      >
+      <TableContainer component={Paper} className={classes.tableContainer}>
         <Table className={classes.table} aria-label="customized table">
           <colgroup>
             {props.columns.map((width: string, index: number) => (

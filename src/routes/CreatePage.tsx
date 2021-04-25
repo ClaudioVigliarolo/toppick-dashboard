@@ -131,13 +131,15 @@ export default function CreatePage({
         </div>
       )}
       {isTextareaVisible() && (
-        <TextArea
-          handleChange={(text) => {
-            setQuestionsText(text);
-          }}
-          placeholder="Type or paste your questions here (min: 10 lines)"
-          value={questionsText}
-        />
+        <div className={classes.textAreaContainer}>
+          <TextArea
+            handleChange={(text) => {
+              setQuestionsText(text);
+            }}
+            placeholder="Type or paste your questions here (min: 10 lines)"
+            value={questionsText}
+          />
+        </div>
       )}
       {isReviewListVisible() && (
         <div className={classes.questionsListContainer}>

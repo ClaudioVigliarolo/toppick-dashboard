@@ -35,6 +35,10 @@ export const useAppStyles = makeStyles((theme: Theme) =>
       maxWidth: 300,
       backgroundColor: theme.palette.background.paper,
     },
+    textAreaContainer: {
+      padding: 50,
+      paddingBottom: 200,
+    },
 
     chips: {
       display: "flex",
@@ -74,10 +78,10 @@ export const useAppStyles = makeStyles((theme: Theme) =>
       marginTop: -50,
       marginBottom: 50,
       maxWidth: "50vw",
+      minWidth: 400,
     },
 
     buttonContainer: {
-      marginTop: 100,
       display: "flex",
       flexDirection: "row",
       width: 600,

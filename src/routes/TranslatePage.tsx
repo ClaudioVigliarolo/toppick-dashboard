@@ -287,12 +287,14 @@ export default function CreatePage({
       )}
 
       {isTextareaVisible() && (
-        <TextArea
-          placeholder="Type or paste your questions here (min: 10 lines)"
-          value={translationTextArea[textAreaIndex]}
-          handleChange={onTranslationTextAreaChange}
-          readOnly={textAreaIndex === TextAreaIndex.Original}
-        />
+        <div className={classes.textAreaContainer}>
+          <TextArea
+            placeholder="Type or paste your questions here (min: 10 lines)"
+            value={translationTextArea[textAreaIndex]}
+            handleChange={onTranslationTextAreaChange}
+            readOnly={textAreaIndex === TextAreaIndex.Original}
+          />
+        </div>
       )}
 
       {isReviewButtonVisible() && (

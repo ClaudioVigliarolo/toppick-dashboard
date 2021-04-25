@@ -2,6 +2,7 @@ import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
 import { ListItemText } from "@material-ui/core";
+import { CONSTANTS } from "src/constants/constants";
 const LIST_ITEM_HEIGTH = 100;
 const LIST_ITEM_MARGIN = 25;
 
@@ -39,7 +40,11 @@ export default function QuestionsList({
       }}
     >
       <FixedSizeList
-        width={1000}
+        width={
+          window.innerWidth > CONSTANTS.SMALL_SCREEN
+            ? window.innerWidth * 0.7
+            : window.innerWidth * 0.5
+        }
         height={questions.length * (LIST_ITEM_MARGIN + LIST_ITEM_HEIGTH)}
         itemSize={70}
         itemCount={questions.length}

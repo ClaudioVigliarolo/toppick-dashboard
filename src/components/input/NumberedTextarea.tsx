@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "50vh",
       backgroundAttachment: "local",
       outlineColor: "white",
+      "@media (max-width: 500px)": {
+        width: 600,
+      },
     },
     root: {
       padding: "2px 8px",

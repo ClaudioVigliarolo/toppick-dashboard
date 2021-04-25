@@ -47,6 +47,11 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "column",
       minHeight: "100vh",
       width: "100%",
+
+      "@media (max-width: 500px)": {
+        padding: 100,
+        width: "200%",
+      },
     },
     paper: {
       background: "red",
