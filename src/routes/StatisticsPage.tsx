@@ -1,8 +1,9 @@
 //api call to get all the topics to translate (from user_current_lang to target_lang)
 import React from "react";
-import { getCategories, getTopics } from "../api/api";
+import { getCategories, getStatsContent, getTopics } from "../api/api";
 import { Category, PageProps, Topic } from "../interfaces/Interfaces";
 import PieChart from "../components/custom/PieChart";
+import ChartBar from "../components/charts/ChartBar";
 export default function CreatePage({
   token,
   currentLanguage,
@@ -19,7 +20,7 @@ export default function CreatePage({
         setCategories(retrievedCategories);
       }
 
-      const retrievedTopics = await getTopics(currentLanguage, token);
+      const retrievedTopics = await getStatsContent(currentLanguage, token);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
@@ -29,7 +30,19 @@ export default function CreatePage({
 
   return (
     <>
-      <PieChart />
+      <div>
+        <div
+          style={{
+            width: "60vw",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <ChartBar />
+          <ChartBar />
+        </div>
+      </div>
     </>
   );
 }

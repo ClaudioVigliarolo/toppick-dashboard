@@ -91,6 +91,24 @@ export const getToTranslateTopics = async (
   }
 };
 
+//it will return the stats of all the content: number of questions, topics,
+export const getStatsContent = async (
+  lang: string,
+  token: string
+): Promise<Topic[] | null> => {
+  try {
+    const response = await axios.get(`${HOSTNAME}/topick/get_stats/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.status == 200 ? response.data.topics : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
 export const addTopic = async (
   topic: Topic,
   lang: string,

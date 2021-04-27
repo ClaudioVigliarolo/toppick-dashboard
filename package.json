@@ -30,7 +30,8 @@
     "react-jss": "10.6.0",
     "react-loading-overlay": "1.0.1",
     "react-router-dom": "^5.2.0",
-    "react-window": "^1.8.6"
+    "react-window": "^1.8.6",
+    "victory": "35.5.1"
   },
   "devDependencies": {
     "@types/react": "16.9.34",

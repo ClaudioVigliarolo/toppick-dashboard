@@ -6,16 +6,8 @@ import {
   StyledTableRow,
   useStyles,
 } from "./TableStyles";
-import { CONSTANTS } from "../../constants/constants";
-
-import { CreatedUser, EmailType, Lang } from "../../interfaces/Interfaces";
-import { onUserDelete, onUserUpdate, onUserAdd } from "../../utils/users";
-import { getHash } from "../../utils/utils";
-import DeleteDialog from "../dialogs/ConfirmDialog";
-import UserAddDialog from "../dialogs/UserDialog";
-import UserEditDialog from "../dialogs/UserDialog";
-import CustomButton from "../buttons/CustomButton";
-import SearchBar from "../input/searchBar";
+import { CreatedUser, Lang } from "../../interfaces/Interfaces";
+import MailIcon from "@material-ui/icons/MailOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -24,12 +16,14 @@ interface TableUsersProps {
   languages: Lang[];
   onEdit: (user: CreatedUser) => void;
   onDelete: (user: CreatedUser) => void;
+  onMessage: (user: CreatedUser) => void;
   searchText: string;
 }
 
 export default function TableUsers({
   onDelete,
   onEdit,
+  onMessage,
   searchText,
   users,
 }: TableUsersProps) {
@@ -41,12 +35,18 @@ export default function TableUsers({
         return (
           <StyledTableRow key={index}>
             <StyledTableCell> {user.username}</StyledTableCell>
-            <StyledTableCell> {user.email}</StyledTableCell>
+            <StyledTableCell> {user.userMail}</StyledTableCell>
             <StyledTableCell>{user.type}</StyledTableCell>
             <StyledEditCell>
               {user.languages &&
-                user.languages.map((lang: string) => lang + "  ")}
-              <div className={classes.iconsContainer}>
+                user.languages.map((lang: string) => lang.toUpperCase() + "  ")}
+              <div className={classes.userIconsContainer}>
+                <MailIcon
+                  onClick={() => {
+                    onMessage(user);
+                  }}
+                />
+
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {

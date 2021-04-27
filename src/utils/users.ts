@@ -55,7 +55,7 @@ export const onUserUpdate = async (
   newUsers.forEach(function (u: CreatedUser) {
     if (u.id == updatedUser.id) {
       (u.username = updatedUser.username),
-        (u.email = updatedUser.email),
+        (u.userMail = updatedUser.userMail),
         (u.password = updatedUser.password),
         (u.type = updatedUser.type),
         (u.languages = updatedUser.languages);
@@ -90,6 +90,26 @@ export const onUserAdd = async (
   const newUsers = users;
   newUsers.unshift(newUser);
   setUsers([...newUsers]);
+  setLoading(false);
+  onSuccess();
+};
+
+export const onUserMessage = async (
+  user: CreatedUser,
+  emailtype: EmailType,
+  emailinfo: EmailInfo,
+  token: string,
+  setLoading: (val: boolean) => void,
+  onSuccess: () => void,
+  onError: () => void
+): Promise<void> => {
+  setLoading(true);
+  const val = await emailUser(emailtype, emailinfo, user, token);
+
+  if (!val) {
+    setLoading(false);
+    return onError();
+  }
   setLoading(false);
   onSuccess();
 };

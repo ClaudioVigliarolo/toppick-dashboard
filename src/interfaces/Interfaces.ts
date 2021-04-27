@@ -71,7 +71,7 @@ export interface LocalsEmail {
 export interface User {
   type: string;
   username: string;
-  email: string;
+  userMail: string;
   languages: Lang[];
 }
 export interface LoggedUser extends User {
@@ -99,6 +99,7 @@ export enum EmailType {
   Registration = "registration.ejs",
   Update = "update.ejs",
   Removal = "removal.ejs",
+  Message = "message.ejs",
 }
 
 export interface Email {
@@ -120,16 +121,31 @@ export interface UpdatesResponse {
   related: any;
 }
 
+export enum MailTemplate {
+  Registration = "registration",
+  Removal = "removal",
+  Update = "update",
+  Message = "message",
+}
+
 export interface EmailInfo {
   email: string;
   fromEmail: string;
   fromName: string;
-  subject: string;
+  subject: EmailSubject;
+  message?: string;
 }
 
 export enum Lang {
   IT = "it",
   EN = "en",
+}
+
+export enum EmailSubject {
+  Update = "Updated Credentials",
+  Remove = "Account Removal",
+  Registration = "Registration",
+  Message = "Message",
 }
 
 export interface ToTranslateTopic {
