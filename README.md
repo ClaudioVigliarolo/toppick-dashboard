@@ -4,7 +4,7 @@
     <img src="https://i.ibb.co/9rcHG4t/image.png" alt="Logo">
   </a>
 
-  <h3 align="center">Topick front end Dashboard</h3>
+  <h3 align="center">Top Pick front end Dashboard</h3>
 
 <!-- USAGE EXAMPLES -->
 <br />
