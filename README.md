@@ -12,7 +12,7 @@
 
 ## Overview
 
-the App is the front end of the Topick project. For more details, check out the following <a href="https://github.com/ClaudioVigliarolo/top-pick-frontend"><strong>repo</strong></a> which provides the node back end the app interacts with
+the App is the front end of the Top Pick project. For more details, check out the following <a href="https://github.com/ClaudioVigliarolo/top-pick-frontend"><strong>repo</strong></a> which provides the node back end the app interacts with
 
 <br />
 
