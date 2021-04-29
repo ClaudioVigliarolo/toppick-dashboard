@@ -17,7 +17,6 @@ import { COLORS } from "src/constants/Colors";
 import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import { CONSTANTS } from "src/constants/constants";
 import { getGoogleTranslatedQuestions, getQuestionsByTopic } from "src/api/api";
 import {
   Category,
@@ -47,6 +46,7 @@ const DEFAULT_TRANSLATION_TEXTAREA: TranslationTextArea = {
 };
 
 const NO_TOTRANSLATE_TOPIC = {
+  source_lang: Lang.EN,
   dest_lang: Lang.EN,
   id: -1,
   ref_id: -1,
@@ -120,6 +120,13 @@ export default function CreatePage({
     })();
   }, [currentLanguage]);
 
+  React.useEffect(() => {
+    setReview(false);
+    setIsQuestionsTranslate(false);
+    setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
+    window.scrollTo(0, 0);
+  }, [currentLanguage]);
+
   const handleTextAreaSwitchChange = (
     event: React.MouseEvent<HTMLElement>,
     newVal: any
@@ -171,12 +178,14 @@ export default function CreatePage({
 
   const onGoogleTranslateQuestions = async (
     topicID: number,
-    lang: Lang,
+    from: Lang,
+    to: Lang,
     token: string
   ) => {
     const googleTranslations = await getGoogleTranslatedQuestions(
       topicID,
-      lang,
+      from,
+      to,
       token
     );
 
@@ -197,8 +206,9 @@ export default function CreatePage({
   const isReviewButtonVisible = () => {
     if (
       isReview ||
-      translationTextArea === DEFAULT_TRANSLATION_TEXTAREA ||
-      textAreaIndex === TextAreaIndex.Original
+      !isQuestionsTranslate ||
+      (translationTextArea === DEFAULT_TRANSLATION_TEXTAREA &&
+        textAreaIndex !== TextAreaIndex.Original)
     )
       return false;
 
@@ -396,19 +406,21 @@ export default function CreatePage({
 
               await onGoogleTranslateQuestions(
                 selectedTopicToTranslate.topic_id,
-                CONSTANTS.ROOT_LANG,
+                selectedTopicToTranslate.source_lang,
+                selectedTopicToTranslate.dest_lang,
                 token
               );
 
               await onSetBlankSheet();
               setLoading(false);
               onSuccess();
+
+              setIsQuestionsTranslate(true);
+              setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
+              setTopicAddDialog(false);
             },
             onError
           );
-          setIsQuestionsTranslate(true);
-          setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
-          setTopicAddDialog(false);
         }}
         onRefuse={() => {
           setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);

@@ -153,7 +153,26 @@ export interface ToTranslateTopic {
   ref_id: number;
   topic_id: number;
   dest_lang: Lang;
+  source_lang: Lang;
   source_title: string;
   source_related: Related[];
   source_categories: Category[];
+}
+
+export interface StatsContent {
+  categories: number;
+  topics: number;
+  questions: number;
+}
+
+export interface StatsClientRequest {
+  id: number;
+  client_id: number;
+  lang: Lang;
+  timestamp: Date;
+}
+
+export interface Data {
+  label: string;
+  value: number;
 }

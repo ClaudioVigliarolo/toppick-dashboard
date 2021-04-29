@@ -3,7 +3,14 @@ import React from "react";
 import { getCategories, getStatsContent, getTopics } from "../api/api";
 import { Category, PageProps, Topic } from "../interfaces/Interfaces";
 import PieChart from "../components/custom/PieChart";
-import ChartBar from "../components/charts/ChartBar";
+import DBChartBar from "../components/charts/DBChartBar";
+import ActivityChart from "../components/charts/ActivityChart";
+import UserChart from "../components/charts/UserChart";
+import ReportsChart from "../components/charts/ReportsChart";
+
+import CardNumber from "../components/custom/CardNumber";
+import Tabs from "../components/switches/Tabs";
+
 export default function CreatePage({
   token,
   currentLanguage,
@@ -22,7 +29,7 @@ export default function CreatePage({
 
       const retrievedTopics = await getStatsContent(currentLanguage, token);
       if (retrievedTopics != null) {
-        setTopics(retrievedTopics);
+        //  setTopics(retrievedTopics);
       }
       setLoading(false);
     })();
@@ -34,13 +41,15 @@ export default function CreatePage({
         <div
           style={{
             width: "60vw",
+            height: "60vh",
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: "column",
           }}
         >
-          <ChartBar />
-          <ChartBar />
+          <ReportsChart currentLanguage={currentLanguage} token={token} />
+          <DBChartBar currentLanguage={currentLanguage} token={token} />
+          <ActivityChart currentLanguage={currentLanguage} token={token} />
+          <UserChart currentLanguage={currentLanguage} token={token} />
         </div>
       </div>
     </>

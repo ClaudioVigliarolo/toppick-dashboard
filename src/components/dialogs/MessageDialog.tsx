@@ -37,6 +37,7 @@ export default function MessageDialog(props: MessageDialogProps) {
           <TextField
             error={error}
             autoFocus
+            placeholder="Type email message here..."
             multiline
             rows={10}
             rowsMax={10}

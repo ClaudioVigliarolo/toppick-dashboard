@@ -1,5 +1,5 @@
 module.exports = {
-  HOSTNAME: "https://top-pick-api-dev.herokuapp.com",
+  HOSTNAME: "http://localhost:4001",
 };
 
 //"http://localhost:4001",

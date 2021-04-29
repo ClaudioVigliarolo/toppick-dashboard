@@ -55,7 +55,7 @@ export const onCategoryAdd = async (
 export const onCategoryUpdate = async (
   category: Category,
   categories: Category[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setCategories: (categories: Category[]) => void,
   setLoading: (val: boolean) => void,
@@ -81,7 +81,7 @@ export const onCategoryUpdate = async (
 export const onCategoryDelete = async (
   ref_id: number,
   categories: Category[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setCategories: (categories: Category[]) => void,
   setLoading: (val: boolean) => void,
@@ -106,7 +106,7 @@ export const onCategoryDelete = async (
 export const onQuestionAdd = async (
   newQuestion: Question,
   questions: Question[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setQuestions: (categories: Question[]) => void,
   setLoading: (val: boolean) => void,
@@ -132,7 +132,7 @@ export const onQuestionAdd = async (
 export const onQuestionUpdate = async (
   question: Question,
   questions: Question[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setQuestions: (categories: Question[]) => void,
   setLoading: (val: boolean) => void,
@@ -162,7 +162,7 @@ export const onQuestionUpdate = async (
 export const onQuestionDelete = async (
   id: number,
   questions: Question[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setQuestions: (categories: Question[]) => void,
   setLoading: (val: boolean) => void,
@@ -184,7 +184,7 @@ export const onQuestionDelete = async (
 export const onTopicAdd = async (
   newTopic: Topic,
   topics: Topic[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setTopics: (topics: Topic[]) => void,
   setLoading: (val: boolean) => void,
@@ -261,7 +261,7 @@ export const getTopicIdFromTitle = (
 export const onTopicUpdate = async (
   updatedTopic: Topic,
   topics: Topic[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setTopics: (topics: Topic[]) => void,
   setLoading: (val: boolean) => void,
@@ -295,7 +295,7 @@ export const onTopicUpdate = async (
 export const onTopicDelete = async (
   ref_id: number,
   topics: Topic[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setTopics: (topics: Topic[]) => void,
   setLoading: (val: boolean) => void,
@@ -318,7 +318,7 @@ export const onReportDelete = async (
   question_id: number,
   reports: ReportHandled[],
   setReports: (reports: ReportHandled[]) => void,
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
@@ -345,7 +345,7 @@ export const onQuestionsAdd = async (
   questionsArray: string[],
   selectTopic: string,
   topics: Topic[],
-  currentLanguage: string,
+  currentLanguage: Lang,
   token: string,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,

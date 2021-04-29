@@ -39,6 +39,15 @@ export default function ViewPage({
   );
   const classes = useAppStyles();
 
+  /*  addReport(
+        {
+          client_id: "12123",
+          question_id: 50941,
+          reason: "dsnnds",
+        },
+        currentLanguage
+      );*/
+
   React.useEffect(() => {
     (async () => {
       setLoading(true);
@@ -103,11 +112,11 @@ export default function ViewPage({
             onSuccess,
             onError
           );
-          setEditDialog(false);
+          setAddDialog(false);
           setCurrentCategory(NO_CATEGORY);
         }}
         onRefuse={() => {
-          setEditDialog(false);
+          setAddDialog(false);
           setCurrentCategory(NO_CATEGORY);
         }}
       />
