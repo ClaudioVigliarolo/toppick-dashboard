@@ -1,8 +1,16 @@
 //api call to get all the topics to translate (from user_current_lang to target_lang)
 import React from "react";
-import { getCategories, getTopics } from "../api/api";
+import { getCategories, getStatsContent, getTopics } from "../api/api";
 import { Category, PageProps, Topic } from "../interfaces/Interfaces";
 import PieChart from "../components/custom/PieChart";
+import DBChartBar from "../components/charts/DBChartBar";
+import ActivityChart from "../components/charts/ActivityChart";
+import UserChart from "../components/charts/UserChart";
+import ReportsChart from "../components/charts/ReportsChart";
+
+import CardNumber from "../components/custom/CardNumber";
+import Tabs from "../components/switches/Tabs";
+
 export default function CreatePage({
   token,
   currentLanguage,
@@ -19,9 +27,9 @@ export default function CreatePage({
         setCategories(retrievedCategories);
       }
 
-      const retrievedTopics = await getTopics(currentLanguage, token);
+      const retrievedTopics = await getStatsContent(currentLanguage, token);
       if (retrievedTopics != null) {
-        setTopics(retrievedTopics);
+        //  setTopics(retrievedTopics);
       }
       setLoading(false);
     })();
@@ -29,7 +37,21 @@ export default function CreatePage({
 
   return (
     <>
-      <PieChart />
+      <div>
+        <div
+          style={{
+            width: "60vw",
+            height: "60vh",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <ReportsChart currentLanguage={currentLanguage} token={token} />
+          <DBChartBar currentLanguage={currentLanguage} token={token} />
+          <ActivityChart currentLanguage={currentLanguage} token={token} />
+          <UserChart currentLanguage={currentLanguage} token={token} />
+        </div>
+      </div>
     </>
   );
 }

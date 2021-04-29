@@ -1,15 +1,12 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import { TransitionProps } from '@material-ui/core/transitions';
-import { COLORS } from '../../constants/Colors';
-import { TextField } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import { TransitionProps } from "@material-ui/core/transitions";
+import { COLORS } from "../../constants/Colors";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -26,44 +23,54 @@ interface TextDialogProps {
   refuseButtonText?: string;
   headerText: string;
   children?: React.ReactNode;
-  minWidth: number;
+  minWidth?: number;
+  minHeigth?: number;
 }
-export const CustomDialog = (props: TextDialogProps) => {
+export const CustomDialog = ({
+  open,
+  onConfirm,
+  confirmButtonText = "Confirm",
+  onRefuse,
+  refuseButtonText = "Close",
+  headerText,
+  children,
+  minWidth = 400,
+  minHeigth = 0,
+}: TextDialogProps) => {
   return (
     <div>
       <Dialog
-        open={props.open}
+        open={open}
         TransitionComponent={Transition}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">
-          {props.headerText}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{headerText}</DialogTitle>
 
         <DialogContent
-          style={{ minWidth: props.minWidth, alignItems: 'center' }}
+          style={{
+            minWidth: minWidth,
+            alignItems: "center",
+            minHeight: minHeigth,
+          }}
         >
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexDirection: 'column',
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
             }}
           >
-            {props.children}
+            {children}
           </div>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={props.onRefuse}
-            style={{ color: COLORS.darkerOrange }}
-          >
-            {props.refuseButtonText ? props.refuseButtonText : 'Close'}
+          <Button onClick={onRefuse} style={{ color: COLORS.darkerOrange }}>
+            {refuseButtonText}
           </Button>
-          <Button onClick={props.onConfirm} style={{ color: COLORS.blue }}>
-            {props.confirmButtonText ? props.confirmButtonText : 'Submit'}
+          <Button onClick={onConfirm} style={{ color: COLORS.blue }}>
+            {confirmButtonText}
           </Button>
         </DialogActions>
       </Dialog>

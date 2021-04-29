@@ -174,7 +174,7 @@ export default function ViewPage({
             onSuccess,
             onError
           );
-          setDeleteDialog(false);
+          setTopicAddDialog(false);
         }}
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);

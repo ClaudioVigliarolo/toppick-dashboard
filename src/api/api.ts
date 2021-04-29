@@ -14,11 +14,13 @@ import {
   EmailInfo,
   ToTranslateTopic,
   Lang,
+  StatsContent,
+  StatsClientRequest,
 } from "../interfaces/Interfaces";
 import { HOSTNAME } from "../config/config";
 
 export const getCategories = async (
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<Category[] | null> => {
   console.log("getc ategoris tiktok", lang);
@@ -55,7 +57,7 @@ export const getUsers = async (
 };
 
 export const getTopics = async (
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<Topic[] | null> => {
   try {
@@ -72,7 +74,7 @@ export const getTopics = async (
 };
 
 export const getToTranslateTopics = async (
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<ToTranslateTopic[] | null> => {
   try {
@@ -91,9 +93,64 @@ export const getToTranslateTopics = async (
   }
 };
 
+//it will return the stats of all the content: number of questions, topics,
+export const getStatsContent = async (
+  lang: Lang,
+  token: string
+): Promise<StatsContent | null> => {
+  try {
+    const response = await axios.get(`${HOSTNAME}/stats/get_content/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.status == 200 ? response.data : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export const getClientRequests = async (
+  lang: Lang,
+  token: string
+): Promise<StatsClientRequest[] | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/stats/get_clientrequests/${lang}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export const getStatsReports = async (
+  lang: Lang,
+  token: string
+): Promise<StatsClientRequest[] | null> => {
+  try {
+    const response = await axios.get(`${HOSTNAME}/stats/get_reports/${lang}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.status == 200 ? response.data : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
 export const addTopic = async (
   topic: Topic,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -118,7 +175,7 @@ export const addTopic = async (
 
 export const updateTopic = async (
   topic: Topic,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -143,7 +200,7 @@ export const updateTopic = async (
 
 export const deleteTopic = async (
   ref_id: number,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -289,7 +346,7 @@ export const emailUser = async (
 
 export const deleteCategory = async (
   ref_id: number,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -312,7 +369,7 @@ export const deleteCategory = async (
 
 export const addQuestion = async (
   question: Question,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -337,7 +394,7 @@ export const addQuestion = async (
 
 export const addQuestions = async (
   questions: Question[],
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -362,7 +419,7 @@ export const addQuestions = async (
 
 export const addCategory = async (
   category: Category,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -387,7 +444,7 @@ export const addCategory = async (
 
 export const updateCategory = async (
   category: Category,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -412,7 +469,7 @@ export const updateCategory = async (
 
 export const getUpdates = async (
   date: string,
-  lang: string,
+  lang: Lang,
   id: number
 ): Promise<UpdatesResponse | null> => {
   try {
@@ -428,7 +485,7 @@ export const getUpdates = async (
 
 export const addReport = async (
   report: Report,
-  lang: string
+  lang: Lang
 ): Promise<boolean> => {
   try {
     const response = await axios.post(`${HOSTNAME}/topick/add_report`, {
@@ -444,7 +501,7 @@ export const addReport = async (
 
 export const updateQuestion = async (
   question: Question,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -469,7 +526,7 @@ export const updateQuestion = async (
 
 export const deleteReport = async (
   question_id: number,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -491,7 +548,7 @@ export const deleteReport = async (
 
 export const deleteQuestion = async (
   id: number,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
@@ -512,7 +569,7 @@ export const deleteQuestion = async (
 };
 
 export const getReports = async (
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<ReportHandled[] | null> => {
   try {
@@ -529,7 +586,7 @@ export const getReports = async (
 };
 
 export const getQuestions = async (
-  lang: string,
+  lang: Lang,
   token: string,
   from: number,
   to: number
@@ -619,12 +676,13 @@ export const getQuestionsByTopic = async (
 
 export const getGoogleTranslatedQuestions = async (
   id: number,
-  lang: string,
+  from: Lang,
+  to: Lang,
   token: string
 ): Promise<string[] | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topick/get_google_translated_questions/${id}/${lang}`,
+      `${HOSTNAME}/topick/get_google_translated_questions/${id}/${from}/${to}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -640,7 +698,7 @@ export const getGoogleTranslatedQuestions = async (
 
 export const addToTranslateTopic = async (
   id: number,
-  lang: string,
+  lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {

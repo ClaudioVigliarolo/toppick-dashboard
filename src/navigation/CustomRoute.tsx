@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
+import { Lang } from "src/interfaces/Interfaces";
 
 interface CustomRouteProps {
   path: string;
@@ -7,7 +8,7 @@ interface CustomRouteProps {
   Component: any;
   token: string;
   isAuthenticated: boolean;
-  currentLanguage: string;
+  currentLanguage: Lang;
   setLoading: (newVal: boolean) => void;
   loading: boolean;
   onError: () => void;

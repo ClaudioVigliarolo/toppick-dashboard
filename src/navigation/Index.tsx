@@ -32,7 +32,7 @@ export const getCondition = (
       return isAuthenticated && userType == "root";
 
     case "/translate": //userType == "translated"
-      return isAuthenticated && lang !== Lang.EN;
+      return isAuthenticated;
 
     case "/categories":
       return isAuthenticated;
@@ -72,7 +72,7 @@ export const Navigation = () => {
 
   React.useEffect(() => {
     (async () => {
-      console.log("ggg", await getUpdates("Sun May 11,2014", "it", 1234));
+      console.log("ggg", await getUpdates("Sun May 11,2014", Lang.EN, 1234));
     })();
   }, []);
 

@@ -145,6 +145,18 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "row",
       justifyContent: "space-between",
     },
+
+    userIconsContainer: {
+      position: "absolute",
+      right: 30,
+      color: "orange",
+      top: "30%",
+      cursor: "pointer",
+      width: 110,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
   })
 );
 

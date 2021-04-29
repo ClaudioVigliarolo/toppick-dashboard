@@ -19,7 +19,7 @@ export default function LoginPage({
     setUserToken,
     setCurrentLanguage,
     userToken,
-    setEmail,
+    setUserMail,
   } = React.useContext(AuthContext);
 
   //renamed  setEmail to setEmailState for context function ovverriding problem
@@ -38,8 +38,8 @@ export default function LoginPage({
     if (user) {
       localStorage.setItem("token", user.token);
       setUserType(user.type);
-      setEmail(user.username);
-      setEmail(user.email);
+      setUserMail(user.username);
+      setUserMail(user.userMail);
       setUserToken(user.token);
       setUserLanguages(user.languages);
       setCurrentLanguage(user.languages[0]);

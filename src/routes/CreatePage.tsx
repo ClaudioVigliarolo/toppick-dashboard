@@ -227,6 +227,7 @@ export default function CreatePage({
             setTopics,
             setLoading,
             () => {
+              setQuestionsText("");
               setSelectedTopic(newTitle);
               setTopicAddDialog(false);
               onSuccess();
