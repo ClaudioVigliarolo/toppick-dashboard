@@ -1,9 +1,6 @@
 module.exports = {
-<<<<<<< HEAD
-  HOSTNAME: "https://top-pick-api.herokuapp.com",
-=======
-  HOSTNAME: "http://localhost:4001",
->>>>>>> dev
+  HOSTNAME:
+    process.env.NODE_ENV === "production"
+      ? "https://top-pick-api-dev.herokuapp.com"
+      : "http://localhost:4001",
 };
-
-//"http://localhost:4001",
