@@ -55,7 +55,8 @@ export default function UsersPage({
       setLoading(true);
       const retrievedUsers = await getUsers(token);
       if (retrievedUsers != null) {
-        setUsers(retrievedUsers);
+        //filter the root user from the list
+        setUsers(retrievedUsers.filter((user) => user.type !== "root"));
       }
       setLoading(false);
     })();

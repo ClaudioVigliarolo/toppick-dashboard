@@ -1,4 +1,5 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { COLORS } from "src/constants/Colors";
 
 // Create your Styles. Remember, since React-JSS uses the default preset,
 // most plugins are available without further configuration needed.
@@ -93,6 +94,27 @@ export const useAppStyles = makeStyles((theme: Theme) =>
     },
     switchContainer: {
       marginBottom: 100,
+    },
+
+    tabsContainer: {
+      alignItems: "center",
+      display: "flex",
+      flexDirection: "row",
+    },
+    statsContainer: {
+      width: "60vw",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    chartContainer: {
+      backgroundColor: "red",
+    },
+    buttonsHeader: {
+      margin: 80,
+      textAlign: "center",
+      color: COLORS.white,
+      fontSize: 25,
     },
   })
 );

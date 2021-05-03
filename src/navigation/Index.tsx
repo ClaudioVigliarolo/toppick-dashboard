@@ -72,7 +72,7 @@ export const Navigation = () => {
 
   React.useEffect(() => {
     (async () => {
-      console.log("ggg", await getUpdates("Sun May 11,2014", Lang.EN, 1234));
+      console.log("ggg", await getUpdates("Sun May 11,2014", Lang.FR, 12));
     })();
   }, []);
 
