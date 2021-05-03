@@ -47,7 +47,12 @@ export default function CardNumber({ label, value }: CardNumberProps) {
 
   return (
     <div className={classes.container}>
-      <div className={classes.label}>{label}</div>
+      <div
+        className={classes.label}
+        style={{ fontSize: label.length > 10 ? 20 : 25 }}
+      >
+        {label}
+      </div>
       <div className={classes.value}>{value}</div>
     </div>
   );

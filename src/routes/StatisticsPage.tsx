@@ -1,56 +1,132 @@
-//api call to get all the topics to translate (from user_current_lang to target_lang)
 import React from "react";
-import { getCategories, getStatsContent, getTopics } from "../api/api";
-import { Category, PageProps, Topic } from "../interfaces/Interfaces";
-import PieChart from "../components/custom/PieChart";
+import { PageProps } from "../interfaces/Interfaces";
 import DBChartBar from "../components/charts/DBChartBar";
-import ActivityChart from "../components/charts/ActivityChart";
+import UpdatesChart from "../components/charts/UpdatesChart";
 import UserChart from "../components/charts/UserChart";
 import ReportsChart from "../components/charts/ReportsChart";
+import Button from "../components/buttons/TabButton";
+import { useAppStyles } from "src/styles/common";
 
-import CardNumber from "../components/custom/CardNumber";
-import Tabs from "../components/switches/Tabs";
+interface ChartButton {
+  label: string;
+  chartIndex: number;
+}
 
-export default function CreatePage({
-  token,
-  currentLanguage,
-  setLoading,
-}: PageProps) {
-  const [topics, setTopics] = React.useState<Topic[]>([]);
-  const [categories, setCategories] = React.useState<Category[]>([]);
+interface DateButton {
+  label: string;
+  date: Date;
+}
 
-  React.useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage, token);
-      if (retrievedCategories != null) {
-        setCategories(retrievedCategories);
-      }
+enum ChartIndex {
+  UpdatesChart,
+  UsersChart,
+  ReportsChart,
+}
 
-      const retrievedTopics = await getStatsContent(currentLanguage, token);
-      if (retrievedTopics != null) {
-        //  setTopics(retrievedTopics);
-      }
-      setLoading(false);
-    })();
-  }, [currentLanguage]);
+var date = new Date();
+
+const MAX_DATE = new Date(date.getFullYear() + 1000, date.getMonth(), 1);
+
+const dateButtons: DateButton[] = [
+  {
+    label: "Today",
+    date: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+  },
+  {
+    label: "Yesterday",
+    date: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7),
+  },
+  {
+    label: "Week",
+    date: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7),
+  },
+  {
+    label: "Month",
+    date: new Date(date.getFullYear(), date.getMonth() + 1, 1),
+  },
+  {
+    label: "3 Months",
+    date: new Date(date.getFullYear(), date.getMonth() + 3, 1),
+  },
+  {
+    label: "1 Year",
+    date: new Date(date.getFullYear() + 1, date.getMonth(), 1),
+  },
+];
+
+const chartButtons: ChartButton[] = [
+  { label: "Reports", chartIndex: ChartIndex.ReportsChart },
+  { label: "Users", chartIndex: ChartIndex.UsersChart },
+  { label: "Updates", chartIndex: ChartIndex.UpdatesChart },
+];
+
+export default function CreatePage({ token, currentLanguage }: PageProps) {
+  const [chartIndex, setChartIndex] = React.useState<number>(0);
+  const [dateIndex, setDateIndex] = React.useState<number>(-1);
+  const [maxDate, setMaxDate] = React.useState<Date>(MAX_DATE);
+  const classes = useAppStyles();
 
   return (
     <>
-      <div>
-        <div
-          style={{
-            width: "60vw",
-            height: "60vh",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <ReportsChart currentLanguage={currentLanguage} token={token} />
-          <DBChartBar currentLanguage={currentLanguage} token={token} />
-          <ActivityChart currentLanguage={currentLanguage} token={token} />
-          <UserChart currentLanguage={currentLanguage} token={token} />
+      <div className={classes.statsContainer}>
+        <div className={classes.tabsContainer}>
+          {dateButtons.map((u, i) => (
+            <Button
+              label={u.label}
+              selected={dateIndex === i}
+              onClick={() => {
+                if (dateIndex === i) {
+                  setDateIndex(-1);
+                  setMaxDate(MAX_DATE);
+                } else {
+                  setDateIndex(i);
+                  setMaxDate(dateButtons[i].date);
+                }
+              }}
+            />
+          ))}
         </div>
+        <DBChartBar
+          currentLanguage={currentLanguage}
+          token={token}
+          maxDate={maxDate}
+        />
+
+        <div className={classes.buttonsHeader}>
+          Visualize {chartButtons[chartIndex].label}
+        </div>
+        <div className={classes.tabsContainer}>
+          {chartButtons.map((t) => (
+            <Button
+              label={t.label}
+              selected={chartIndex === t.chartIndex}
+              onClick={() => setChartIndex(t.chartIndex)}
+            />
+          ))}
+        </div>
+
+        {chartIndex == ChartIndex.ReportsChart && (
+          <ReportsChart
+            currentLanguage={currentLanguage}
+            token={token}
+            maxDate={maxDate}
+          />
+        )}
+
+        {chartIndex == ChartIndex.UpdatesChart && (
+          <UpdatesChart
+            currentLanguage={currentLanguage}
+            token={token}
+            maxDate={maxDate}
+          />
+        )}
+        {chartIndex == ChartIndex.UsersChart && (
+          <UserChart
+            currentLanguage={currentLanguage}
+            token={token}
+            maxDate={maxDate}
+          />
+        )}
       </div>
     </>
   );

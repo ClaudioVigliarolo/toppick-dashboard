@@ -15,7 +15,10 @@ import {
   ToTranslateTopic,
   Lang,
   StatsContent,
-  StatsClientRequest,
+  StatsUser,
+  StatsReport,
+  UserStats,
+  StatsUpdates,
 } from "../interfaces/Interfaces";
 import { HOSTNAME } from "../config/config";
 
@@ -95,15 +98,19 @@ export const getToTranslateTopics = async (
 
 //it will return the stats of all the content: number of questions, topics,
 export const getStatsContent = async (
+  until: Date,
   lang: Lang,
   token: string
 ): Promise<StatsContent | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/stats/get_content/` + lang, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const response = await axios.get(
+      `${HOSTNAME}/stats/get_content/${until}/${lang}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -114,7 +121,7 @@ export const getStatsContent = async (
 export const getClientRequests = async (
   lang: Lang,
   token: string
-): Promise<StatsClientRequest[] | null> => {
+): Promise<any | null> => {
   try {
     const response = await axios.get(
       `${HOSTNAME}/stats/get_clientrequests/${lang}`,
@@ -132,15 +139,40 @@ export const getClientRequests = async (
 };
 
 export const getStatsReports = async (
+  until: Date,
   lang: Lang,
   token: string
-): Promise<StatsClientRequest[] | null> => {
+): Promise<StatsReport | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/stats/get_reports/${lang}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const response = await axios.get(
+      `${HOSTNAME}/stats/get_reports/${until}/${lang}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export const getStatsUpdates = async (
+  until: Date,
+  lang: Lang,
+  token: string
+): Promise<StatsUpdates | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/stats/get_clientupdates/${until}/${lang}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -690,6 +722,27 @@ export const getGoogleTranslatedQuestions = async (
       }
     );
     return response.status == 200 ? response.data.translations : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+export const getUserStats = async (
+  id: number,
+  until: Date,
+  lang: Lang,
+  token: string
+): Promise<UserStats | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/stats/get_user/${id}/${until}/${lang}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;

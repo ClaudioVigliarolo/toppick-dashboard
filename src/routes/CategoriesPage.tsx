@@ -1,6 +1,6 @@
 import React from "react";
 import { addReport, getCategories } from "../api/api";
-import { Category, PageProps, Report } from "../interfaces/Interfaces";
+import { Category, Lang, PageProps, Report } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
 import CustomButton from "src/components/buttons/CustomButton";
 import SearchBar from "src/components/input/searchBar";
@@ -39,14 +39,14 @@ export default function ViewPage({
   );
   const classes = useAppStyles();
 
-  /*  addReport(
-        {
-          client_id: "12123",
-          question_id: 50941,
-          reason: "dsnnds",
-        },
-        currentLanguage
-      );*/
+  addReport(
+    {
+      client_id: "213132",
+      question_id: 489816,
+      reason: "bella  e interessante",
+    },
+    Lang.IT
+  );
 
   React.useEffect(() => {
     (async () => {

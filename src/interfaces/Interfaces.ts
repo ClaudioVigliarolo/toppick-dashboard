@@ -139,6 +139,8 @@ export interface EmailInfo {
 export enum Lang {
   IT = "it",
   EN = "en",
+  FR = "fr",
+  ES = "es",
 }
 
 export enum EmailSubject {
@@ -165,14 +167,59 @@ export interface StatsContent {
   questions: number;
 }
 
-export interface StatsClientRequest {
-  id: number;
-  client_id: number;
-  lang: Lang;
-  timestamp: Date;
+export interface StatsUpdates {
+  updates: number;
+}
+
+export interface StatsReport {
+  reports: number;
 }
 
 export interface Data {
   label: string;
   value: number;
+}
+
+export enum ActionType {
+  ADD_TOPIC,
+  ADD_QUESTION,
+  ADD_CATEGORY,
+
+  UPDATE_TOPIC,
+  UPDATE_QUESTION,
+  UPDATE_CATEGORY,
+
+  TRANSLATE_TOPIC,
+
+  DELETE_TOPIC,
+  DELETE_QUESTION,
+  DELETE_CATEGORY,
+  DELETE_REPORT,
+  DELETE_TOTRANSLATE,
+}
+
+export interface StatsUser {
+  id: number;
+  user_id: number;
+  lang: Lang;
+  action: ActionType;
+  timestamp: Date;
+}
+
+export interface UserStats {
+  categoriesAdded: number;
+  categoriesUpdated: number;
+  categoriesDeleted: number;
+
+  topicsAdded: number;
+  topicsUpdated: number;
+  topicsDeleted: number;
+
+  questionsAdded: number;
+  questionsUpdated: number;
+  questionsDeleted: number;
+
+  totranslateDeleted: number;
+  translatedTopics: number;
+  deletedReports: number;
 }
