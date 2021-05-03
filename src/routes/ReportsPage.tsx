@@ -22,7 +22,6 @@ const NO_REPORT: ReportHandled = {
   timestamp: new Date(),
   question_title: "",
   topic_title: "",
-  client_id: "",
   username: "",
   topic_id: -1,
 };

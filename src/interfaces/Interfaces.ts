@@ -24,12 +24,14 @@ export interface Report {
 }
 
 //report handled by the app
-export interface ReportHandled extends Report {
+export interface ReportHandled {
   username: string;
   question_title: string;
   timestamp: Date;
   topic_id: number;
   topic_title: string;
+  question_id: number;
+  reason: string;
 }
 
 export interface CategoryTopic {

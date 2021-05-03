@@ -38,7 +38,7 @@ export default function ViewPage({
     NO_CATEGORY
   );
   const classes = useAppStyles();
-
+  /*
   addReport(
     {
       client_id: "213132",
@@ -46,7 +46,7 @@ export default function ViewPage({
       reason: "bella  e interessante",
     },
     Lang.IT
-  );
+  );*/
 
   React.useEffect(() => {
     (async () => {
