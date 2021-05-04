@@ -7,13 +7,15 @@ import { useChartStyles } from "./ChartStyles";
 interface UpdatesChartProps {
   currentLanguage: Lang;
   token: string;
-  maxDate: Date;
+  from: Date;
+  until: Date;
 }
 
 export default function UpdatesChart({
   currentLanguage,
   token,
-  maxDate,
+  from,
+  until,
 }: UpdatesChartProps) {
   const [updateStats, setUpdateStats] = React.useState<StatsUpdates>({
     updates: 0,
@@ -23,7 +25,8 @@ export default function UpdatesChart({
   React.useEffect(() => {
     (async () => {
       const retrievedStats = await getStatsUpdates(
-        maxDate,
+        from,
+        until,
         currentLanguage,
         token
       );
@@ -31,7 +34,7 @@ export default function UpdatesChart({
         setUpdateStats(retrievedStats);
       }
     })();
-  }, [currentLanguage, maxDate]);
+  }, [currentLanguage, from]);
 
   return (
     <div className={classes.container}>

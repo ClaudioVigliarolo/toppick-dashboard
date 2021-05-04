@@ -38,6 +38,7 @@ export default function ViewPage({
     NO_CATEGORY
   );
   const classes = useAppStyles();
+
   /*
   addReport(
     {

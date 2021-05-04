@@ -9,12 +9,14 @@ import { useChartStyles } from "./ChartStyles";
 interface DBChartBarProps {
   currentLanguage: Lang;
   token: string;
-  maxDate: Date;
+  from: Date;
+  until: Date;
 }
 export default function DBChartBar({
   currentLanguage,
   token,
-  maxDate,
+  from,
+  until,
 }: DBChartBarProps) {
   const [users, setUsers] = React.useState<CreatedUser[]>([]);
   const [index, setIndex] = React.useState<number>(0);
@@ -45,13 +47,15 @@ export default function DBChartBar({
         setUsers(retrievedUsers);
         await getUserStats(
           retrievedUsers[index].id,
-          maxDate,
+          from,
+          until,
           currentLanguage,
           token
         );
         const retrievedStats = await getUserStats(
           retrievedUsers[index].id,
-          maxDate,
+          from,
+          until,
           currentLanguage,
           token
         );
@@ -67,7 +71,8 @@ export default function DBChartBar({
       if (users.length === 0) return;
       const retrievedStats = await getUserStats(
         users[index].id,
-        maxDate,
+        from,
+        until,
         currentLanguage,
         token
       );
@@ -75,7 +80,7 @@ export default function DBChartBar({
         setUserStats(retrievedStats);
       }
     })();
-  }, [index, currentLanguage, maxDate]);
+  }, [index, currentLanguage, from]);
 
   return (
     <>
@@ -104,7 +109,7 @@ export default function DBChartBar({
             </div>,
             <div className={classes.cardnumbersContainer}>
               <CardNumber
-                label="Translated Discarded"
+                label="Discarded Translation"
                 value={userStats.totranslateDeleted}
               />
               <CardNumber
@@ -112,7 +117,7 @@ export default function DBChartBar({
                 value={userStats.questionsDeleted}
               />
               <CardNumber
-                label="Qu estions Updated"
+                label="Questions Updated"
                 value={userStats.questionsUpdated}
               />
             </div>,

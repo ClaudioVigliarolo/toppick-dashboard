@@ -1,5 +1,3 @@
-import { CONSTANTS } from "src/constants/constants";
-
 export const getHash = (str1: string, str2: string = "") => {
   const str = str1 + "*" + str2;
   var hash = 0,
@@ -47,4 +45,51 @@ export const getTextFromLines = (inputText: string[]): string => {
   /*if (!inputText) return [];
   const lines = inputText.match(/[^\r\n]+/g);
   return lines ? lines : [];*/
+};
+
+//time utils
+
+export const getTodayStart = (): Date => {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  return date;
+};
+
+export const getTodayEnd = (): Date => {
+  const date = new Date();
+  return date;
+};
+
+export const getYesterdayStart = (): Date => {
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
+  date.setHours(0, 0, 0, 0);
+  return date;
+};
+
+export const getLastWeekStart = (): Date => {
+  const date = new Date();
+  date.setDate(date.getDate() - 7);
+  date.setHours(0, 0, 0, 0);
+  return date;
+};
+
+export const getLastMonthStart = (): Date => {
+  const date = new Date();
+  date.setDate(1);
+  date.setMonth(date.getMonth() - 1);
+  return date;
+};
+
+export const getLastThreeMonthsStart = (): Date => {
+  const date = new Date();
+  date.setDate(1);
+  date.setMonth(date.getMonth() - 3);
+  return date;
+};
+
+export const getLastYearStart = (): Date => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - 1);
+  return date;
 };

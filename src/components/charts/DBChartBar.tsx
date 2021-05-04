@@ -7,13 +7,15 @@ import { useChartStyles } from "./ChartStyles";
 interface DBChartBarProps {
   currentLanguage: Lang;
   token: string;
-  maxDate: Date;
+  from: Date;
+  until: Date;
 }
 
 export default function DBChartBar({
   currentLanguage,
   token,
-  maxDate,
+  from,
+  until,
 }: DBChartBarProps) {
   const [contentStats, setContentStats] = React.useState<StatsContent>({
     categories: 0,
@@ -26,7 +28,8 @@ export default function DBChartBar({
   React.useEffect(() => {
     (async () => {
       const retrievedStats = await getStatsContent(
-        maxDate,
+        from,
+        until,
         currentLanguage,
         token
       );
@@ -34,7 +37,7 @@ export default function DBChartBar({
         setContentStats(retrievedStats);
       }
     })();
-  }, [currentLanguage, maxDate]);
+  }, [currentLanguage, from]);
 
   return (
     <div className={classes.container}>

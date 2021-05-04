@@ -98,13 +98,14 @@ export const getToTranslateTopics = async (
 
 //it will return the stats of all the content: number of questions, topics,
 export const getStatsContent = async (
+  from: Date,
   until: Date,
   lang: Lang,
   token: string
 ): Promise<StatsContent | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_content/${until}/${lang}`,
+      `${HOSTNAME}/stats/get_content/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -139,13 +140,14 @@ export const getClientRequests = async (
 };
 
 export const getStatsReports = async (
+  from: Date,
   until: Date,
   lang: Lang,
   token: string
 ): Promise<StatsReport | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_reports/${until}/${lang}`,
+      `${HOSTNAME}/stats/get_reports/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -160,13 +162,14 @@ export const getStatsReports = async (
 };
 
 export const getStatsUpdates = async (
+  from: Date,
   until: Date,
   lang: Lang,
   token: string
 ): Promise<StatsUpdates | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_clientupdates/${until}/${lang}`,
+      `${HOSTNAME}/stats/get_clientupdates/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -729,13 +732,14 @@ export const getGoogleTranslatedQuestions = async (
 };
 export const getUserStats = async (
   id: number,
+  from: Date,
   until: Date,
   lang: Lang,
   token: string
 ): Promise<UserStats | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_user/${id}/${until}/${lang}`,
+      `${HOSTNAME}/stats/get_user/${id}/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,

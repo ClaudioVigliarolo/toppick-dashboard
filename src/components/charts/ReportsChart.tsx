@@ -7,13 +7,15 @@ import { useChartStyles } from "./ChartStyles";
 interface ReportsChartProps {
   currentLanguage: Lang;
   token: string;
-  maxDate: Date;
+  until: Date;
+  from: Date;
 }
 
 export default function ReportsChart({
   currentLanguage,
   token,
-  maxDate,
+  until,
+  from,
 }: ReportsChartProps) {
   const [reportStats, setReportStats] = React.useState<StatsReport>({
     reports: 0,
@@ -23,7 +25,8 @@ export default function ReportsChart({
   React.useEffect(() => {
     (async () => {
       const retrievedStats = await getStatsReports(
-        maxDate,
+        from,
+        until,
         currentLanguage,
         token
       );
@@ -33,7 +36,7 @@ export default function ReportsChart({
         setReportStats(retrievedStats);
       }
     })();
-  }, [currentLanguage, maxDate]);
+  }, [currentLanguage, until]);
 
   return (
     <div className={classes.container}>

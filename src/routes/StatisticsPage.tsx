@@ -5,7 +5,17 @@ import UpdatesChart from "../components/charts/UpdatesChart";
 import UserChart from "../components/charts/UserChart";
 import ReportsChart from "../components/charts/ReportsChart";
 import Button from "../components/buttons/TabButton";
+import { CONSTANTS } from "../constants/constants";
 import { useAppStyles } from "src/styles/common";
+import {
+  getTodayEnd,
+  getTodayStart,
+  getLastWeekStart,
+  getLastYearStart,
+  getLastThreeMonthsStart,
+  getLastMonthStart,
+  getYesterdayStart,
+} from "src/utils/utils";
 
 interface ChartButton {
   label: string;
@@ -14,7 +24,8 @@ interface ChartButton {
 
 interface DateButton {
   label: string;
-  date: Date;
+  from: Date;
+  until: Date;
 }
 
 enum ChartIndex {
@@ -23,34 +34,36 @@ enum ChartIndex {
   ReportsChart,
 }
 
-var date = new Date();
-
-const MAX_DATE = new Date(date.getFullYear() + 1000, date.getMonth(), 1);
-
 const dateButtons: DateButton[] = [
   {
     label: "Today",
-    date: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+    from: getTodayStart(),
+    until: getTodayEnd(),
   },
   {
     label: "Yesterday",
-    date: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7),
+    from: getYesterdayStart(),
+    until: getTodayStart(),
   },
   {
     label: "Week",
-    date: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7),
+    from: getLastWeekStart(),
+    until: getTodayEnd(),
   },
   {
     label: "Month",
-    date: new Date(date.getFullYear(), date.getMonth() + 1, 1),
+    from: getLastMonthStart(),
+    until: getTodayEnd(),
   },
   {
     label: "3 Months",
-    date: new Date(date.getFullYear(), date.getMonth() + 3, 1),
+    from: getLastThreeMonthsStart(),
+    until: getTodayEnd(),
   },
   {
     label: "1 Year",
-    date: new Date(date.getFullYear() + 1, date.getMonth(), 1),
+    from: getLastYearStart(),
+    until: getTodayEnd(),
   },
 ];
 
@@ -63,7 +76,9 @@ const chartButtons: ChartButton[] = [
 export default function CreatePage({ token, currentLanguage }: PageProps) {
   const [chartIndex, setChartIndex] = React.useState<number>(0);
   const [dateIndex, setDateIndex] = React.useState<number>(-1);
-  const [maxDate, setMaxDate] = React.useState<Date>(MAX_DATE);
+  const [until, setUntilDate] = React.useState<Date>(CONSTANTS.DEF_UNTIL_DATE);
+  const [from, setFromDate] = React.useState<Date>(CONSTANTS.DEF_FROM_DATE);
+
   const classes = useAppStyles();
 
   return (
@@ -77,10 +92,12 @@ export default function CreatePage({ token, currentLanguage }: PageProps) {
               onClick={() => {
                 if (dateIndex === i) {
                   setDateIndex(-1);
-                  setMaxDate(MAX_DATE);
+                  setFromDate(CONSTANTS.DEF_FROM_DATE);
+                  setUntilDate(CONSTANTS.DEF_UNTIL_DATE);
                 } else {
                   setDateIndex(i);
-                  setMaxDate(dateButtons[i].date);
+                  setFromDate(u.from);
+                  setUntilDate(u.until);
                 }
               }}
             />
@@ -89,7 +106,8 @@ export default function CreatePage({ token, currentLanguage }: PageProps) {
         <DBChartBar
           currentLanguage={currentLanguage}
           token={token}
-          maxDate={maxDate}
+          until={until}
+          from={from}
         />
 
         <div className={classes.buttonsHeader}>
@@ -109,7 +127,8 @@ export default function CreatePage({ token, currentLanguage }: PageProps) {
           <ReportsChart
             currentLanguage={currentLanguage}
             token={token}
-            maxDate={maxDate}
+            until={until}
+            from={from}
           />
         )}
 
@@ -117,14 +136,16 @@ export default function CreatePage({ token, currentLanguage }: PageProps) {
           <UpdatesChart
             currentLanguage={currentLanguage}
             token={token}
-            maxDate={maxDate}
+            until={until}
+            from={from}
           />
         )}
         {chartIndex == ChartIndex.UsersChart && (
           <UserChart
             currentLanguage={currentLanguage}
             token={token}
-            maxDate={maxDate}
+            until={until}
+            from={from}
           />
         )}
       </div>
