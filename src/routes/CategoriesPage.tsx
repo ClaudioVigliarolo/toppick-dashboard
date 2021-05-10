@@ -1,15 +1,16 @@
 import React from "react";
-import { addReport, getCategories } from "../api/api";
-import { Category, Lang, PageProps, Report } from "../interfaces/Interfaces";
+import { getCategories, getCategoryTopics } from "../api/api";
+import { Category, CategoryTopic, PageProps } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
 import CustomButton from "src/components/buttons/CustomButton";
-import SearchBar from "src/components/input/searchBar";
+import SearchBar from "src/components/input/SearchBar";
 import AddDialog from "../components/dialogs/CategoryDialog";
 import EditDialog from "../components/dialogs/CategoryDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../styles/common";
 
 import {
+  getTopicFromTitle,
   onCategoryAdd,
   onCategoryDelete,
   onCategoryUpdate,
@@ -20,6 +21,7 @@ const NO_CATEGORY: Category = {
   id: -1,
   ref_id: -1,
   title: "",
+  categoryTopics: [],
 };
 
 export default function ViewPage({
@@ -30,6 +32,9 @@ export default function ViewPage({
   onSuccess,
 }: PageProps) {
   const [categories, setCategories] = React.useState<Category[]>([]);
+  const [categoryTopics, setCategoryTopics] = React.useState<CategoryTopic[]>(
+    []
+  );
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
@@ -38,23 +43,19 @@ export default function ViewPage({
     NO_CATEGORY
   );
   const classes = useAppStyles();
-
-  /*
-  addReport(
-    {
-      client_id: "213132",
-      question_id: 489816,
-      reason: "bella  e interessante",
-    },
-    Lang.IT
-  );*/
-
   React.useEffect(() => {
     (async () => {
       setLoading(true);
       const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
+      }
+      const retrievedCategTopics = await getCategoryTopics(
+        currentLanguage,
+        token
+      );
+      if (retrievedCategTopics != null) {
+        setCategoryTopics(retrievedCategTopics);
       }
       setLoading(false);
     })();
@@ -78,12 +79,10 @@ export default function ViewPage({
           setSearchText={(text) => setSearchText(text)}
           searchText={searchText}
         />
-        <div>
-          <CustomButton
-            onClick={() => setAddDialog(true)}
-            title="INSERT NEW CATEGORY"
-          />
-        </div>
+        <CustomButton
+          onClick={() => setAddDialog(true)}
+          title="INSERT NEW CATEGORY"
+        />
       </div>
       <TableCategories
         token={token}
@@ -98,12 +97,18 @@ export default function ViewPage({
         category=""
         headerText="Add new Category"
         open={addDialog}
-        onConfirm={async (newTitle: string) => {
+        preselectedCategTopics={[]}
+        categTopics={categoryTopics}
+        onConfirm={async (
+          newTitle: string,
+          selectedCategTopics: CategoryTopic[]
+        ) => {
           await onCategoryAdd(
             {
               id: getHash(newTitle, currentLanguage),
               title: newTitle,
               ref_id: getHash(newTitle, currentLanguage),
+              categoryTopics: selectedCategTopics,
             },
             categories,
             currentLanguage,
@@ -124,13 +129,20 @@ export default function ViewPage({
 
       <EditDialog
         open={editDialog}
-        onConfirm={(newTitle: string) => {
-          onCategoryUpdate(
+        preselectedCategTopics={currentCategory.categoryTopics}
+        categTopics={categoryTopics}
+        onConfirm={async (
+          newTitle: string,
+          selectedTopics: CategoryTopic[]
+        ) => {
+          await onCategoryUpdate(
             {
-              title: newTitle,
               id: currentCategory.id,
+              title: newTitle,
               ref_id: currentCategory.ref_id,
+              categoryTopics: selectedTopics,
             },
+
             categories,
             currentLanguage,
             token,

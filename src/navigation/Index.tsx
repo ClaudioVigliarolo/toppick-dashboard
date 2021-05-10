@@ -1,27 +1,18 @@
 import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import ReportsPage from "../routes/ReportsPage";
-import CategoriesPage from "../routes/CategoriesPage";
-import UsersPage from "../routes/UsersPage";
-import TopicsPage from "../routes/TopicsPage";
-import QuestionsPage from "../routes/QuestionsPage";
-import LoginPage from "../routes/LoginPage";
-import CreatePage from "../routes/CreatePage";
-import TranslatePage from "../routes/TranslatePage";
-import StatisticsPage from "../routes/StatisticsPage";
 
 import CustomRoute from "./CustomRoute";
 import Menu from "./Menu";
 import { getUpdates } from "../api/api";
 import { Lang } from "src/interfaces/Interfaces";
 import { StatusContext } from "src/context/StatusContext";
+import { routes } from "./routes";
 
 export const getCondition = (
   userType: string,
   path: string,
-  isAuthenticated: boolean,
-  lang?: Lang
+  isAuthenticated: boolean
 ) => {
   switch (path) {
     case "/login":
@@ -93,145 +84,22 @@ export const Navigation = () => {
             from="/"
             to={isAuthenticated ? "categories/en" : "/login"}
           />
-          <CustomRoute
-            path="/login"
-            condition={getCondition(userType, "/login", isAuthenticated)}
-            Component={LoginPage}
-            isAuthenticated={isAuthenticated}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(userType, "/categories", isAuthenticated)}
-            path="/categories"
-            isAuthenticated={isAuthenticated}
-            Component={CategoriesPage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(userType, "/users", isAuthenticated)}
-            isAuthenticated={isAuthenticated}
-            path="/users"
-            Component={UsersPage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(userType, "/topics", isAuthenticated)}
-            path="/topics"
-            isAuthenticated={isAuthenticated}
-            Component={TopicsPage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(userType, "/questions", isAuthenticated)}
-            path="/questions"
-            isAuthenticated={isAuthenticated}
-            Component={QuestionsPage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(userType, "/reports", isAuthenticated)}
-            path="/reports"
-            isAuthenticated={isAuthenticated}
-            Component={ReportsPage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(userType, "/create", isAuthenticated)}
-            path="/create"
-            isAuthenticated={isAuthenticated}
-            Component={CreatePage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(userType, "/stats", isAuthenticated)}
-            path="/stats"
-            isAuthenticated={isAuthenticated}
-            Component={StatisticsPage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
-
-          <CustomRoute
-            condition={getCondition(
-              userType,
-              "/translate",
-              isAuthenticated,
-              currentLanguage
-            )}
-            path="/translate"
-            isAuthenticated={isAuthenticated}
-            Component={TranslatePage}
-            token={userToken}
-            currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
-            error={error}
-            success={success}
-          />
+          {routes.map((route) => (
+            <CustomRoute
+              path={route.path}
+              condition={getCondition(userType, route.path, isAuthenticated)}
+              Component={route.component}
+              isAuthenticated={isAuthenticated}
+              token={userToken}
+              currentLanguage={currentLanguage}
+              setLoading={setLoading}
+              loading={loading}
+              onError={onError}
+              onSuccess={onSuccess}
+              error={error}
+              success={success}
+            />
+          ))}
         </Switch>
       }
     />

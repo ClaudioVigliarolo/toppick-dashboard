@@ -1,14 +1,12 @@
 //api call to get all the topics to translate (from user_current_lang to target_lang)
 import React from "react";
-import { getCategories, getTopics, getToTranslateTopics } from "../api/api";
+import { getCategoryTopics, getTopics, getToTranslateTopics } from "../api/api";
 import CustomButton from "../components/buttons/CustomButton";
 import TranslationAddDialog from "../components/dialogs/TopicDialog";
 import Select from "../components/select/TranslateSelect";
 import TextArea from "../components/input/NumberedTextarea";
 import QuestionsList from "../components/lists/QuestionsList";
 import {
-  getCategoriesFromTitles,
-  getRelatedFromTitle,
   ondeleteToTranslateTopic,
   onQuestionsAdd,
   onTopicAdd,
@@ -19,9 +17,10 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { getGoogleTranslatedQuestions, getQuestionsByTopic } from "src/api/api";
 import {
-  Category,
+  CategoryTopic,
   Lang,
   PageProps,
+  Related,
   Topic,
   ToTranslateTopic,
 } from "../interfaces/Interfaces";
@@ -55,6 +54,17 @@ const NO_TOTRANSLATE_TOPIC = {
   source_title: "Pick A topic To Translate",
   topic_id: -1,
 };
+
+const NO_TOPIC: Topic = {
+  categories: [],
+  id: -1,
+  related: [],
+  source: "",
+  timestamp: new Date(),
+  title: "Select A Topic",
+  ref_id: -1,
+};
+
 export default function CreatePage({
   token,
   currentLanguage,
@@ -71,7 +81,7 @@ export default function CreatePage({
     setTranslationTextArea,
   ] = React.useState<TranslationTextArea>(DEFAULT_TRANSLATION_TEXTAREA);
   const [topics, setTopics] = React.useState<Topic[]>([]);
-  const [categories, setCategories] = React.useState<Category[]>([]);
+  const [categories, setCategories] = React.useState<CategoryTopic[]>([]);
   const [textAreaIndex, setTextAreaIndex] = React.useState<number>(
     TextAreaIndex.Google
   );
@@ -80,11 +90,7 @@ export default function CreatePage({
     setTranslatedQuestionsArray,
   ] = React.useState<string[]>([]);
   const [isReview, setReview] = React.useState<boolean>(false);
-  const [
-    translatedTopicTitle,
-    setTranslatedTopicTitle,
-  ] = React.useState<string>("");
-
+  const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
   const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
   const [toTranslateTopics, setToTranslateTopics] = React.useState<
     ToTranslateTopic[]
@@ -95,7 +101,10 @@ export default function CreatePage({
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage, token);
+      const retrievedCategories = await getCategoryTopics(
+        currentLanguage,
+        token
+      );
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
@@ -110,10 +119,8 @@ export default function CreatePage({
         currentLanguage,
         token
       );
-      console.log("Myto", toTranslateTopics);
       if (toTranslateTopics != null) {
         setToTranslateTopics(toTranslateTopics);
-        console.log("Myto", toTranslateTopics);
       }
 
       setLoading(false);
@@ -131,7 +138,6 @@ export default function CreatePage({
     event: React.MouseEvent<HTMLElement>,
     newVal: any
   ) => {
-    console.log("newww", newVal);
     setTextAreaIndex(newVal !== null ? newVal : textAreaIndex);
   };
 
@@ -330,18 +336,20 @@ export default function CreatePage({
                   onClick={async () => {
                     await onQuestionsAdd(
                       translatedQuestionsArray,
-                      translatedTopicTitle,
-                      topics,
+                      selectedTopic,
                       currentLanguage,
                       token,
                       setLoading,
-                      onSuccess,
+                      () => {
+                        setReview(false);
+                        setIsQuestionsTranslate(false);
+                        setSelectedTopic(NO_TOPIC);
+                        setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
+                        window.scrollTo(0, 0);
+                        onSuccess();
+                      },
                       onError
                     );
-                    setReview(false);
-                    setIsQuestionsTranslate(false);
-                    setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
-                    window.scrollTo(0, 0);
                   }}
                   color={COLORS.blue}
                   title="Submit, everything's fine"
@@ -354,37 +362,29 @@ export default function CreatePage({
 
       <TranslationAddDialog
         open={topicAddDialog}
-        preselectedCategories={selectedTopicToTranslate.source_categories.map(
-          (c) => c.title
-        )}
-        preselectedRelated={selectedTopicToTranslate.source_related.map(
-          (c) => c.title
-        )}
-        categories={categories.map((categ) => categ.title)}
-        related={topics
-          .map((topic) => topic.title)
-          .filter((s) => s != selectedTopicToTranslate.source_title)}
+        preselectedCategories={selectedTopicToTranslate.source_categories}
+        preselectedRelated={selectedTopicToTranslate.source_related}
+        categories={categories}
+        related={topics}
         headerText="Add New Topic"
         topic=""
         placeholderTitle={selectedTopicToTranslate.source_title}
         onConfirm={async (
           newTitle: string,
-          selectedCategoriesTitles: string[],
-          selectedRelatedTitles: string[]
+          selectedCategories: CategoryTopic[],
+          selectedRelated: Related[]
         ) => {
+          const newTopic: Topic = {
+            id: getHash(newTitle),
+            title: newTitle,
+            related: selectedRelated,
+            source: "TopPicks Creators",
+            timestamp: new Date(),
+            categories: selectedCategories,
+            ref_id: selectedTopicToTranslate.ref_id,
+          };
           onTopicAdd(
-            {
-              id: getHash(newTitle),
-              title: newTitle,
-              related: getRelatedFromTitle(topics, selectedRelatedTitles),
-              source: "TopPicks Creators",
-              timestamp: new Date(),
-              categories: getCategoriesFromTitles(
-                categories,
-                selectedCategoriesTitles
-              ),
-              ref_id: selectedTopicToTranslate.ref_id,
-            },
+            newTopic,
             topics,
             currentLanguage,
             token,
@@ -392,7 +392,7 @@ export default function CreatePage({
             setLoading,
             async () => {
               setLoading(true);
-              setTranslatedTopicTitle(newTitle);
+              setSelectedTopic(newTopic);
               ondeleteToTranslateTopic(
                 selectedTopicToTranslate.id,
                 toTranslateTopics,
@@ -416,7 +416,6 @@ export default function CreatePage({
               await onSetBlankSheet();
               setLoading(false);
               onSuccess();
-
               setIsQuestionsTranslate(true);
               setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
               setTopicAddDialog(false);

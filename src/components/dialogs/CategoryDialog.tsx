@@ -1,30 +1,55 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
+import { CategoryTopic, Topic, Value } from "src/interfaces/Interfaces";
+import { isSelected } from "src/utils/utils";
+import Chip from "../select/ObjectChip";
 import { CustomDialog } from "./DialogStyles";
 
 interface CategoryDialogProps {
   open: boolean;
-  onConfirm: any;
-  onRefuse: any;
+  onConfirm: (category: string, categTopics: CategoryTopic[]) => void;
+  onRefuse: () => void;
   category: string;
+  preselectedCategTopics: CategoryTopic[];
+  categTopics: CategoryTopic[];
   headerText: string;
 }
+
 export default function CategoryDialog(props: CategoryDialogProps) {
   const [category, setCategory] = React.useState<string>("");
+  const [selectedCategTopics, setSelectedCategTopics] = React.useState<
+    CategoryTopic[]
+  >([]);
   const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
     setCategory(props.category);
-  }, [props.category]);
+    setSelectedCategTopics(props.preselectedCategTopics);
+  }, [props.category, props.preselectedCategTopics]);
 
   const onSubmit = async (newCategory: string) => {
     setError(false);
     setCategory("");
-    if (newCategory == "") {
+    if (newCategory == "" || selectedCategTopics.length == 0) {
       setError(true);
       return;
     }
-    props.onConfirm(newCategory);
+    props.onConfirm(newCategory, selectedCategTopics);
+  };
+
+  const handleCategTopicChange = (index: number) => {
+    if (isSelected(selectedCategTopics, props.categTopics[index])) {
+      setSelectedCategTopics([
+        ...selectedCategTopics.filter(
+          (s) => s.title !== props.categTopics[index].title
+        ),
+      ]);
+    } else {
+      setSelectedCategTopics([
+        ...selectedCategTopics,
+        props.categTopics[index],
+      ]);
+    }
   };
 
   return (
@@ -32,21 +57,31 @@ export default function CategoryDialog(props: CategoryDialogProps) {
       <CustomDialog
         open={props.open}
         headerText={props.headerText}
-        minWidth={400}
+        minWidth={500}
         onConfirm={() => onSubmit(category)}
         onRefuse={props.onRefuse}
         children={
-          <TextField
-            error={error}
-            autoFocus
-            InputLabelProps={{ shrink: true }}
-            margin="dense"
-            label="text"
-            id="standard-helperText"
-            value={category}
-            onChange={(e) => setCategory(e.currentTarget.value)}
-            fullWidth
-          />
+          <>
+            <TextField
+              error={error}
+              autoFocus
+              InputLabelProps={{ shrink: true }}
+              margin="dense"
+              label="text"
+              id="standard-helperText"
+              value={category}
+              onChange={(e) => setCategory(e.currentTarget.value)}
+              fullWidth
+            />
+            <Chip
+              width={300}
+              selectedValues={selectedCategTopics}
+              values={props.categTopics}
+              header={"Related Topics"}
+              error={error}
+              handleChange={handleCategTopicChange}
+            />
+          </>
         }
       />
     </>

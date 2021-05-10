@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import CustomButton from "../buttons/CustomButton";
+import Button from "../buttons/CustomButton";
 export const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -43,7 +43,7 @@ export const Form = ({
       <div className={classes.container} style={{ height }}>
         {children}
         <div className={classes.button}>
-          <CustomButton
+          <Button
             onClick={onSubmit}
             title="Submit"
             submit={true}

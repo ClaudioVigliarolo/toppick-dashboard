@@ -3,6 +3,8 @@ import { Lang } from "src/interfaces/Interfaces";
 import { getUser } from "../api/api";
 import { StatusContext } from "./StatusContext";
 
+const DEFAULT_LANG: Lang = Lang.EN;
+
 export const AuthContext = React.createContext({
   isAuthenticated: false,
   setIsAuthenticated: (newVal: boolean) => {},
@@ -23,7 +25,9 @@ export const AuthContext = React.createContext({
 export const AuthProvider = ({ children }: { children: any }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const [languages, setUserLanguages] = React.useState<Lang[]>([]);
-  const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(Lang.EN);
+  const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(
+    DEFAULT_LANG
+  );
   const [userType, setUserType] = React.useState<string>("");
   const [username, setUsername] = React.useState<string>("");
   const [userMail, setUserMail] = React.useState<string>("");
@@ -37,7 +41,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
       const prevLanguage: any = localStorage.getItem("language");
       if (storedJwt !== null && prevLanguage !== null) {
         const retrievedUser = await getUser(storedJwt);
-        if (retrievedUser) {
+
+        if (retrievedUser && retrievedUser.languages) {
           //the user was already authenticated, set up his data
           setUserLanguages(retrievedUser.languages);
           setCurrentLanguage(prevLanguage);
@@ -66,10 +71,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
 
   const onsetUserMail = (newVal: string) => {
     setUserMail(newVal);
-  };
-
-  const onSetLoading = (newVal: boolean) => {
-    setLoading(newVal);
   };
 
   const onSetCurrentLanguage = (newLang: Lang) => {

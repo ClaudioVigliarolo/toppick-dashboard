@@ -20,8 +20,8 @@ interface AlertDialogSlideProps {
   open: boolean;
   title: string;
   description: string;
-  onConfirm: any;
-  onRefuse: any;
+  onConfirm: () => void;
+  onRefuse: () => void;
 }
 export default function AlertDialogSlide(props: AlertDialogSlideProps) {
   const [open, setOpen] = React.useState(false);

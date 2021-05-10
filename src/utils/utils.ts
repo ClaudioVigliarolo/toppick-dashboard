@@ -1,3 +1,5 @@
+import { Value } from "src/interfaces/Interfaces";
+
 export const getHash = (str1: string, str2: string = "") => {
   const str = str1 + "*" + str2;
   var hash = 0,
@@ -8,11 +10,10 @@ export const getHash = (str1: string, str2: string = "") => {
     hash = (hash << 5) - hash + chr;
     hash |= 0; // Convert to 32bit integer
   }
-  return hash;
+  return Math.abs(hash);
 };
 
 export const getFormattedDate = (inputDate: any): string => {
-  console.log(inputDate);
   const todaysDate = new Date();
   // call setHours to take the time out of the comparison
   if (
@@ -28,6 +29,8 @@ export const getCurrentTime = (): string => {
   return new Date().toISOString();
 };
 
+/*text*/
+
 export const countTextLines = (inputText: string): number => {
   if (!inputText) return 0;
   const lines = inputText.match(/[^\r\n]+/g);
@@ -40,15 +43,11 @@ export const getLinesFromText = (inputText: string): string[] => {
   return lines ? lines : [];
 };
 
-export const getTextFromLines = (inputText: string[]): string => {
-  return "";
-  /*if (!inputText) return [];
-  const lines = inputText.match(/[^\r\n]+/g);
-  return lines ? lines : [];*/
+export const noSpace = (inputText: string): string => {
+  return inputText.replace(/\s/g, "");
 };
 
-//time utils
-
+/*time*/
 export const getTodayStart = (): Date => {
   const date = new Date();
   date.setHours(0, 0, 0, 0);
@@ -92,4 +91,8 @@ export const getLastYearStart = (): Date => {
   const date = new Date();
   date.setFullYear(date.getFullYear() - 1);
   return date;
+};
+
+export const isSelected = (arr: Value[], val: Value) => {
+  return arr.find((value) => value.title === val.title) ? true : false;
 };

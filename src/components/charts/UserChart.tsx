@@ -1,7 +1,7 @@
 import React from "react";
-import CardNumber from "../custom/CardNumber";
+import CardNumber from "../cards/CardNumber";
 import Button from "../buttons/TabButton";
-import StatsCarousel from "../carousels/StatsCarousel";
+import StatsCarousel from "../../temp/carousels/StatsCarousel";
 import { CreatedUser, Lang, UserStats } from "src/interfaces/Interfaces";
 import { getUsers, getUserStats } from "src/api/api";
 import { useChartStyles } from "./ChartStyles";
@@ -35,6 +35,7 @@ export default function DBChartBar({
 
     totranslateDeleted: 0,
     translatedTopics: 0,
+    translatedQuestions: 0,
     deletedReports: 0,
   });
 
@@ -125,6 +126,10 @@ export default function DBChartBar({
               <CardNumber
                 label="Translated topics"
                 value={userStats.translatedTopics}
+              />
+              <CardNumber
+                label="Translated questions"
+                value={userStats.translatedQuestions}
               />
               <CardNumber
                 label="Handled Reports"

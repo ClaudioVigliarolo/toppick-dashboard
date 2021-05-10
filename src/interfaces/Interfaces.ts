@@ -6,14 +6,54 @@ export interface Topic {
   title: string;
   source: string;
   timestamp: Date;
-  categories: Category[];
+  categories: TopicCategory[];
   related: Related[];
+}
+
+export interface TopicCategory {
+  id: number;
+  ref_id: number;
+  title: string;
+}
+
+export interface ToTranslateTopic {
+  id: number;
+  ref_id: number;
+  topic_id: number;
+  dest_lang: Lang;
+  source_lang: Lang;
+  source_title: string;
+  source_related: Related[];
+  source_categories: TopicCategory[];
+}
+
+export interface TopicsCategory {
+  topic_id: number;
+  category_id: number;
 }
 
 export interface Category {
   title: string;
   id: number;
   ref_id: number;
+  categoryTopics: CategoryTopic[];
+}
+
+export interface CategoryTopic {
+  id: number;
+  ref_id: number;
+  title: string;
+}
+
+export interface Related {
+  title: string;
+  ref_id: number;
+  id: number;
+}
+
+export interface QuestionTopic {
+  id: number;
+  title: string;
 }
 
 //report coming from the external world
@@ -34,29 +74,11 @@ export interface ReportHandled {
   reason: string;
 }
 
-export interface CategoryTopic {
-  category_id: number;
-  topic_id: number;
-  //  counter: number;
-}
-
-export interface Related {
-  id: number;
-  title: string;
-  ref_id: number;
-}
-
 export interface Question {
   id: number;
-  topic_id: number;
-  topic_title: string;
   title: string;
   timestamp: Date;
-}
-
-export interface Language {
-  label: string;
-  value: string;
+  topic: QuestionTopic;
 }
 
 export interface EditItem {
@@ -152,17 +174,6 @@ export enum EmailSubject {
   Message = "Message",
 }
 
-export interface ToTranslateTopic {
-  id: number;
-  ref_id: number;
-  topic_id: number;
-  dest_lang: Lang;
-  source_lang: Lang;
-  source_title: string;
-  source_related: Related[];
-  source_categories: Category[];
-}
-
 export interface StatsContent {
   categories: number;
   topics: number;
@@ -223,5 +234,18 @@ export interface UserStats {
 
   totranslateDeleted: number;
   translatedTopics: number;
+  translatedQuestions: number;
   deletedReports: number;
+}
+
+export interface Value {
+  title: string;
+}
+
+export interface Route {
+  key: string;
+  path: string;
+  sidebarName: string;
+  navbarName: string;
+  component: React.ReactNode;
 }

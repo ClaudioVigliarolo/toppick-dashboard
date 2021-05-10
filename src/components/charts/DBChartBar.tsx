@@ -1,5 +1,5 @@
 import React from "react";
-import CardNumber from "../custom/CardNumber";
+import CardNumber from "../cards/CardNumber";
 import { Lang, StatsContent } from "../../interfaces/Interfaces";
 import { getStatsContent } from "../../api/api";
 import { useChartStyles } from "./ChartStyles";

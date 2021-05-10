@@ -1,10 +1,59 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { COLORS } from "src/constants/Colors";
+import { CONSTANTS } from "src/constants/constants";
 
 // Create your Styles. Remember, since React-JSS uses the default preset,
 // most plugins are available without further configuration needed.
 export const useAppStyles = makeStyles((theme: Theme) =>
   createStyles({
+    menu: {
+      display: "flex",
+    },
+    appBar: {
+      width: `calc(100% - ${CONSTANTS.DRAWER_WIDTH}px)`,
+      marginLeft: CONSTANTS.DRAWER_WIDTH,
+    },
+    drawer: {
+      width: CONSTANTS.DRAWER_WIDTH,
+      flexShrink: 0,
+    },
+    drawerItem: {
+      color: COLORS.menuText,
+      textTransform: "uppercase",
+      fontWeight: "bolder",
+      float: "left",
+    },
+    childrenContainer: {
+      paddingTop: 100,
+      backgroundColor: COLORS.primaryBackground,
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      minHeight: "100vh",
+      width: "100%",
+
+      "@media (max-width: 500px)": {
+        padding: 100,
+        width: "200%",
+      },
+    },
+    paper: {
+      background: "red",
+      color: "red",
+    },
+    drawerPaper: {
+      width: CONSTANTS.DRAWER_WIDTH,
+      background: COLORS.menuContainer,
+      color: "#fff",
+    },
+    colorLinearProgress: {
+      backgroundColor: COLORS.lighterOrange,
+    },
+    bardLinearProgress: {
+      backgroundColor: COLORS.darkerOrange,
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
     headerSection: {
       display: "flex",
       flexDirection: "row",

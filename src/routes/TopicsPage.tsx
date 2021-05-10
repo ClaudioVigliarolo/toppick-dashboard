@@ -1,9 +1,15 @@
 import React from "react";
 import { getCategories, getTopics } from "../api/api";
-import { Category, PageProps, Topic } from "../interfaces/Interfaces";
+import {
+  Category,
+  CategoryTopic,
+  PageProps,
+  Related,
+  Topic,
+} from "../interfaces/Interfaces";
 import TableTopics from "../components/tables/TableTopics";
 import CustomButton from "src/components/buttons/CustomButton";
-import SearchBar from "src/components/input/searchBar";
+import SearchBar from "src/components/input/SearchBar";
 import TopicAddDialog from "../components/dialogs/TopicDialog";
 import TopicEditDialog from "../components/dialogs/TopicDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
@@ -42,7 +48,7 @@ export default function ViewPage({
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const [addDialog, setAddDialog] = React.useState<boolean>(false);
+
   const classes = useAppStyles();
 
   React.useEffect(() => {
@@ -86,7 +92,6 @@ export default function ViewPage({
         </div>
       </div>
       <TableTopics
-        categories={categories}
         searchText={searchText}
         onDelete={onDelete}
         onEdit={onEdit}
@@ -95,29 +100,24 @@ export default function ViewPage({
 
       <TopicEditDialog
         open={editDialog}
-        related={topics
-          .map((topic) => topic.title)
-          .filter((s) => s != currentTopic.title)}
-        preselectedRelated={currentTopic.related.map((r) => r.title)}
-        preselectedCategories={currentTopic.categories.map((r) => r.title)}
+        related={topics}
+        preselectedRelated={currentTopic.related}
+        preselectedCategories={currentTopic.categories}
         topic={currentTopic.title}
-        categories={categories.map((categ) => categ.title)}
+        categories={categories}
         onConfirm={(
           newTitle: string,
-          selectedCategoriesTitles: string[],
-          selectedRelatedTitles: string[]
+          selectedCategories: CategoryTopic[],
+          selectedRelated: Related[]
         ) => {
           onTopicUpdate(
             {
               id: currentTopic.id,
               title: newTitle,
-              related: getRelatedFromTitle(topics, selectedRelatedTitles),
+              related: selectedRelated,
               source: "TopPicks Creators",
               timestamp: new Date(),
-              categories: getCategoriesFromTitles(
-                categories,
-                selectedCategoriesTitles
-              ),
+              categories: selectedCategories,
               ref_id: currentTopic.ref_id,
             },
             topics,
@@ -142,28 +142,23 @@ export default function ViewPage({
         open={topicAddDialog}
         preselectedCategories={[]}
         preselectedRelated={[]}
-        categories={categories.map((categ) => categ.title)}
-        related={topics
-          .map((topic) => topic.title)
-          .filter((s) => s != currentTopic.title)}
+        categories={categories}
+        related={topics}
         headerText="Add New Topic"
         topic=""
         onConfirm={(
           newTitle: string,
-          selectedCategoriesTitles: string[],
-          selectedRelatedTitles: string[]
+          selectedCategories: CategoryTopic[],
+          selectedRelated: Related[]
         ) => {
           onTopicAdd(
             {
               id: getHash(newTitle, currentLanguage),
               title: newTitle,
-              related: getRelatedFromTitle(topics, selectedRelatedTitles),
+              related: selectedRelated,
               source: "TopPicks Creators",
               timestamp: new Date(),
-              categories: getCategoriesFromTitles(
-                categories,
-                selectedCategoriesTitles
-              ),
+              categories: selectedCategories,
               ref_id: getHash(newTitle, currentLanguage),
             },
             topics,

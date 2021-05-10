@@ -39,7 +39,7 @@ export default function TableUsers({
             <StyledTableCell>{user.type}</StyledTableCell>
             <StyledEditCell>
               {user.languages &&
-                user.languages.map((lang: string) => lang.toUpperCase() + "  ")}
+                user.languages.map((lang: Lang) => lang.toUpperCase() + "  ")}
               <div className={classes.userIconsContainer}>
                 <MailIcon
                   onClick={() => {

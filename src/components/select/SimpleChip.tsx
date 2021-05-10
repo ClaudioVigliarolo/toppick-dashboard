@@ -1,11 +1,6 @@
 import React from "react";
 
-import {
-  withStyles,
-  Theme,
-  createStyles,
-  makeStyles,
-} from "@material-ui/core/styles";
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import {
   FormControl,
   MenuItem,
@@ -85,9 +80,9 @@ export default function CustomChip(props: CustomChipProps) {
           )}
           MenuProps={MenuProps}
         >
-          {props.values.map((categ: string) => (
-            <MenuItem key={categ} value={categ}>
-              {categ}
+          {props.values.map((val: string) => (
+            <MenuItem key={val} value={val}>
+              {val}
             </MenuItem>
           ))}
         </Select>

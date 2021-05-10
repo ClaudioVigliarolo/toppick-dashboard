@@ -1,9 +1,20 @@
 import React from "react";
-import { getCategories, getQuestions, getTopics } from "../api/api";
-import { Category, PageProps, Question, Topic } from "../interfaces/Interfaces";
+import {
+  getCategories,
+  getQuestions,
+  getQuestionTopics,
+  getTopics,
+} from "../api/api";
+import {
+  Category,
+  PageProps,
+  Question,
+  QuestionTopic,
+  Topic,
+} from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
 import CustomButton from "src/components/buttons/CustomButton";
-import SearchBar from "src/components/input/searchBar";
+import SearchBar from "src/components/input/SearchBar";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import QuestionAddDialog from "../components/dialogs/QuestionDialog";
 import QuestionEditDialog from "../components/dialogs/QuestionDialog";
@@ -21,8 +32,20 @@ const NO_QUESTION: Question = {
   id: -1,
   timestamp: new Date(),
   title: "",
-  topic_id: -1,
-  topic_title: "",
+  topic: {
+    id: -1,
+    title: "",
+  },
+};
+
+const NO_TOPIC: Topic = {
+  categories: [],
+  id: -1,
+  related: [],
+  source: "",
+  timestamp: new Date(),
+  title: "Select A Topic",
+  ref_id: -1,
 };
 
 const SCROLL_THRESHOLD = 200;
@@ -36,7 +59,7 @@ export default function ViewPage({
   onError,
   onSuccess,
 }: PageProps) {
-  const [topics, setTopics] = React.useState<Topic[]>([]);
+  const [topics, setTopics] = React.useState<QuestionTopic[]>([]);
   const [questions, setQuestions] = React.useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = React.useState<Question>(
     NO_QUESTION
@@ -55,9 +78,12 @@ export default function ViewPage({
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedTopics = await getTopics(currentLanguage, token);
-      if (retrievedTopics != null) {
-        setTopics(retrievedTopics);
+      const retrievedQuestionTopics = await getQuestionTopics(
+        currentLanguage,
+        token
+      );
+      if (retrievedQuestionTopics != null) {
+        setTopics(retrievedQuestionTopics);
       }
       setLoading(false);
     })();
@@ -161,15 +187,17 @@ export default function ViewPage({
 
       <QuestionEditDialog
         open={editDialog}
-        topics={topics.map((t) => t.title)}
-        onConfirm={(newTitle: string, topicTitle: string) => {
-          onQuestionUpdate(
+        topics={topics}
+        onConfirm={async (newTitle: string, topic: QuestionTopic) => {
+          await onQuestionUpdate(
             {
               id: currentQuestion.id,
               title: newTitle,
-              topic_id: getTopicIdFromTitle(topics, topicTitle),
               timestamp: new Date(),
-              topic_title: topicTitle,
+              topic: {
+                id: topic.id,
+                title: topic.title,
+              },
             },
             questions,
             currentLanguage,
@@ -184,7 +212,7 @@ export default function ViewPage({
         }}
         headerText="Editing Question"
         question={currentQuestion.title}
-        topic={currentQuestion.topic_title}
+        topic={currentQuestion.topic}
         onRefuse={() => {
           setCurrentQuestion(NO_QUESTION);
           setEditDialog(false);
@@ -192,19 +220,21 @@ export default function ViewPage({
       />
 
       <QuestionAddDialog
-        topics={topics.map((t) => t.title)}
-        topic=""
+        topics={topics}
+        topic={NO_TOPIC}
         headerText="Add a new Question"
         question=""
         open={questionAddDialog}
-        onConfirm={(newTitle: string, topicTitle: string) => {
-          onQuestionAdd(
+        onConfirm={async (newTitle: string, topic: QuestionTopic) => {
+          await onQuestionAdd(
             {
-              id: getHash(newTitle + "*" + topicTitle),
+              id: getHash(newTitle + "*" + topic.title),
               title: newTitle,
-              topic_id: getTopicIdFromTitle(topics, topicTitle),
               timestamp: new Date(),
-              topic_title: topicTitle,
+              topic: {
+                id: topic.id,
+                title: topic.title,
+              },
             },
             questions,
             currentLanguage,

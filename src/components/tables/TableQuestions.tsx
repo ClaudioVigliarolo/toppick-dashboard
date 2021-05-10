@@ -29,11 +29,11 @@ export default function TableQuestions({
   const renderRows = (questions: Question[]) => {
     return questions.map((question: Question, index: number) => {
       if (
-        question.topic_title.toLowerCase().includes(searchText.toLowerCase())
+        question.topic.title.toLowerCase().includes(searchText.toLowerCase())
       ) {
         return (
           <StyledTableRow key={index}>
-            <StyledTableCell>{question.topic_title}</StyledTableCell>
+            <StyledTableCell>{question.topic.title}</StyledTableCell>
 
             <StyledTableCell>
               {getFormattedDate(question.timestamp)}
