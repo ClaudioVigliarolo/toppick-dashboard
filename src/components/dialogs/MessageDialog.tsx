@@ -5,7 +5,7 @@ import { CustomDialog } from "./DialogStyles";
 interface MessageDialogProps {
   open: boolean;
   onSend: (message: string) => void;
-  onRefuse: any;
+  onRefuse: () => void;
   headerText: string;
 }
 export default function MessageDialog(props: MessageDialogProps) {

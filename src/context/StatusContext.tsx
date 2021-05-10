@@ -32,7 +32,6 @@ export const StatusProvider = ({ children }: { children: any }) => {
   const onSetLoading = (newVal: boolean) => {
     setLoading(newVal);
   };
-
   return (
     <StatusContext.Provider
       value={{

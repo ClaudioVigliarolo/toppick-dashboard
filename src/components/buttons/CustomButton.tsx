@@ -19,17 +19,19 @@ export default function CustomButton({
   disabled = false,
 }: CustomButtonProps) {
   return (
-    <Button
-      variant="contained"
-      disabled={disabled}
-      style={{
-        backgroundColor: color,
-        color: "white",
-      }}
-      type={submit ? "submit" : "button"}
-      onClick={onClick}
-    >
-      {title}
-    </Button>
+    <div>
+      <Button
+        variant="contained"
+        disabled={disabled}
+        style={{
+          backgroundColor: color,
+          color: "white",
+        }}
+        type={submit ? "submit" : "button"}
+        onClick={onClick}
+      >
+        {title}
+      </Button>
+    </div>
   );
 }

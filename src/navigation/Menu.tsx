@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -13,141 +12,15 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { COLORS } from "../constants/Colors";
-import { colors, LinearProgress, MenuItem, Select } from "@material-ui/core";
+import { routes } from "./routes";
+import { LinearProgress, MenuItem } from "@material-ui/core";
 import LanguageSelect from "../components/select/LanguageSelect";
 import HeaderSection from "../components/layout/HeaderSection";
 import { getCondition } from "./Index";
 import { logoutUser } from "../api/api";
 import { Lang } from "src/interfaces/Interfaces";
-const drawerWidth = 240;
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-    },
-    appBar: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    drawerItem: {
-      color: COLORS.menuText,
-      textTransform: "uppercase",
-      fontWeight: "bolder",
-      float: "left",
-    },
-    childrenContainer: {
-      paddingTop: 100,
-      backgroundColor: COLORS.primaryBackground,
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "column",
-      minHeight: "100vh",
-      width: "100%",
+import { useAppStyles } from "src/styles/common";
 
-      "@media (max-width: 500px)": {
-        padding: 100,
-        width: "200%",
-      },
-    },
-    paper: {
-      background: "red",
-      color: "red",
-    },
-    drawerPaper: {
-      width: drawerWidth,
-      background: COLORS.menuContainer,
-      color: "#fff",
-    },
-    colorLinearProgress: {
-      backgroundColor: COLORS.lighterOrange,
-    },
-    bardLinearProgress: {
-      backgroundColor: COLORS.darkerOrange,
-    },
-    // necessary for content to be below app bar
-    toolbar: theme.mixins.toolbar,
-  })
-);
-
-const routers = [
-  {
-    key: "login",
-    path: "/login",
-    sidebarName: "login",
-    navbarName: "login",
-  },
-
-  {
-    key: "users",
-    path: "/users",
-    sidebarName: "users",
-    navbarName: "users",
-  },
-
-  {
-    key: "stats",
-    path: "/stats",
-    sidebarName: "statistics",
-    navbarName: "Overview",
-  },
-
-  {
-    key: "translate",
-    path: "/translate",
-    sidebarName: "translate",
-    navbarName: "translate",
-  },
-
-  {
-    key: "create",
-    path: "/create",
-    sidebarName: "create",
-    navbarName: "create",
-  },
-
-  {
-    key: "registration",
-    path: "/registration",
-    sidebarName: "registration",
-    navbarName: "registration",
-  },
-
-  {
-    key: "register",
-    path: "/register",
-    sidebarName: "register",
-    navbarName: "register",
-  },
-
-  {
-    key: "categories",
-    path: "/categories",
-    sidebarName: "categories",
-    navbarName: "categories",
-  },
-  {
-    key: "topics",
-    path: "/topics",
-    sidebarName: "topics",
-    navbarName: "topics",
-  },
-  {
-    key: "questions",
-    path: "/questions",
-    sidebarName: "questions",
-    navbarName: "questions",
-  },
-  {
-    key: "reports",
-    path: "/reports",
-    sidebarName: "reports",
-    navbarName: "reports",
-  },
-];
 export default function PersistentDrawerLeft({
   children,
   userType,
@@ -169,7 +42,7 @@ export default function PersistentDrawerLeft({
   currentLanguage: Lang;
   loading: boolean;
 }) {
-  const classes = useStyles();
+  const classes = useAppStyles();
   const [path, setPath] = React.useState("");
 
   let location = useLocation();
@@ -187,12 +60,12 @@ export default function PersistentDrawerLeft({
   };
 
   const getRouteName = (path: string) => {
-    const route = routers.find((route) => route.path == path);
+    const route = routes.find((route) => route.path == path);
     return route ? route.navbarName : "Not found";
   };
 
   return (
-    <div className={classes.root}>
+    <div className={classes.menu}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -232,16 +105,10 @@ export default function PersistentDrawerLeft({
       >
         <div className={classes.toolbar} />
         <Divider />
-
         <List>
-          {routers.map(
+          {routes.map(
             (prop: any, key: number) =>
-              getCondition(
-                userType,
-                prop.path,
-                isAuthenticated,
-                currentLanguage
-              ) && (
+              getCondition(userType, prop.path, isAuthenticated) && (
                 <Link
                   to={prop.path}
                   style={{ textDecoration: "none" }}
@@ -258,7 +125,6 @@ export default function PersistentDrawerLeft({
           )}
         </List>
         <Divider />
-
         <Divider />
         <List>
           {isAuthenticated && (
@@ -282,7 +148,6 @@ export default function PersistentDrawerLeft({
       </Drawer>
       <div className={classes.childrenContainer}>
         <HeaderSection title={getRouteName(path)} />
-
         {children}
       </div>
     </div>

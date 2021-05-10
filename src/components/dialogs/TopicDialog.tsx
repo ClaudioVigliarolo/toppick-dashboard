@@ -1,22 +1,29 @@
 import React from "react";
 import { CustomDialog } from "./DialogStyles";
-import Chip from "../select/Chip";
+import Chip from "../select/ObjectChip";
 import { TextField } from "@material-ui/core";
+import {
+  Category,
+  CategoryTopic,
+  Related,
+  Topic,
+} from "src/interfaces/Interfaces";
+import { isSelected } from "src/utils/utils";
+
 interface TopicDialogProps {
   topic: string;
   open: boolean;
   onConfirm: (
     topicTitle: string,
-    selectedCategoriesTitles: string[],
-    selectedRelatedTitles: string[]
+    selectedCategories: CategoryTopic[],
+    selectedRelated: Related[]
   ) => void;
   onRefuse: () => void;
-  categories: string[];
-  preselectedCategories: string[];
-  preselectedRelated: string[];
+  categories: CategoryTopic[];
+  preselectedCategories: CategoryTopic[];
+  preselectedRelated: Related[];
   headerText: string;
-  related: string[];
-
+  related: Topic[];
   placeholderTitle?: string;
   placeholderCategories?: string;
   placeholderRelated?: string;
@@ -24,10 +31,10 @@ interface TopicDialogProps {
 
 export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<string>("");
-  const [selectedRelated, setSelectedRelated] = React.useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(
-    []
-  );
+  const [selectedRelated, setSelectedRelated] = React.useState<Related[]>([]);
+  const [selectedCategories, setSelectedCategories] = React.useState<
+    CategoryTopic[]
+  >([]);
   const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
@@ -36,7 +43,10 @@ export default function TopicDialog(props: TopicDialogProps) {
     setSelectedRelated(props.preselectedRelated);
   }, [props.categories, props.topic, props.preselectedCategories]);
 
-  const onSubmit = async (newTopic: string, selectedCategories: string[]) => {
+  const onSubmit = async (
+    newTopic: string,
+    selectedCategories: CategoryTopic[]
+  ) => {
     setError(false);
     if (newTopic == "" || selectedCategories.length == 0) {
       setError(true);
@@ -45,16 +55,28 @@ export default function TopicDialog(props: TopicDialogProps) {
     props.onConfirm(newTopic, selectedCategories, selectedRelated);
   };
 
-  const handleCategoriesChange = (
-    event: React.ChangeEvent<{ value: string[] }>
-  ) => {
-    setSelectedCategories(event.target.value);
+  const handleCategoriesChange = (index: number) => {
+    if (isSelected(selectedCategories, props.categories[index])) {
+      setSelectedCategories([
+        ...selectedCategories.filter(
+          (s) => s.title !== props.categories[index].title
+        ),
+      ]);
+    } else {
+      setSelectedCategories([...selectedCategories, props.categories[index]]);
+    }
   };
 
-  const handleRelatedChange = (
-    event: React.ChangeEvent<{ value: string[] }>
-  ) => {
-    setSelectedRelated(event.target.value);
+  const handleRelatedChange = (index: number) => {
+    if (isSelected(selectedRelated, props.related[index])) {
+      setSelectedRelated([
+        ...selectedRelated.filter(
+          (s) => s.title !== props.related[index].title
+        ),
+      ]);
+    } else {
+      setSelectedRelated([...selectedRelated, props.related[index]]);
+    }
   };
 
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import SearchBar from "src/components/input/searchBar";
+import SearchBar from "src/components/input/SearchBar";
 import Select from "src/components/select/Select";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import EditDialog from "../components/dialogs/EditDialog";
@@ -14,8 +14,6 @@ import TableReports from "../components/tables/TableReports";
 import { PageProps, ReportHandled, Topic } from "../interfaces/Interfaces";
 import { useAppStyles } from "../styles/common";
 
-const NO_TOPIC = "Filter by topic";
-
 const NO_REPORT: ReportHandled = {
   question_id: -1,
   reason: "",
@@ -26,6 +24,16 @@ const NO_REPORT: ReportHandled = {
   topic_id: -1,
 };
 
+const NO_TOPIC: Topic = {
+  categories: [],
+  id: -1,
+  related: [],
+  source: "",
+  timestamp: new Date(),
+  title: "Filter by topic",
+  ref_id: -1,
+};
+
 export default function ReportsPage({
   token,
   currentLanguage,
@@ -34,13 +42,12 @@ export default function ReportsPage({
   onError,
   onSuccess,
 }: PageProps) {
-  const [filterTopic, setFilterTopic] = React.useState<string>(NO_TOPIC);
+  const [filterTopic, setFilterTopic] = React.useState<Topic>(NO_TOPIC);
   const [reports, setReports] = React.useState<ReportHandled[]>([]);
   const [currentReport, setCurrentReport] = React.useState<ReportHandled>(
     NO_REPORT
   );
   const [topics, setTopics] = React.useState<Topic[]>([]);
-  const [topicTitles, setTopicTitles] = React.useState<string[]>([]);
   const [searchText, setSearchText] = React.useState<string>("");
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
@@ -57,14 +64,13 @@ export default function ReportsPage({
       const retrievedTopics = await getTopics(currentLanguage, token);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
-        setTopicTitles(retrievedTopics.map((t) => t.title));
       }
       setLoading(false);
     })();
   }, [currentLanguage]);
 
-  const handleTopicChange = (event: React.ChangeEvent<{ value: string }>) => {
-    setFilterTopic(event.target.value);
+  const handleTopicChange = (index: number) => {
+    setFilterTopic(topics[index]);
   };
 
   const onEdit = (report: ReportHandled) => {
@@ -102,7 +108,7 @@ export default function ReportsPage({
           <Select
             handleChange={handleTopicChange}
             value={filterTopic}
-            values={topicTitles}
+            values={topics}
             defaultValue={NO_TOPIC}
           />
         </div>
@@ -111,7 +117,7 @@ export default function ReportsPage({
         <TableReports
           reports={reports}
           topics={topics}
-          filterTopic={filterTopic === NO_TOPIC ? "" : filterTopic}
+          filterTopic={filterTopic === NO_TOPIC ? "" : filterTopic.title}
           onDelete={onDelete}
           onEdit={onEdit}
           searchText={searchText}
@@ -175,8 +181,10 @@ export default function ReportsPage({
               id: currentReport.question_id,
               title: newQuestion,
               timestamp: new Date(),
-              topic_id: currentReport.topic_id,
-              topic_title: currentReport.topic_title,
+              topic: {
+                id: currentReport.topic_id,
+                title: currentReport.topic_title,
+              },
             },
             [],
             currentLanguage,

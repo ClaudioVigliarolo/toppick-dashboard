@@ -6,12 +6,13 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
+import { Value } from "src/interfaces/Interfaces";
 
 interface CustomSelectProps {
-  value: string;
-  handleChange: any;
-  defaultValue: string;
-  values: string[];
+  value: Value;
+  handleChange: (index: number) => void;
+  defaultValue: Value;
+  values: Value[];
   color?: string;
   header?: string;
   width?: number;
@@ -37,14 +38,17 @@ export default function CustomSelect({
         }}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={value}
-        onChange={handleChange}
-        defaultValue=""
+        value={value.title}
+        defaultValue="ss"
       >
-        <MenuItem value={defaultValue}>{defaultValue}</MenuItem>
-        {values.map((val: string, index: number) => (
-          <MenuItem key={index} value={val}>
-            {val}
+        <MenuItem value={defaultValue.title}>{defaultValue.title}</MenuItem>
+        {values.map((val: Value, index: number) => (
+          <MenuItem
+            key={index}
+            value={val.title}
+            onClick={() => handleChange(index)}
+          >
+            {val.title}
           </MenuItem>
         ))}
       </Select>

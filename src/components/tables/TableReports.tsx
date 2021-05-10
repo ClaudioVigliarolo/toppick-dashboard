@@ -27,7 +27,6 @@ interface TableReportsProps {
   onIgnore: (report: ReportHandled) => void;
   searchText: string;
 }
-const NO_TOPIC = "Filter by topic";
 
 export default function TableCategories({
   searchText,

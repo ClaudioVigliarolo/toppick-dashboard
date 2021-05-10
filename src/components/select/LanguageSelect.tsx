@@ -1,10 +1,8 @@
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button";
 import { Lang } from "src/interfaces/Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -12,7 +10,6 @@ const useStyles = makeStyles((theme: Theme) =>
     formControl: {
       minWidth: 50,
     },
-
     select: {
       marginTop: theme.spacing(2),
       color: "orange",
@@ -36,22 +33,17 @@ export default function LanguageSelect({
   currentLanguage,
 }: {
   languages: Lang[];
-  onLanguageChange(newLang: any): void;
+  onLanguageChange(lang: any): void;
   currentLanguage: Lang;
 }) {
   const classes = useStyles();
-  const [language, setLanguage] = React.useState<string>("");
-
-  const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
-    setLanguage(event.target.value);
-  };
 
   return (
     <div>
       <FormControl className={classes.formControl}>
         <Select
           value={currentLanguage}
-          onChange={(e) => {
+          onChange={(e: any) => {
             onLanguageChange(e.target.value);
           }}
           displayEmpty
@@ -63,8 +55,8 @@ export default function LanguageSelect({
             },
           }}
         >
-          {languages.map((language: string) => (
-            <MenuItem key={language} value={language}>
+          {languages.map((language: Lang, index: number) => (
+            <MenuItem key={index} value={language}>
               {language.toUpperCase()}
             </MenuItem>
           ))}

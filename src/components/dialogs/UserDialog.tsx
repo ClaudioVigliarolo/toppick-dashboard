@@ -1,10 +1,8 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
 import { CustomDialog } from "./DialogStyles";
-import { CONSTANTS as USER_CONSTANTS } from "../../constants/constants";
-import { addUser } from "../../api/api";
-import Chip from "../select/Chip";
-import { Form, useStyles } from "../input/Form";
+import Chip from "../select/SimpleChip";
+import { useStyles } from "../input/Form";
 import { Lang } from "src/interfaces/Interfaces";
 
 interface UserDialogProps {
@@ -16,7 +14,7 @@ interface UserDialogProps {
     languages: Lang[],
     usertype?: string
   ) => void;
-  onRefuse: any;
+  onRefuse: () => void;
   email: string;
   username: string;
   password: string;
@@ -46,7 +44,6 @@ export default function UserDialog({
   const [selectedLanguagesState, setSelectedLanguagesState] = React.useState<
     Lang[]
   >([]);
-  const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -54,7 +51,6 @@ export default function UserDialog({
     setSelectedLanguagesState(selectedLanguages);
     setEmailState(email);
     setPasswordState(password);
-    console.log("amore", languages, selectedLanguages);
   }, [username, email, password, selectedLanguages]);
 
   const onSubmit = async (): Promise<void> => {
@@ -71,10 +67,13 @@ export default function UserDialog({
     onConfirm(usernameState, emailState, passwordState, selectedLanguagesState);
   };
 
-  const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+  const handleChange = (event: React.ChangeEvent<any>) => {
     setSelectedLanguagesState(event.target.value);
   };
 
+  {
+    console.log("llllll", languages);
+  }
   return (
     <>
       <CustomDialog

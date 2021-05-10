@@ -17,9 +17,9 @@ const Transition = React.forwardRef(function Transition(
 
 interface TextDialogProps {
   open: boolean;
-  onConfirm: any;
+  onConfirm: () => void;
   confirmButtonText?: string;
-  onRefuse: any;
+  onRefuse: () => void;
   refuseButtonText?: string;
   headerText: string;
   children?: React.ReactNode;

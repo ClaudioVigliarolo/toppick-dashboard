@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Redirect, Route, RouteProps } from "react-router-dom";
+import React from "react";
+import { Redirect, Route } from "react-router-dom";
 import { Lang } from "src/interfaces/Interfaces";
 
 interface CustomRouteProps {

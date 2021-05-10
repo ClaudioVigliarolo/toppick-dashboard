@@ -2,42 +2,45 @@ import React from "react";
 import { CustomDialog } from "./DialogStyles";
 import Select from "../select/Select";
 import { TextField } from "@material-ui/core";
+import { QuestionTopic, Topic } from "src/interfaces/Interfaces";
 interface QuestionDialogProps {
-  topic: string;
+  topic: QuestionTopic;
   open: boolean;
-  onConfirm: (question: string, topic: string) => void;
+  onConfirm: (question: string, topic: QuestionTopic) => void;
   onRefuse: () => void;
-  topics: string[];
+  topics: QuestionTopic[];
   question: string;
   headerText: string;
 }
-const NO_TOPIC = "Select a topic";
+
+const NO_TOPIC: QuestionTopic = {
+  id: -1,
+  title: "Select A Topic",
+};
 
 export default function QuestionDialog(props: QuestionDialogProps) {
   const [question, setQuestion] = React.useState<string>("");
-  const [topic, setTopic] = React.useState<string>("");
-  const [topics, setTopics] = React.useState<string[]>([]);
+  const [topic, setTopic] = React.useState<QuestionTopic>(NO_TOPIC);
   const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
     if (props.open) {
       setQuestion(props.question);
       setTopic(props.topic);
-      setTopics(props.topics);
     }
   }, [props.topics, props.topic, props.question]);
 
-  const onSubmit = async (newTopic: string, newQuestion: string) => {
+  const onSubmit = async (newTopic: QuestionTopic, newQuestion: string) => {
     setError(false);
-    if (newTopic == "" || newQuestion == "") {
+    if (newTopic.title === NO_TOPIC.title || newQuestion === "") {
       setError(true);
       return;
     }
     props.onConfirm(newQuestion, newTopic);
   };
 
-  const handleChange = (event: React.ChangeEvent<{ value: string }>) => {
-    setTopic(event.target.value);
+  const handleChange = (index: number) => {
+    setTopic(props.topics[index]);
   };
 
   return (
@@ -63,10 +66,10 @@ export default function QuestionDialog(props: QuestionDialogProps) {
               <Select
                 handleChange={handleChange}
                 value={topic}
-                values={topics}
+                values={props.topics}
                 color="black"
                 header="topic"
-                defaultValue={NO_TOPIC}
+                defaultValue={topic}
               />
             </div>
           </>

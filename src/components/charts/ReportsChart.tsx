@@ -1,5 +1,5 @@
 import React from "react";
-import CardNumber from "../custom/CardNumber";
+import CardNumber from "../cards/CardNumber";
 import { getStatsReports } from "../../api/api";
 import { Lang, StatsReport } from "../../interfaces/Interfaces";
 import { useChartStyles } from "./ChartStyles";
@@ -30,8 +30,6 @@ export default function ReportsChart({
         currentLanguage,
         token
       );
-      console.log("casetta", retrievedStats);
-
       if (retrievedStats != null) {
         setReportStats(retrievedStats);
       }

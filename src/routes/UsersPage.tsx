@@ -9,7 +9,7 @@ import {
 } from "../interfaces/Interfaces";
 import TableUsers from "../components/tables/TableUsers";
 import { AuthContext } from "../context/AuthContext";
-import SearchBar from "src/components/input/searchBar";
+import SearchBar from "src/components/input/SearchBar";
 import CustomButton from "src/components/buttons/CustomButton";
 import UserAddDialog from "../components/dialogs/UserDialog";
 import UserEditDialog from "../components/dialogs/UserDialog";
@@ -23,7 +23,7 @@ import {
   onUserMessage,
   onUserUpdate,
 } from "src/utils/users";
-import { getHash } from "src/utils/utils";
+import { getHash, noSpace } from "src/utils/utils";
 
 const NO_USER: CreatedUser = {
   id: -1,
@@ -119,18 +119,18 @@ export default function UsersPage({
         ) => {
           onUserAdd(
             {
-              userMail: email.replace(/\s/g, ""),
-              password: password.replace(/\s/g, ""),
+              userMail: noSpace(email),
+              password: noSpace(password),
               languages,
               id: getHash(newUsername),
               type,
-              username: newUsername.replace(/\s/g, ""),
+              username: noSpace(newUsername),
             },
             users,
             setUsers,
             EmailType.Registration,
             {
-              email: email.replace(/\s/g, ""),
+              email: noSpace(email),
               fromEmail: userMail,
               fromName: username,
               subject: EmailSubject.Registration,
@@ -164,18 +164,18 @@ export default function UsersPage({
         ) => {
           onUserUpdate(
             {
-              username: newUsername.replace(/\s/g, ""),
-              userMail: email.replace(/\s/g, ""),
+              username: noSpace(newUsername),
+              userMail: noSpace(email),
               id: currentUser.id,
               languages,
-              password: password.replace(/\s/g, ""),
+              password: noSpace(password),
               type,
             },
             users,
             setUsers,
             EmailType.Update,
             {
-              email: email.replace(/\s/g, ""),
+              email: noSpace(email),
               fromEmail: userMail,
               fromName: username,
               subject: EmailSubject.Update,

@@ -13,7 +13,6 @@ import { getFormattedDate } from "../../utils/utils";
 
 interface TableTopicsProps {
   topics: Topic[];
-  categories: Category[];
   searchText: string;
   onEdit: (categ: Topic) => void;
   onDelete: (categ: Topic) => void;
@@ -21,7 +20,6 @@ interface TableTopicsProps {
 
 export default function TableTopics({
   searchText,
-  categories,
   topics,
   onDelete,
   onEdit,

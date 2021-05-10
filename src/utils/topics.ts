@@ -1,11 +1,9 @@
 /* utils for inserting, modifing, removing topics  */
-
 import {
   Category,
   Lang,
   Question,
   Related,
-  Report,
   ReportHandled,
   Topic,
   ToTranslateTopic,
@@ -20,13 +18,21 @@ import {
   deleteReport,
   deleteTopic,
   deleteToTranslateTopic,
-  getGoogleTranslatedQuestions,
   updateCategory,
   updateQuestion,
   updateTopic,
 } from "../api/api";
-import { getCurrentTime, getHash } from "../utils/utils";
-import { CONSTANTS } from "../constants/constants";
+import { getHash } from "../utils/utils";
+
+const NO_TOPIC: Topic = {
+  categories: [],
+  id: -1,
+  related: [],
+  source: "",
+  timestamp: new Date(),
+  title: "",
+  ref_id: -1,
+};
 
 export const onCategoryAdd = async (
   newCategory: Category,
@@ -149,8 +155,8 @@ export const onQuestionUpdate = async (
   newQuestions.forEach(function (item: Question) {
     if (item.id == question.id) {
       item.title = question.title;
-      item.topic_id = question.topic_id;
-      item.topic_title = question.topic_title;
+      item.topic.title = question.topic.title;
+      item.topic.id = question.topic.id;
       item.timestamp = new Date();
     }
   });
@@ -222,6 +228,7 @@ export const getCategoriesFromTitles = (
         id: category.id,
         title: category.title,
         ref_id: category.ref_id,
+        categoryTopics: category.categoryTopics,
       });
     }
   });
@@ -256,6 +263,18 @@ export const getTopicIdFromTitle = (
     }
   });
   return selectedTopic ? selectedTopic.id : -1;
+};
+
+export const getTopicFromTitle = (
+  selectedTopicTitle: string,
+  topics: Topic[]
+): Topic => {
+  const selectedTopic = topics.find((topic: Topic) => {
+    if (topic.title == selectedTopicTitle) {
+      return topic;
+    }
+  });
+  return selectedTopic ? selectedTopic : NO_TOPIC;
 };
 
 export const onTopicUpdate = async (
@@ -343,8 +362,7 @@ export const onReportDelete = async (
 
 export const onQuestionsAdd = async (
   questionsArray: string[],
-  selectTopic: string,
-  topics: Topic[],
+  selectedTopic: Topic,
   currentLanguage: Lang,
   token: string,
   setLoading: (val: boolean) => void,
@@ -352,30 +370,27 @@ export const onQuestionsAdd = async (
   onError: () => void
 ) => {
   setLoading(true);
-
-  const topic = topics.find((t) => t.title == selectTopic);
-  if (!topic || questionsArray.length < 0) {
+  if (!selectedTopic || questionsArray.length < 0) {
     setLoading(false);
     return onError();
   }
 
   const newQuestions: Question[] = questionsArray.map(
     (questionTitle: string) => ({
-      id: getHash(questionTitle + "*" + topic?.title),
+      id: getHash(questionTitle + "*" + selectedTopic.title),
       timestamp: new Date(),
-      topic_title: topic.title,
       title: questionTitle,
-      topic_id: topic.id,
+      topic: {
+        id: selectedTopic.id,
+        title: selectedTopic.title,
+      },
     })
   );
-
   const val = await addQuestions(newQuestions, currentLanguage, token);
-
   if (!val) {
     setLoading(false);
     return onError();
   }
-
   setLoading(false);
   onSuccess();
 };

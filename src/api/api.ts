@@ -7,18 +7,17 @@ import {
   ReportHandled,
   Topic,
   LoggedUser,
-  Email,
   UpdatesResponse,
   EmailType,
-  LocalsEmail,
   EmailInfo,
   ToTranslateTopic,
   Lang,
   StatsContent,
-  StatsUser,
   StatsReport,
   UserStats,
   StatsUpdates,
+  CategoryTopic,
+  QuestionTopic,
 } from "../interfaces/Interfaces";
 import { HOSTNAME } from "../config/config";
 
@@ -26,10 +25,29 @@ export const getCategories = async (
   lang: Lang,
   token: string
 ): Promise<Category[] | null> => {
-  console.log("getc ategoris tiktok", lang);
   try {
     const response = await axios.get(
       `${HOSTNAME}/topick/get_categories/` + lang,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export const getCategoryTopics = async (
+  lang: Lang,
+  token: string
+): Promise<CategoryTopic[] | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/topick/get_categorytopics/` + lang,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -69,7 +87,27 @@ export const getTopics = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data.topics : null;
+    return response.status == 200 ? response.data : null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export const getQuestionTopics = async (
+  lang: Lang,
+  token: string
+): Promise<QuestionTopic[] | null> => {
+  try {
+    const response = await axios.get(
+      `${HOSTNAME}/topick/get_questiontopics/` + lang,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -89,7 +127,7 @@ export const getToTranslateTopics = async (
         },
       }
     );
-    return response.status == 200 ? response.data.toTranslate : null;
+    return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -613,7 +651,7 @@ export const getReports = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data.reports : null;
+    return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;

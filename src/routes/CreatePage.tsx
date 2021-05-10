@@ -5,25 +5,35 @@ import {
   getQuestionsByTopic,
   getTopics,
 } from "../api/api";
-import { Category, PageProps, Topic } from "../interfaces/Interfaces";
+import {
+  Category,
+  CategoryTopic,
+  PageProps,
+  Related,
+  Topic,
+} from "../interfaces/Interfaces";
 import TopicAddDialog from "../components/dialogs/TopicDialog";
 import { useAppStyles } from "../styles/common";
 import Select from "src/components/select/Select";
 import CustomButton from "src/components/buttons/CustomButton";
 import TextArea from "src/components/input/NumberedTextarea";
 import QuestionsList from "src/components/lists/QuestionsList";
-import {
-  getCategoriesFromTitles,
-  getRelatedFromTitle,
-  getTopicIdFromTitle,
-  onQuestionsAdd,
-  onTopicAdd,
-} from "src/utils/topics";
+import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
 import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";
 
 const MIN_QUESTIONS = -1;
-const NO_TOPIC = "Select A Topic";
+
+const NO_TOPIC: Topic = {
+  categories: [],
+  id: -1,
+  related: [],
+  source: "",
+  timestamp: new Date(),
+  title: "Select A Topic",
+  ref_id: -1,
+};
+
 export default function CreatePage({
   token,
   currentLanguage,
@@ -31,7 +41,7 @@ export default function CreatePage({
   onError,
   onSuccess,
 }: PageProps) {
-  const [selectedTopic, setSelectedTopic] = React.useState<string>(NO_TOPIC);
+  const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
   const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
   const [questionsText, setQuestionsText] = React.useState<string>("");
   const [questionsArray, setQuestionsArray] = React.useState<string[]>([]);
@@ -62,14 +72,12 @@ export default function CreatePage({
     setQuestionsArray(getLinesFromText(questionsText));
   };
 
-  const handleTopicChange = async (
-    event: React.ChangeEvent<{ value: any }>
-  ) => {
-    setSelectedTopic(event.target.value);
-    if (event.target.value !== NO_TOPIC) {
+  const handleTopicChange = async (index: number) => {
+    setSelectedTopic(topics[index]);
+    if (topics[index] !== NO_TOPIC) {
       setLoading(true);
       const retrievedQuestions = await getQuestionsByTopic(
-        getTopicIdFromTitle(topics, event.target.value),
+        topics[index].id,
         token
       );
       if (retrievedQuestions !== null) {
@@ -108,9 +116,7 @@ export default function CreatePage({
       return "Let's start by picking a Topic ";
     }
   };
-  {
-    console.log("suso", selectedTopic);
-  }
+
   return (
     <div className={classes.container}>
       <h1 className={classes.headerText}>{renderHeaderText()}</h1>
@@ -120,7 +126,7 @@ export default function CreatePage({
           <Select
             handleChange={handleTopicChange}
             value={selectedTopic}
-            values={topics.map((t) => t.title)}
+            values={topics}
             defaultValue={NO_TOPIC}
           />
 
@@ -159,13 +165,12 @@ export default function CreatePage({
                     await onQuestionsAdd(
                       questionsArray,
                       selectedTopic,
-                      topics,
                       currentLanguage,
                       token,
                       setLoading,
                       async () => {
                         await addToTranslateTopic(
-                          getTopicIdFromTitle(topics, selectedTopic),
+                          selectedTopic.id,
                           currentLanguage,
                           token
                         );
@@ -197,30 +202,26 @@ export default function CreatePage({
         open={topicAddDialog}
         preselectedCategories={[]}
         preselectedRelated={[]}
-        categories={categories.map((categ) => categ.title)}
-        related={topics
-          .map((topic) => topic.title)
-          .filter((s) => s != selectedTopic)}
+        categories={categories}
+        related={topics}
         headerText="Add New Topic"
         topic=""
         onConfirm={async (
-          newTitle: string,
-          selectedCategoriesTitles: string[],
-          selectedRelatedTitles: string[]
+          newTopicTitle: string,
+          selectedCategories: CategoryTopic[],
+          selectedRelated: Related[]
         ) => {
+          const newTopic: Topic = {
+            id: getHash(newTopicTitle, currentLanguage),
+            title: newTopicTitle,
+            related: selectedRelated,
+            source: "TopPicks, " + "username",
+            timestamp: new Date(),
+            categories: selectedCategories,
+            ref_id: getHash(newTopicTitle, currentLanguage),
+          };
           await onTopicAdd(
-            {
-              id: getHash(newTitle, currentLanguage),
-              title: newTitle,
-              related: getRelatedFromTitle(topics, selectedRelatedTitles),
-              source: "TopPicks, " + "username",
-              timestamp: new Date(),
-              categories: getCategoriesFromTitles(
-                categories,
-                selectedCategoriesTitles
-              ),
-              ref_id: getHash(newTitle, currentLanguage),
-            },
+            newTopic,
             topics,
             currentLanguage,
             token,
@@ -228,7 +229,7 @@ export default function CreatePage({
             setLoading,
             () => {
               setQuestionsText("");
-              setSelectedTopic(newTitle);
+              setSelectedTopic(newTopic);
               setTopicAddDialog(false);
               onSuccess();
             },
