@@ -14,7 +14,7 @@ import {
 } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
 import CustomButton from "../components/buttons/CustomButton";
-import SearchBar from "../components/input/SearchBar";
+import SearchBar from "../components/input/SearchBa";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import QuestionAddDialog from "../components/dialogs/QuestionDialog";
 import QuestionEditDialog from "../components/dialogs/QuestionDialog";

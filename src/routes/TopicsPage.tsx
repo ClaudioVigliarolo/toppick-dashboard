@@ -9,7 +9,7 @@ import {
 } from "../interfaces/Interfaces";
 import TableTopics from "../components/tables/TableTopics";
 import CustomButton from "../components/buttons/CustomButton";
-import SearchBar from "../components/input/SearchBar";
+import SearchBar from "../components/input/SearchBa";
 import TopicAddDialog from "../components/dialogs/TopicDialog";
 import TopicEditDialog from "../components/dialogs/TopicDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";

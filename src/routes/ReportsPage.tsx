@@ -1,5 +1,5 @@
 import React from "react";
-import SearchBar from "../components/input/SearchBar";
+import SearchBar from "../components/input/SearchBa";
 import Select from "../components/select/Select";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import EditDialog from "../components/dialogs/EditDialog";

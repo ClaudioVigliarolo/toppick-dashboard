@@ -3,7 +3,7 @@ import { getCategories, getCategoryTopics } from "../api/api";
 import { Category, CategoryTopic, PageProps } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
 import CustomButton from "../components/buttons/CustomButton";
-import SearchBar from "../components/input/SearchBar";
+import SearchBar from "../components/input/SearchBa";
 import AddDialog from "../components/dialogs/CategoryDialog";
 import EditDialog from "../components/dialogs/CategoryDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
