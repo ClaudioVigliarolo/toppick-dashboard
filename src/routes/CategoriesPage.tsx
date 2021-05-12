@@ -2,8 +2,8 @@ import React from "react";
 import { getCategories, getCategoryTopics } from "../api/api";
 import { Category, CategoryTopic, PageProps } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
-import CustomButton from "src/components/buttons/CustomButton";
-import SearchBar from "src/components/input/SearchBar";
+import CustomButton from "../components/buttons/CustomButton";
+import SearchBar from "../components/input/SearchBar";
 import AddDialog from "../components/dialogs/CategoryDialog";
 import EditDialog from "../components/dialogs/CategoryDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
@@ -39,9 +39,8 @@ export default function ViewPage({
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
   const [addDialog, setAddDialog] = React.useState<boolean>(false);
-  const [currentCategory, setCurrentCategory] = React.useState<Category>(
-    NO_CATEGORY
-  );
+  const [currentCategory, setCurrentCategory] =
+    React.useState<Category>(NO_CATEGORY);
   const classes = useAppStyles();
   React.useEffect(() => {
     (async () => {

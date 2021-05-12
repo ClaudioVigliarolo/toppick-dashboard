@@ -13,8 +13,8 @@ import {
   Topic,
 } from "../interfaces/Interfaces";
 import TableCategories from "../components/tables/TableCategories";
-import CustomButton from "src/components/buttons/CustomButton";
-import SearchBar from "src/components/input/SearchBar";
+import CustomButton from "../components/buttons/CustomButton";
+import SearchBar from "../components/input/SearchBar";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import QuestionAddDialog from "../components/dialogs/QuestionDialog";
 import QuestionEditDialog from "../components/dialogs/QuestionDialog";
@@ -61,13 +61,11 @@ export default function ViewPage({
 }: PageProps) {
   const [topics, setTopics] = React.useState<QuestionTopic[]>([]);
   const [questions, setQuestions] = React.useState<Question[]>([]);
-  const [currentQuestion, setCurrentQuestion] = React.useState<Question>(
-    NO_QUESTION
-  );
+  const [currentQuestion, setCurrentQuestion] =
+    React.useState<Question>(NO_QUESTION);
   const [searchText, setSearchText] = React.useState<string>("");
-  const [questionAddDialog, setQuestionAddDialog] = React.useState<boolean>(
-    false
-  );
+  const [questionAddDialog, setQuestionAddDialog] =
+    React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [scrollTop, setScrollTop] = React.useState(0);

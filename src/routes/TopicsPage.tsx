@@ -8,8 +8,8 @@ import {
   Topic,
 } from "../interfaces/Interfaces";
 import TableTopics from "../components/tables/TableTopics";
-import CustomButton from "src/components/buttons/CustomButton";
-import SearchBar from "src/components/input/SearchBar";
+import CustomButton from "../components/buttons/CustomButton";
+import SearchBar from "../components/input/SearchBar";
 import TopicAddDialog from "../components/dialogs/TopicDialog";
 import TopicEditDialog from "../components/dialogs/TopicDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";

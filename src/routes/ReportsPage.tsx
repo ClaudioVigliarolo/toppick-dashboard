@@ -1,6 +1,6 @@
 import React from "react";
-import SearchBar from "src/components/input/SearchBar";
-import Select from "src/components/select/Select";
+import SearchBar from "../components/input/SearchBar";
+import Select from "../components/select/Select";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import EditDialog from "../components/dialogs/EditDialog";
 
@@ -44,9 +44,8 @@ export default function ReportsPage({
 }: PageProps) {
   const [filterTopic, setFilterTopic] = React.useState<Topic>(NO_TOPIC);
   const [reports, setReports] = React.useState<ReportHandled[]>([]);
-  const [currentReport, setCurrentReport] = React.useState<ReportHandled>(
-    NO_REPORT
-  );
+  const [currentReport, setCurrentReport] =
+    React.useState<ReportHandled>(NO_REPORT);
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [searchText, setSearchText] = React.useState<string>("");
   const [editDialog, setEditDialog] = React.useState<boolean>(false);

@@ -14,10 +14,10 @@ import {
 } from "../interfaces/Interfaces";
 import TopicAddDialog from "../components/dialogs/TopicDialog";
 import { useAppStyles } from "../styles/common";
-import Select from "src/components/select/Select";
-import CustomButton from "src/components/buttons/CustomButton";
-import TextArea from "src/components/input/NumberedTextarea";
-import QuestionsList from "src/components/lists/QuestionsList";
+import Select from "../components/select/Select";
+import CustomButton from "../components/buttons/CustomButton";
+import TextArea from "../components/input/NumberedTextarea";
+import QuestionsList from "../components/lists/QuestionsList";
 import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
 import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";

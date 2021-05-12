@@ -9,8 +9,8 @@ import {
 } from "../interfaces/Interfaces";
 import TableUsers from "../components/tables/TableUsers";
 import { AuthContext } from "../context/AuthContext";
-import SearchBar from "src/components/input/SearchBar";
-import CustomButton from "src/components/buttons/CustomButton";
+import SearchBar from "../components/input/SearchBar";
+import CustomButton from "../components/buttons/CustomButton";
 import UserAddDialog from "../components/dialogs/UserDialog";
 import UserEditDialog from "../components/dialogs/UserDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
