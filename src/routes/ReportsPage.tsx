@@ -1,5 +1,6 @@
 import React from "react";
-import Select from "../components/select/Select";
+import SearchBar from "src/components/input/SearchBar";
+import Select from "src/components/select/Select";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import EditDialog from "../components/dialogs/EditDialog";
 
@@ -97,6 +98,11 @@ export default function ReportsPage({
   return (
     <>
       <div className={classes.headerSection}>
+        <SearchBar
+          placeholder="Filter Topics"
+          setSearchText={(text) => setSearchText(text)}
+          searchText={searchText}
+        />
         <div>
           <Select
             handleChange={handleTopicChange}
