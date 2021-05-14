@@ -52,14 +52,8 @@ export const Navigation = () => {
     currentLanguage,
   } = React.useContext(AuthContext);
 
-  const {
-    setLoading,
-    loading,
-    onError,
-    onSuccess,
-    error,
-    success,
-  } = React.useContext(StatusContext);
+  const { setLoading, loading, onError, onSuccess, error, success } =
+    React.useContext(StatusContext);
 
   React.useEffect(() => {
     (async () => {
@@ -84,8 +78,9 @@ export const Navigation = () => {
             from="/"
             to={isAuthenticated ? "categories/en" : "/login"}
           />
-          {routes.map((route) => (
+          {routes.map((route, index) => (
             <CustomRoute
+              key={index}
               path={route.path}
               condition={getCondition(userType, route.path, isAuthenticated)}
               Component={route.component}

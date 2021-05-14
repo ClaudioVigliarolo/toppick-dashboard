@@ -4,3 +4,4 @@ module.exports = {
       ? "https://top-pick-api.herokuapp.com"
       : "https://top-pick-api-dev.herokuapp.com",
 };
+//"http://localhost:4001"

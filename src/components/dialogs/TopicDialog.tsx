@@ -2,12 +2,7 @@ import React from "react";
 import { CustomDialog } from "./DialogStyles";
 import Chip from "../select/ObjectChip";
 import { TextField } from "@material-ui/core";
-import {
-  Category,
-  CategoryTopic,
-  Related,
-  Topic,
-} from "src/interfaces/Interfaces";
+import { CategoryTopic, Related, Topic } from "src/interfaces/Interfaces";
 import { isSelected } from "src/utils/utils";
 
 interface TopicDialogProps {
@@ -31,6 +26,7 @@ interface TopicDialogProps {
 
 export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<string>("");
+  const [related, setRelated] = React.useState<Related[]>([]);
   const [selectedRelated, setSelectedRelated] = React.useState<Related[]>([]);
   const [selectedCategories, setSelectedCategories] = React.useState<
     CategoryTopic[]
@@ -39,6 +35,12 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   React.useEffect(() => {
     setTopic(props.topic);
+    const newRelated = [...props.related];
+    setRelated(
+      newRelated
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .filter((c) => c.title !== props.topic)
+    );
     setSelectedCategories(props.preselectedCategories);
     setSelectedRelated(props.preselectedRelated);
   }, [props.categories, props.topic, props.preselectedCategories]);
@@ -68,14 +70,12 @@ export default function TopicDialog(props: TopicDialogProps) {
   };
 
   const handleRelatedChange = (index: number) => {
-    if (isSelected(selectedRelated, props.related[index])) {
+    if (isSelected(selectedRelated, related[index])) {
       setSelectedRelated([
-        ...selectedRelated.filter(
-          (s) => s.title !== props.related[index].title
-        ),
+        ...selectedRelated.filter((s) => s.title !== related[index].title),
       ]);
     } else {
-      setSelectedRelated([...selectedRelated, props.related[index]]);
+      setSelectedRelated([...selectedRelated, related[index]]);
     }
   };
 
@@ -117,9 +117,7 @@ export default function TopicDialog(props: TopicDialogProps) {
             <Chip
               width={300}
               selectedValues={selectedRelated}
-              values={props.related
-                .sort((a, b) => a.title.localeCompare(b.title))
-                .filter((c) => c.title !== props.topic)}
+              values={related}
               header={
                 props.placeholderRelated
                   ? props.placeholderRelated
