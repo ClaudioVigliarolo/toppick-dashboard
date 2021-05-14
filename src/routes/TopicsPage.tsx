@@ -84,12 +84,10 @@ export default function ViewPage({
           setSearchText={(text) => setSearchText(text)}
           searchText={searchText}
         />
-        <div>
-          <CustomButton
-            onClick={() => setTopicAddDialog(true)}
-            title="INSERT NEW TOPIC"
-          />
-        </div>
+        <CustomButton
+          onClick={() => setTopicAddDialog(true)}
+          title="INSERT NEW TOPIC"
+        />
       </div>
       <TableTopics
         searchText={searchText}

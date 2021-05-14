@@ -22,7 +22,7 @@ import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
 import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";
 
-const MIN_QUESTIONS = -1;
+const MIN_QUESTIONS = 5;
 
 const NO_TOPIC: Topic = {
   categories: [],
@@ -59,6 +59,7 @@ export default function CreatePage({
       }
 
       const retrievedTopics = await getTopics(currentLanguage, token);
+      //sort by timestamp
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }

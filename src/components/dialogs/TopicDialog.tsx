@@ -102,7 +102,9 @@ export default function TopicDialog(props: TopicDialogProps) {
             <Chip
               width={300}
               selectedValues={selectedCategories}
-              values={props.categories}
+              values={props.categories.sort((a, b) =>
+                a.title.localeCompare(b.title)
+              )}
               header={
                 props.placeholderCategories
                   ? props.placeholderCategories
@@ -115,7 +117,9 @@ export default function TopicDialog(props: TopicDialogProps) {
             <Chip
               width={300}
               selectedValues={selectedRelated}
-              values={props.related}
+              values={props.related
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .filter((c) => c.title !== props.topic)}
               header={
                 props.placeholderRelated
                   ? props.placeholderRelated

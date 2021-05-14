@@ -76,7 +76,9 @@ export default function CategoryDialog(props: CategoryDialogProps) {
             <Chip
               width={300}
               selectedValues={selectedCategTopics}
-              values={props.categTopics}
+              values={props.categTopics.sort((a, b) =>
+                a.title.localeCompare(b.title)
+              )}
               header={"Related Topics"}
               error={error}
               handleChange={handleCategTopicChange}

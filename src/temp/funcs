@@ -8,3 +8,10 @@
     Lang.IT
   );
   */
+
+
+export const sortTopicsByTimestamp = (items: Topic[]): Topic[] => {
+  return items.sort(function (x, y) {
+    return new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime();
+  });
+};

@@ -114,11 +114,13 @@ export default function ViewPage({
             token,
             setCategories,
             setLoading,
-            onSuccess,
+            () => {
+              setAddDialog(false);
+              setCurrentCategory(NO_CATEGORY);
+              onSuccess();
+            },
             onError
           );
-          setAddDialog(false);
-          setCurrentCategory(NO_CATEGORY);
         }}
         onRefuse={() => {
           setAddDialog(false);
@@ -147,7 +149,11 @@ export default function ViewPage({
             token,
             setCategories,
             setLoading,
-            onSuccess,
+            () => {
+              setAddDialog(false);
+              setCurrentCategory(NO_CATEGORY);
+              onSuccess();
+            },
             onError
           );
           setEditDialog(false);

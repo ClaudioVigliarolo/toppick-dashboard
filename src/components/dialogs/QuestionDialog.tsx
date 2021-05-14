@@ -66,7 +66,9 @@ export default function QuestionDialog(props: QuestionDialogProps) {
               <Select
                 handleChange={handleChange}
                 value={topic}
-                values={props.topics}
+                values={props.topics.sort((a, b) =>
+                  a.title.localeCompare(b.title)
+                )}
                 color="black"
                 header="topic"
                 defaultValue={topic}

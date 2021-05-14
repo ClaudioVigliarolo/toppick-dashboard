@@ -1,4 +1,4 @@
-import { Value } from "src/interfaces/Interfaces";
+import { Topic, Value } from "src/interfaces/Interfaces";
 
 export const getHash = (str1: string, str2: string = "") => {
   const str = str1 + "*" + str2;

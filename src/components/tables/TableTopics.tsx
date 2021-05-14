@@ -30,7 +30,15 @@ export default function TableTopics({
     return topics.map((topic: Topic, index: number) => {
       if (topic.title.toLowerCase().includes(searchText.toLowerCase())) {
         return (
-          <StyledTableRow key={index}>
+          <StyledTableRow
+            key={index}
+            style={{
+              backgroundColor:
+                topic.related.length === 0 || topic.categories.length === 0
+                  ? "red"
+                  : "",
+            }}
+          >
             <StyledTableCell> {topic.title}</StyledTableCell>
             <StyledTableCell>{topic.source}</StyledTableCell>
             <StyledTableCell>

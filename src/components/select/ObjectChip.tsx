@@ -93,20 +93,22 @@ export default function CustomChip({
           )}
           MenuProps={MenuProps}
         >
-          {values.map((val: Value, index: number) => (
-            <MenuItem
-              key={val.title}
-              value={val.title}
-              style={{
-                backgroundColor: isSelected(selectedValues, val)
-                  ? COLORS.lighterOrange
-                  : "transparent",
-              }}
-              onClick={() => handleChange(index)}
-            >
-              {val.title}
-            </MenuItem>
-          ))}
+          {values
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .map((val: Value, index: number) => (
+              <MenuItem
+                key={val.title}
+                value={val.title}
+                style={{
+                  backgroundColor: isSelected(selectedValues, val)
+                    ? COLORS.lighterOrange
+                    : "transparent",
+                }}
+                onClick={() => handleChange(index)}
+              >
+                {val.title}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
     </>
