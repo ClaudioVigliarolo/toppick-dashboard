@@ -72,23 +72,17 @@ export default function CreatePage({
   onError,
   onSuccess,
 }: PageProps) {
-  const [
-    selectedTopicToTranslate,
-    setselectedTopicToTranslate,
-  ] = React.useState<ToTranslateTopic>(NO_TOTRANSLATE_TOPIC);
-  const [
-    translationTextArea,
-    setTranslationTextArea,
-  ] = React.useState<TranslationTextArea>(DEFAULT_TRANSLATION_TEXTAREA);
+  const [selectedTopicToTranslate, setselectedTopicToTranslate] =
+    React.useState<ToTranslateTopic>(NO_TOTRANSLATE_TOPIC);
+  const [translationTextArea, setTranslationTextArea] =
+    React.useState<TranslationTextArea>(DEFAULT_TRANSLATION_TEXTAREA);
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [categories, setCategories] = React.useState<CategoryTopic[]>([]);
   const [textAreaIndex, setTextAreaIndex] = React.useState<number>(
     TextAreaIndex.Google
   );
-  const [
-    translatedQuestionsArray,
-    setTranslatedQuestionsArray,
-  ] = React.useState<string[]>([]);
+  const [translatedQuestionsArray, setTranslatedQuestionsArray] =
+    React.useState<string[]>([]);
   const [isReview, setReview] = React.useState<boolean>(false);
   const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
   const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
@@ -225,12 +219,14 @@ export default function CreatePage({
       translationTextArea[TextAreaIndex.Original]
     );
 
+    return currentTextAreaLength > 5;
+    /*
     return (
       Math.abs(originalTextAreaLength - currentTextAreaLength) <=
         originalTextAreaLength / 3 &&
       Math.abs(originalTextAreaLength + currentTextAreaLength) >=
         originalTextAreaLength / 3
-    );
+    );*/
   };
 
   const isReviewListVisible = () => {

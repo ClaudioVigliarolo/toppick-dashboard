@@ -61,7 +61,9 @@ export default function CreatePage({
       const retrievedTopics = await getTopics(currentLanguage, token);
       //sort by timestamp
       if (retrievedTopics != null) {
-        setTopics(retrievedTopics);
+        setTopics(
+          retrievedTopics.sort((a, b) => a.title.localeCompare(b.title))
+        );
       }
       setLoading(false);
       setSelectedTopic(NO_TOPIC);
