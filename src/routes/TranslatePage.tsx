@@ -114,7 +114,11 @@ export default function CreatePage({
         token
       );
       if (toTranslateTopics != null) {
-        setToTranslateTopics(toTranslateTopics);
+        setToTranslateTopics(
+          toTranslateTopics.sort((a, b) =>
+            a.source_title.localeCompare(b.source_title)
+          )
+        );
       }
 
       setLoading(false);
