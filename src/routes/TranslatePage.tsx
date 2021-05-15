@@ -335,7 +335,7 @@ export default function CreatePage({
                 <CustomButton
                   onClick={async () => {
                     await onQuestionsAdd(
-                      translatedQuestionsArray,
+                      [...new Set(translatedQuestionsArray)],
                       selectedTopic,
                       currentLanguage,
                       token,
