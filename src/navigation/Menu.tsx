@@ -13,13 +13,22 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { COLORS } from "../constants/Colors";
 import { routes } from "./routes";
-import { LinearProgress, MenuItem } from "@material-ui/core";
+import { LinearProgress, MenuItem, withStyles } from "@material-ui/core";
 import LanguageSelect from "../components/select/LanguageSelect";
 import HeaderSection from "../components/layout/HeaderSection";
 import { getCondition } from "./Index";
 import { logoutUser } from "../api/api";
 import { Lang } from "src/interfaces/Interfaces";
 import { useAppStyles } from "src/styles/common";
+
+const StyledLinearProgress = withStyles({
+  colorPrimary: {
+    backgroundColor: COLORS.lighterOrange,
+  },
+  barColorPrimary: {
+    backgroundColor: COLORS.darkerOrange,
+  },
+})(LinearProgress);
 
 export default function PersistentDrawerLeft({
   children,
@@ -86,14 +95,7 @@ export default function PersistentDrawerLeft({
             </div>
           )}
         </Toolbar>
-        {loading && (
-          <LinearProgress
-            classes={{
-              colorPrimary: classes.colorLinearProgress,
-              barColorPrimary: classes.bardLinearProgress,
-            }}
-          />
-        )}
+        {loading && <StyledLinearProgress />}
       </AppBar>
       <Drawer
         className={classes.drawer}
