@@ -19,7 +19,6 @@ import QuestionAddDialog from "../components/dialogs/QuestionDialog";
 import QuestionEditDialog from "../components/dialogs/QuestionDialog";
 import { useAppStyles } from "../styles/common";
 import {
-  getTopicIdFromTitle,
   onQuestionAdd,
   onQuestionDelete,
   onQuestionUpdate,

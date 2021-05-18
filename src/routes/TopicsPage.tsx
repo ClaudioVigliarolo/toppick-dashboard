@@ -15,13 +15,7 @@ import TopicEditDialog from "../components/dialogs/TopicDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../styles/common";
 
-import {
-  getCategoriesFromTitles,
-  getRelatedFromTitle,
-  onTopicAdd,
-  onTopicDelete,
-  onTopicUpdate,
-} from "src/utils/topics";
+import { onTopicAdd, onTopicDelete, onTopicUpdate } from "src/utils/topics";
 import { getHash } from "src/utils/utils";
 
 const NO_TOPIC: Topic = {
@@ -149,6 +143,15 @@ export default function ViewPage({
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
+          console.log("mio amico", {
+            id: getHash(newTitle, currentLanguage),
+            title: newTitle,
+            related: selectedRelated,
+            source: "TopPicks Creators",
+            timestamp: new Date(),
+            categories: selectedCategories,
+            ref_id: getHash(newTitle, currentLanguage),
+          });
           onTopicAdd(
             {
               id: getHash(newTitle, currentLanguage),

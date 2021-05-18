@@ -375,7 +375,7 @@ export default function CreatePage({
           selectedRelated: Related[]
         ) => {
           const newTopic: Topic = {
-            id: getHash(newTitle),
+            id: getHash(newTitle, currentLanguage),
             title: newTitle,
             related: selectedRelated,
             source: "TopPicks Creators",
@@ -383,6 +383,8 @@ export default function CreatePage({
             categories: selectedCategories,
             ref_id: selectedTopicToTranslate.ref_id,
           };
+          console.log("nuuuuuuuuuuuuu", newTopic);
+
           onTopicAdd(
             newTopic,
             topics,

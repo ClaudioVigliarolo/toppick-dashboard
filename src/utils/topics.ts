@@ -235,48 +235,6 @@ export const getCategoriesFromTitles = (
   return updatedCategories;
 };
 
-export const getRelatedFromTitle = (
-  topics: Topic[],
-  selectedRelatedTitles: string[]
-) => {
-  const newRelated: Related[] = [];
-  selectedRelatedTitles.forEach((title: string) => {
-    const topic = topics.find((x) => x.title === title);
-    if (topic) {
-      newRelated.push({
-        id: topic.id,
-        title: topic.title,
-        ref_id: topic.ref_id,
-      });
-    }
-  });
-  return newRelated;
-};
-
-export const getTopicIdFromTitle = (
-  topics: Topic[],
-  selectedTopicTitle: string
-): number => {
-  const selectedTopic = topics.find((topic: Topic) => {
-    if (topic.title == selectedTopicTitle) {
-      return topic.id;
-    }
-  });
-  return selectedTopic ? selectedTopic.id : -1;
-};
-
-export const getTopicFromTitle = (
-  selectedTopicTitle: string,
-  topics: Topic[]
-): Topic => {
-  const selectedTopic = topics.find((topic: Topic) => {
-    if (topic.title == selectedTopicTitle) {
-      return topic;
-    }
-  });
-  return selectedTopic ? selectedTopic : NO_TOPIC;
-};
-
 export const onTopicUpdate = async (
   updatedTopic: Topic,
   topics: Topic[],

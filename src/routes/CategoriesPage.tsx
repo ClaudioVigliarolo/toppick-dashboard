@@ -10,7 +10,6 @@ import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../styles/common";
 
 import {
-  getTopicFromTitle,
   onCategoryAdd,
   onCategoryDelete,
   onCategoryUpdate,
