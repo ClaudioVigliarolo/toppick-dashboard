@@ -383,7 +383,6 @@ export default function CreatePage({
             categories: selectedCategories,
             ref_id: selectedTopicToTranslate.ref_id,
           };
-          console.log("nuuuuuuuuuuuuu", newTopic);
 
           onTopicAdd(
             newTopic,
