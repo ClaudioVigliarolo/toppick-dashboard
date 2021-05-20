@@ -1,6 +1,6 @@
 //api call to get all the topics to translate (from user_current_lang to target_lang)
 import React from "react";
-import { getCategoryTopics, getTopics, getToTranslateTopics } from "../api/api";
+import { getCategories, getTopics, getToTranslateTopics } from "../api/api";
 import CustomButton from "../components/buttons/CustomButton";
 import TranslationAddDialog from "../components/dialogs/TopicDialog";
 import Select from "../components/select/TranslateSelect";
@@ -17,6 +17,7 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { getGoogleTranslatedQuestions, getQuestionsByTopic } from "src/api/api";
 import {
+  Category,
   CategoryTopic,
   Lang,
   PageProps,
@@ -77,7 +78,7 @@ export default function CreatePage({
   const [translationTextArea, setTranslationTextArea] =
     React.useState<TranslationTextArea>(DEFAULT_TRANSLATION_TEXTAREA);
   const [topics, setTopics] = React.useState<Topic[]>([]);
-  const [categories, setCategories] = React.useState<CategoryTopic[]>([]);
+  const [categories, setCategories] = React.useState<Category[]>([]);
   const [textAreaIndex, setTextAreaIndex] = React.useState<number>(
     TextAreaIndex.Google
   );
@@ -95,10 +96,7 @@ export default function CreatePage({
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedCategories = await getCategoryTopics(
-        currentLanguage,
-        token
-      );
+      const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
@@ -134,7 +132,7 @@ export default function CreatePage({
 
   const handleTextAreaSwitchChange = (
     event: React.MouseEvent<HTMLElement>,
-    newVal: any
+    newVal: number | null
   ) => {
     setTextAreaIndex(newVal !== null ? newVal : textAreaIndex);
   };
