@@ -71,6 +71,7 @@ export default function CreatePage({
   currentLanguage,
   setLoading,
   onError,
+  loading,
   onSuccess,
 }: PageProps) {
   const [selectedTopicToTranslate, setselectedTopicToTranslate] =
@@ -360,6 +361,7 @@ export default function CreatePage({
 
       <TranslationAddDialog
         open={topicAddDialog}
+        loading={loading}
         preselectedCategories={selectedTopicToTranslate.source_categories}
         preselectedRelated={selectedTopicToTranslate.source_related}
         categories={categories}

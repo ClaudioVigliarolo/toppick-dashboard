@@ -7,6 +7,7 @@ import { CustomDialog } from "./DialogStyles";
 
 interface CategoryDialogProps {
   open: boolean;
+  loading: boolean;
   onConfirm: (category: string, categTopics: CategoryTopic[]) => void;
   onRefuse: () => void;
   category: string;
@@ -60,6 +61,7 @@ export default function CategoryDialog(props: CategoryDialogProps) {
         minWidth={500}
         onConfirm={() => onSubmit(category)}
         onRefuse={props.onRefuse}
+        loading={props.loading}
         children={
           <>
             <TextField

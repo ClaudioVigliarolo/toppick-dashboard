@@ -8,6 +8,7 @@ import { isSelected } from "src/utils/utils";
 interface TopicDialogProps {
   topic: string;
   open: boolean;
+  loading: boolean;
   onConfirm: (
     topicTitle: string,
     selectedCategories: CategoryTopic[],
@@ -85,6 +86,7 @@ export default function TopicDialog(props: TopicDialogProps) {
         open={props.open}
         headerText={props.headerText}
         minWidth={600}
+        loading={props.loading}
         children={
           <>
             <TextField

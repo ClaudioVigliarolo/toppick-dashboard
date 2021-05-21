@@ -1,6 +1,6 @@
 import React from "react";
 import CardNumber from "../cards/CardNumber";
-import { getStatsUpdates } from "../../api/api";
+import { getStatsClientUpdates } from "../../api/api";
 import { Lang, StatsUpdates } from "../../interfaces/Interfaces";
 import { useChartStyles } from "./ChartStyles";
 
@@ -17,21 +17,22 @@ export default function UpdatesChart({
   from,
   until,
 }: UpdatesChartProps) {
-  const [updateStats, setUpdateStats] = React.useState<StatsUpdates>({
+  const [clientUpdates, setClientUpdates] = React.useState<StatsUpdates>({
     updates: 0,
   });
   const classes = useChartStyles();
 
   React.useEffect(() => {
     (async () => {
-      const retrievedStats = await getStatsUpdates(
+      const retrievedStats = await getStatsClientUpdates(
         from,
         until,
         currentLanguage,
         token
       );
-      if (retrievedStats != null) {
-        setUpdateStats(retrievedStats);
+      if (retrievedStats !== null) {
+        console.log("mydog", retrievedStats);
+        setClientUpdates(retrievedStats);
       }
     })();
   }, [currentLanguage, from]);
@@ -39,7 +40,7 @@ export default function UpdatesChart({
   return (
     <div className={classes.container}>
       <div className={classes.cardnumbersContainer}>
-        <CardNumber label="Updates" value={updateStats.updates} />
+        <CardNumber label="Updates" value={clientUpdates.updates} />
       </div>
     </div>
   );

@@ -38,6 +38,7 @@ export default function UsersPage({
   token,
   setLoading,
   onError,
+  loading,
   onSuccess,
 }: PageProps) {
   const { languages, userMail, username } = React.useContext(AuthContext);
@@ -106,6 +107,7 @@ export default function UsersPage({
         password=""
         username=""
         selectedLanguages={[]}
+        loading={loading}
         type={CONSTANTS.NO_USER_TYPE}
         headerText="Register new User"
         languages={languages}
@@ -150,6 +152,7 @@ export default function UsersPage({
       <UserEditDialog
         email={currentUser.userMail}
         password=""
+        loading={loading}
         username={currentUser.username}
         type={currentUser.type}
         open={editDialog}
@@ -197,6 +200,7 @@ export default function UsersPage({
       />
 
       <MessageDialog
+        loading={loading}
         open={messageDialog}
         headerText={currentUser.username}
         onSend={async (message: string) => {

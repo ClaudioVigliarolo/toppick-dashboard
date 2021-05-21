@@ -33,6 +33,7 @@ export default function ViewPage({
   currentLanguage,
   setLoading,
   onError,
+  loading,
   onSuccess,
 }: PageProps) {
   const [topics, setTopics] = React.useState<Topic[]>([]);
@@ -92,6 +93,7 @@ export default function ViewPage({
 
       <TopicEditDialog
         open={editDialog}
+        loading={loading}
         related={topics}
         preselectedRelated={currentTopic.related}
         preselectedCategories={currentTopic.categories}
@@ -136,6 +138,7 @@ export default function ViewPage({
         preselectedRelated={[]}
         categories={categories}
         related={topics}
+        loading={loading}
         headerText="Add New Topic"
         topic=""
         onConfirm={(

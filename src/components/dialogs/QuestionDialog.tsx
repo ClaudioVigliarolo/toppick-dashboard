@@ -11,6 +11,7 @@ interface QuestionDialogProps {
   topics: QuestionTopic[];
   question: string;
   headerText: string;
+  loading: boolean;
 }
 
 const NO_TOPIC: QuestionTopic = {
@@ -46,6 +47,7 @@ export default function QuestionDialog(props: QuestionDialogProps) {
   return (
     <>
       <CustomDialog
+        loading={props.loading}
         open={props.open}
         headerText={props.headerText}
         minWidth={500}

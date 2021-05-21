@@ -27,6 +27,7 @@ export default function ViewPage({
   token,
   currentLanguage,
   setLoading,
+  loading,
   onError,
   onSuccess,
 }: PageProps) {
@@ -93,6 +94,7 @@ export default function ViewPage({
 
       <AddDialog
         category=""
+        loading={loading}
         headerText="Add new Category"
         open={addDialog}
         preselectedCategTopics={[]}
@@ -129,6 +131,7 @@ export default function ViewPage({
 
       <EditDialog
         open={editDialog}
+        loading={loading}
         preselectedCategTopics={currentCategory.categoryTopics}
         categTopics={categoryTopics}
         onConfirm={async (

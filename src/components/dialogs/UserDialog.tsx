@@ -22,6 +22,7 @@ interface UserDialogProps {
   headerText: string;
   languages: Lang[];
   selectedLanguages: Lang[];
+  loading: boolean;
 }
 
 export default function UserDialog({
@@ -35,6 +36,7 @@ export default function UserDialog({
   onConfirm,
   selectedLanguages,
   open,
+  loading,
 }: UserDialogProps) {
   const classes = useStyles();
   const [usernameState, setUsernameState] = React.useState<string>("");
@@ -71,13 +73,11 @@ export default function UserDialog({
     setSelectedLanguagesState(event.target.value);
   };
 
-  {
-    console.log("llllll", languages);
-  }
   return (
     <>
       <CustomDialog
         open={open}
+        loading={loading}
         headerText={headerText}
         minWidth={400}
         onConfirm={onSubmit}

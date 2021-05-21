@@ -1,12 +1,6 @@
 import React from "react";
+import { getQuestions, getQuestionTopics } from "../api/api";
 import {
-  getCategories,
-  getQuestions,
-  getQuestionTopics,
-  getTopics,
-} from "../api/api";
-import {
-  Category,
   PageProps,
   Question,
   QuestionTopic,
@@ -53,6 +47,7 @@ const ITEMS_PER_SCROLL = 50;
 export default function ViewPage({
   token,
   currentLanguage,
+  loading,
   setLoading,
   onError,
   onSuccess,
@@ -183,6 +178,7 @@ export default function ViewPage({
 
       <QuestionEditDialog
         open={editDialog}
+        loading={loading}
         topics={topics}
         onConfirm={async (newTitle: string, topic: QuestionTopic) => {
           await onQuestionUpdate(
@@ -218,6 +214,7 @@ export default function ViewPage({
       <QuestionAddDialog
         topics={topics}
         topic={NO_TOPIC}
+        loading={loading}
         headerText="Add a new Question"
         question=""
         open={questionAddDialog}

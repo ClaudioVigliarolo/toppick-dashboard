@@ -26,18 +26,32 @@ export const getCategories = async (
   token: string
 ): Promise<Category[] | null> => {
   try {
-    const response = await axios.get(
-      `${HOSTNAME}/topick/get_categories/` + lang,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const response = await axios.get(`${HOSTNAME}/categories/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
+  }
+};
+
+export const getMaintenanceStatus = async (
+  lang: Lang,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.get(`${HOSTNAME}/maintenance/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.status == 200 ? response.data : false;
+  } catch (err) {
+    console.error(err);
+    return false;
   }
 };
 
@@ -46,14 +60,11 @@ export const getCategoryTopics = async (
   token: string
 ): Promise<CategoryTopic[] | null> => {
   try {
-    const response = await axios.get(
-      `${HOSTNAME}/topick/get_categorytopics/` + lang,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const response = await axios.get(`${HOSTNAME}/category/topics/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -65,12 +76,13 @@ export const getUsers = async (
   token: string
 ): Promise<CreatedUser[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/users/all`, {
+    const response = await axios.get(`${HOSTNAME}/users`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data.users : null;
+    console.log("8888888", response.data);
+    return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -82,7 +94,7 @@ export const getTopics = async (
   token: string
 ): Promise<Topic[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topick/get_topics/` + lang, {
+    const response = await axios.get(`${HOSTNAME}/topics/` + lang, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -99,14 +111,11 @@ export const getQuestionTopics = async (
   token: string
 ): Promise<QuestionTopic[] | null> => {
   try {
-    const response = await axios.get(
-      `${HOSTNAME}/topick/get_questiontopics/` + lang,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const response = await axios.get(`${HOSTNAME}/question/topics/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -119,14 +128,11 @@ export const getToTranslateTopics = async (
   token: string
 ): Promise<ToTranslateTopic[] | null> => {
   try {
-    const response = await axios.get(
-      `${HOSTNAME}/topick/get_totranslate_topics/` + lang,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const response = await axios.get(`${HOSTNAME}/totranslate/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -143,7 +149,7 @@ export const getStatsContent = async (
 ): Promise<StatsContent | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_content/${from}/${until}/${lang}`,
+      `${HOSTNAME}/stats/content/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -162,14 +168,11 @@ export const getClientRequests = async (
   token: string
 ): Promise<any | null> => {
   try {
-    const response = await axios.get(
-      `${HOSTNAME}/stats/get_clientrequests/${lang}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const response = await axios.get(`${HOSTNAME}/stats/requests/${lang}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -185,7 +188,7 @@ export const getStatsReports = async (
 ): Promise<StatsReport | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_reports/${from}/${until}/${lang}`,
+      `${HOSTNAME}/stats/reports/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -199,7 +202,7 @@ export const getStatsReports = async (
   }
 };
 
-export const getStatsUpdates = async (
+export const getStatsClientUpdates = async (
   from: Date,
   until: Date,
   lang: Lang,
@@ -207,7 +210,7 @@ export const getStatsUpdates = async (
 ): Promise<StatsUpdates | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_clientupdates/${from}/${until}/${lang}`,
+      `${HOSTNAME}/stats/client/updates/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -228,7 +231,7 @@ export const addTopic = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topick/add_topic`,
+      `${HOSTNAME}/topics`,
       {
         topic,
         lang,
@@ -253,7 +256,7 @@ export const updateTopic = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/topick/update_topic`,
+      `${HOSTNAME}/topics`,
       {
         topic,
         lang,
@@ -277,7 +280,7 @@ export const deleteTopic = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topick/delete_topic`, {
+    const response = await axios.delete(`${HOSTNAME}/topics`, {
       data: {
         ref_id,
         lang,
@@ -300,19 +303,16 @@ export const deleteToTranslateTopic = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(
-      `${HOSTNAME}/topick/delete_totranslate_topic`,
-      {
-        data: {
-          id,
-          lang,
-        },
+    const response = await axios.delete(`${HOSTNAME}/totranslate`, {
+      data: {
+        id,
+        lang,
+      },
 
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200;
   } catch (err) {
     console.log(err);
@@ -325,7 +325,7 @@ export const deleteUser = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/users/delete`, {
+    const response = await axios.delete(`${HOSTNAME}/users`, {
       data: {
         id,
       },
@@ -372,7 +372,7 @@ export const updateUser = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/users/update`,
+      `${HOSTNAME}/users`,
       {
         user,
       },
@@ -423,7 +423,7 @@ export const deleteCategory = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topick/delete_category`, {
+    const response = await axios.delete(`${HOSTNAME}/categories`, {
       data: {
         ref_id,
         lang,
@@ -447,7 +447,7 @@ export const addQuestion = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topick/add_question`,
+      `${HOSTNAME}/question`,
       {
         question,
         lang,
@@ -472,7 +472,7 @@ export const addQuestions = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topick/add_questions`,
+      `${HOSTNAME}/questions`,
       {
         questions,
         lang,
@@ -497,7 +497,7 @@ export const addCategory = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topick/add_category`,
+      `${HOSTNAME}/categories`,
       {
         category,
         lang,
@@ -522,7 +522,7 @@ export const updateCategory = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/topick/update_category`,
+      `${HOSTNAME}/categories`,
       {
         category,
         lang,
@@ -547,7 +547,7 @@ export const getUpdates = async (
 ): Promise<UpdatesResponse | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topick/get_updates/${id}/${date}/${lang}`
+      `${HOSTNAME}/updates/${id}/${date}/${lang}`
     );
     return response.status == 200 ? response.data : null;
   } catch (err) {
@@ -561,7 +561,7 @@ export const addReport = async (
   lang: Lang
 ): Promise<boolean> => {
   try {
-    const response = await axios.post(`${HOSTNAME}/topick/add_report`, {
+    const response = await axios.post(`${HOSTNAME}/reports`, {
       report,
       lang,
     });
@@ -579,7 +579,7 @@ export const updateQuestion = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/topick/update_question`,
+      `${HOSTNAME}/questions`,
       {
         question,
         lang,
@@ -603,7 +603,7 @@ export const deleteReport = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topick/delete_report`, {
+    const response = await axios.delete(`${HOSTNAME}/reports`, {
       data: {
         question_id,
         lang,
@@ -625,7 +625,7 @@ export const deleteQuestion = async (
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topick/delete_question`, {
+    const response = await axios.delete(`${HOSTNAME}/questions`, {
       data: {
         id,
         lang,
@@ -646,7 +646,7 @@ export const getReports = async (
   token: string
 ): Promise<ReportHandled[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topick/get_reports/${lang}`, {
+    const response = await axios.get(`${HOSTNAME}/reports/${lang}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -666,7 +666,7 @@ export const getQuestions = async (
 ): Promise<Question[] | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topick/get_questions/${from}/${to}/${lang}`,
+      `${HOSTNAME}/questions/${from}/${to}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -732,14 +732,11 @@ export const getQuestionsByTopic = async (
   token: string
 ): Promise<Question[] | null> => {
   try {
-    const response = await axios.get(
-      `${HOSTNAME}/topick/get_topic_questions/${id}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const response = await axios.get(`${HOSTNAME}/questions/topic/${id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return response.status == 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -755,7 +752,7 @@ export const getGoogleTranslatedQuestions = async (
 ): Promise<string[] | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/topick/get_google_translated_questions/${id}/${from}/${to}`,
+      `${HOSTNAME}/totranslate/googletranslations/${id}/${from}/${to}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -777,7 +774,7 @@ export const getUserStats = async (
 ): Promise<UserStats | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/stats/get_user/${id}/${from}/${until}/${lang}`,
+      `${HOSTNAME}/stats/user/${id}/${from}/${until}/${lang}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -798,9 +795,34 @@ export const addToTranslateTopic = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/topick/add_totranslate_topic`,
+      `${HOSTNAME}/totranslate`,
       {
         id,
+        lang,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status == 200;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+export const updateMaintenance = async (
+  value: boolean,
+  lang: Lang,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.put(
+      `${HOSTNAME}/maintenance`,
+      {
+        value,
         lang,
       },
       {

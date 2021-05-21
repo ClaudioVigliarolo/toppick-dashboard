@@ -46,13 +46,6 @@ export default function DBChartBar({
       const retrievedUsers = await getUsers(token);
       if (retrievedUsers != null) {
         setUsers(retrievedUsers);
-        await getUserStats(
-          retrievedUsers[index].id,
-          from,
-          until,
-          currentLanguage,
-          token
-        );
         const retrievedStats = await getUserStats(
           retrievedUsers[index].id,
           from,
@@ -88,6 +81,7 @@ export default function DBChartBar({
       <div className={classes.userTabsContainer}>
         {users.map((u, i) => (
           <Button
+            key={u.id}
             label={u.username}
             selected={index === i}
             onClick={() => setIndex(i)}
@@ -97,7 +91,7 @@ export default function DBChartBar({
       <div className={classes.container}>
         <StatsCarousel
           items={[
-            <div className={classes.cardnumbersContainer}>
+            <div className={classes.cardnumbersContainer} key={0}>
               <CardNumber label="Topics Added" value={userStats.topicsAdded} />
               <CardNumber
                 label="Topics Updated"
@@ -108,7 +102,7 @@ export default function DBChartBar({
                 value={userStats.questionsAdded}
               />
             </div>,
-            <div className={classes.cardnumbersContainer}>
+            <div className={classes.cardnumbersContainer} key={1}>
               <CardNumber
                 label="Discarded Translation"
                 value={userStats.totranslateDeleted}
@@ -122,7 +116,7 @@ export default function DBChartBar({
                 value={userStats.questionsUpdated}
               />
             </div>,
-            <div className={classes.cardnumbersContainer}>
+            <div className={classes.cardnumbersContainer} key={2}>
               <CardNumber
                 label="Translated topics"
                 value={userStats.translatedTopics}

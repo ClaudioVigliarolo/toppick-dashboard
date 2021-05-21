@@ -6,7 +6,7 @@ import QuestionsPage from "../routes/QuestionsPage";
 import LoginPage from "../routes/LoginPage";
 import CreatePage from "../routes/CreatePage";
 import TranslatePage from "../routes/TranslatePage";
-import StatisticsPage from "../routes/StatisticsPage";
+import StatisticsPage from "../routes/StatsPage";
 import { Route } from "src/interfaces/Interfaces";
 
 export const routes: Route[] = [

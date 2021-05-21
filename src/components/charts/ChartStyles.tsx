@@ -30,6 +30,7 @@ export const useChartStyles = makeStyles((theme: Theme) =>
     userTabsContainer: {
       marginLeft: "40vw",
       marginTop: -40,
+      minHeight: 40,
       float: "right",
       flexDirection: "row",
       display: "flex",

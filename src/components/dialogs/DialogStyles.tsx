@@ -4,6 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { COLORS } from "../../constants/Colors";
@@ -18,6 +19,7 @@ const Transition = React.forwardRef(function Transition(
 interface TextDialogProps {
   open: boolean;
   onConfirm: () => void;
+  loading: boolean;
   confirmButtonText?: string;
   onRefuse: () => void;
   refuseButtonText?: string;
@@ -36,6 +38,7 @@ export const CustomDialog = ({
   children,
   minWidth = 400,
   minHeigth = 0,
+  loading,
 }: TextDialogProps) => {
   return (
     <div>
@@ -66,12 +69,28 @@ export const CustomDialog = ({
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onRefuse} style={{ color: COLORS.darkerOrange }}>
-            {refuseButtonText}
-          </Button>
-          <Button onClick={onConfirm} style={{ color: COLORS.blue }}>
-            {confirmButtonText}
-          </Button>
+          {loading ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <CircularProgress
+                style={{ color: COLORS.primaryOrange, alignSelf: "center" }}
+              />
+            </div>
+          ) : (
+            <>
+              <Button onClick={onRefuse} style={{ color: COLORS.darkerOrange }}>
+                {refuseButtonText}
+              </Button>
+              <Button onClick={onConfirm} style={{ color: COLORS.blue }}>
+                {confirmButtonText}
+              </Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </div>

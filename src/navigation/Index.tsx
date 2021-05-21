@@ -14,6 +14,7 @@ export const getCondition = (
   path: string,
   isAuthenticated: boolean
 ) => {
+  console.log("ussty", userType);
   switch (path) {
     case "/login":
       return !isAuthenticated;
@@ -57,7 +58,7 @@ export const Navigation = () => {
 
   React.useEffect(() => {
     (async () => {
-      console.log("ggg", await getUpdates("Sun May 11,2014", Lang.FR, 12));
+      console.log("ggg", await getUpdates("Sun May 11,2014", Lang.IT, 12));
     })();
   }, []);
 

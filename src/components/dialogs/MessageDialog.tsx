@@ -4,6 +4,7 @@ import { CustomDialog } from "./DialogStyles";
 
 interface MessageDialogProps {
   open: boolean;
+  loading: boolean;
   onSend: (message: string) => void;
   onRefuse: () => void;
   headerText: string;
@@ -25,6 +26,7 @@ export default function MessageDialog(props: MessageDialogProps) {
   return (
     <>
       <CustomDialog
+        loading={props.loading}
         open={props.open}
         headerText={"Write to:   " + props.headerText}
         minWidth={600}

@@ -38,6 +38,7 @@ export default function CreatePage({
   token,
   currentLanguage,
   setLoading,
+  loading,
   onError,
   onSuccess,
 }: PageProps) {
@@ -166,7 +167,7 @@ export default function CreatePage({
                 <CustomButton
                   onClick={async () => {
                     await onQuestionsAdd(
-                      questionsArray,
+                      [...new Set(questionsArray)],
                       selectedTopic,
                       currentLanguage,
                       token,
@@ -177,14 +178,14 @@ export default function CreatePage({
                           currentLanguage,
                           token
                         );
+                        //add translations
+                        window.scrollTo(0, 0);
+                        setReview(false);
+                        setSelectedTopic(NO_TOPIC);
                         onSuccess();
                       },
                       onError
                     );
-                    //add translations
-                    window.scrollTo(0, 0);
-                    setReview(false);
-                    setSelectedTopic(NO_TOPIC);
                   }}
                   color={COLORS.blue}
                   title="Submit, everything's fine"
@@ -206,6 +207,7 @@ export default function CreatePage({
         preselectedCategories={[]}
         preselectedRelated={[]}
         categories={categories}
+        loading={loading}
         related={topics}
         headerText="Add New Topic"
         topic=""
