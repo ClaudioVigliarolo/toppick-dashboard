@@ -26,6 +26,7 @@ import {
   ToTranslateTopic,
 } from "../interfaces/Interfaces";
 import { useAppStyles } from "src/styles/common";
+import { CircularProgress } from "@material-ui/core";
 
 enum TextAreaIndex {
   Google,
@@ -323,37 +324,41 @@ export default function CreatePage({
           <QuestionsList
             questions={translatedQuestionsArray}
             children={
-              <div className={classes.buttonContainer}>
-                <CustomButton
-                  onClick={() => {
-                    setReview(false);
-                  }}
-                  color="red"
-                  title="Revert, change something"
-                />
-                <CustomButton
-                  onClick={async () => {
-                    await onQuestionsAdd(
-                      [...new Set(translatedQuestionsArray)],
-                      selectedTopic,
-                      currentLanguage,
-                      token,
-                      setLoading,
-                      () => {
-                        setReview(false);
-                        setIsQuestionsTranslate(false);
-                        setSelectedTopic(NO_TOPIC);
-                        setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
-                        window.scrollTo(0, 0);
-                        onSuccess();
-                      },
-                      onError
-                    );
-                  }}
-                  color={COLORS.blue}
-                  title="Submit, everything's fine"
-                />
-              </div>
+              loading ? (
+                <CircularProgress />
+              ) : (
+                <div className={classes.buttonContainer}>
+                  <CustomButton
+                    onClick={() => {
+                      setReview(false);
+                    }}
+                    color="red"
+                    title="Revert, change something"
+                  />
+                  <CustomButton
+                    onClick={async () => {
+                      await onQuestionsAdd(
+                        [...new Set(translatedQuestionsArray)],
+                        selectedTopic,
+                        currentLanguage,
+                        token,
+                        setLoading,
+                        () => {
+                          setReview(false);
+                          setIsQuestionsTranslate(false);
+                          setSelectedTopic(NO_TOPIC);
+                          setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
+                          window.scrollTo(0, 0);
+                          onSuccess();
+                        },
+                        onError
+                      );
+                    }}
+                    color={COLORS.blue}
+                    title="Submit, everything's fine"
+                  />
+                </div>
+              )
             }
           />
         </div>
