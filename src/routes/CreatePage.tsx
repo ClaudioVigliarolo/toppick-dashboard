@@ -21,6 +21,7 @@ import QuestionsList from "../components/lists/QuestionsList";
 import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
 import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";
+import { CircularProgress } from "@material-ui/core";
 
 const MIN_QUESTIONS = 5;
 
@@ -156,41 +157,45 @@ export default function CreatePage({
           <QuestionsList
             questions={questionsArray}
             children={
-              <div className={classes.buttonContainer}>
-                <CustomButton
-                  onClick={() => {
-                    setReview(false);
-                  }}
-                  color="red"
-                  title="Revert, change something"
-                />
-                <CustomButton
-                  onClick={async () => {
-                    await onQuestionsAdd(
-                      [...new Set(questionsArray)],
-                      selectedTopic,
-                      currentLanguage,
-                      token,
-                      setLoading,
-                      async () => {
-                        await addToTranslateTopic(
-                          selectedTopic.id,
-                          currentLanguage,
-                          token
-                        );
-                        //add translations
-                        window.scrollTo(0, 0);
-                        setReview(false);
-                        setSelectedTopic(NO_TOPIC);
-                        onSuccess();
-                      },
-                      onError
-                    );
-                  }}
-                  color={COLORS.blue}
-                  title="Submit, everything's fine"
-                />
-              </div>
+              loading ? (
+                <CircularProgress />
+              ) : (
+                <div className={classes.buttonContainer}>
+                  <CustomButton
+                    onClick={() => {
+                      setReview(false);
+                    }}
+                    color="red"
+                    title="Revert, change something"
+                  />
+                  <CustomButton
+                    onClick={async () => {
+                      await onQuestionsAdd(
+                        [...new Set(questionsArray)],
+                        selectedTopic,
+                        currentLanguage,
+                        token,
+                        setLoading,
+                        async () => {
+                          await addToTranslateTopic(
+                            selectedTopic.id,
+                            currentLanguage,
+                            token
+                          );
+                          //add translations
+                          window.scrollTo(0, 0);
+                          setReview(false);
+                          setSelectedTopic(NO_TOPIC);
+                          onSuccess();
+                        },
+                        onError
+                      );
+                    }}
+                    color={COLORS.blue}
+                    title="Submit, everything's fine"
+                  />
+                </div>
+              )
             }
           />
         </div>
