@@ -30,7 +30,13 @@ export default function TableCategories({
     return categories.map((category: Category, index: number) => {
       if (category.title.toLowerCase().includes(searchText.toLowerCase())) {
         return (
-          <StyledTableRow key={index}>
+          <StyledTableRow
+            key={index}
+            style={{
+              backgroundColor:
+                category.categoryTopics.length === 0 ? "red" : "",
+            }}
+          >
             <StyledEditCell>
               {category.title}
               <div className={classes.iconsContainer}>
