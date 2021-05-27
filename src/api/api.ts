@@ -60,7 +60,7 @@ export const getCategoryTopics = async (
   token: string
 ): Promise<CategoryTopic[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/category/topics/` + lang, {
+    const response = await axios.get(`${HOSTNAME}/categories/topics/` + lang, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -274,18 +274,42 @@ export const updateTopic = async (
   }
 };
 
-export const deleteTopic = async (
+//delete only the topic for the selected lang
+export const deleteTopicUnique = async (
+  id: number,
+  lang: Lang,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.delete(`${HOSTNAME}/topics/unique`, {
+      data: {
+        id,
+        lang,
+      },
+
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.status == 200;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+//delete also the topics with same ref id in other
+export const deleteTopicMany = async (
   ref_id: number,
   lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/topics`, {
+    const response = await axios.delete(`${HOSTNAME}/topics/many`, {
       data: {
         ref_id,
         lang,
       },
-
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -417,18 +441,39 @@ export const emailUser = async (
   }
 };
 
-export const deleteCategory = async (
+export const deleteCategoryMany = async (
   ref_id: number,
   lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${HOSTNAME}/categories`, {
+    const response = await axios.delete(`${HOSTNAME}/categories/many`, {
       data: {
         ref_id,
         lang,
       },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.status == 200;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
 
+export const deleteCategoryUnique = async (
+  id: number,
+  lang: Lang,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.delete(`${HOSTNAME}/categories/unique`, {
+      data: {
+        id,
+        lang,
+      },
       headers: {
         Authorization: "Bearer " + token,
       },

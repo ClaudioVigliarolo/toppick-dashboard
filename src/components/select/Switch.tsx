@@ -5,17 +5,19 @@ interface CustomSwitchProps {
   text: string;
   value: boolean;
   handleChange: (val: any) => void;
+  textColor?: string;
 }
 export default function CustomSwitch({
   text,
   value,
   handleChange,
+  textColor = "#fff",
 }: CustomSwitchProps) {
   return (
     <div
       style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
     >
-      <span style={{ color: "white", fontSize: 20 }}>{text}</span>
+      <span style={{ fontSize: 20, color: textColor }}>{text}</span>
       <span>
         <Switch
           checked={value}

@@ -22,46 +22,47 @@ interface AlertDialogSlideProps {
   description: string;
   onConfirm: () => void;
   onRefuse: () => void;
+  children?: React.ReactNode;
 }
-export default function AlertDialogSlide(props: AlertDialogSlideProps) {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+export default function AlertDialogSlide({
+  children,
+  description,
+  onConfirm,
+  onRefuse,
+  open,
+  title,
+}: AlertDialogSlideProps) {
   return (
-    <div>
-      <Dialog
-        open={props.open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">{props.title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {props.description}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={props.onRefuse}
-            style={{ color: COLORS.darkerOrange }}
-          >
-            Close
-          </Button>
-          <Button onClick={props.onConfirm} style={{ color: COLORS.blue }}>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      keepMounted
+      aria-labelledby="alert-dialog-slide-title"
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
+          {description}
+        </DialogContentText>
+        <div
+          style={{
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {children}
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onRefuse} style={{ color: COLORS.darkerOrange }}>
+          Close
+        </Button>
+        <Button onClick={onConfirm} style={{ color: COLORS.blue }}>
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

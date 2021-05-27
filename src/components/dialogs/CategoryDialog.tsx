@@ -30,7 +30,6 @@ export default function CategoryDialog(props: CategoryDialogProps) {
 
   const onSubmit = async (newCategory: string) => {
     setError(false);
-    setCategory("");
     if (newCategory == "" || selectedCategTopics.length == 0) {
       setError(true);
       return;

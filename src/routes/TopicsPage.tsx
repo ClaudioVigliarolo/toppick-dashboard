@@ -12,10 +12,16 @@ import CustomButton from "../components/buttons/CustomButton";
 import SearchBar from "../components/input/SearchBar";
 import TopicAddDialog from "../components/dialogs/TopicDialog";
 import TopicEditDialog from "../components/dialogs/TopicDialog";
+import Switch from "../components/select/Switch";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../styles/common";
 
-import { onTopicAdd, onTopicDelete, onTopicUpdate } from "src/utils/topics";
+import {
+  onTopicAdd,
+  onTopicDeleteMany,
+  onTopicDeleteUnique,
+  onTopicUpdate,
+} from "src/utils/topics";
 import { getHash } from "src/utils/utils";
 
 const NO_TOPIC: Topic = {
@@ -43,6 +49,7 @@ export default function ViewPage({
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
+  const [multipleDelete, setMultipleDelete] = React.useState<boolean>(false);
 
   const classes = useAppStyles();
 
@@ -183,25 +190,46 @@ export default function ViewPage({
 
       <DeleteDialog
         open={deleteDialog}
+        children={
+          <Switch
+            text="Multiple Delete"
+            textColor="black"
+            handleChange={() => setMultipleDelete(!multipleDelete)}
+            value={multipleDelete}
+          />
+        }
         onConfirm={() => {
-          onTopicDelete(
-            currentTopic.ref_id,
-            topics,
-            currentLanguage,
-            token,
-            setTopics,
-            setLoading,
-            onSuccess,
-            onError
-          );
+          multipleDelete
+            ? onTopicDeleteMany(
+                currentTopic.ref_id,
+                topics,
+                currentLanguage,
+                token,
+                setTopics,
+                setLoading,
+                onSuccess,
+                onError
+              )
+            : onTopicDeleteUnique(
+                currentTopic.id,
+                topics,
+                currentLanguage,
+                token,
+                setTopics,
+                setLoading,
+                onSuccess,
+                onError
+              );
           setCurrentTopic(NO_TOPIC);
           setDeleteDialog(false);
+          setMultipleDelete(false);
         }}
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
           setDeleteDialog(false);
+          setMultipleDelete(false);
         }}
       />
     </>

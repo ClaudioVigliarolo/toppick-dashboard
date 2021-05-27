@@ -11,10 +11,12 @@ import { useAppStyles } from "../styles/common";
 
 import {
   onCategoryAdd,
-  onCategoryDelete,
+  onCategoryDeleteMany,
+  onCategoryDeleteUnique,
   onCategoryUpdate,
 } from "src/utils/topics";
 import { getHash } from "src/utils/utils";
+import Switch from "src/components/select/Switch";
 
 const NO_CATEGORY: Category = {
   id: -1,
@@ -41,7 +43,9 @@ export default function ViewPage({
   const [addDialog, setAddDialog] = React.useState<boolean>(false);
   const [currentCategory, setCurrentCategory] =
     React.useState<Category>(NO_CATEGORY);
+  const [multipleDelete, setMultipleDelete] = React.useState<boolean>(false);
   const classes = useAppStyles();
+
   React.useEffect(() => {
     (async () => {
       setLoading(true);
@@ -171,23 +175,45 @@ export default function ViewPage({
 
       <DeleteDialog
         open={deleteDialog}
+        children={
+          <Switch
+            text="Multiple Delete"
+            textColor="black"
+            handleChange={() => setMultipleDelete(!multipleDelete)}
+            value={multipleDelete}
+          />
+        }
         onConfirm={() => {
-          onCategoryDelete(
-            currentCategory.ref_id,
-            categories,
-            currentLanguage,
-            token,
-            setCategories,
-            setLoading,
-            onSuccess,
-            onError
-          );
+          multipleDelete
+            ? onCategoryDeleteMany(
+                currentCategory.ref_id,
+                categories,
+                currentLanguage,
+                token,
+                setCategories,
+                setLoading,
+                onSuccess,
+                onError
+              )
+            : onCategoryDeleteUnique(
+                currentCategory.id,
+                categories,
+                currentLanguage,
+                token,
+                setCategories,
+                setLoading,
+                onSuccess,
+                onError
+              );
+
           setDeleteDialog(false);
+          setMultipleDelete(false);
         }}
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setDeleteDialog(false);
+          setMultipleDelete(false);
         }}
       />
     </>

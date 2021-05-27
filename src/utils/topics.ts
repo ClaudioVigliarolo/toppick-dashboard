@@ -3,7 +3,6 @@ import {
   Category,
   Lang,
   Question,
-  Related,
   ReportHandled,
   Topic,
   ToTranslateTopic,
@@ -13,10 +12,12 @@ import {
   addQuestion,
   addQuestions,
   addTopic,
-  deleteCategory,
+  deleteCategoryMany,
+  deleteCategoryUnique,
   deleteQuestion,
   deleteReport,
-  deleteTopic,
+  deleteTopicMany,
+  deleteTopicUnique,
   deleteToTranslateTopic,
   updateCategory,
   updateQuestion,
@@ -84,7 +85,7 @@ export const onCategoryUpdate = async (
   onSuccess();
 };
 
-export const onCategoryDelete = async (
+export const onCategoryDeleteMany = async (
   ref_id: number,
   categories: Category[],
   currentLanguage: Lang,
@@ -95,7 +96,7 @@ export const onCategoryDelete = async (
   onError: () => void
 ) => {
   setLoading(true);
-  const val = await deleteCategory(ref_id, currentLanguage, token);
+  const val = await deleteCategoryMany(ref_id, currentLanguage, token);
   if (!val) {
     setLoading(false);
     onError();
@@ -104,6 +105,29 @@ export const onCategoryDelete = async (
   const newCategories = categories.filter(
     (categ: Category) => categ.ref_id !== ref_id
   );
+  setCategories([...newCategories]);
+  setLoading(false);
+  onSuccess();
+};
+
+export const onCategoryDeleteUnique = async (
+  id: number,
+  categories: Category[],
+  currentLanguage: Lang,
+  token: string,
+  setCategories: (categories: Category[]) => void,
+  setLoading: (val: boolean) => void,
+  onSuccess: () => void,
+  onError: () => void
+) => {
+  setLoading(true);
+  const val = await deleteCategoryUnique(id, currentLanguage, token);
+  if (!val) {
+    setLoading(false);
+    onError();
+    return;
+  }
+  const newCategories = categories.filter((categ: Category) => categ.id !== id);
   setCategories([...newCategories]);
   setLoading(false);
   onSuccess();
@@ -269,7 +293,29 @@ export const onTopicUpdate = async (
   onSuccess();
 };
 
-export const onTopicDelete = async (
+export const onTopicDeleteUnique = async (
+  id: number,
+  topics: Topic[],
+  currentLanguage: Lang,
+  token: string,
+  setTopics: (topics: Topic[]) => void,
+  setLoading: (val: boolean) => void,
+  onSuccess: () => void,
+  onError: () => void
+): Promise<void> => {
+  setLoading(true);
+  const val = await deleteTopicUnique(id, currentLanguage, token);
+  if (!val) {
+    setLoading(false);
+    return onError();
+  }
+  const newTopics = topics.filter((topic: Topic) => topic.id !== id);
+  setTopics([...newTopics]);
+  setLoading(false);
+  onSuccess();
+};
+
+export const onTopicDeleteMany = async (
   ref_id: number,
   topics: Topic[],
   currentLanguage: Lang,
@@ -280,12 +326,12 @@ export const onTopicDelete = async (
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
-  const val = await deleteTopic(ref_id, currentLanguage, token);
+  const val = await deleteTopicMany(ref_id, currentLanguage, token);
   if (!val) {
     setLoading(false);
     return onError();
   }
-  const newTopics = topics.filter((topic: Topic) => topic.ref_id != ref_id);
+  const newTopics = topics.filter((topic: Topic) => topic.ref_id !== ref_id);
   setTopics([...newTopics]);
   setLoading(false);
   onSuccess();
@@ -310,7 +356,7 @@ export const onReportDelete = async (
   }
   //update locally
   const newReports = reports.filter(function (item: ReportHandled) {
-    return item.question_id != question_id;
+    return item.question_id !== question_id;
   });
 
   setReports([...newReports]);
