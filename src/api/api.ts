@@ -31,7 +31,7 @@ export const getCategories = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -48,7 +48,7 @@ export const getMaintenanceStatus = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : false;
+    return response.status === 200 ? response.data : false;
   } catch (err) {
     console.error(err);
     return false;
@@ -65,7 +65,7 @@ export const getCategoryTopics = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -82,7 +82,7 @@ export const getUsers = async (
       },
     });
     console.log("8888888", response.data);
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -99,7 +99,7 @@ export const getTopics = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -116,7 +116,7 @@ export const getQuestionTopics = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -125,15 +125,19 @@ export const getQuestionTopics = async (
 
 export const getToTranslateTopics = async (
   lang: Lang,
+  archived: boolean,
   token: string
 ): Promise<ToTranslateTopic[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/totranslate/` + lang, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-    return response.status == 200 ? response.data : null;
+    const response = await axios.get(
+      `${HOSTNAME}/totranslate/${lang}/${archived}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -156,7 +160,7 @@ export const getStatsContent = async (
         },
       }
     );
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -173,7 +177,7 @@ export const getClientRequests = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -195,7 +199,7 @@ export const getStatsReports = async (
         },
       }
     );
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -217,7 +221,7 @@ export const getStatsClientUpdates = async (
         },
       }
     );
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -242,7 +246,7 @@ export const addTopic = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -267,7 +271,7 @@ export const updateTopic = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -291,7 +295,7 @@ export const deleteTopicUnique = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -314,7 +318,7 @@ export const deleteTopicMany = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -337,7 +341,59 @@ export const deleteToTranslateTopic = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200;
+    return response.status === 200;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+export const archiveToTranslateTopic = async (
+  id: number,
+  lang: Lang,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.post(
+      `${HOSTNAME}/totranslate/archive`,
+      {
+        id,
+        lang,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+
+    return response.status === 200;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+export const unarchiveToTranslateTopic = async (
+  id: number,
+  lang: Lang,
+  token: string
+): Promise<boolean> => {
+  try {
+    const response = await axios.post(
+      `${HOSTNAME}/totranslate/unarchive`,
+      {
+        id,
+        lang,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -358,7 +414,7 @@ export const deleteUser = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 201;
+    return response.status === 201;
   } catch (err) {
     console.log(err);
     return false;
@@ -383,7 +439,7 @@ export const addUser = async (
       }
     );
 
-    return response.status == 201;
+    return response.status === 201;
   } catch (err) {
     console.log(err);
     return false;
@@ -406,7 +462,7 @@ export const updateUser = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -434,7 +490,7 @@ export const emailUser = async (
       }
     );
 
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -456,7 +512,7 @@ export const deleteCategoryMany = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -478,7 +534,7 @@ export const deleteCategoryUnique = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -503,7 +559,7 @@ export const addQuestion = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -528,7 +584,7 @@ export const addQuestions = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -553,7 +609,7 @@ export const addCategory = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -578,7 +634,7 @@ export const updateCategory = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -594,7 +650,7 @@ export const getUpdates = async (
     const response = await axios.get(
       `${HOSTNAME}/updates/${id}/${date}/${lang}`
     );
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -610,7 +666,7 @@ export const addReport = async (
       report,
       lang,
     });
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -635,7 +691,7 @@ export const updateQuestion = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -657,7 +713,7 @@ export const deleteReport = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -679,7 +735,7 @@ export const deleteQuestion = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -696,7 +752,7 @@ export const getReports = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -718,7 +774,7 @@ export const getQuestions = async (
         },
       }
     );
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -734,7 +790,7 @@ export const login = async (
       email,
       password,
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.log(err);
     return null;
@@ -748,7 +804,7 @@ export const getUser = async (token: string): Promise<LoggedUser | null> => {
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data.user : null;
+    return response.status === 200 ? response.data.user : null;
   } catch (err) {
     console.log(err);
     return null;
@@ -782,7 +838,7 @@ export const getQuestionsByTopic = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -804,7 +860,7 @@ export const getGoogleTranslatedQuestions = async (
         },
       }
     );
-    return response.status == 200 ? response.data.translations : null;
+    return response.status === 200 ? response.data.translations : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -826,7 +882,7 @@ export const getUserStats = async (
         },
       }
     );
-    return response.status == 200 ? response.data : null;
+    return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
     return null;
@@ -851,7 +907,7 @@ export const addToTranslateTopic = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;
@@ -876,7 +932,7 @@ export const updateMaintenance = async (
         },
       }
     );
-    return response.status == 200;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;

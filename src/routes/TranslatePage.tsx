@@ -6,10 +6,13 @@ import TranslationAddDialog from "../components/dialogs/TopicDialog";
 import Select from "../components/select/TranslateSelect";
 import TextArea from "../components/input/NumberedTextarea";
 import QuestionsList from "../components/lists/QuestionsList";
+import Button from "../components/buttons/TabButton";
 import {
+  onaAchiveToTranslateTopic,
   ondeleteToTranslateTopic,
   onQuestionsAdd,
   onTopicAdd,
+  onUnarchiveToTranslateTopic,
 } from "src/utils/topics";
 import { COLORS } from "src/constants/Colors";
 import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
@@ -87,6 +90,7 @@ export default function CreatePage({
   const [translatedQuestionsArray, setTranslatedQuestionsArray] =
     React.useState<string[]>([]);
   const [isReview, setReview] = React.useState<boolean>(false);
+  const [archived, setArchive] = React.useState<boolean>(false);
   const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
   const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
   const [toTranslateTopics, setToTranslateTopics] = React.useState<
@@ -111,6 +115,7 @@ export default function CreatePage({
       //get to translate
       const toTranslateTopics = await getToTranslateTopics(
         currentLanguage,
+        false,
         token
       );
       if (toTranslateTopics != null) {
@@ -124,6 +129,25 @@ export default function CreatePage({
       setLoading(false);
     })();
   }, [currentLanguage]);
+
+  React.useEffect(() => {
+    (async () => {
+      //get to translate
+      const toTranslateTopics = await getToTranslateTopics(
+        currentLanguage,
+        archived,
+        token
+      );
+      if (toTranslateTopics != null) {
+        setToTranslateTopics(
+          toTranslateTopics.sort((a, b) =>
+            a.source_title.localeCompare(b.source_title)
+          )
+        );
+      }
+      setLoading(false);
+    })();
+  }, [archived]);
 
   React.useEffect(() => {
     setReview(false);
@@ -254,25 +278,52 @@ export default function CreatePage({
       <h1 className={classes.headerText}>{renderHeaderText()}</h1>
 
       {isSelectToTranslateVisible() && (
-        <div className={classes.headerContainer}>
-          <Select
-            width={500}
-            onDelete={(i: number) =>
-              ondeleteToTranslateTopic(
-                toTranslateTopics[i].id,
-                toTranslateTopics,
-                setToTranslateTopics,
-                currentLanguage,
-                token
-              )
-            }
-            onSelect={onSelectTranslate}
-            value={selectedTopicToTranslate.source_title}
-            values={toTranslateTopics.map(
-              (t) => t.source_title + " (" + t.dest_lang.toUpperCase() + ")"
-            )}
-            defaultValue={NO_TOTRANSLATE_TOPIC.source_title}
-          />
+        <div className={classes.translateHeaderContainer}>
+          <div>
+            <Select
+              onDelete={(i: number) =>
+                ondeleteToTranslateTopic(
+                  toTranslateTopics[i].id,
+                  toTranslateTopics,
+                  setToTranslateTopics,
+                  currentLanguage,
+                  token
+                )
+              }
+              onArchive={(i: number) =>
+                onaAchiveToTranslateTopic(
+                  toTranslateTopics[i].id,
+                  toTranslateTopics,
+                  setToTranslateTopics,
+                  currentLanguage,
+                  token
+                )
+              }
+              onUnarchive={(i: number) =>
+                onUnarchiveToTranslateTopic(
+                  toTranslateTopics[i].id,
+                  toTranslateTopics,
+                  setToTranslateTopics,
+                  currentLanguage,
+                  token
+                )
+              }
+              onSelect={onSelectTranslate}
+              value={selectedTopicToTranslate.source_title}
+              values={toTranslateTopics.map(
+                (t) => t.source_title + " (" + t.dest_lang.toUpperCase() + ")"
+              )}
+              defaultValue={NO_TOTRANSLATE_TOPIC.source_title}
+              archived={archived}
+            />
+          </div>
+          <div>
+            <Button
+              label="Archive"
+              selected={archived}
+              onClick={() => setArchive(!archived)}
+            />
+          </div>
         </div>
       )}
       {isTranslationSwitchVisible() && (

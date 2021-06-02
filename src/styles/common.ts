@@ -110,10 +110,11 @@ export const useAppStyles = makeStyles((theme: Theme) =>
       width: "100%",
       minHeight: "100vh",
     },
-    headerContainer: {
+    translateHeaderContainer: {
       display: "flex",
-      justifyContent: "space-between",
+      justifyContent: "space-evenly",
       flexDirection: "row",
+      minWidth: 600,
     },
 
     headerText: {

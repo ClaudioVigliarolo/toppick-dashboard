@@ -12,6 +12,7 @@ import {
   addQuestion,
   addQuestions,
   addTopic,
+  archiveToTranslateTopic,
   deleteCategoryMany,
   deleteCategoryUnique,
   deleteQuestion,
@@ -19,6 +20,7 @@ import {
   deleteTopicMany,
   deleteTopicUnique,
   deleteToTranslateTopic,
+  unarchiveToTranslateTopic,
   updateCategory,
   updateQuestion,
   updateTopic,
@@ -416,7 +418,53 @@ export const ondeleteToTranslateTopic = async (
   const newToTranslateTopics = toTranslateTopics.filter(function (
     item: ToTranslateTopic
   ) {
-    return item.id != id;
+    return item.id !== id;
+  });
+
+  setToTranslateTopics([...newToTranslateTopics]);
+};
+
+export const onaAchiveToTranslateTopic = async (
+  id: number,
+  toTranslateTopics: ToTranslateTopic[],
+  setToTranslateTopics: (toTranslateTopics: ToTranslateTopic[]) => void,
+  lang: Lang,
+  token: string
+) => {
+  const val = await archiveToTranslateTopic(id, lang, token);
+  if (!val) {
+    //unnecessary further error handling
+    return;
+  }
+  console.log("muvallll", val);
+  console.log(toTranslateTopics);
+  //update locally
+  const newToTranslateTopics = toTranslateTopics.filter(function (
+    item: ToTranslateTopic
+  ) {
+    return item.id !== id;
+  });
+
+  setToTranslateTopics([...newToTranslateTopics]);
+};
+
+export const onUnarchiveToTranslateTopic = async (
+  id: number,
+  toTranslateTopics: ToTranslateTopic[],
+  setToTranslateTopics: (toTranslateTopics: ToTranslateTopic[]) => void,
+  lang: Lang,
+  token: string
+) => {
+  const val = await unarchiveToTranslateTopic(id, lang, token);
+  if (!val) {
+    //unnecessary further error handling
+    return;
+  }
+  //update locally
+  const newToTranslateTopics = toTranslateTopics.filter(function (
+    item: ToTranslateTopic
+  ) {
+    return item.id !== id;
   });
 
   setToTranslateTopics([...newToTranslateTopics]);

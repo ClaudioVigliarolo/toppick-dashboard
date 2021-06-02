@@ -1,25 +1,30 @@
 import React from "react";
-import { InputLabel, ListItemText, MenuItem, Select } from "@material-ui/core";
-
+import { InputLabel, ListItem, MenuItem, Select } from "@material-ui/core";
+import ArchiveIcon from "@material-ui/icons/Archive";
+import UnarchiveIcon from "@material-ui/icons/Unarchive";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { COLORS } from "src/constants/Colors";
 interface TranslateSelectProps {
   value: string;
   defaultValue: string;
   values: string[];
-  color?: string;
   header?: string;
-  width?: number;
+  archived: boolean;
   onDelete: (index: number) => void;
+  onArchive: (index: number) => void;
+  onUnarchive: (index: number) => void;
   onSelect: (index: number) => void;
 }
 export default function TranslateSelect({
   value,
   defaultValue,
   values,
-  color = "#fff",
   header,
-  width = 500,
   onDelete,
   onSelect,
+  onArchive,
+  onUnarchive,
+  archived,
 }: TranslateSelectProps) {
   return (
     <>
@@ -27,9 +32,9 @@ export default function TranslateSelect({
       <Select
         style={{
           textTransform: "capitalize",
-          width,
+          width: 500,
           fontSize: 20,
-          color: color,
+          color: "#fff",
         }}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
@@ -46,25 +51,54 @@ export default function TranslateSelect({
             }}
           >
             {val}
-            <ListItemText
-              onClick={(e) => {
-                onDelete(index);
-                e.stopPropagation();
-                e.nativeEvent.stopImmediatePropagation();
-              }}
+            <div
               style={{
-                color: "red",
-                fontSize: 10,
-                textTransform: "uppercase",
-                fontWeight: "bold",
-                position: "absolute",
-                right: 10,
-                top: 0,
-                bottom: 0,
+                width: "100%",
+                backgroundColor: "blue",
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              Remove
-            </ListItemText>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  position: "absolute",
+                  right: 0,
+                  width: 80,
+                  justifyContent: "space-between",
+                }}
+              >
+                {!archived ? (
+                  <ArchiveIcon
+                    style={{ color: COLORS.primaryOrange }}
+                    onClick={(e) => {
+                      onArchive(index);
+                      e.stopPropagation();
+                      e.nativeEvent.stopImmediatePropagation();
+                    }}
+                  />
+                ) : (
+                  <UnarchiveIcon
+                    style={{ color: COLORS.primaryOrange }}
+                    onClick={(e) => {
+                      onUnarchive(index);
+                      e.stopPropagation();
+                      e.nativeEvent.stopImmediatePropagation();
+                    }}
+                  />
+                )}
+                <DeleteIcon
+                  style={{ color: COLORS.red }}
+                  onClick={(e) => {
+                    onDelete(index);
+                    e.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                  }}
+                />
+              </div>
+            </div>
           </MenuItem>
         ))}
       </Select>
