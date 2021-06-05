@@ -15,7 +15,6 @@ import TopicEditDialog from "../components/dialogs/TopicDialog";
 import Switch from "../components/select/Switch";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../styles/common";
-
 import {
   onTopicAdd,
   onTopicDeleteMany,

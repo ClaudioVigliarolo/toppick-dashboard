@@ -79,6 +79,7 @@ export interface Question {
   title: string;
   timestamp: Date;
   topic: QuestionTopic;
+  n?: number;
 }
 
 export interface EditItem {

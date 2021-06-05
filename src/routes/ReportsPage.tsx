@@ -99,7 +99,7 @@ export default function ReportsPage({
     <>
       <div className={classes.headerSection}>
         <SearchBar
-          placeholder="Filter Topics"
+          placeholder="Filter Questions"
           setSearchText={(text) => setSearchText(text)}
           searchText={searchText}
         />

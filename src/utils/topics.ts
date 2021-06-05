@@ -27,16 +27,6 @@ import {
 } from "../api/api";
 import { getHash } from "../utils/utils";
 
-const NO_TOPIC: Topic = {
-  categories: [],
-  id: -1,
-  related: [],
-  source: "",
-  timestamp: new Date(),
-  title: "",
-  ref_id: -1,
-};
-
 export const onCategoryAdd = async (
   newCategory: Category,
   categories: Category[],

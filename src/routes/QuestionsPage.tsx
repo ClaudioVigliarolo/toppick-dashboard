@@ -20,6 +20,10 @@ import {
 import { getHash } from "src/utils/utils";
 import TableQuestions from "../components/tables/TableQuestions";
 
+const SCROLL_THRESHOLD = 200;
+const DIVIDING_FACTOR = 10;
+const ITEMS_PER_SCROLL = 50;
+
 const NO_QUESTION: Question = {
   id: -1,
   timestamp: new Date(),
@@ -39,10 +43,6 @@ const NO_TOPIC: Topic = {
   title: "Select A Topic",
   ref_id: -1,
 };
-
-const SCROLL_THRESHOLD = 200;
-const DIVIDING_FACTOR = 10;
-const ITEMS_PER_SCROLL = 50;
 
 export default function ViewPage({
   token,
@@ -223,6 +223,7 @@ export default function ViewPage({
             {
               id: getHash(newTitle + "*" + topic.title),
               title: newTitle,
+              n: 0,
               timestamp: new Date(),
               topic: {
                 id: topic.id,

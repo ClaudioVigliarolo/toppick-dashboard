@@ -8,7 +8,6 @@ import AddDialog from "../components/dialogs/CategoryDialog";
 import EditDialog from "../components/dialogs/CategoryDialog";
 import DeleteDialog from "../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../styles/common";
-
 import {
   onCategoryAdd,
   onCategoryDeleteMany,

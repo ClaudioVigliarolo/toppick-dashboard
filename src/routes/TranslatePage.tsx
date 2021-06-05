@@ -43,12 +43,6 @@ interface TranslationTextArea {
   original: string;
 }
 
-const DEFAULT_TRANSLATION_TEXTAREA: TranslationTextArea = {
-  blank: "",
-  google: "",
-  original: "",
-};
-
 const NO_TOTRANSLATE_TOPIC = {
   source_lang: Lang.EN,
   dest_lang: Lang.EN,
@@ -68,6 +62,12 @@ const NO_TOPIC: Topic = {
   timestamp: new Date(),
   title: "Select A Topic",
   ref_id: -1,
+};
+
+const DEFAULT_TRANSLATION_TEXTAREA: TranslationTextArea = {
+  blank: "",
+  google: "",
+  original: "",
 };
 
 export default function CreatePage({
