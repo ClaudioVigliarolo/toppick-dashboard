@@ -115,7 +115,7 @@ export default function ReportsPage({
       {reports.length > 0 && (
         <TableReports
           reports={reports}
-          topics={topics}
+          topics={topics.sort((a, b) => a.title.localeCompare(b.title))}
           filterTopic={filterTopic === NO_TOPIC ? "" : filterTopic.title}
           onDelete={onDelete}
           onEdit={onEdit}
