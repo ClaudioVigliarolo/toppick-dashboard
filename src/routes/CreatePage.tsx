@@ -23,7 +23,7 @@ import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";
 import { CircularProgress } from "@material-ui/core";
 
-const MIN_QUESTIONS = 5;
+const MIN_QUESTIONS = 15;
 
 const NO_TOPIC: Topic = {
   categories: [],

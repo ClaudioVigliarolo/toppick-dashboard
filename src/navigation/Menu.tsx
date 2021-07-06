@@ -83,7 +83,7 @@ export default function PersistentDrawerLeft({
       >
         <Toolbar>
           <Typography variant="h6" noWrap>
-            TOP Picks
+            TOP Pick
           </Typography>
           {isAuthenticated && (
             <div style={{ position: "absolute", right: 20, top: 0 }}>
