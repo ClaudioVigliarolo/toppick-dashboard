@@ -7,9 +7,9 @@ const DEF_UNTIL_DATE = new Date();
 const DEF_FROM_DATE = new Date(date.getFullYear() - 1000, date.getMonth(), 1);
 
 const TOPIC_SOURCES = [
+  "TopPick Creators",
   "The Internet TESL Journal",
   "ESL Conversation Questions",
-  "TopPick Creators",
 ];
 export const CONSTANTS = {
   ALERT_TIME: 3000,
