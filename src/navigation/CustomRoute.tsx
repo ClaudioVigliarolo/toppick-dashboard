@@ -7,7 +7,6 @@ interface CustomRouteProps {
   condition: boolean;
   Component: any;
   token: string;
-  isAuthenticated: boolean;
   currentLanguage: Lang;
   setLoading: (newVal: boolean) => void;
   loading: boolean;
@@ -17,12 +16,13 @@ interface CustomRouteProps {
   success: boolean;
 }
 
+const getLastUrl = () => "categories";
+
 const CustomRoute = ({
   path,
   Component,
   condition,
   token,
-  isAuthenticated,
   currentLanguage,
   setLoading,
   loading,
@@ -31,6 +31,7 @@ const CustomRoute = ({
   error,
   success,
 }: CustomRouteProps) => {
+  console.log("condom", condition);
   return condition ? (
     <Route
       path={path}
@@ -48,8 +49,9 @@ const CustomRoute = ({
         />
       )}
     />
-  ) : (
-    <Redirect to={isAuthenticated ? "categories" : "/login"} />
-  );
+  ) : //se loading && ! autenticated => display spinner
+  //se loading && authenticated => currrent
+  // se ! authenticated => login
+  null;
 };
 export default CustomRoute;

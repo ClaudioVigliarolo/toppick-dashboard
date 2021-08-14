@@ -26,6 +26,8 @@ import {
   PageProps,
   Related,
   Topic,
+  TopicLevel,
+  TopicType,
   ToTranslateTopic,
 } from "../interfaces/Interfaces";
 import { useAppStyles } from "src/styles/common";
@@ -59,6 +61,8 @@ const NO_TOPIC: Topic = {
   id: -1,
   related: [],
   source: "",
+  type: 0,
+  level: 0,
   timestamp: new Date(),
   title: "Select A Topic",
   ref_id: -1,
@@ -70,7 +74,7 @@ const DEFAULT_TRANSLATION_TEXTAREA: TranslationTextArea = {
   original: "",
 };
 
-export default function CreatePage({
+export default function TranslatePage({
   token,
   currentLanguage,
   setLoading,
@@ -428,12 +432,16 @@ export default function CreatePage({
         onConfirm={async (
           newTitle: string,
           newSource: string,
+          newType: TopicType,
+          newLevel: TopicLevel,
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
           const newTopic: Topic = {
             id: getHash(newTitle, currentLanguage),
             title: newTitle,
+            type: newType,
+            level: newLevel,
             related: selectedRelated,
             source: newSource,
             timestamp: new Date(),

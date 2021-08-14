@@ -2,11 +2,17 @@ import React from "react";
 import { CustomDialog } from "./DialogStyles";
 import Chip from "../select/ObjectChip";
 import { TextField } from "@material-ui/core";
-import { CategoryTopic, Related, Topic } from "src/interfaces/Interfaces";
-import { isSelected } from "src/utils/utils";
+import {
+  CategoryTopic,
+  Related,
+  Topic,
+  TopicLevel,
+  TopicType,
+} from "src/interfaces/Interfaces";
+import { isEnum, isSelected } from "src/utils/utils";
 import Select from "../select/SimpleSelect";
 import { CONSTANTS } from "src/constants/constants";
-
+import RadioSelect from "../select/RadioSelect";
 interface TopicDialogProps {
   topic: string;
   open: boolean;
@@ -14,6 +20,8 @@ interface TopicDialogProps {
   onConfirm: (
     topicTitle: string,
     source: string,
+    type: TopicType,
+    level: TopicLevel,
     selectedCategories: CategoryTopic[],
     selectedRelated: Related[]
   ) => void;
@@ -22,6 +30,8 @@ interface TopicDialogProps {
   preselectedCategories: CategoryTopic[];
   preselectedRelated: Related[];
   headerText: string;
+  type?: TopicType;
+  level?: TopicLevel;
   related: Topic[];
   placeholderTitle?: string;
   placeholderCategories?: string;
@@ -31,7 +41,11 @@ interface TopicDialogProps {
 
 export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<string>("");
+  const [topicType, setTopicType] = React.useState<TopicType>(
+    CONSTANTS.TOPIC_RADIO_TYPES[0].value
+  );
   const [related, setRelated] = React.useState<Related[]>([]);
+  const [level, setLevel] = React.useState<string>(CONSTANTS.TOPIC_LEVELS[1]);
   const [source, setSource] = React.useState<string>(
     CONSTANTS.TOPIC_SOURCES[0]
   );
@@ -51,12 +65,15 @@ export default function TopicDialog(props: TopicDialogProps) {
     );
     setSelectedCategories(props.preselectedCategories);
     setSelectedRelated(props.preselectedRelated);
+    props.type && setTopicType(props.type);
     props.source && setSource(props.source);
+    props.level !== undefined && setLevel(CONSTANTS.TOPIC_LEVELS[props.level]);
   }, [
     props.categories,
     props.topic,
     props.source,
     props.preselectedCategories,
+    props.source,
   ]);
 
   const onSubmit = async (
@@ -68,7 +85,14 @@ export default function TopicDialog(props: TopicDialogProps) {
       setError(true);
       return;
     }
-    props.onConfirm(newTopic, source, selectedCategories, selectedRelated);
+    props.onConfirm(
+      newTopic,
+      source,
+      topicType,
+      CONSTANTS.TOPIC_LEVELS.indexOf(level),
+      selectedCategories,
+      selectedRelated
+    );
   };
 
   const handleCategoriesChange = (index: number) => {
@@ -95,6 +119,15 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   const handleSourceChange = (event: React.ChangeEvent<any>) => {
     setSource(event.target.value);
+  };
+
+  const handleLevelChange = (event: React.ChangeEvent<any>) => {
+    setLevel(event.target.value);
+  };
+
+  const handleRadioChange = (event: React.ChangeEvent<any>) => {
+    console.log(event.target.value);
+    setTopicType(parseInt(event.target.value));
   };
 
   return (
@@ -145,7 +178,11 @@ export default function TopicDialog(props: TopicDialogProps) {
               error={error}
               handleChange={handleRelatedChange}
             />
-
+            <RadioSelect
+              value={topicType}
+              handleRadioChange={handleRadioChange}
+              values={CONSTANTS.TOPIC_RADIO_TYPES}
+            />
             <div style={{ alignSelf: "center", marginTop: 10 }}>
               <Select
                 handleChange={handleSourceChange}
@@ -154,6 +191,16 @@ export default function TopicDialog(props: TopicDialogProps) {
                 color="black"
                 width={300}
                 defaultValue={CONSTANTS.TOPIC_SOURCES[0]}
+              />
+            </div>
+            <div style={{ alignSelf: "center", marginTop: 10 }}>
+              <Select
+                handleChange={handleLevelChange}
+                value={level}
+                values={CONSTANTS.TOPIC_LEVELS}
+                color="black"
+                width={300}
+                defaultValue={level}
               />
             </div>
           </>

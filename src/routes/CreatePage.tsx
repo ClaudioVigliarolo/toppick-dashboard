@@ -11,6 +11,8 @@ import {
   PageProps,
   Related,
   Topic,
+  TopicLevel,
+  TopicType,
 } from "../interfaces/Interfaces";
 import TopicAddDialog from "../components/dialogs/TopicDialog";
 import { useAppStyles } from "../styles/common";
@@ -29,6 +31,8 @@ const NO_TOPIC: Topic = {
   categories: [],
   id: -1,
   related: [],
+  type: 0,
+  level: 0,
   source: "",
   timestamp: new Date(),
   title: "Select A Topic",
@@ -112,6 +116,15 @@ export default function CreatePage({
     return !isReview;
   };
 
+  const getQuestionsPlaceholder = () => {
+    console.log("uuuu", selectedTopic);
+    if (selectedTopic.type === TopicType.DIALOG) {
+      return "The 1st question is the description of the dialog \nFollows the questions";
+    } else {
+      return "Type or paste your questions here (min: 10 lines)";
+    }
+  };
+
   const renderHeaderText = () => {
     if (isReview) {
       return "Step 3: Proofread before submitting  ";
@@ -147,7 +160,7 @@ export default function CreatePage({
             handleChange={(text) => {
               setQuestionsText(text);
             }}
-            placeholder="Type or paste your questions here (min: 10 lines)"
+            placeholder={getQuestionsPlaceholder()}
             value={questionsText}
           />
         </div>
@@ -195,7 +208,7 @@ export default function CreatePage({
           />
         </div>
       )}
-
+      {console.log("sssss", selectedTopic)}
       {isReviewButtonVisible() && (
         <div className={classes.buttonContainer}>
           <CustomButton onClick={onSubmitReview} title="Submit For Review" />
@@ -214,12 +227,16 @@ export default function CreatePage({
         onConfirm={async (
           newTopicTitle: string,
           newSource: string,
+          newType: TopicType,
+          newLevel: TopicLevel,
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
           const newID = getHash(newTopicTitle, currentLanguage);
           const newTopic: Topic = {
             id: newID,
+            type: newType,
+            level: newLevel,
             title: newTopicTitle,
             related: selectedRelated,
             source: newSource,

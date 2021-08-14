@@ -15,7 +15,7 @@ const messageSuccess = "Successfully executed";
 const messageError = "We encountered an error";
 
 export const StatusProvider = ({ children }: { children: any }) => {
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
 

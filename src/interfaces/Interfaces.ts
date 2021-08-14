@@ -3,9 +3,11 @@ import { RouteProps } from "react-router-dom";
 export interface Topic {
   id: number;
   ref_id: number;
+  type: TopicType;
   title: string;
   source: string;
   timestamp: Date;
+  level: TopicLevel;
   categories: TopicCategory[];
   related: Related[];
 }
@@ -249,4 +251,19 @@ export interface Route {
   sidebarName: string;
   navbarName: string;
   component: React.ReactNode;
+}
+
+export enum TopicType {
+  TOPIC,
+  DIALOG,
+}
+
+export interface RadioButton {
+  value: any;
+  title: string;
+}
+export enum TopicLevel {
+  EASY,
+  MEDIUM,
+  HARD,
 }

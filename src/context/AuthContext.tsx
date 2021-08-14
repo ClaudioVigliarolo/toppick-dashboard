@@ -18,6 +18,7 @@ export const AuthContext = React.createContext({
   userToken: "",
   username: "",
   userMail: "",
+  lastUrl: "",
   languages: [Lang.EN],
   currentLanguage: Lang.EN,
 });
@@ -25,10 +26,10 @@ export const AuthContext = React.createContext({
 export const AuthProvider = ({ children }: { children: any }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const [languages, setUserLanguages] = React.useState<Lang[]>([]);
-  const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(
-    DEFAULT_LANG
-  );
+  const [currentLanguage, setCurrentLanguage] =
+    React.useState<Lang>(DEFAULT_LANG);
   const [userType, setUserType] = React.useState<string>("");
+  const [lastUrl, setLastUrl] = React.useState<string>("");
   const [username, setUsername] = React.useState<string>("");
   const [userMail, setUserMail] = React.useState<string>("");
   const [userToken, setUserToken] = React.useState<string>("");
@@ -38,6 +39,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
     (async () => {
       setLoading(true);
       const storedJwt = localStorage.getItem("token");
+      let urlPath = localStorage.getItem("url");
+      urlPath = urlPath ? urlPath : "/categories";
       const prevLanguage: any = localStorage.getItem("language");
       if (storedJwt !== null && prevLanguage !== null) {
         const retrievedUser = await getUser(storedJwt);
@@ -92,6 +95,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
         setIsAuthenticated: onSetIsAuthenticated,
         setUserType: onSetUserType,
         userType,
+        lastUrl,
         setUsername: onSetUserName,
         setUserMail: onsetUserMail,
         setUserLanguages: onSetUserLangs,

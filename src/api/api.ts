@@ -414,7 +414,7 @@ export const deleteUser = async (
         Authorization: "Bearer " + token,
       },
     });
-    return response.status === 201;
+    return response.status === 200;
   } catch (err) {
     console.log(err);
     return false;

@@ -1,4 +1,4 @@
-import { Lang } from "../interfaces/Interfaces";
+import { Lang, RadioButton, TopicType } from "../interfaces/Interfaces";
 
 const date = new Date();
 
@@ -11,6 +11,14 @@ const TOPIC_SOURCES = [
   "The Internet TESL Journal",
   "ESL Conversation Questions",
 ];
+
+const TOPIC_LEVELS = ["Easy", "Medium", "Hard"];
+
+const TOPIC_RADIO_TYPES: RadioButton[] = [
+  { title: "Topic", value: TopicType.TOPIC },
+  { title: "Dialog", value: TopicType.DIALOG },
+];
+
 export const CONSTANTS = {
   ALERT_TIME: 3000,
   DRAWER_WIDTH: 220,
@@ -20,4 +28,6 @@ export const CONSTANTS = {
   DEF_FROM_DATE,
   DEF_UNTIL_DATE,
   TOPIC_SOURCES,
+  TOPIC_LEVELS,
+  TOPIC_RADIO_TYPES,
 };

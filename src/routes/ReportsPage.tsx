@@ -27,6 +27,8 @@ const NO_REPORT: ReportHandled = {
 const NO_TOPIC: Topic = {
   categories: [],
   id: -1,
+  type: 0,
+  level: 0,
   related: [],
   source: "",
   timestamp: new Date(),

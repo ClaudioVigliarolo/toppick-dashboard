@@ -20,6 +20,7 @@ import { getCondition } from "./Index";
 import { logoutUser } from "../api/api";
 import { Lang } from "src/interfaces/Interfaces";
 import { useAppStyles } from "src/styles/common";
+import { refreshPage } from "src/utils/utils";
 
 const StyledLinearProgress = withStyles({
   colorPrimary: {
@@ -56,10 +57,6 @@ export default function PersistentDrawerLeft({
 
   let location = useLocation();
 
-  const refreshPage = () => {
-    window.location.reload();
-  };
-
   React.useEffect(() => {
     setPath(location.pathname);
   }, [location, setPath]);
@@ -69,8 +66,16 @@ export default function PersistentDrawerLeft({
   };
 
   const getRouteName = (path: string) => {
-    const route = routes.find((route) => route.path == path);
-    return route ? route.navbarName : "Not found";
+    if (loading) {
+      return "Please wait...";
+    }
+    if (getCondition(userType, path, isAuthenticated)) {
+      const route = routes.find((route) => route.path == path);
+      if (route) {
+        return route.navbarName;
+      }
+    }
+    return "Not found";
   };
 
   return (

@@ -22,7 +22,7 @@ export const onUserDelete = async (
     return onError();
   }
   const newUsers = users.filter(
-    (user: CreatedUser) => user.id != deletedUser.id
+    (user: CreatedUser) => user.id !== deletedUser.id
   );
   setUsers([...newUsers]);
   setLoading(false);

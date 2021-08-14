@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { login } from "../api/api";
 import { Form, useStyles } from "../components/input/Form";
 import { AuthContext } from "../context/AuthContext";
@@ -27,7 +28,7 @@ export default function LoginPage({
   const [password, setPassword] = React.useState<string>("");
 
   const classes = useStyles();
-
+  const history = useHistory();
   const onSubmit = async (): Promise<void> => {
     if (!emailState || !password) {
       onError();
@@ -44,6 +45,7 @@ export default function LoginPage({
       setUserLanguages(user.languages);
       setCurrentLanguage(user.languages[0]);
       setIsAuthenticated(true);
+      history.push("/categories");
       setLoading(false);
     } else {
       onError();

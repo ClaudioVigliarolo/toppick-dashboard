@@ -96,3 +96,12 @@ export const getLastYearStart = (): Date => {
 export const isSelected = (arr: Value[], val: Value) => {
   return arr.find((value) => value.title === val.title) ? true : false;
 };
+
+export const isEnum = (val: any) => {
+  if (val === undefined || val === null) return false;
+  return true;
+};
+
+export const refreshPage = () => {
+  window.location.reload();
+};

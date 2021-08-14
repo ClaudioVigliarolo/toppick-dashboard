@@ -276,6 +276,8 @@ export const onTopicUpdate = async (
   newTopics[topicIndex].timestamp = new Date();
   newTopics[topicIndex].categories = updatedTopic.categories;
   newTopics[topicIndex].related = updatedTopic.related;
+  newTopics[topicIndex].level = updatedTopic.level;
+  newTopics[topicIndex].type = updatedTopic.type;
   newTopics[topicIndex].source = updatedTopic.source;
 
   //push new updated arrays

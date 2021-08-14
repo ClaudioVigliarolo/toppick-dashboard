@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect, Switch } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-
+import { useLocation } from "react-router-dom";
 import CustomRoute from "./CustomRoute";
 import Menu from "./Menu";
 import { getUpdates } from "../api/api";
@@ -51,6 +51,7 @@ export const Navigation = () => {
     languages,
     setCurrentLanguage,
     currentLanguage,
+    lastUrl,
   } = React.useContext(AuthContext);
 
   const { setLoading, loading, onError, onSuccess, error, success } =
@@ -61,7 +62,7 @@ export const Navigation = () => {
       console.log("ggg", await getUpdates("Sun May 11,2014", Lang.IT, 12));
     })();
   }, []);
-
+  const location = useLocation();
   return (
     <Menu
       loading={loading}
@@ -74,18 +75,15 @@ export const Navigation = () => {
       currentLanguage={currentLanguage}
       children={
         <Switch>
-          <Redirect
-            exact
-            from="/"
-            to={isAuthenticated ? "categories/en" : "/login"}
-          />
+          {!loading && !isAuthenticated && location.pathname !== "/login" && (
+            <Redirect to="/login" />
+          )}
           {routes.map((route, index) => (
             <CustomRoute
               key={index}
               path={route.path}
               condition={getCondition(userType, route.path, isAuthenticated)}
               Component={route.component}
-              isAuthenticated={isAuthenticated}
               token={userToken}
               currentLanguage={currentLanguage}
               setLoading={setLoading}

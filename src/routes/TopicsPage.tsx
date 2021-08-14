@@ -6,6 +6,8 @@ import {
   PageProps,
   Related,
   Topic,
+  TopicLevel,
+  TopicType,
 } from "../interfaces/Interfaces";
 import TableTopics from "../components/tables/TableTopics";
 import CustomButton from "../components/buttons/CustomButton";
@@ -28,6 +30,8 @@ const NO_TOPIC: Topic = {
   id: -1,
   related: [],
   source: "",
+  level: 0,
+  type: 0,
   timestamp: new Date(),
   title: "",
   ref_id: -1,
@@ -102,13 +106,17 @@ export default function ViewPage({
         loading={loading}
         related={topics}
         source={currentTopic.source}
+        type={currentTopic.type}
         preselectedRelated={currentTopic.related}
         preselectedCategories={currentTopic.categories}
         topic={currentTopic.title}
+        level={currentTopic.level}
         categories={categories}
         onConfirm={(
           newTitle: string,
           newSource: string,
+          newType: TopicType,
+          newLevel: TopicLevel,
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
@@ -118,6 +126,8 @@ export default function ViewPage({
               title: newTitle,
               related: selectedRelated,
               source: newSource,
+              type: newType,
+              level: newLevel,
               timestamp: new Date(),
               categories: selectedCategories,
               ref_id: currentTopic.ref_id,
@@ -152,6 +162,8 @@ export default function ViewPage({
         onConfirm={(
           newTitle: string,
           newSource: string,
+          newType: TopicType,
+          newLevel: TopicLevel,
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
@@ -159,8 +171,10 @@ export default function ViewPage({
             {
               id: getHash(newTitle, currentLanguage),
               title: newTitle,
+              type: newType,
               related: selectedRelated,
               source: newSource,
+              level: newLevel,
               timestamp: new Date(),
               categories: selectedCategories,
               ref_id: getHash(newTitle, currentLanguage),
