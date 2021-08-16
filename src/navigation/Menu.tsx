@@ -75,7 +75,7 @@ export default function PersistentDrawerLeft({
         return route.navbarName;
       }
     }
-    return "Not found";
+    return "Error: 404";
   };
 
   return (

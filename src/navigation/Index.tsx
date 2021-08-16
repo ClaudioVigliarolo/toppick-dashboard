@@ -51,7 +51,6 @@ export const Navigation = () => {
     languages,
     setCurrentLanguage,
     currentLanguage,
-    lastUrl,
   } = React.useContext(AuthContext);
 
   const { setLoading, loading, onError, onSuccess, error, success } =
@@ -78,6 +77,8 @@ export const Navigation = () => {
           {!loading && !isAuthenticated && location.pathname !== "/login" && (
             <Redirect to="/login" />
           )}
+          {isAuthenticated && <Redirect exact from="/" to="/categories" />}
+          {isAuthenticated && <Redirect exact from="/login" to="/categories" />}
           {routes.map((route, index) => (
             <CustomRoute
               key={index}
