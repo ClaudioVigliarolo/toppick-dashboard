@@ -680,7 +680,7 @@ export const updateQuestion = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/questions`,
+      `${HOSTNAME}/question`,
       {
         question,
         lang,
