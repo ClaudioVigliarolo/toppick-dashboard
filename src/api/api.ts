@@ -23,12 +23,11 @@ import { HOSTNAME } from "../config/config";
 
 export const getCategories = async (
   lang: Lang,
-  token: string
 ): Promise<Category[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/categories/` + lang, {
       headers: {
-        Authorization: "Bearer " + token,
+       
       },
     });
     return response.status === 200 ? response.data : null;
@@ -57,12 +56,10 @@ export const getMaintenanceStatus = async (
 
 export const getCategoryTopics = async (
   lang: Lang,
-  token: string
 ): Promise<CategoryTopic[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/categories/topics/` + lang, {
       headers: {
-        Authorization: "Bearer " + token,
       },
     });
     return response.status === 200 ? response.data : null;
@@ -91,12 +88,10 @@ export const getUsers = async (
 
 export const getTopics = async (
   lang: Lang,
-  token: string
 ): Promise<Topic[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/topics/` + lang, {
       headers: {
-        Authorization: "Bearer " + token,
       },
     });
     return response.status === 200 ? response.data : null;
@@ -108,12 +103,10 @@ export const getTopics = async (
 
 export const getQuestionTopics = async (
   lang: Lang,
-  token: string
 ): Promise<QuestionTopic[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/question/topics/` + lang, {
       headers: {
-        Authorization: "Bearer " + token,
       },
     });
     return response.status === 200 ? response.data : null;
@@ -761,7 +754,6 @@ export const getReports = async (
 
 export const getQuestions = async (
   lang: Lang,
-  token: string,
   from: number,
   to: number
 ): Promise<Question[] | null> => {
@@ -770,7 +762,6 @@ export const getQuestions = async (
       `${HOSTNAME}/questions/${from}/${to}/${lang}`,
       {
         headers: {
-          Authorization: "Bearer " + token,
         },
       }
     );
@@ -830,12 +821,10 @@ export const logoutUser = async (token: string): Promise<string[] | null> => {
 
 export const getQuestionsByTopic = async (
   id: number,
-  token: string
 ): Promise<Question[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/questions/topic/${id}`, {
       headers: {
-        Authorization: "Bearer " + token,
       },
     });
     return response.status === 200 ? response.data : null;

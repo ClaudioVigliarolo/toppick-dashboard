@@ -73,7 +73,6 @@ export default function ViewPage({
       setLoading(true);
       const retrievedQuestionTopics = await getQuestionTopics(
         currentLanguage,
-        token
       );
       if (retrievedQuestionTopics != null) {
         setTopics(retrievedQuestionTopics);
@@ -86,7 +85,6 @@ export default function ViewPage({
     (async () => {
       let retrievedQuestions = await getQuestions(
         currentLanguage,
-        token,
         0,
         SCROLL_THRESHOLD
       );
@@ -111,7 +109,6 @@ export default function ViewPage({
         setLastScrollUpdate(lastScrollUpdate + SCROLL_THRESHOLD);
         let retrievedQuestions = await getQuestions(
           currentLanguage,
-          token,
           lastScrollUpdate / DIVIDING_FACTOR,
           lastScrollUpdate / DIVIDING_FACTOR + ITEMS_PER_SCROLL
         );

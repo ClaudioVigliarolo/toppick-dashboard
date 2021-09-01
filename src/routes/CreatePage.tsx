@@ -59,12 +59,12 @@ export default function CreatePage({
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage, token);
+      const retrievedCategories = await getCategories(currentLanguage);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
 
-      const retrievedTopics = await getTopics(currentLanguage, token);
+      const retrievedTopics = await getTopics(currentLanguage);
       //sort by timestamp
       if (retrievedTopics != null) {
         setTopics(
@@ -87,7 +87,6 @@ export default function CreatePage({
       setLoading(true);
       const retrievedQuestions = await getQuestionsByTopic(
         topics[index].id,
-        token
       );
       if (retrievedQuestions !== null) {
         setQuestionsText(retrievedQuestions.map((q) => q.title).join("\n"));

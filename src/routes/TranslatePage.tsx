@@ -106,12 +106,12 @@ export default function TranslatePage({
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage, token);
+      const retrievedCategories = await getCategories(currentLanguage);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
 
-      const retrievedTopics = await getTopics(currentLanguage, token);
+      const retrievedTopics = await getTopics(currentLanguage);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
@@ -197,7 +197,7 @@ export default function TranslatePage({
   };
 
   const onSetOriginalQuestions = async (topicID: number, token: string) => {
-    const originalQuestions = await getQuestionsByTopic(topicID, token);
+    const originalQuestions = await getQuestionsByTopic(topicID);
     if (originalQuestions !== null) {
       const newTextArea = translationTextArea;
       const originalQuestionsText = originalQuestions

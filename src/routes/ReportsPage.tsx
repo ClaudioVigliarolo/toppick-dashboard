@@ -62,7 +62,7 @@ export default function ReportsPage({
       if (reports != null) {
         setReports(reports);
       }
-      const retrievedTopics = await getTopics(currentLanguage, token);
+      const retrievedTopics = await getTopics(currentLanguage);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }

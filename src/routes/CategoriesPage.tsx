@@ -48,13 +48,12 @@ export default function ViewPage({
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage, token);
+      const retrievedCategories = await getCategories(currentLanguage);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
       const retrievedCategTopics = await getCategoryTopics(
         currentLanguage,
-        token
       );
       if (retrievedCategTopics != null) {
         setCategoryTopics(retrievedCategTopics);
