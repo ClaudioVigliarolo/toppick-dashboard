@@ -21,14 +21,10 @@ import {
 } from "../interfaces/Interfaces";
 import { HOSTNAME } from "../config/config";
 
-export const getCategories = async (
-  lang: Lang,
-): Promise<Category[] | null> => {
+export const getCategories = async (lang: Lang): Promise<Category[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/categories/` + lang, {
-      headers: {
-       
-      },
+      headers: {},
     });
     return response.status === 200 ? response.data : null;
   } catch (err) {
@@ -55,12 +51,11 @@ export const getMaintenanceStatus = async (
 };
 
 export const getCategoryTopics = async (
-  lang: Lang,
+  lang: Lang
 ): Promise<CategoryTopic[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/categories/topics/` + lang, {
-      headers: {
-      },
+      headers: {},
     });
     return response.status === 200 ? response.data : null;
   } catch (err) {
@@ -86,13 +81,10 @@ export const getUsers = async (
   }
 };
 
-export const getTopics = async (
-  lang: Lang,
-): Promise<Topic[] | null> => {
+export const getTopics = async (lang: Lang): Promise<Topic[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/topics/` + lang, {
-      headers: {
-      },
+      headers: {},
     });
     return response.status === 200 ? response.data : null;
   } catch (err) {
@@ -102,12 +94,11 @@ export const getTopics = async (
 };
 
 export const getQuestionTopics = async (
-  lang: Lang,
+  lang: Lang
 ): Promise<QuestionTopic[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/question/topics/` + lang, {
-      headers: {
-      },
+      headers: {},
     });
     return response.status === 200 ? response.data : null;
   } catch (err) {
@@ -761,8 +752,7 @@ export const getQuestions = async (
     const response = await axios.get(
       `${HOSTNAME}/questions/${from}/${to}/${lang}`,
       {
-        headers: {
-        },
+        headers: {},
       }
     );
     return response.status === 200 ? response.data : null;
@@ -820,12 +810,11 @@ export const logoutUser = async (token: string): Promise<string[] | null> => {
 };
 
 export const getQuestionsByTopic = async (
-  id: number,
+  id: number
 ): Promise<Question[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/questions/topic/${id}`, {
-      headers: {
-      },
+      headers: {},
     });
     return response.status === 200 ? response.data : null;
   } catch (err) {
@@ -875,31 +864,6 @@ export const getUserStats = async (
   } catch (err) {
     console.error(err);
     return null;
-  }
-};
-
-export const addToTranslateTopic = async (
-  id: number,
-  lang: Lang,
-  token: string
-): Promise<boolean> => {
-  try {
-    const response = await axios.post(
-      `${HOSTNAME}/totranslate`,
-      {
-        id,
-        lang,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    return response.status === 200;
-  } catch (err) {
-    console.log(err);
-    return false;
   }
 };
 

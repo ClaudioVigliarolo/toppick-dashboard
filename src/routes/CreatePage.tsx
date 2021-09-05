@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  addToTranslateTopic,
-  getCategories,
-  getQuestionsByTopic,
-  getTopics,
-} from "../api/api";
+import { getCategories, getQuestionsByTopic, getTopics } from "../api/api";
 import {
   Category,
   CategoryTopic,
@@ -85,9 +80,7 @@ export default function CreatePage({
     setSelectedTopic(topics[index]);
     if (topics[index] !== NO_TOPIC) {
       setLoading(true);
-      const retrievedQuestions = await getQuestionsByTopic(
-        topics[index].id,
-      );
+      const retrievedQuestions = await getQuestionsByTopic(topics[index].id);
       if (retrievedQuestions !== null) {
         setQuestionsText(retrievedQuestions.map((q) => q.title).join("\n"));
       }
@@ -251,7 +244,6 @@ export default function CreatePage({
             setTopics,
             setLoading,
             async () => {
-              await addToTranslateTopic(newID, currentLanguage, token);
               setQuestionsText("");
               setSelectedTopic(newTopic);
               setTopicAddDialog(false);
