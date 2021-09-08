@@ -30,22 +30,17 @@ export default function TableTopics({
     return topics.map((topic: Topic, index: number) => {
       if (topic.title.toLowerCase().includes(searchText.toLowerCase())) {
         return (
-          <StyledTableRow
-            key={index}
-            style={{
-              backgroundColor:
-                topic.related.length === 0 || topic.categories.length === 0
-                  ? "red"
-                  : "",
-            }}
-          >
+          <StyledTableRow key={index}>
             <StyledTableCell> {topic.title}</StyledTableCell>
             <StyledTableCell>{topic.source}</StyledTableCell>
             <StyledTableCell>
               {getFormattedDate(topic.timestamp)}
             </StyledTableCell>
-            <StyledEditCell>
+            <StyledEditCell
+              style={{ color: topic.related.length === 0 ? "red" : "black" }}
+            >
               {topic.related.map((r: Related) => r.title + " ")}
+              {topic.related.length === 0 && "Warning, no related topic!"}
               <div className={classes.iconsContainer}>
                 <EditIcon
                   className={classes.editIcon}

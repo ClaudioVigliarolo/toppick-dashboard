@@ -449,7 +449,7 @@ export default function TranslatePage({
             ref_id: selectedTopicToTranslate.ref_id,
           };
 
-          onTopicAdd(
+          await onTopicAdd(
             newTopic,
             topics,
             currentLanguage,

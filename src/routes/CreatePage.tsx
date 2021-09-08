@@ -138,6 +138,7 @@ export default function CreatePage({
             value={selectedTopic}
             values={topics}
             defaultValue={NO_TOPIC}
+            width={400}
           />
 
           <CustomButton

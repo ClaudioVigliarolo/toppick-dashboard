@@ -1,7 +1,7 @@
 import React from "react";
 import CardNumber from "../cards/CardNumber";
 import Button from "../buttons/TabButton";
-import StatsCarousel from "../../temp/carousels/StatsCarousel";
+import StatsCarousel from "../carousels/StatsCarousel";
 import { CreatedUser, Lang, UserStats } from "src/interfaces/Interfaces";
 import { getUsers, getUserStats } from "src/api/api";
 import { useChartStyles } from "./ChartStyles";

@@ -52,9 +52,7 @@ export default function ViewPage({
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
-      const retrievedCategTopics = await getCategoryTopics(
-        currentLanguage,
-      );
+      const retrievedCategTopics = await getCategoryTopics(currentLanguage);
       if (retrievedCategTopics != null) {
         setCategoryTopics(retrievedCategTopics);
       }

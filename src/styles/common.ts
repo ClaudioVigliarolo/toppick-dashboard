@@ -2,8 +2,6 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { COLORS } from "src/constants/Colors";
 import { CONSTANTS } from "src/constants/constants";
 
-// Create your Styles. Remember, since React-JSS uses the default preset,
-// most plugins are available without further configuration needed.
 export const useAppStyles = makeStyles((theme: Theme) =>
   createStyles({
     menu: {
@@ -36,10 +34,6 @@ export const useAppStyles = makeStyles((theme: Theme) =>
         padding: 100,
         width: "200%",
       },
-    },
-    paper: {
-      background: "red",
-      color: "red",
     },
     drawerPaper: {
       width: CONSTANTS.DRAWER_WIDTH,

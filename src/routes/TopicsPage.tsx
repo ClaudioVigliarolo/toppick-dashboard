@@ -52,7 +52,7 @@ export default function ViewPage({
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const [multipleDelete, setMultipleDelete] = React.useState<boolean>(false);
+  const [multipleDelete, setMultipleDelete] = React.useState<boolean>(true);
 
   const classes = useAppStyles();
 
@@ -112,7 +112,7 @@ export default function ViewPage({
         topic={currentTopic.title}
         level={currentTopic.level}
         categories={categories}
-        onConfirm={(
+        onConfirm={async (
           newTitle: string,
           newSource: string,
           newType: TopicType,
@@ -120,7 +120,7 @@ export default function ViewPage({
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
-          onTopicUpdate(
+          await onTopicUpdate(
             {
               id: currentTopic.id,
               title: newTitle,
@@ -159,7 +159,7 @@ export default function ViewPage({
         loading={loading}
         headerText="Add New Topic"
         topic=""
-        onConfirm={(
+        onConfirm={async (
           newTitle: string,
           newSource: string,
           newType: TopicType,
@@ -167,7 +167,7 @@ export default function ViewPage({
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
-          onTopicAdd(
+          await onTopicAdd(
             {
               id: getHash(newTitle, currentLanguage),
               title: newTitle,

@@ -1,7 +1,5 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-// Create your Styles. Remember, since React-JSS uses the default preset,
-// most plugins are available without further configuration needed.
 export const useChartStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -19,7 +17,6 @@ export const useChartStyles = makeStyles((theme: Theme) =>
       flexDirection: "row",
     },
     chartContainer: {
-      //backgroundColor: "red",
       width: "60%",
     },
     chartHeader: {
