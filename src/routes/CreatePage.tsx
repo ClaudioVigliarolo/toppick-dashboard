@@ -15,7 +15,11 @@ import Select from "../components/select/ObjectSelect";
 import CustomButton from "../components/buttons/CustomButton";
 import TextArea from "../components/input/NumberedTextarea";
 import QuestionsList from "../components/lists/QuestionsList";
-import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
+import {
+  onQuestionsAdd,
+  onQuestionsUpdate,
+  onTopicAdd,
+} from "src/utils/topics";
 import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";
 import { CircularProgress } from "@material-ui/core";
@@ -46,6 +50,7 @@ export default function CreatePage({
   const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
   const [questionsText, setQuestionsText] = React.useState<string>("");
   const [questionsArray, setQuestionsArray] = React.useState<string[]>([]);
+  const [isUpdate, setIsUpdate] = React.useState<boolean>(false);
   const [isReview, setReview] = React.useState(false);
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -83,6 +88,11 @@ export default function CreatePage({
       const retrievedQuestions = await getQuestionsByTopic(topics[index].id);
       if (retrievedQuestions !== null) {
         setQuestionsText(retrievedQuestions.map((q) => q.title).join("\n"));
+        if (retrievedQuestions.length > 0) {
+          setIsUpdate(true);
+        } else {
+          setIsUpdate(false);
+        }
       }
       setLoading(false);
     }
@@ -109,7 +119,6 @@ export default function CreatePage({
   };
 
   const getQuestionsPlaceholder = () => {
-    console.log("uuuu", selectedTopic);
     if (selectedTopic.type === TopicType.DIALOG) {
       return "The 1st question is the description of the dialog \nFollows the questions";
     } else {
@@ -121,9 +130,45 @@ export default function CreatePage({
     if (isReview) {
       return "Step 3: Proofread before submitting  ";
     } else if (selectedTopic !== NO_TOPIC) {
-      return "Step 2: Insert each question in a row ";
+      return (
+        "Step 2:" +
+        (isUpdate
+          ? "Edit the questions"
+          : "Insert new questions, each question on a new line")
+      );
     } else if (selectedTopic === NO_TOPIC) {
       return "Let's start by picking a Topic ";
+    }
+  };
+
+  const onReset = async () => {
+    window.scrollTo(0, 0);
+    setReview(false);
+    setSelectedTopic(NO_TOPIC);
+    onSuccess();
+  };
+
+  const handleSubmit = async () => {
+    if (isUpdate) {
+      await onQuestionsUpdate(
+        [...new Set(questionsArray)],
+        selectedTopic,
+        currentLanguage,
+        token,
+        setLoading,
+        onReset,
+        onError
+      );
+    } else {
+      await onQuestionsAdd(
+        [...new Set(questionsArray)],
+        selectedTopic,
+        currentLanguage,
+        token,
+        setLoading,
+        onReset,
+        onError
+      );
     }
   };
 
@@ -175,23 +220,7 @@ export default function CreatePage({
                     title="Revert, change something"
                   />
                   <CustomButton
-                    onClick={async () => {
-                      await onQuestionsAdd(
-                        [...new Set(questionsArray)],
-                        selectedTopic,
-                        currentLanguage,
-                        token,
-                        setLoading,
-                        async () => {
-                          //add translations
-                          window.scrollTo(0, 0);
-                          setReview(false);
-                          setSelectedTopic(NO_TOPIC);
-                          onSuccess();
-                        },
-                        onError
-                      );
-                    }}
+                    onClick={handleSubmit}
                     color={COLORS.blue}
                     title="Submit, everything's fine"
                   />
@@ -201,7 +230,7 @@ export default function CreatePage({
           />
         </div>
       )}
-      {console.log("sssss", selectedTopic)}
+      {console.log("artefatto", isUpdate)}
       {isReviewButtonVisible() && (
         <div className={classes.buttonContainer}>
           <CustomButton onClick={onSubmitReview} title="Submit For Review" />
@@ -248,6 +277,7 @@ export default function CreatePage({
               setQuestionsText("");
               setSelectedTopic(newTopic);
               setTopicAddDialog(false);
+              setIsUpdate(false);
               onSuccess();
             },
             onError

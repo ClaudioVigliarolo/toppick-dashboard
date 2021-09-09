@@ -525,31 +525,6 @@ export const deleteCategoryUnique = async (
   }
 };
 
-export const addQuestion = async (
-  question: Question,
-  lang: Lang,
-  token: string
-): Promise<boolean> => {
-  try {
-    const response = await axios.post(
-      `${HOSTNAME}/question`,
-      {
-        question,
-        lang,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    return response.status === 200;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
-};
-
 export const addQuestions = async (
   questions: Question[],
   lang: Lang,
@@ -657,16 +632,16 @@ export const addReport = async (
   }
 };
 
-export const updateQuestion = async (
-  question: Question,
+export const updateQuestions = async (
+  questions: Question[],
   lang: Lang,
   token: string
 ): Promise<boolean> => {
   try {
     const response = await axios.put(
-      `${HOSTNAME}/question`,
+      `${HOSTNAME}/questions`,
       {
-        question,
+        questions,
         lang,
       },
       {

@@ -9,7 +9,6 @@ import {
 } from "../interfaces/Interfaces";
 import {
   addCategory,
-  addQuestion,
   addQuestions,
   addTopic,
   archiveToTranslateTopic,
@@ -22,7 +21,7 @@ import {
   deleteToTranslateTopic,
   unarchiveToTranslateTopic,
   updateCategory,
-  updateQuestion,
+  updateQuestions,
   updateTopic,
 } from "../api/api";
 import { getHash } from "../utils/utils";
@@ -137,7 +136,7 @@ export const onQuestionAdd = async (
 ) => {
   setLoading(true);
 
-  const val = await addQuestion(newQuestion, currentLanguage, token);
+  const val = await addQuestions([newQuestion], currentLanguage, token);
   const newQuestions = questions;
 
   if (!val) {
@@ -162,7 +161,7 @@ export const onQuestionUpdate = async (
   onError: () => void
 ) => {
   setLoading(true);
-  const val = await updateQuestion(question, currentLanguage, token);
+  const val = await updateQuestions([question], currentLanguage, token);
   if (!val) {
     setLoading(false);
     return onError();
@@ -355,6 +354,41 @@ export const onReportDelete = async (
   });
 
   setReports([...newReports]);
+  setLoading(false);
+  onSuccess();
+};
+
+export const onQuestionsUpdate = async (
+  questionsArray: string[],
+  selectedTopic: Topic,
+  currentLanguage: Lang,
+  token: string,
+  setLoading: (val: boolean) => void,
+  onSuccess: () => void,
+  onError: () => void
+) => {
+  setLoading(true);
+  if (!selectedTopic || questionsArray.length < 0) {
+    setLoading(false);
+    return onError();
+  }
+
+  const newQuestions: Question[] = questionsArray.map(
+    (questionTitle: string) => ({
+      id: getHash(questionTitle + "*" + selectedTopic.title),
+      timestamp: new Date(),
+      title: questionTitle,
+      topic: {
+        id: selectedTopic.id,
+        title: selectedTopic.title,
+      },
+    })
+  );
+  const val = await updateQuestions(newQuestions, currentLanguage, token);
+  if (!val) {
+    setLoading(false);
+    return onError();
+  }
   setLoading(false);
   onSuccess();
 };

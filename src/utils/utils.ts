@@ -33,13 +33,19 @@ export const getCurrentTime = (): string => {
 
 export const countTextLines = (inputText: string): number => {
   if (!inputText) return 0;
-  const lines = inputText.match(/[^\r\n]+/g);
+  let lines = inputText.match(/[^\r\n]+/g);
+  if (lines) {
+    lines = lines.filter((l) => l.replace(/\s/g, "").length > 0);
+  }
   return lines ? lines.length : 0;
 };
 
 export const getLinesFromText = (inputText: string): string[] => {
   if (!inputText) return [];
-  const lines = inputText.match(/[^\r\n]+/g);
+  let lines = inputText.match(/[^\r\n]+/g);
+  if (lines) {
+    lines = lines.filter((l) => l.replace(/\s/g, "").length > 0);
+  }
   return lines ? lines : [];
 };
 
