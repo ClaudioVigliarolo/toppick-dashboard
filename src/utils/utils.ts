@@ -13,7 +13,7 @@ export const getHash = (str1: string, str2: string = "") => {
   return Math.abs(hash);
 };
 
-export const getFormattedDate = (inputDate: any): string => {
+export const getFormattedDate = (inputDate: Date): string => {
   const todaysDate = new Date();
   // call setHours to take the time out of the comparison
   if (

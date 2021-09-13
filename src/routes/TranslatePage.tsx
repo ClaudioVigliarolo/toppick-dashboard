@@ -45,7 +45,7 @@ interface TranslationTextArea {
   original: string;
 }
 
-const NO_TOTRANSLATE_TOPIC = {
+const NO_TOTRANSLATE_TOPIC: ToTranslateTopic = {
   source_lang: Lang.EN,
   dest_lang: Lang.EN,
   id: -1,
@@ -54,6 +54,9 @@ const NO_TOTRANSLATE_TOPIC = {
   source_related: [],
   source_title: "Pick A topic To Translate",
   topic_id: -1,
+  level: 0,
+  source: "",
+  type: 0,
 };
 
 const NO_TOPIC: Topic = {
@@ -174,6 +177,7 @@ export default function TranslatePage({
     );
   };
   const onSelectTranslate = (index: number) => {
+    console.log("CURRR", toTranslateTopics[index]);
     setselectedTopicToTranslate(toTranslateTopics[index]);
     setTopicAddDialog(true);
   };
@@ -252,13 +256,6 @@ export default function TranslatePage({
     );
 
     return currentTextAreaLength > 5;
-    /*
-    return (
-      Math.abs(originalTextAreaLength - currentTextAreaLength) <=
-        originalTextAreaLength / 3 &&
-      Math.abs(originalTextAreaLength + currentTextAreaLength) >=
-        originalTextAreaLength / 3
-    );*/
   };
 
   const isReviewListVisible = () => {
@@ -315,7 +312,7 @@ export default function TranslatePage({
               onSelect={onSelectTranslate}
               value={selectedTopicToTranslate.source_title}
               values={toTranslateTopics.map(
-                (t) => t.source_title + " (" + t.dest_lang.toUpperCase() + ")"
+                (t) => t.source_title + " (" + t.source_lang.toUpperCase() + ")"
               )}
               defaultValue={NO_TOTRANSLATE_TOPIC.source_title}
               archived={archived}
@@ -426,6 +423,9 @@ export default function TranslatePage({
         preselectedRelated={selectedTopicToTranslate.source_related}
         categories={categories}
         related={topics}
+        level={selectedTopicToTranslate.level}
+        source={selectedTopicToTranslate.source}
+        type={selectedTopicToTranslate.type}
         headerText="Add New Topic"
         topic=""
         placeholderTitle={selectedTopicToTranslate.source_title}

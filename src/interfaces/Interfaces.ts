@@ -25,8 +25,11 @@ export interface ToTranslateTopic {
   dest_lang: Lang;
   source_lang: Lang;
   source_title: string;
+  type: TopicType;
   source_related: Related[];
   source_categories: TopicCategory[];
+  source: string;
+  level: TopicLevel;
 }
 
 export interface TopicsCategory {

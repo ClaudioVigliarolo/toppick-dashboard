@@ -229,14 +229,12 @@ export default function ViewPage({
               );
           setCurrentTopic(NO_TOPIC);
           setDeleteDialog(false);
-          setMultipleDelete(false);
         }}
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
           setDeleteDialog(false);
-          setMultipleDelete(false);
         }}
       />
     </>
