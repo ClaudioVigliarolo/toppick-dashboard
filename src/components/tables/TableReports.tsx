@@ -6,18 +6,9 @@ import {
   useStyles,
   StyledTableCell,
 } from "./TableStyles";
-import { Report, ReportHandled, Topic } from "../../interfaces/Interfaces";
-import DeleteDialog from "../dialogs/ConfirmDialog";
-import EditDialog from "../dialogs/EditDialog";
+import { ReportHandled, Topic } from "../../interfaces/Interfaces";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-
-import {
-  onQuestionDelete,
-  onQuestionUpdate,
-  onReportDelete,
-} from "src/utils/topics";
-
 interface TableReportsProps {
   reports: ReportHandled[];
   topics: Topic[];

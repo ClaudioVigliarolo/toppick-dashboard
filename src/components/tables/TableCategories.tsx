@@ -4,6 +4,7 @@ import {
   StyledEditCell,
   StyledTableRow,
   useStyles,
+  StyledTableCell,
 } from "./TableStyles";
 import { Category, Lang } from "../../interfaces/Interfaces";
 import EditIcon from "@material-ui/icons/Edit";
@@ -31,8 +32,12 @@ export default function TableCategories({
       if (category.title.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
-            <StyledEditCell>
-              {category.title}
+            <StyledTableCell> {category.title}</StyledTableCell>
+            <StyledEditCell
+              style={{
+                color: category.categoryTopics.length === 0 ? "red" : "black",
+              }}
+            >
               {category.categoryTopics.length === 0 &&
                 "Warning, no topic in this category !"}
               <div className={classes.iconsContainer}>
@@ -57,8 +62,8 @@ export default function TableCategories({
   };
   return (
     <CustomTable
-      columns={["50%"]}
-      columnNames={["category"]}
+      columns={["60%", "50%"]}
+      columnNames={["category", ""]}
       body={renderRows(categories)}
     />
   );
