@@ -74,7 +74,7 @@ export default function ViewPage({
     <>
       <div className={classes.headerSection}>
         <SearchBar
-          placeholder="Filter Topics"
+          placeholder="Filter Categories"
           setSearchText={(text) => setSearchText(text)}
           searchText={searchText}
         />

@@ -1,4 +1,3 @@
-//api call to get all the topics to translate (from user_current_lang to target_lang)
 import React from "react";
 import { getCategories, getTopics, getToTranslateTopics } from "../api/api";
 import CustomButton from "../components/buttons/CustomButton";
