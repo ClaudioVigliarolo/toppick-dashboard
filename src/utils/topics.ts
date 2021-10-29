@@ -374,8 +374,8 @@ export const onQuestionsUpdate = async (
   }
 
   const newQuestions: Question[] = questionsArray.map(
-    (questionTitle: string) => ({
-      id: getHash(questionTitle + "*" + selectedTopic.title),
+    (questionTitle: string, index: number) => ({
+      id: getHash(questionTitle + "*" + selectedTopic.title + "*" + index),
       timestamp: new Date(),
       title: questionTitle,
       topic: {
@@ -409,8 +409,8 @@ export const onQuestionsAdd = async (
   }
 
   const newQuestions: Question[] = questionsArray.map(
-    (questionTitle: string) => ({
-      id: getHash(questionTitle + "*" + selectedTopic.title),
+    (questionTitle: string, index: number) => ({
+      id: getHash(questionTitle + "*" + selectedTopic.title + "*" + index),
       timestamp: new Date(),
       title: questionTitle,
       topic: {
