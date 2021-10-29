@@ -24,7 +24,7 @@ import { countTextLines, getHash, getLinesFromText } from "src/utils/utils";
 import { COLORS } from "src/constants/Colors";
 import { CircularProgress } from "@material-ui/core";
 
-const MIN_QUESTIONS = 15;
+const MIN_QUESTIONS = 10;
 
 const NO_TOPIC: Topic = {
   categories: [],
@@ -102,7 +102,7 @@ export default function CreatePage({
     return (
       !isReview &&
       selectedTopic != NO_TOPIC &&
-      countTextLines(questionsText) > MIN_QUESTIONS
+      countTextLines(questionsText) >= MIN_QUESTIONS
     );
   };
 
@@ -151,7 +151,7 @@ export default function CreatePage({
   const handleSubmit = async () => {
     if (isUpdate) {
       await onQuestionsUpdate(
-        [...new Set(questionsArray)],
+        questionsArray,
         selectedTopic,
         currentLanguage,
         token,
@@ -161,7 +161,7 @@ export default function CreatePage({
       );
     } else {
       await onQuestionsAdd(
-        [...new Set(questionsArray)],
+        questionsArray,
         selectedTopic,
         currentLanguage,
         token,

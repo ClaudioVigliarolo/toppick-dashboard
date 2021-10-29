@@ -389,7 +389,7 @@ export default function TranslatePage({
                   <CustomButton
                     onClick={async () => {
                       await onQuestionsAdd(
-                        [...new Set(translatedQuestionsArray)],
+                        translatedQuestionsArray,
                         selectedTopic,
                         currentLanguage,
                         token,
