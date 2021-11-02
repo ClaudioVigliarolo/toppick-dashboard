@@ -130,12 +130,9 @@ export default function CreatePage({
     if (isReview) {
       return "Step 3: Proofread before submitting  ";
     } else if (selectedTopic !== NO_TOPIC) {
-      return (
-        "Step 2:" +
-        (isUpdate
-          ? "Edit the questions"
-          : "Insert new questions, each question on a new line")
-      );
+      return isUpdate
+        ? "Edit the questions"
+        : "Step 2: Insert new questions, each question on a new line";
     } else if (selectedTopic === NO_TOPIC) {
       return "Let's start by picking a Topic ";
     }
