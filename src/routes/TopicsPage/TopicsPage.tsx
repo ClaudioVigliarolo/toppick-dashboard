@@ -1,5 +1,5 @@
 import React from "react";
-import { getCategories, getTopics } from "../api/api";
+import { getCategories, getTopics } from "../../api/api";
 import {
   Category,
   CategoryTopic,
@@ -8,15 +8,15 @@ import {
   Topic,
   TopicLevel,
   TopicType,
-} from "../interfaces/Interfaces";
-import TableTopics from "../components/tables/TableTopics";
-import CustomButton from "../components/buttons/CustomButton";
-import SearchBar from "../components/input/SearchBar";
-import TopicAddDialog from "../components/dialogs/TopicDialog";
-import TopicEditDialog from "../components/dialogs/TopicDialog";
-import Switch from "../components/select/Switch";
-import DeleteDialog from "../components/dialogs/ConfirmDialog";
-import { useAppStyles } from "../styles/common";
+} from "../../interfaces/Interfaces";
+import TableTopics from "../../components/tables/TableTopics";
+import CustomButton from "../../components/buttons/CustomButton";
+import SearchBar from "../../components/input/SearchBar";
+import TopicAddDialog from "../../components/dialogs/TopicDialog";
+import TopicEditDialog from "../../components/dialogs/TopicDialog";
+import Switch from "../../components/select/Switch";
+import DeleteDialog from "../../components/dialogs/ConfirmDialog";
+import { useAppStyles } from "../../styles/common";
 import {
   onTopicAdd,
   onTopicDeleteMany,

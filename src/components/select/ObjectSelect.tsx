@@ -35,7 +35,9 @@ export default function CustomSelect({
         value={value.title}
         defaultValue="ss"
       >
-        <MenuItem value={defaultValue.title}>{defaultValue.title}</MenuItem>
+        <MenuItem onClick={() => handleChange(-1)} value={defaultValue.title}>
+          {defaultValue.title}
+        </MenuItem>
         {values.map((val: Value, index: number) => (
           <MenuItem
             key={index}

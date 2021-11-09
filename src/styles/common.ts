@@ -127,8 +127,11 @@ export const useAppStyles = makeStyles((theme: Theme) =>
       justifyContent: "space-evenly",
       paddingBottom: 100,
     },
-    questionsListContainer: {
+    QuestionsReviewContainer: {
       marginTop: 50,
+    },
+    QuestionTextFieldContainer: {
+      marginBottom: 80,
     },
     switchContainer: {
       marginBottom: 100,

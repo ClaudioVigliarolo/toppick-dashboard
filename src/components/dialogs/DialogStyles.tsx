@@ -41,7 +41,7 @@ export const CustomDialog = ({
   loading,
 }: TextDialogProps) => {
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <Dialog
         open={open}
         TransitionComponent={Transition}

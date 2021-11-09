@@ -1,13 +1,13 @@
 import React from "react";
-import { PageProps } from "../interfaces/Interfaces";
-import DBChartBar from "../components/charts/DBChartBar";
-import UpdatesChart from "../components/charts/UpdatesChart";
-import UserChart from "../components/charts/UserChart";
-import ReportsChart from "../components/charts/ReportsChart";
-import Button from "../components/buttons/TabButton";
-import { CONSTANTS } from "../constants/constants";
+import { PageProps } from "../../interfaces/Interfaces";
+import DBChartBar from "../../components/charts/DBChartBar";
+import UpdatesChart from "../../components/charts/UpdatesChart";
+import UserChart from "../../components/charts/UserChart";
+import ReportsChart from "../../components/charts/ReportsChart";
+import Button from "../../components/buttons/TabButton";
+import { CONSTANTS } from "../../constants/constants";
 import { useAppStyles } from "src/styles/common";
-import Switch from "../components/select/Switch";
+import Switch from "../../components/select/Switch";
 import {
   getTodayEnd,
   getTodayStart,
@@ -17,7 +17,7 @@ import {
   getLastMonthStart,
   getYesterdayStart,
 } from "src/utils/utils";
-import { getMaintenanceStatus, updateMaintenance } from "../api/api";
+import { getMaintenanceStatus, updateMaintenance } from "../../api/api";
 
 interface ChartButton {
   label: string;

@@ -83,8 +83,11 @@ export interface Question {
   id: number;
   title: string;
   timestamp: Date;
-  topic: QuestionTopic;
+  topic_id: number;
   n?: number;
+  new?: boolean;
+  link?: string;
+  description?: string;
 }
 
 export interface EditItem {

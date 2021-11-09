@@ -1,13 +1,17 @@
 import React from "react";
-import { getCategories, getCategoryTopics } from "../api/api";
-import { Category, CategoryTopic, PageProps } from "../interfaces/Interfaces";
-import TableCategories from "../components/tables/TableCategories";
-import CustomButton from "../components/buttons/CustomButton";
-import SearchBar from "../components/input/SearchBar";
-import AddDialog from "../components/dialogs/CategoryDialog";
-import EditDialog from "../components/dialogs/CategoryDialog";
-import DeleteDialog from "../components/dialogs/ConfirmDialog";
-import { useAppStyles } from "../styles/common";
+import { getCategories, getCategoryTopics } from "../../api/api";
+import {
+  Category,
+  CategoryTopic,
+  PageProps,
+} from "../../interfaces/Interfaces";
+import TableCategories from "../../components/tables/TableCategories";
+import CustomButton from "../../components/buttons/CustomButton";
+import SearchBar from "../../components/input/SearchBar";
+import AddDialog from "../../components/dialogs/CategoryDialog";
+import EditDialog from "../../components/dialogs/CategoryDialog";
+import DeleteDialog from "../../components/dialogs/ConfirmDialog";
+import { useAppStyles } from "../../styles/common";
 import {
   onCategoryAdd,
   onCategoryDeleteMany,

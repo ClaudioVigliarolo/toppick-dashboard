@@ -13,6 +13,14 @@ export const getHash = (str1: string, str2: string = "") => {
   return Math.abs(hash);
 };
 
+export const getQuestionHash = (
+  title: string,
+  topic: string,
+  index: number
+) => {
+  return getHash(title + "*" + topic + "*" + index);
+};
+
 export const getFormattedDate = (inputDate: Date): string => {
   const todaysDate = new Date();
   // call setHours to take the time out of the comparison
@@ -101,11 +109,6 @@ export const getLastYearStart = (): Date => {
 
 export const isSelected = (arr: Value[], val: Value) => {
   return arr.find((value) => value.title === val.title) ? true : false;
-};
-
-export const isEnum = (val: any) => {
-  if (val === undefined || val === null) return false;
-  return true;
 };
 
 export const refreshPage = () => {

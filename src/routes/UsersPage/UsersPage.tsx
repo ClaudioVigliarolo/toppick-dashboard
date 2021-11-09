@@ -1,21 +1,21 @@
 import React from "react";
-import { getUsers } from "../api/api";
+import { getUsers } from "../../api/api";
 import {
   CreatedUser,
   EmailSubject,
   EmailType,
   Lang,
   PageProps,
-} from "../interfaces/Interfaces";
-import TableUsers from "../components/tables/TableUsers";
-import { AuthContext } from "../context/AuthContext";
-import SearchBar from "../components/input/SearchBar";
-import CustomButton from "../components/buttons/CustomButton";
-import UserAddDialog from "../components/dialogs/UserDialog";
-import UserEditDialog from "../components/dialogs/UserDialog";
-import DeleteDialog from "../components/dialogs/ConfirmDialog";
-import MessageDialog from "../components/dialogs/MessageDialog";
-import { useAppStyles } from "../styles/common";
+} from "../../interfaces/Interfaces";
+import TableUsers from "../../components/tables/TableUsers";
+import { AuthContext } from "../../context/AuthContext";
+import SearchBar from "../../components/input/SearchBar";
+import CustomButton from "../../components/buttons/CustomButton";
+import UserAddDialog from "../../components/dialogs/UserDialog";
+import UserEditDialog from "../../components/dialogs/UserDialog";
+import DeleteDialog from "../../components/dialogs/ConfirmDialog";
+import MessageDialog from "../../components/dialogs/MessageDialog";
+import { useAppStyles } from "../../styles/common";
 import { CONSTANTS } from "src/constants/constants";
 import {
   onUserAdd,

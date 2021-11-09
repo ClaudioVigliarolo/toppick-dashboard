@@ -6,7 +6,7 @@ import {
   useStyles,
   StyledTableCell,
 } from "./TableStyles";
-import { Category, Topic, Related } from "../../interfaces/Interfaces";
+import { Topic, Related } from "../../interfaces/Interfaces";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { getFormattedDate } from "../../utils/utils";

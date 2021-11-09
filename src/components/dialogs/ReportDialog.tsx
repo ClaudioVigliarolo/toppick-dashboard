@@ -16,7 +16,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface EditDialogProps {
+interface ReportDialogProps {
   open: boolean;
   header: string;
   title: string;
@@ -24,7 +24,7 @@ interface EditDialogProps {
   onConfirm: (title: string) => void;
   onRefuse: () => void;
 }
-export default function EditDialog(props: EditDialogProps) {
+export default function ReportDialog(props: ReportDialogProps) {
   const [title, setTitle] = React.useState<string>("");
   const [error, setError] = React.useState(false);
 

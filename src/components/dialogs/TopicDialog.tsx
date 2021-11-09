@@ -9,7 +9,7 @@ import {
   TopicLevel,
   TopicType,
 } from "src/interfaces/Interfaces";
-import { isEnum, isSelected } from "src/utils/utils";
+import { isSelected } from "src/utils/utils";
 import Select from "../select/SimpleSelect";
 import { CONSTANTS } from "src/constants/constants";
 import RadioSelect from "../select/RadioSelect";

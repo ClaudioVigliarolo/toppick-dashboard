@@ -1,10 +1,10 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { login } from "../api/api";
-import { Form, useStyles } from "../components/input/Form";
-import { AuthContext } from "../context/AuthContext";
+import { login } from "../../api/api";
+import { Form, useStyles } from "../../components/input/Form";
+import { AuthContext } from "../../context/AuthContext";
 import { TextField } from "@material-ui/core";
-import { PageProps } from "../interfaces/Interfaces";
+import { PageProps } from "../../interfaces/Interfaces";
 export default function LoginPage({
   setLoading,
   onError,

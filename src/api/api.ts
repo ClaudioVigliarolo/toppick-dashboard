@@ -632,31 +632,6 @@ export const addReport = async (
   }
 };
 
-export const updateQuestions = async (
-  questions: Question[],
-  lang: Lang,
-  token: string
-): Promise<boolean> => {
-  try {
-    const response = await axios.put(
-      `${HOSTNAME}/questions`,
-      {
-        questions,
-        lang,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    return response.status === 200;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
-};
-
 export const deleteReport = async (
   question_id: number,
   lang: Lang,
@@ -803,7 +778,7 @@ export const getGoogleTranslatedQuestions = async (
   from: Lang,
   to: Lang,
   token: string
-): Promise<string[] | null> => {
+): Promise<Question[] | null> => {
   try {
     const response = await axios.get(
       `${HOSTNAME}/totranslate/googletranslations/${id}/${from}/${to}`,
@@ -813,9 +788,10 @@ export const getGoogleTranslatedQuestions = async (
         },
       }
     );
-    return response.status === 200 ? response.data.translations : null;
+    console.log("DATIIIIIIIIIIIII", response.data);
+    return response.status === 200 ? response.data : null;
   } catch (err) {
-    console.error(err);
+    console.error("ALLORA ERRORE???", err);
     return null;
   }
 };

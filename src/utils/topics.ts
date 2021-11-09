@@ -21,10 +21,9 @@ import {
   deleteToTranslateTopic,
   unarchiveToTranslateTopic,
   updateCategory,
-  updateQuestions,
   updateTopic,
 } from "../api/api";
-import { getHash } from "../utils/utils";
+import { getLinesFromText, getQuestionHash } from "../utils/utils";
 
 export const onCategoryAdd = async (
   newCategory: Category,
@@ -160,8 +159,8 @@ export const onQuestionUpdate = async (
   onSuccess: () => void,
   onError: () => void
 ) => {
-  setLoading(true);
-  const val = await updateQuestions([question], currentLanguage, token);
+  /*setLoading(true);
+  const val = await addQuestions(questions, currentLanguage, token);
   if (!val) {
     setLoading(false);
     return onError();
@@ -177,7 +176,7 @@ export const onQuestionUpdate = async (
   });
   setQuestions([...newQuestions]);
   setLoading(false);
-  onSuccess();
+  onSuccess();*/
 };
 
 export const onQuestionDelete = async (
@@ -358,43 +357,8 @@ export const onReportDelete = async (
   onSuccess();
 };
 
-export const onQuestionsUpdate = async (
-  questionsArray: string[],
-  selectedTopic: Topic,
-  currentLanguage: Lang,
-  token: string,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-) => {
-  setLoading(true);
-  if (!selectedTopic || questionsArray.length < 0) {
-    setLoading(false);
-    return onError();
-  }
-
-  const newQuestions: Question[] = questionsArray.map(
-    (questionTitle: string, index: number) => ({
-      id: getHash(questionTitle + "*" + selectedTopic.title + "*" + index),
-      timestamp: new Date(),
-      title: questionTitle,
-      topic: {
-        id: selectedTopic.id,
-        title: selectedTopic.title,
-      },
-    })
-  );
-  const val = await updateQuestions(newQuestions, currentLanguage, token);
-  if (!val) {
-    setLoading(false);
-    return onError();
-  }
-  setLoading(false);
-  onSuccess();
-};
-
 export const onQuestionsAdd = async (
-  questionsArray: string[],
+  questions: Question[],
   selectedTopic: Topic,
   currentLanguage: Lang,
   token: string,
@@ -403,23 +367,11 @@ export const onQuestionsAdd = async (
   onError: () => void
 ) => {
   setLoading(true);
-  if (!selectedTopic || questionsArray.length < 0) {
+  if (!selectedTopic || questions.length < 0) {
     setLoading(false);
     return onError();
   }
-
-  const newQuestions: Question[] = questionsArray.map(
-    (questionTitle: string, index: number) => ({
-      id: getHash(questionTitle + "*" + selectedTopic.title + "*" + index),
-      timestamp: new Date(),
-      title: questionTitle,
-      topic: {
-        id: selectedTopic.id,
-        title: selectedTopic.title,
-      },
-    })
-  );
-  const val = await addQuestions(newQuestions, currentLanguage, token);
+  const val = await addQuestions(questions, currentLanguage, token);
   if (!val) {
     setLoading(false);
     return onError();
@@ -495,4 +447,16 @@ export const onUnarchiveToTranslateTopic = async (
   });
 
   setToTranslateTopics([...newToTranslateTopics]);
+};
+
+export const generateQuestions = (text: string, topic: Topic): Question[] => {
+  const questionsStr = getLinesFromText(text);
+  const questions: Question[] = questionsStr.map((title, index) => ({
+    id: getQuestionHash(title, topic.title, index),
+    timestamp: new Date(),
+    title: title,
+    topic_id: topic.id,
+  }));
+
+  return questions;
 };

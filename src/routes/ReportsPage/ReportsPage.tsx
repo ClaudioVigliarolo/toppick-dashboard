@@ -1,18 +1,18 @@
 import React from "react";
 import SearchBar from "src/components/input/SearchBar";
 import Select from "src/components/select/ObjectSelect";
-import DeleteDialog from "../components/dialogs/ConfirmDialog";
-import EditDialog from "../components/dialogs/EditDialog";
+import DeleteDialog from "../../components/dialogs/ConfirmDialog";
+import ReportDialog from "../../components/dialogs/ReportDialog";
 
 import {
   onQuestionDelete,
   onQuestionUpdate,
   onReportDelete,
 } from "src/utils/topics";
-import { getReports, getTopics } from "../api/api";
-import TableReports from "../components/tables/TableReports";
-import { PageProps, ReportHandled, Topic } from "../interfaces/Interfaces";
-import { useAppStyles } from "../styles/common";
+import { getReports, getTopics } from "../../api/api";
+import TableReports from "../../components/tables/TableReports";
+import { PageProps, ReportHandled, Topic } from "../../interfaces/Interfaces";
+import { useAppStyles } from "../../styles/common";
 
 const NO_REPORT: ReportHandled = {
   question_id: -1,
@@ -50,7 +50,7 @@ export default function ReportsPage({
     React.useState<ReportHandled>(NO_REPORT);
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [searchText, setSearchText] = React.useState<string>("");
-  const [editDialog, setEditDialog] = React.useState<boolean>(false);
+  const [reportDialog, setReportDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
 
   const classes = useAppStyles();
@@ -76,7 +76,7 @@ export default function ReportsPage({
 
   const onEdit = (report: ReportHandled) => {
     setCurrentReport(report);
-    setEditDialog(true);
+    setReportDialog(true);
   };
 
   const onDelete = (report: ReportHandled) => {
@@ -163,8 +163,8 @@ export default function ReportsPage({
         }}
       />
 
-      <EditDialog
-        open={editDialog}
+      <ReportDialog
+        open={reportDialog}
         onConfirm={async (newQuestion: string) => {
           await onReportDelete(
             currentReport.question_id,
@@ -177,15 +177,11 @@ export default function ReportsPage({
             onError
           );
 
-          await onQuestionUpdate(
+          /* await onQuestionUpdate(
             {
               id: currentReport.question_id,
               title: newQuestion,
               timestamp: new Date(),
-              topic: {
-                id: currentReport.topic_id,
-                title: currentReport.topic_title,
-              },
             },
             [],
             currentLanguage,
@@ -194,17 +190,17 @@ export default function ReportsPage({
             setLoading,
             onSuccess,
             onError
-          );
+          );*/
 
           setCurrentReport(NO_REPORT);
-          setEditDialog(false);
+          setReportDialog(false);
         }}
         id={currentReport.question_id}
         header="Editing question"
         title={currentReport.question_title}
         onRefuse={() => {
           setCurrentReport(NO_REPORT);
-          setEditDialog(false);
+          setReportDialog(false);
         }}
       />
     </>
