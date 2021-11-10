@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { createStyles, makeStyles, TextField } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { Question } from "src/interfaces/Interfaces";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -13,6 +13,44 @@ interface TranslateQuestionFieldProps {
   targetQuestion: Question;
 }
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    container: {
+      backgroundColor: "white",
+      padding: 30,
+      paddingTop: 20,
+      paddingBottom: 50,
+      margin: 30,
+      borderRadius: 5,
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+    },
+    AddIconContainer: {
+      display: "flex",
+      bottom: -15,
+      right: "50%",
+      left: "50%",
+      transform: "translate(-50%, 0)",
+      position: "absolute",
+      width: 100,
+      height: 30,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    DeleteIconContainer: {
+      right: 5,
+      top: 5,
+      position: "absolute",
+      width: 100,
+      height: 30,
+      backgroundColor: "transparent",
+      paddingLeft: 60,
+    },
+  })
+);
+
 export default function TranslateQuestionField({
   onChange,
   sourceQuestion,
@@ -23,21 +61,10 @@ export default function TranslateQuestionField({
 }: TranslateQuestionFieldProps) {
   const [showAdd, setShowAdd] = React.useState<boolean>(false);
   const [showDelete, setShowDelete] = React.useState<boolean>(false);
+  const classes = useStyles();
 
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        padding: 30,
-        paddingTop: 20,
-        paddingBottom: 50,
-        margin: 30,
-        borderRadius: 5,
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className={classes.container}>
       <TextField
         id="outlined-multiline-flexible"
         label={"Source n°" + (index + 1)}
@@ -59,19 +86,8 @@ export default function TranslateQuestionField({
         }
       />
       <div
-        style={{
-          display: "flex",
-          bottom: -15,
-          right: "50%",
-          left: "50%",
-          transform: "translate(-50%, 0)",
-          position: "absolute",
-          width: 100,
-          height: 30,
-          backgroundColor: showAdd ? "orangered" : "transparent",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className={classes.AddIconContainer}
+        style={{ backgroundColor: showAdd ? "orangered" : "transparent" }}
         onMouseEnter={() => setShowAdd(true)}
         onMouseLeave={() => setShowAdd(false)}
       >
@@ -84,15 +100,7 @@ export default function TranslateQuestionField({
       </div>
 
       <div
-        style={{
-          right: 5,
-          top: 5,
-          position: "absolute",
-          width: 100,
-          height: 30,
-          backgroundColor: "transparent",
-          paddingLeft: 60,
-        }}
+        className={classes.DeleteIconContainer}
         onMouseEnter={() => setShowDelete(true)}
         onMouseLeave={() => setShowDelete(false)}
       >

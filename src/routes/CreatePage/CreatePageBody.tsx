@@ -72,7 +72,7 @@ export default function CreatePageBody({
         onRefuse={resetTopic}
       />
       {isQuestionListVisible() && (
-        <div className={classes.CreateQuestionFieldContainer}>
+        <div style={{ marginBottom: 50 }}>
           {questions.map((q, i) => (
             <QuestionField
               index={i}
@@ -85,16 +85,14 @@ export default function CreatePageBody({
         </div>
       )}
       {isReview && (
-        <div className={classes.QuestionsReviewContainer}>
-          <QuestionsReview
-            classes={classes}
-            questions={questions}
-            onChange={onQuestionChange}
-            onSubmit={() => onSubmit(questions)}
-            onClose={() => setReview(false)}
-            loading={loading}
-          />
-        </div>
+        <QuestionsReview
+          classes={classes}
+          questions={questions}
+          onChange={onQuestionChange}
+          onSubmit={() => onSubmit(questions)}
+          onClose={() => setReview(false)}
+          loading={loading}
+        />
       )}
       {isReviewButtonVisible() && (
         <div className={classes.buttonContainer}>

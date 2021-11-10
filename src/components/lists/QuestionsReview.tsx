@@ -81,15 +81,7 @@ export default function QuestionsList({
   };
 
   return (
-    <div
-      style={{
-        justifyContent: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingBottom: 30,
-      }}
-    >
+    <div className={classes.QuestionsReviewContainer}>
       <FixedSizeList
         width={
           window.innerWidth > CONSTANTS.SMALL_SCREEN
@@ -102,7 +94,7 @@ export default function QuestionsList({
       >
         {renderRow}
       </FixedSizeList>
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 50 }}>
         {loading ? (
           <CircularProgress />
         ) : (

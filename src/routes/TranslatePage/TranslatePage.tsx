@@ -1,11 +1,6 @@
 import React from "react";
 import { getCategories, getTopics, getToTranslateTopics } from "../../api/api";
-import CustomButton from "../../components/buttons/CustomButton";
 import TranslationAddDialog from "../../components/dialogs/TopicDialog";
-import Select from "../../components/select/TranslateSelect";
-import TextArea from "../../components/input/NumberedTextarea";
-import QuestionsReview from "../../components/lists/QuestionsReview";
-import Button from "../../components/buttons/TabButton";
 import {
   onaAchiveToTranslateTopic,
   ondeleteToTranslateTopic,
@@ -13,14 +8,7 @@ import {
   onTopicAdd,
   onUnarchiveToTranslateTopic,
 } from "src/utils/topics";
-import {
-  countTextLines,
-  getHash,
-  getLinesFromText,
-  getQuestionHash,
-} from "src/utils/utils";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import { getHash, getQuestionHash } from "src/utils/utils";
 import { getGoogleTranslatedQuestions, getQuestionsByTopic } from "src/api/api";
 import {
   Category,
@@ -360,8 +348,6 @@ export default function TranslatePage({
 
       <TranslatePageBody
         classes={classes}
-        defaultTopic={NO_TOTRANSLATE_TOPIC}
-        selectedTopic={selectedTopicToTranslate}
         setReview={setReview}
         isReview={isReview}
         loading={loading}

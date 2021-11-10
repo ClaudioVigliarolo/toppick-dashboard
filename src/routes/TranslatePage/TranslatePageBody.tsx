@@ -6,9 +6,7 @@ import QuestionsReview from "../../components/lists/QuestionsReview";
 
 const MIN_QUESTIONS = 10;
 export default function CreatePageBody({
-  selectedTopic,
   classes,
-  defaultTopic,
   setReview,
   isReview,
   loading,
@@ -21,8 +19,6 @@ export default function CreatePageBody({
   onSubmitReview,
 }: {
   classes: any;
-  selectedTopic: ToTranslateTopic;
-  defaultTopic: ToTranslateTopic;
   loading: boolean;
   setReview: (val: boolean) => void;
   isReview: boolean;
@@ -44,11 +40,10 @@ export default function CreatePageBody({
     return !isReview && isQuestionListVisible();
   };
 
-  console.log("tttt", targetQuestions);
   return (
     <>
       {isQuestionListVisible() && (
-        <div className={classes.QuestionTextFieldContainer}>
+        <div style={{ marginBottom: 50 }}>
           {targetQuestions.map((q, i) => (
             <TranslateField
               index={i}
@@ -62,16 +57,14 @@ export default function CreatePageBody({
         </div>
       )}
       {isReview && (
-        <div className={classes.QuestionsReviewContainer}>
-          <QuestionsReview
-            classes={classes}
-            questions={targetQuestions}
-            onChange={onQuestionChange}
-            onSubmit={onSubmit}
-            onClose={() => setReview(false)}
-            loading={loading}
-          />
-        </div>
+        <QuestionsReview
+          classes={classes}
+          questions={targetQuestions}
+          onChange={onQuestionChange}
+          onSubmit={onSubmit}
+          onClose={() => setReview(false)}
+          loading={loading}
+        />
       )}
       {isReviewButtonVisible() && (
         <div className={classes.buttonContainer}>
