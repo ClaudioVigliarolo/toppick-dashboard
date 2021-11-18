@@ -10,6 +10,8 @@ export interface Topic {
   level: TopicLevel;
   categories: TopicCategory[];
   related: Related[];
+  description?: string;
+  image?: string;
 }
 
 export interface TopicCategory {
@@ -22,6 +24,8 @@ export interface ToTranslateTopic {
   id: number;
   ref_id: number;
   topic_id: number;
+  description?: string;
+  image?: string;
   dest_lang: Lang;
   source_lang: Lang;
   source_title: string;

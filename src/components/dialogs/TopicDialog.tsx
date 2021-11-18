@@ -1,5 +1,5 @@
 import React from "react";
-import { CustomDialog } from "./DialogStyles";
+import { CustomDialog, TabData } from "./DialogsStyles2";
 import Chip from "../select/ObjectChip";
 import { TextField } from "@material-ui/core";
 import {
@@ -22,6 +22,8 @@ interface TopicDialogProps {
     source: string,
     type: TopicType,
     level: TopicLevel,
+    description: string,
+    image: string,
     selectedCategories: CategoryTopic[],
     selectedRelated: Related[]
   ) => void;
@@ -36,11 +38,18 @@ interface TopicDialogProps {
   placeholderTitle?: string;
   placeholderCategories?: string;
   source?: string;
+  description?: string;
+  image?: string;
   placeholderRelated?: string;
 }
 
+const NO_IMAGE_URL =
+  "https://icon-library.com/images/add-photo-icon/add-photo-icon-19.jpg";
+
 export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<string>("");
+  const [imageUrl, setImageUrl] = React.useState<string>("");
+  const [description, setDescription] = React.useState<string>("");
   const [topicType, setTopicType] = React.useState<TopicType>(
     CONSTANTS.TOPIC_RADIO_TYPES[0].value
   );
@@ -53,7 +62,6 @@ export default function TopicDialog(props: TopicDialogProps) {
   const [selectedCategories, setSelectedCategories] = React.useState<
     CategoryTopic[]
   >([]);
-  const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
     setTopic(props.topic);
@@ -67,6 +75,8 @@ export default function TopicDialog(props: TopicDialogProps) {
     setSelectedRelated(props.preselectedRelated);
     props.type && setTopicType(props.type);
     props.source && setSource(props.source);
+    props.description && setDescription(props.description);
+    props.image && setImageUrl(props.image);
     props.level !== undefined && setLevel(CONSTANTS.TOPIC_LEVELS[props.level]);
   }, [
     props.categories,
@@ -80,16 +90,13 @@ export default function TopicDialog(props: TopicDialogProps) {
     newTopic: string,
     selectedCategories: CategoryTopic[]
   ) => {
-    setError(false);
-    if (newTopic == "" || selectedCategories.length == 0) {
-      setError(true);
-      return;
-    }
     props.onConfirm(
       newTopic,
       source,
       topicType,
       CONSTANTS.TOPIC_LEVELS.indexOf(level),
+      description,
+      imageUrl,
       selectedCategories,
       selectedRelated
     );
@@ -130,81 +137,139 @@ export default function TopicDialog(props: TopicDialogProps) {
     setTopicType(parseInt(event.target.value));
   };
 
+  const isSubmitEnabled = (): boolean =>
+    topic.length > 0 &&
+    imageUrl.length > 0 &&
+    level.length > 0 &&
+    selectedCategories.length > 0;
+
+  const tabs: TabData[] = [
+    {
+      label: "Overview",
+      children: (
+        <>
+          <TextField
+            autoFocus
+            placeholder={props.placeholderTitle}
+            InputLabelProps={{ shrink: true }}
+            margin="dense"
+            label="Title"
+            id="standard-helperText"
+            value={topic}
+            onChange={(e) => setTopic(e.currentTarget.value)}
+            style={{ width: 500, alignSelf: "center", marginTop: 10 }}
+          />
+
+          <TextField
+            autoFocus
+            placeholder={props.placeholderTitle}
+            InputLabelProps={{ shrink: true }}
+            margin="dense"
+            label="Description"
+            id="outlined-multiline-flexible"
+            multiline
+            rows={3}
+            value={description}
+            onChange={(e) => setDescription(e.currentTarget.value)}
+            style={{ width: 500, alignSelf: "center" }}
+          />
+
+          <img
+            src={imageUrl ? imageUrl : NO_IMAGE_URL}
+            style={{ height: 200, alignSelf: "center", marginTop: 20 }}
+          />
+          <TextField
+            autoFocus
+            placeholder="Paste the Image Url here"
+            InputLabelProps={{ shrink: true }}
+            margin="dense"
+            label="Link"
+            id="standard-helperText"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.currentTarget.value)}
+            style={{ width: 300, alignSelf: "center", marginTop: 10 }}
+          />
+        </>
+      ),
+    },
+    {
+      label: "Related",
+      children: (
+        <>
+          <Chip
+            width={300}
+            selectedValues={selectedCategories}
+            values={props.categories.sort((a, b) =>
+              a.title.localeCompare(b.title)
+            )}
+            header={
+              props.placeholderCategories
+                ? props.placeholderCategories
+                : "Related Categories"
+            }
+            handleChange={handleCategoriesChange}
+          />
+          <Chip
+            width={300}
+            selectedValues={selectedRelated}
+            values={related}
+            header={
+              props.placeholderRelated
+                ? props.placeholderRelated
+                : "Related Topics"
+            }
+            handleChange={handleRelatedChange}
+          />
+        </>
+      ),
+    },
+
+    {
+      label: "Info",
+      children: (
+        <>
+          <div style={{ alignSelf: "center", marginTop: 20 }}>
+            <Select
+              handleChange={handleSourceChange}
+              value={source}
+              values={CONSTANTS.TOPIC_SOURCES}
+              color="black"
+              width={300}
+              defaultValue={CONSTANTS.TOPIC_SOURCES[0]}
+            />
+          </div>
+          <div style={{ alignSelf: "center", marginTop: 20, marginBottom: 20 }}>
+            <Select
+              handleChange={handleLevelChange}
+              value={level}
+              values={CONSTANTS.TOPIC_LEVELS}
+              color="black"
+              width={300}
+              defaultValue={level}
+            />
+          </div>
+          <RadioSelect
+            value={topicType}
+            handleRadioChange={handleRadioChange}
+            values={CONSTANTS.TOPIC_RADIO_TYPES}
+          />
+        </>
+      ),
+    },
+  ];
+  {
+    console.log("Muy ppp", props);
+  }
   return (
     <>
       <CustomDialog
         open={props.open}
         headerText={props.headerText}
         minWidth={600}
+        minHeigth={560}
         loading={props.loading}
-        children={
-          <>
-            <TextField
-              error={error}
-              autoFocus
-              placeholder={props.placeholderTitle}
-              InputLabelProps={{ shrink: true }}
-              margin="dense"
-              label="text"
-              id="standard-helperText"
-              value={topic}
-              onChange={(e) => setTopic(e.currentTarget.value)}
-              fullWidth
-            />
-            <Chip
-              width={300}
-              selectedValues={selectedCategories}
-              values={props.categories.sort((a, b) =>
-                a.title.localeCompare(b.title)
-              )}
-              header={
-                props.placeholderCategories
-                  ? props.placeholderCategories
-                  : "Related Categories"
-              }
-              error={error}
-              handleChange={handleCategoriesChange}
-            />
-
-            <Chip
-              width={300}
-              selectedValues={selectedRelated}
-              values={related}
-              header={
-                props.placeholderRelated
-                  ? props.placeholderRelated
-                  : "Related Topics"
-              }
-              error={error}
-              handleChange={handleRelatedChange}
-            />
-            <RadioSelect
-              value={topicType}
-              handleRadioChange={handleRadioChange}
-              values={CONSTANTS.TOPIC_RADIO_TYPES}
-            />
-            <div style={{ alignSelf: "center", marginTop: 10 }}>
-              <Select
-                handleChange={handleSourceChange}
-                value={source}
-                values={CONSTANTS.TOPIC_SOURCES}
-                color="black"
-                width={300}
-                defaultValue={CONSTANTS.TOPIC_SOURCES[0]}
-              />
-            </div>
-            <div style={{ alignSelf: "center", marginTop: 10 }}>
-              <Select
-                handleChange={handleLevelChange}
-                value={level}
-                values={CONSTANTS.TOPIC_LEVELS}
-                color="black"
-                width={300}
-                defaultValue={level}
-              />
-            </div>
-          </>
-        }
+        tabData={tabs}
+        confirmButtonDisabled={!isSubmitEnabled()}
         onConfirm={() => {
           onSubmit(topic, selectedCategories);
         }}

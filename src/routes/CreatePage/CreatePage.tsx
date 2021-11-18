@@ -37,6 +37,8 @@ const NO_TOPIC: Topic = {
   timestamp: new Date(),
   title: "Select A Topic",
   ref_id: -1,
+  description: "",
+  image: "",
 };
 
 export default function CreatePage({
@@ -156,20 +158,24 @@ export default function CreatePage({
   };
 
   const onConfirmTopicAdd = async (
-    newTopicTitle: string,
+    newTitle: string,
     newSource: string,
     newType: TopicType,
     newLevel: TopicLevel,
+    newDescription: string,
+    newImage: string,
     selectedCategories: CategoryTopic[],
     selectedRelated: Related[]
   ) => {
-    const newID = getHash(newTopicTitle, currentLanguage);
+    const newID = getHash(newTitle, currentLanguage);
     const newTopic: Topic = {
       id: newID,
       type: newType,
       level: newLevel,
-      title: newTopicTitle,
+      title: newTitle,
       related: selectedRelated,
+      description: newDescription,
+      image: newImage,
       source: newSource,
       timestamp: new Date(),
       categories: selectedCategories,

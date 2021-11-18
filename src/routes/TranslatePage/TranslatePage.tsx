@@ -53,6 +53,8 @@ const NO_TOTRANSLATE_TOPIC: ToTranslateTopic = {
   topic_id: -1,
   level: 0,
   source: "",
+  description: "",
+  image: "",
   type: 0,
 };
 
@@ -66,6 +68,8 @@ const NO_TOPIC: Topic = {
   timestamp: new Date(),
   title: "Select A Topic",
   ref_id: -1,
+  description: "",
+  image: "",
 };
 
 export default function TranslatePage({
@@ -208,6 +212,8 @@ export default function TranslatePage({
     newSource: string,
     newType: TopicType,
     newLevel: TopicLevel,
+    newDescription: string,
+    newImage: string,
     selectedCategories: CategoryTopic[],
     selectedRelated: Related[]
   ) => {
@@ -216,6 +222,8 @@ export default function TranslatePage({
       title: newTitle,
       type: newType,
       level: newLevel,
+      image: newImage,
+      description: newDescription,
       related: selectedRelated,
       source: newSource,
       timestamp: new Date(),
@@ -370,6 +378,8 @@ export default function TranslatePage({
         level={selectedTopicToTranslate.level}
         source={selectedTopicToTranslate.source}
         type={selectedTopicToTranslate.type}
+        description={selectedTopicToTranslate.description}
+        image={selectedTopicToTranslate.image}
         headerText="Add New Topic"
         topic=""
         placeholderTitle={selectedTopicToTranslate.source_title}

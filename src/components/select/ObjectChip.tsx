@@ -21,7 +21,7 @@ import { isSelected } from "src/utils/utils";
 interface CustomChipProps {
   handleChange: (index: number) => void;
   values: Value[];
-  error: boolean;
+  error?: boolean;
   width: number;
   selectedValues: Value[];
   header: string;
@@ -56,7 +56,7 @@ export default function CustomChip({
   width,
   handleChange,
   header,
-  error,
+  error = false,
 }: CustomChipProps) {
   const classes = useStyles();
 

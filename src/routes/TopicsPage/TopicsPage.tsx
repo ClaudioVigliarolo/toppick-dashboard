@@ -35,6 +35,8 @@ const NO_TOPIC: Topic = {
   timestamp: new Date(),
   title: "",
   ref_id: -1,
+  description: "",
+  image: "",
 };
 
 export default function ViewPage({
@@ -81,6 +83,8 @@ export default function ViewPage({
     setDeleteDialog(true);
   };
 
+  console.log("cccc", currentTopic);
+
   return (
     <>
       <div className={classes.headerSection}>
@@ -111,12 +115,16 @@ export default function ViewPage({
         preselectedCategories={currentTopic.categories}
         topic={currentTopic.title}
         level={currentTopic.level}
+        image={currentTopic.image}
+        description={currentTopic.description}
         categories={categories}
         onConfirm={async (
           newTitle: string,
           newSource: string,
           newType: TopicType,
           newLevel: TopicLevel,
+          newDescription: string,
+          newImage: string,
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
@@ -126,6 +134,8 @@ export default function ViewPage({
               title: newTitle,
               related: selectedRelated,
               source: newSource,
+              description: newDescription,
+              image: newImage,
               type: newType,
               level: newLevel,
               timestamp: new Date(),
@@ -164,6 +174,8 @@ export default function ViewPage({
           newSource: string,
           newType: TopicType,
           newLevel: TopicLevel,
+          newDescription: string,
+          newImage: string,
           selectedCategories: CategoryTopic[],
           selectedRelated: Related[]
         ) => {
@@ -172,6 +184,8 @@ export default function ViewPage({
               id: getHash(newTitle, currentLanguage),
               title: newTitle,
               type: newType,
+              image: newImage,
+              description: newDescription,
               related: selectedRelated,
               source: newSource,
               level: newLevel,
