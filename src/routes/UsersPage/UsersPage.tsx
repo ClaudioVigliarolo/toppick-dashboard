@@ -114,14 +114,14 @@ export default function UsersPage({
         open={userAddDialog}
         onConfirm={(
           newUsername: string,
-          email: string,
+          newMail: string,
           password: string,
           languages: Lang[],
           type: string = CONSTANTS.NO_USER_TYPE
         ) => {
           onUserAdd(
             {
-              userMail: noSpace(email),
+              userMail: noSpace(newMail),
               password: noSpace(password),
               languages,
               id: getHash(newUsername),
@@ -132,7 +132,7 @@ export default function UsersPage({
             setUsers,
             EmailType.Registration,
             {
-              email: noSpace(email),
+              email: noSpace(newMail),
               fromEmail: userMail,
               fromName: username,
               subject: EmailSubject.Registration,
