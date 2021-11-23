@@ -68,7 +68,11 @@ export const onCategoryUpdate = async (
   }
   const newCategories = categories;
   newCategories.forEach(function (item: Category) {
-    if (item.id == category.id) item.title = category.title;
+    if (item.id == category.id) {
+      item.title = category.title;
+      item.description = category.description;
+      item.image = category.image;
+    }
   });
   setCategories([...newCategories]);
   setLoading(false);

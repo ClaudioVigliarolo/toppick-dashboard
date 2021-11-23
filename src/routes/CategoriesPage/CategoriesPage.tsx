@@ -74,6 +74,92 @@ export default function ViewPage({
     setDeleteDialog(true);
   };
 
+  const onAddSubmit = async (
+    newCategory: string,
+    newDescription: string,
+    newImageUrl: string,
+    newCategTopics: CategoryTopic[]
+  ) => {
+    await onCategoryAdd(
+      {
+        id: getHash(newCategory, currentLanguage),
+        title: newCategory,
+        ref_id: getHash(newCategory, currentLanguage),
+        categoryTopics: newCategTopics,
+        description: newDescription,
+        image: newImageUrl,
+      },
+      categories,
+      currentLanguage,
+      token,
+      setCategories,
+      setLoading,
+      () => {
+        setAddDialog(false);
+        setCurrentCategory(NO_CATEGORY);
+        onSuccess();
+      },
+      onError
+    );
+  };
+
+  const onEditSubmit = async (
+    newCategory: string,
+    newDescription: string,
+    newImageUrl: string,
+    newCategTopics: CategoryTopic[]
+  ) => {
+    await onCategoryUpdate(
+      {
+        id: currentCategory.id,
+        title: newCategory,
+        ref_id: currentCategory.ref_id,
+        image: newImageUrl,
+        categoryTopics: newCategTopics,
+        description: newDescription,
+      },
+      categories,
+      currentLanguage,
+      token,
+      setCategories,
+      setLoading,
+      () => {
+        setAddDialog(false);
+        setCurrentCategory(NO_CATEGORY);
+        onSuccess();
+      },
+      onError
+    );
+    setEditDialog(false);
+    setCurrentCategory(NO_CATEGORY);
+  };
+
+  const onMultipleDelete = () => {
+    multipleDelete
+      ? onCategoryDeleteMany(
+          currentCategory.ref_id,
+          categories,
+          currentLanguage,
+          token,
+          setCategories,
+          setLoading,
+          onSuccess,
+          onError
+        )
+      : onCategoryDeleteUnique(
+          currentCategory.id,
+          categories,
+          currentLanguage,
+          token,
+          setCategories,
+          setLoading,
+          onSuccess,
+          onError
+        );
+
+    setDeleteDialog(false);
+  };
+
   return (
     <>
       <div className={classes.headerSection}>
@@ -103,30 +189,7 @@ export default function ViewPage({
         open={addDialog}
         preselectedCategTopics={[]}
         categTopics={categoryTopics}
-        onConfirm={async (
-          newTitle: string,
-          selectedCategTopics: CategoryTopic[]
-        ) => {
-          await onCategoryAdd(
-            {
-              id: getHash(newTitle, currentLanguage),
-              title: newTitle,
-              ref_id: getHash(newTitle, currentLanguage),
-              categoryTopics: selectedCategTopics,
-            },
-            categories,
-            currentLanguage,
-            token,
-            setCategories,
-            setLoading,
-            () => {
-              setAddDialog(false);
-              setCurrentCategory(NO_CATEGORY);
-              onSuccess();
-            },
-            onError
-          );
-        }}
+        onConfirm={onAddSubmit}
         onRefuse={() => {
           setAddDialog(false);
           setCurrentCategory(NO_CATEGORY);
@@ -136,35 +199,11 @@ export default function ViewPage({
       <EditDialog
         open={editDialog}
         loading={loading}
+        description={currentCategory.description}
+        image={currentCategory.image}
         preselectedCategTopics={currentCategory.categoryTopics}
         categTopics={categoryTopics}
-        onConfirm={async (
-          newTitle: string,
-          selectedTopics: CategoryTopic[]
-        ) => {
-          await onCategoryUpdate(
-            {
-              id: currentCategory.id,
-              title: newTitle,
-              ref_id: currentCategory.ref_id,
-              categoryTopics: selectedTopics,
-            },
-
-            categories,
-            currentLanguage,
-            token,
-            setCategories,
-            setLoading,
-            () => {
-              setAddDialog(false);
-              setCurrentCategory(NO_CATEGORY);
-              onSuccess();
-            },
-            onError
-          );
-          setEditDialog(false);
-          setCurrentCategory(NO_CATEGORY);
-        }}
+        onConfirm={onEditSubmit}
         headerText="Editing Category"
         onRefuse={() => {
           setEditDialog(false);
@@ -183,31 +222,7 @@ export default function ViewPage({
             value={multipleDelete}
           />
         }
-        onConfirm={() => {
-          multipleDelete
-            ? onCategoryDeleteMany(
-                currentCategory.ref_id,
-                categories,
-                currentLanguage,
-                token,
-                setCategories,
-                setLoading,
-                onSuccess,
-                onError
-              )
-            : onCategoryDeleteUnique(
-                currentCategory.id,
-                categories,
-                currentLanguage,
-                token,
-                setCategories,
-                setLoading,
-                onSuccess,
-                onError
-              );
-
-          setDeleteDialog(false);
-        }}
+        onConfirm={onMultipleDelete}
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {

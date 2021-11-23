@@ -19,6 +19,9 @@ const TOPIC_RADIO_TYPES: RadioButton[] = [
   { title: "Dialog", value: TopicType.DIALOG },
 ];
 
+export const NO_IMAGE_URL =
+  "https://icon-library.com/images/add-photo-icon/add-photo-icon-19.jpg";
+
 export const CONSTANTS = {
   ALERT_TIME: 3000,
   DRAWER_WIDTH: 220,

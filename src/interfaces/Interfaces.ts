@@ -46,6 +46,8 @@ export interface Category {
   id: number;
   ref_id: number;
   categoryTopics: CategoryTopic[];
+  description?: string;
+  image?: string;
 }
 
 export interface CategoryTopic {

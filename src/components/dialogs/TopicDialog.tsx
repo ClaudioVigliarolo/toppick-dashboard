@@ -11,7 +11,7 @@ import {
 } from "src/interfaces/Interfaces";
 import { isSelected } from "src/utils/utils";
 import Select from "../select/SimpleSelect";
-import { CONSTANTS } from "src/constants/constants";
+import { CONSTANTS, NO_IMAGE_URL } from "src/constants/constants";
 import RadioSelect from "../select/RadioSelect";
 interface TopicDialogProps {
   topic: string;
@@ -42,9 +42,6 @@ interface TopicDialogProps {
   image?: string;
   placeholderRelated?: string;
 }
-
-const NO_IMAGE_URL =
-  "https://icon-library.com/images/add-photo-icon/add-photo-icon-19.jpg";
 
 export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<string>("");
