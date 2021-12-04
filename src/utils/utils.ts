@@ -1,7 +1,7 @@
 import { Topic, Value } from "src/interfaces/Interfaces";
 
 export const getHash = (str1: string, str2: string = "") => {
-  const str = str1 + "*" + str2;
+  const str = str1 + "*" + str2 + new Date().toISOString();
   var hash = 0,
     i,
     chr;
