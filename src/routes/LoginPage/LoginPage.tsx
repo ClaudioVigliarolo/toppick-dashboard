@@ -54,35 +54,28 @@ export default function LoginPage({
   };
 
   return (
-    <>
-      <Form
-        onSubmit={onSubmit}
-        height="40ch"
-        loading={loading}
-        children={
-          <>
-            <TextField
-              onChange={(e) => setEmailState(e.currentTarget.value)}
-              id="standard-basic"
-              label="Email"
-              type="email"
-              className={classes.textField}
-              value={emailState}
-              error={error}
-            />
+    <Form onSubmit={onSubmit} height="40ch" loading={loading}>
+      <>
+        <TextField
+          onChange={(e) => setEmailState(e.currentTarget.value)}
+          id="standard-basic"
+          label="Email"
+          type="email"
+          className={classes.textField}
+          value={emailState}
+          error={error}
+        />
 
-            <TextField
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              id="standard-basic"
-              label="Password"
-              type="password"
-              value={password}
-              className={classes.textField}
-              error={error}
-            />
-          </>
-        }
-      />
-    </>
+        <TextField
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          id="standard-basic"
+          label="Password"
+          type="password"
+          value={password}
+          className={classes.textField}
+          error={error}
+        />
+      </>
+    </Form>
   );
 }

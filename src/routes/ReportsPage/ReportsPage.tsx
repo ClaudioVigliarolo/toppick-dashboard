@@ -34,6 +34,7 @@ const NO_TOPIC: Topic = {
   timestamp: new Date(),
   title: "Filter by topic",
   ref_id: -1,
+  active: false,
 };
 
 export default function ReportsPage({

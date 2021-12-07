@@ -14,7 +14,7 @@ const TOPIC_SOURCES = [
 
 const TOPIC_LEVELS = ["Easy", "Medium", "Hard"];
 
-const TOPIC_RADIO_TYPES: RadioButton[] = [
+const TOPIC_TYPES_RADIO: RadioButton[] = [
   { title: "Topic", value: TopicType.TOPIC },
   { title: "Dialog", value: TopicType.DIALOG },
 ];
@@ -32,5 +32,5 @@ export const CONSTANTS = {
   DEF_UNTIL_DATE,
   TOPIC_SOURCES,
   TOPIC_LEVELS,
-  TOPIC_RADIO_TYPES,
+  TOPIC_TYPES_RADIO,
 };

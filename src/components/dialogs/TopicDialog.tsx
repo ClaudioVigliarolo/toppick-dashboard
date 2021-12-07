@@ -4,15 +4,20 @@ import Chip from "../select/ObjectChip";
 import { TextField } from "@material-ui/core";
 import {
   CategoryTopic,
+  MaterialUiColor,
+  RadioButton,
   Related,
   Topic,
   TopicLevel,
   TopicType,
+  Value,
 } from "src/interfaces/Interfaces";
-import { isSelected } from "src/utils/utils";
+import { hasVal, isSelected } from "src/utils/utils";
 import Select from "../select/SimpleSelect";
+import TypeSelect from "../select/ObjectSelect";
+
 import { CONSTANTS, NO_IMAGE_URL } from "src/constants/constants";
-import RadioSelect from "../select/RadioSelect";
+import Switch from "../select/Switch";
 interface TopicDialogProps {
   topic: string;
   open: boolean;
@@ -24,6 +29,7 @@ interface TopicDialogProps {
     level: TopicLevel,
     description: string,
     image: string,
+    active: boolean,
     selectedCategories: CategoryTopic[],
     selectedRelated: Related[]
   ) => void;
@@ -39,6 +45,7 @@ interface TopicDialogProps {
   placeholderCategories?: string;
   source?: string;
   description?: string;
+  active: boolean;
   image?: string;
   placeholderRelated?: string;
 }
@@ -47,10 +54,11 @@ export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<string>("");
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
-  const [topicType, setTopicType] = React.useState<TopicType>(
-    CONSTANTS.TOPIC_RADIO_TYPES[0].value
+  const [topicType, setTopicType] = React.useState<RadioButton>(
+    CONSTANTS.TOPIC_TYPES_RADIO[0]
   );
   const [related, setRelated] = React.useState<Related[]>([]);
+  const [active, setActive] = React.useState<boolean>(false);
   const [level, setLevel] = React.useState<string>(CONSTANTS.TOPIC_LEVELS[1]);
   const [source, setSource] = React.useState<string>(
     CONSTANTS.TOPIC_SOURCES[0]
@@ -70,11 +78,20 @@ export default function TopicDialog(props: TopicDialogProps) {
     );
     setSelectedCategories(props.preselectedCategories);
     setSelectedRelated(props.preselectedRelated);
-    props.type && setTopicType(props.type);
-    props.source && setSource(props.source);
-    props.description && setDescription(props.description);
-    props.image && setImageUrl(props.image);
-    props.level !== undefined && setLevel(CONSTANTS.TOPIC_LEVELS[props.level]);
+    if (props.type) {
+      const topicType = CONSTANTS.TOPIC_TYPES_RADIO.find(
+        (t) => t.value == props.type
+      );
+      if (topicType) {
+        setTopicType(topicType);
+      }
+    }
+    hasVal(props.source) && setSource(props.source as string);
+    hasVal(props.active) && setActive(props.active);
+    hasVal(props.description) && setDescription(props.description as string);
+    hasVal(props.image) && setImageUrl(props.image as string);
+    hasVal(props.level) &&
+      setLevel(CONSTANTS.TOPIC_LEVELS[props.level as TopicLevel]);
   }, [
     props.categories,
     props.topic,
@@ -90,10 +107,11 @@ export default function TopicDialog(props: TopicDialogProps) {
     props.onConfirm(
       newTopic,
       source,
-      topicType,
+      topicType.value,
       CONSTANTS.TOPIC_LEVELS.indexOf(level),
       description,
       imageUrl,
+      active,
       selectedCategories,
       selectedRelated
     );
@@ -129,9 +147,8 @@ export default function TopicDialog(props: TopicDialogProps) {
     setLevel(event.target.value);
   };
 
-  const handleRadioChange = (event: React.ChangeEvent<any>) => {
-    console.log(event.target.value);
-    setTopicType(parseInt(event.target.value));
+  const handleRadioChange = (index: number) => {
+    setTopicType(CONSTANTS.TOPIC_TYPES_RADIO[index]);
   };
 
   const isSubmitEnabled = (): boolean =>
@@ -145,8 +162,25 @@ export default function TopicDialog(props: TopicDialogProps) {
       label: "Overview",
       children: (
         <>
+          <div
+            style={{
+              position: "absolute",
+              top: 20,
+              right: 20,
+              cursor: "pointer",
+              color: "orange",
+              fontSize: 30,
+            }}
+          >
+            <Switch
+              text=""
+              color={MaterialUiColor.Primary}
+              handleChange={() => setActive(!active)}
+              value={active}
+            />
+          </div>
+
           <TextField
-            autoFocus
             placeholder={props.placeholderTitle}
             InputLabelProps={{ shrink: true }}
             margin="dense"
@@ -158,7 +192,6 @@ export default function TopicDialog(props: TopicDialogProps) {
           />
 
           <TextField
-            autoFocus
             placeholder={props.placeholderTitle}
             InputLabelProps={{ shrink: true }}
             margin="dense"
@@ -173,10 +206,10 @@ export default function TopicDialog(props: TopicDialogProps) {
 
           <img
             src={imageUrl ? imageUrl : NO_IMAGE_URL}
+            alt="img"
             style={{ height: 200, alignSelf: "center", marginTop: 20 }}
           />
           <TextField
-            autoFocus
             placeholder="Paste the Image Url here"
             InputLabelProps={{ shrink: true }}
             margin="dense"
@@ -232,31 +265,47 @@ export default function TopicDialog(props: TopicDialogProps) {
               values={CONSTANTS.TOPIC_SOURCES}
               color="black"
               width={300}
+              header="Source"
               defaultValue={CONSTANTS.TOPIC_SOURCES[0]}
             />
           </div>
-          <div style={{ alignSelf: "center", marginTop: 20, marginBottom: 20 }}>
+          <div style={{ alignSelf: "center", marginTop: 20 }}>
             <Select
               handleChange={handleLevelChange}
               value={level}
               values={CONSTANTS.TOPIC_LEVELS}
               color="black"
               width={300}
+              header="Level"
               defaultValue={level}
             />
           </div>
-          <RadioSelect
-            value={topicType}
-            handleRadioChange={handleRadioChange}
-            values={CONSTANTS.TOPIC_RADIO_TYPES}
-          />
+          <div style={{ alignSelf: "center", marginTop: 20, marginBottom: 20 }}>
+            <TypeSelect
+              value={topicType}
+              handleChange={handleRadioChange}
+              width={300}
+              color="black"
+              header="Type"
+              values={CONSTANTS.TOPIC_TYPES_RADIO}
+            />
+          </div>
+
+          <div style={{ alignSelf: "center", marginTop: 20, marginBottom: 20 }}>
+            <TypeSelect
+              value={topicType}
+              handleChange={handleRadioChange}
+              width={300}
+              color="black"
+              header="Type"
+              values={CONSTANTS.TOPIC_TYPES_RADIO}
+            />
+          </div>
         </>
       ),
     },
   ];
-  {
-    console.log("Muy ppp", props);
-  }
+
   return (
     <>
       <CustomDialog

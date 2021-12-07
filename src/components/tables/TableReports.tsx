@@ -59,9 +59,11 @@ export default function TableCategories({
                   className={classes.deleteIcon}
                 />
                 <div
+                  role="button"
                   onClick={() => {
                     onIgnore(report);
                   }}
+                  tabIndex={0}
                   className={classes.ignoreIcon}
                 >
                   ignore

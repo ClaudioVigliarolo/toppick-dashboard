@@ -31,6 +31,8 @@ export default function TabButton({
   const classes = useStyles();
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={classes.button}
       onClick={onClick}
       style={{

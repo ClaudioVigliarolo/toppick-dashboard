@@ -3,6 +3,7 @@ import { getCategories, getTopics } from "../../api/api";
 import {
   Category,
   CategoryTopic,
+  MaterialUiColor,
   PageProps,
   Related,
   Topic,
@@ -37,6 +38,8 @@ const NO_TOPIC: Topic = {
   ref_id: -1,
   description: "",
   image: "",
+  active: false,
+  //#endregion
 };
 
 export default function ViewPage({
@@ -83,7 +86,81 @@ export default function ViewPage({
     setDeleteDialog(true);
   };
 
-  console.log("cccc", currentTopic);
+  const onEditSubmit = async (
+    newTitle: string,
+    newSource: string,
+    newType: TopicType,
+    newLevel: TopicLevel,
+    newDescription: string,
+    newImage: string,
+    newActive: boolean,
+    selectedCategories: CategoryTopic[],
+    selectedRelated: Related[]
+  ) => {
+    await onTopicUpdate(
+      {
+        id: currentTopic.id,
+        title: newTitle,
+        related: selectedRelated,
+        source: newSource,
+        description: newDescription,
+        image: newImage,
+        type: newType,
+        level: newLevel,
+        active: newActive,
+        timestamp: new Date(),
+        categories: selectedCategories,
+        ref_id: currentTopic.ref_id,
+      },
+      topics,
+      currentLanguage,
+      token,
+      setTopics,
+      setLoading,
+      onSuccess,
+      onError
+    );
+    setCurrentTopic(NO_TOPIC);
+    setEditDialog(false);
+  };
+
+  const onAddSubmit = async (
+    newTitle: string,
+    newSource: string,
+    newType: TopicType,
+    newLevel: TopicLevel,
+    newDescription: string,
+    newImage: string,
+    newActive: boolean,
+    selectedCategories: CategoryTopic[],
+    selectedRelated: Related[]
+  ) => {
+    await onTopicAdd(
+      {
+        id: getHash(newTitle, currentLanguage),
+        title: newTitle,
+        type: newType,
+        image: newImage,
+        description: newDescription,
+        related: selectedRelated,
+        source: newSource,
+        level: newLevel,
+        active: newActive,
+        timestamp: new Date(),
+        categories: selectedCategories,
+        ref_id: getHash(newTitle, currentLanguage),
+      },
+      topics,
+      currentLanguage,
+      token,
+      setTopics,
+      setLoading,
+      onSuccess,
+      onError
+    );
+
+    setTopicAddDialog(false);
+  };
 
   return (
     <>
@@ -111,6 +188,7 @@ export default function ViewPage({
         related={topics}
         source={currentTopic.source}
         type={currentTopic.type}
+        active={currentTopic.active}
         preselectedRelated={currentTopic.related}
         preselectedCategories={currentTopic.categories}
         topic={currentTopic.title}
@@ -118,41 +196,7 @@ export default function ViewPage({
         image={currentTopic.image}
         description={currentTopic.description}
         categories={categories}
-        onConfirm={async (
-          newTitle: string,
-          newSource: string,
-          newType: TopicType,
-          newLevel: TopicLevel,
-          newDescription: string,
-          newImage: string,
-          selectedCategories: CategoryTopic[],
-          selectedRelated: Related[]
-        ) => {
-          await onTopicUpdate(
-            {
-              id: currentTopic.id,
-              title: newTitle,
-              related: selectedRelated,
-              source: newSource,
-              description: newDescription,
-              image: newImage,
-              type: newType,
-              level: newLevel,
-              timestamp: new Date(),
-              categories: selectedCategories,
-              ref_id: currentTopic.ref_id,
-            },
-            topics,
-            currentLanguage,
-            token,
-            setTopics,
-            setLoading,
-            onSuccess,
-            onError
-          );
-          setCurrentTopic(NO_TOPIC);
-          setEditDialog(false);
-        }}
+        onConfirm={onEditSubmit}
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
           setEditDialog(false);
@@ -164,45 +208,13 @@ export default function ViewPage({
         open={topicAddDialog}
         preselectedCategories={[]}
         preselectedRelated={[]}
+        active={false}
         categories={categories}
         related={topics}
         loading={loading}
         headerText="Add New Topic"
         topic=""
-        onConfirm={async (
-          newTitle: string,
-          newSource: string,
-          newType: TopicType,
-          newLevel: TopicLevel,
-          newDescription: string,
-          newImage: string,
-          selectedCategories: CategoryTopic[],
-          selectedRelated: Related[]
-        ) => {
-          await onTopicAdd(
-            {
-              id: getHash(newTitle, currentLanguage),
-              title: newTitle,
-              type: newType,
-              image: newImage,
-              description: newDescription,
-              related: selectedRelated,
-              source: newSource,
-              level: newLevel,
-              timestamp: new Date(),
-              categories: selectedCategories,
-              ref_id: getHash(newTitle, currentLanguage),
-            },
-            topics,
-            currentLanguage,
-            token,
-            setTopics,
-            setLoading,
-            onSuccess,
-            onError
-          );
-          setTopicAddDialog(false);
-        }}
+        onConfirm={onAddSubmit}
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
           setTopicAddDialog(false);
@@ -211,14 +223,6 @@ export default function ViewPage({
 
       <DeleteDialog
         open={deleteDialog}
-        children={
-          <Switch
-            text="Multiple Delete"
-            textColor="black"
-            handleChange={() => setMultipleDelete(!multipleDelete)}
-            value={multipleDelete}
-          />
-        }
         onConfirm={() => {
           multipleDelete
             ? onTopicDeleteMany(
@@ -250,7 +254,15 @@ export default function ViewPage({
           setCurrentTopic(NO_TOPIC);
           setDeleteDialog(false);
         }}
-      />
+      >
+        <Switch
+          text="Multiple Delete"
+          textColor="black"
+          color={MaterialUiColor.Secondary}
+          handleChange={() => setMultipleDelete(!multipleDelete)}
+          value={multipleDelete}
+        />
+      </DeleteDialog>
     </>
   );
 }

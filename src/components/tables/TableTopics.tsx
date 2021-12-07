@@ -10,7 +10,7 @@ import { Topic, Related } from "../../interfaces/Interfaces";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { getFormattedDate } from "../../utils/utils";
-
+import CircleIcon from "@material-ui/icons/CloudCircleOutlined";
 interface TableTopicsProps {
   topics: Topic[];
   searchText: string;
@@ -31,7 +31,7 @@ export default function TableTopics({
       if (topic.title.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
-            <StyledTableCell> {topic.title}</StyledTableCell>
+            <StyledTableCell>{topic.title}</StyledTableCell>
             <StyledTableCell>{topic.source}</StyledTableCell>
             <StyledTableCell>
               {getFormattedDate(topic.timestamp)}
@@ -42,6 +42,11 @@ export default function TableTopics({
               {topic.related.map((r: Related) => r.title + " ")}
               {topic.related.length === 0 && "Warning, no related topic!"}
               <div className={classes.iconsContainer}>
+                <div
+                  className={classes.circle}
+                  style={{ backgroundColor: topic.active ? "lime" : "red" }}
+                />
+
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {

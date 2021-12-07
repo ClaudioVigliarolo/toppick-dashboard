@@ -157,6 +157,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "row",
       justifyContent: "space-between",
     },
+
+    circle: {
+      display: "flex",
+      width: 10,
+      height: 10,
+      borderRadius: "50%",
+      textAlign: "center",
+      alignSelf: "center",
+      marginLeft: -20,
+    },
   })
 );
 

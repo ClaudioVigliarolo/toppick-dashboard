@@ -2,7 +2,7 @@ import React from "react";
 import { CustomDialog } from "./DialogStyles";
 import Select from "../select/ObjectSelect";
 import { TextField } from "@material-ui/core";
-import { QuestionTopic, Topic } from "src/interfaces/Interfaces";
+import { QuestionTopic } from "src/interfaces/Interfaces";
 interface QuestionDialogProps {
   topic: QuestionTopic;
   open: boolean;
@@ -17,6 +17,7 @@ interface QuestionDialogProps {
 const NO_TOPIC: QuestionTopic = {
   id: -1,
   title: "Select A Topic",
+  active: false,
 };
 
 export default function QuestionDialog(props: QuestionDialogProps) {
@@ -55,7 +56,6 @@ export default function QuestionDialog(props: QuestionDialogProps) {
           <>
             <TextField
               error={error}
-              autoFocus
               InputLabelProps={{ shrink: true }}
               margin="dense"
               label="question"

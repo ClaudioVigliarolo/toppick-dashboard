@@ -104,18 +104,15 @@ export const CustomDialog = ({
             textColor="primary"
             centered
           >
-            {tabData.map((t) => (
-              <Tab label={t.label} />
+            {tabData.map((t, i) => (
+              <Tab key={i} label={t.label} />
             ))}
           </Tabs>
 
           {tabData.map((t, i) => (
-            <TabPanel
-              label={t.label}
-              index={i}
-              value={value}
-              children={t.children}
-            />
+            <TabPanel key={i} label={t.label} index={i} value={value}>
+              {t.children}
+            </TabPanel>
           ))}
         </DialogContent>
         <DialogActions>

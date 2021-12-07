@@ -39,6 +39,7 @@ const NO_TOPIC: Topic = {
   ref_id: -1,
   description: "",
   image: "",
+  active: false,
 };
 
 export default function CreatePage({
@@ -164,6 +165,7 @@ export default function CreatePage({
     newLevel: TopicLevel,
     newDescription: string,
     newImage: string,
+    newActive: boolean,
     selectedCategories: CategoryTopic[],
     selectedRelated: Related[]
   ) => {
@@ -180,6 +182,7 @@ export default function CreatePage({
       timestamp: new Date(),
       categories: selectedCategories,
       ref_id: newID,
+      active: newActive,
     };
     await onTopicAdd(
       newTopic,
@@ -235,6 +238,7 @@ export default function CreatePage({
       <TopicAddDialog
         open={topicAddDialog}
         preselectedCategories={[]}
+        active={false}
         preselectedRelated={[]}
         categories={categories}
         loading={loading}

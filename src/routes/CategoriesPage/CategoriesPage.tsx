@@ -3,6 +3,7 @@ import { getCategories, getCategoryTopics } from "../../api/api";
 import {
   Category,
   CategoryTopic,
+  MaterialUiColor,
   PageProps,
 } from "../../interfaces/Interfaces";
 import TableCategories from "../../components/tables/TableCategories";
@@ -214,21 +215,21 @@ export default function ViewPage({
 
       <DeleteDialog
         open={deleteDialog}
-        children={
-          <Switch
-            text="Multiple Delete"
-            textColor="black"
-            handleChange={() => setMultipleDelete(!multipleDelete)}
-            value={multipleDelete}
-          />
-        }
         onConfirm={onMultipleDelete}
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setDeleteDialog(false);
         }}
-      />
+      >
+        <Switch
+          text="Multiple Delete"
+          textColor="black"
+          color={MaterialUiColor.Secondary}
+          handleChange={() => setMultipleDelete(!multipleDelete)}
+          value={multipleDelete}
+        />
+      </DeleteDialog>
     </>
   );
 }

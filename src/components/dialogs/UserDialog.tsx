@@ -82,49 +82,48 @@ export default function UserDialog({
         minWidth={400}
         onConfirm={onSubmit}
         onRefuse={onRefuse}
-        children={
-          <>
-            <TextField
-              onChange={(e) => setUsernameState(e.currentTarget.value)}
-              id="standard-basic"
-              label="Username"
-              className={classes.textField}
-              value={usernameState}
-              error={error}
-            />
+      >
+        <>
+          <TextField
+            onChange={(e) => setUsernameState(e.currentTarget.value)}
+            id="standard-basic"
+            label="Username"
+            className={classes.textField}
+            value={usernameState}
+            error={error}
+          />
 
-            <TextField
-              onChange={(e) => setEmailState(e.currentTarget.value)}
-              id="standard-basic"
-              label="Email"
-              className={classes.textField}
-              value={emailState}
-              error={error}
-            />
+          <TextField
+            onChange={(e) => setEmailState(e.currentTarget.value)}
+            id="standard-basic"
+            label="Email"
+            className={classes.textField}
+            value={emailState}
+            error={error}
+          />
 
-            <TextField
-              onChange={(e) => setPasswordState(e.currentTarget.value)}
-              id="standard-basic"
-              label="Digit new password"
-              type="password"
-              value={passwordState}
-              className={classes.textField}
-              error={error}
-            />
+          <TextField
+            onChange={(e) => setPasswordState(e.currentTarget.value)}
+            id="standard-basic"
+            label="Digit new password"
+            type="password"
+            value={passwordState}
+            className={classes.textField}
+            error={error}
+          />
 
-            <div style={{ alignSelf: "center" }}>
-              <Chip
-                width={200}
-                selectedValues={selectedLanguagesState}
-                values={languages}
-                header="Languages"
-                error={error}
-                handleChange={handleChange}
-              />
-            </div>
-          </>
-        }
-      />
+          <div style={{ alignSelf: "center" }}>
+            <Chip
+              width={200}
+              selectedValues={selectedLanguagesState}
+              values={languages}
+              header="Languages"
+              error={error}
+              handleChange={handleChange}
+            />
+          </div>
+        </>
+      </CustomDialog>
     </>
   );
 }

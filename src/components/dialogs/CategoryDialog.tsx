@@ -2,7 +2,7 @@ import { TextField } from "@material-ui/core";
 import React from "react";
 import { NO_IMAGE_URL } from "src/constants/constants";
 import { CategoryTopic, Topic, Value } from "src/interfaces/Interfaces";
-import { isSelected } from "src/utils/utils";
+import { hasVal, isSelected } from "src/utils/utils";
 import Chip from "../select/ObjectChip";
 import { CustomDialog, TabData } from "./DialogsStyles2";
 
@@ -36,10 +36,9 @@ export default function CategoryDialog(props: CategoryDialogProps) {
   React.useEffect(() => {
     setCategory(props.category);
     setSelectedCategTopics(props.preselectedCategTopics);
-
-    props.description && setDescription(props.description);
-    props.image && setImageUrl(props.image);
-  }, [props.category, props.preselectedCategTopics]);
+    hasVal(props.description) && setDescription(props.description as string);
+    hasVal(props.image) && setImageUrl(props.image as string);
+  }, [props.category, props.image, props.preselectedCategTopics]);
 
   const onSubmit = async () => {
     setError(false);
@@ -72,7 +71,6 @@ export default function CategoryDialog(props: CategoryDialogProps) {
       children: (
         <>
           <TextField
-            autoFocus
             placeholder="Title"
             InputLabelProps={{ shrink: true }}
             margin="dense"
@@ -84,7 +82,6 @@ export default function CategoryDialog(props: CategoryDialogProps) {
           />
 
           <TextField
-            autoFocus
             placeholder="Type or paste description here..."
             InputLabelProps={{ shrink: true }}
             margin="dense"
@@ -99,10 +96,10 @@ export default function CategoryDialog(props: CategoryDialogProps) {
 
           <img
             src={imageUrl ? imageUrl : NO_IMAGE_URL}
+            alt="img"
             style={{ height: 200, alignSelf: "center", marginTop: 20 }}
           />
           <TextField
-            autoFocus
             placeholder="Paste the Image Url here"
             InputLabelProps={{ shrink: true }}
             margin="dense"

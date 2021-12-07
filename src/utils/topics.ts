@@ -281,6 +281,7 @@ export const onTopicUpdate = async (
   newTopics[topicIndex].level = updatedTopic.level;
   newTopics[topicIndex].type = updatedTopic.type;
   newTopics[topicIndex].source = updatedTopic.source;
+  newTopics[topicIndex].active = updatedTopic.active;
 
   //push new updated arrays
   setTopics([...newTopics]);

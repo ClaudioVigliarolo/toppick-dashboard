@@ -72,31 +72,30 @@ export const Navigation = () => {
       setCurrentLanguage={setCurrentLanguage}
       languages={languages}
       currentLanguage={currentLanguage}
-      children={
-        <Switch>
-          {!loading && !isAuthenticated && location.pathname !== "/login" && (
-            <Redirect to="/login" />
-          )}
-          {isAuthenticated && <Redirect exact from="/" to="/categories" />}
-          {isAuthenticated && <Redirect exact from="/login" to="/categories" />}
-          {routes.map((route, index) => (
-            <CustomRoute
-              key={index}
-              path={route.path}
-              condition={getCondition(userType, route.path, isAuthenticated)}
-              Component={route.component}
-              token={userToken}
-              currentLanguage={currentLanguage}
-              setLoading={setLoading}
-              loading={loading}
-              onError={onError}
-              onSuccess={onSuccess}
-              error={error}
-              success={success}
-            />
-          ))}
-        </Switch>
-      }
-    />
+    >
+      <Switch>
+        {!loading && !isAuthenticated && location.pathname !== "/login" && (
+          <Redirect to="/login" />
+        )}
+        {isAuthenticated && <Redirect exact from="/" to="/categories" />}
+        {isAuthenticated && <Redirect exact from="/login" to="/categories" />}
+        {routes.map((route, index) => (
+          <CustomRoute
+            key={index}
+            path={route.path}
+            condition={getCondition(userType, route.path, isAuthenticated)}
+            Component={route.component}
+            token={userToken}
+            currentLanguage={currentLanguage}
+            setLoading={setLoading}
+            loading={loading}
+            onError={onError}
+            onSuccess={onSuccess}
+            error={error}
+            success={success}
+          />
+        ))}
+      </Switch>
+    </Menu>
   );
 };

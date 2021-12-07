@@ -35,24 +35,22 @@ export default function MessageDialog(props: MessageDialogProps) {
         minHeigth={300}
         onConfirm={() => onSubmit(message)}
         onRefuse={props.onRefuse}
-        children={
-          <TextField
-            error={error}
-            autoFocus
-            placeholder="Type email message here..."
-            multiline
-            rows={10}
-            rowsMax={10}
-            InputLabelProps={{ shrink: true }}
-            margin="dense"
-            label="text"
-            id="standard-helperText"
-            value={message}
-            onChange={(e) => setMessage(e.currentTarget.value)}
-            fullWidth
-          />
-        }
-      />
+      >
+        <TextField
+          error={error}
+          placeholder="Type email message here..."
+          multiline
+          rows={10}
+          rowsMax={10}
+          InputLabelProps={{ shrink: true }}
+          margin="dense"
+          label="text"
+          id="standard-helperText"
+          value={message}
+          onChange={(e) => setMessage(e.currentTarget.value)}
+          fullWidth
+        />
+      </CustomDialog>
     </>
   );
 }

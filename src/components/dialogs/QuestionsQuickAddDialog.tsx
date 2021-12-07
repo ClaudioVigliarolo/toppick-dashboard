@@ -43,33 +43,31 @@ export default function QuestionsQuickAddDialog(
         minHeigth={300}
         onConfirm={() => onSubmit(text)}
         onRefuse={props.onRefuse}
-        children={
-          <>
-            <TextField
-              error={error}
-              autoFocus
-              placeholder="Paste your questions here..."
-              multiline
-              rows={10}
-              rowsMax={10}
-              InputLabelProps={{ shrink: true }}
-              margin="dense"
-              label="text"
-              id="standard-helperText"
-              value={text}
-              onChange={(e) => setText(e.currentTarget.value)}
-              fullWidth
-            />
-            <h2
-              style={{
-                color: linesN < props.minQuestions ? "orangered" : "blue",
-              }}
-            >
-              Questions: {linesN}
-            </h2>
-          </>
-        }
-      />
+      >
+        <>
+          <TextField
+            error={error}
+            placeholder="Paste your questions here..."
+            multiline
+            rows={10}
+            rowsMax={10}
+            InputLabelProps={{ shrink: true }}
+            margin="dense"
+            label="text"
+            id="standard-helperText"
+            value={text}
+            onChange={(e) => setText(e.currentTarget.value)}
+            fullWidth
+          />
+          <h2
+            style={{
+              color: linesN < props.minQuestions ? "orangered" : "blue",
+            }}
+          >
+            Questions: {linesN}
+          </h2>
+        </>
+      </CustomDialog>
     </>
   );
 }

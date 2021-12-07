@@ -48,79 +48,75 @@ export default function ArticlesDialog(props: ArticlesDialogProps) {
         onConfirm={onConfirm}
         onRefuse={props.onRefuse}
         loading={false}
-        children={
-          <>
-            {!preview && (
-              <>
-                <VisibilityOutlinedIcon
-                  style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 20,
-                    cursor: "pointer",
-                    color: "orange",
-                    fontSize: 30,
-                  }}
-                  onClick={() => setPreview(true)}
-                />
-                <TextField
-                  error={error}
-                  autoFocus
-                  InputLabelProps={{ shrink: true }}
-                  margin="dense"
-                  label="Question"
-                  id="standard-helperText"
-                  value={title}
-                  onChange={(e) => setTitle(e.currentTarget.value)}
-                  fullWidth
-                />
-                <TextField
-                  error={error}
-                  autoFocus
-                  placeholder="Type or Paste the Description here..."
-                  multiline
-                  rows={10}
-                  rowsMax={10}
-                  InputLabelProps={{ shrink: true }}
-                  margin="dense"
-                  label="title"
-                  id="standard-helperText"
-                  value={description}
-                  onChange={(e) => setDescription(e.currentTarget.value)}
-                />
-                <TextField
-                  error={error}
-                  autoFocus
-                  InputLabelProps={{ shrink: true }}
-                  margin="dense"
-                  label="Link"
-                  placeholder="Paste the Link to the Article here"
-                  id="standard-helperText"
-                  value={link}
-                  onChange={(e) => setLink(e.currentTarget.value)}
-                  fullWidth
-                />
-              </>
-            )}
-            {preview && (
-              <>
-                <CloseIcon
-                  style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 20,
-                    cursor: "pointer",
-                    color: "orange",
-                    fontSize: 30,
-                  }}
-                  onClick={() => setPreview(false)}
-                />
-                <LinkPreview url={link} width="400px" height="400px" />
-              </>
-            )}
-          </>
-        }
-      />
+      >
+        <>
+          {!preview && (
+            <>
+              <VisibilityOutlinedIcon
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                  cursor: "pointer",
+                  color: "orange",
+                  fontSize: 30,
+                }}
+                onClick={() => setPreview(true)}
+              />
+              <TextField
+                error={error}
+                InputLabelProps={{ shrink: true }}
+                margin="dense"
+                label="Question"
+                id="standard-helperText"
+                value={title}
+                onChange={(e) => setTitle(e.currentTarget.value)}
+                fullWidth
+              />
+              <TextField
+                error={error}
+                placeholder="Type or Paste the Description here..."
+                multiline
+                rows={10}
+                rowsMax={10}
+                InputLabelProps={{ shrink: true }}
+                margin="dense"
+                label="title"
+                id="standard-helperText"
+                value={description}
+                onChange={(e) => setDescription(e.currentTarget.value)}
+              />
+              <TextField
+                error={error}
+                InputLabelProps={{ shrink: true }}
+                margin="dense"
+                label="Link"
+                placeholder="Paste the Link to the Article here"
+                id="standard-helperText"
+                value={link}
+                onChange={(e) => setLink(e.currentTarget.value)}
+                fullWidth
+              />
+            </>
+          )}
+          {preview && (
+            <>
+              <CloseIcon
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                  cursor: "pointer",
+                  color: "orange",
+                  fontSize: 30,
+                }}
+                onClick={() => setPreview(false)}
+              />
+              <LinkPreview url={link} width="400px" height="400px" />
+            </>
+          )}
+        </>
+      </CustomDialog>
     </>
   );
 }

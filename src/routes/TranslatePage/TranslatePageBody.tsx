@@ -47,6 +47,7 @@ export default function CreatePageBody({
           {targetQuestions.map((q, i) => (
             <TranslateField
               index={i}
+              key={i}
               sourceQuestion={sourceQuestions[i]}
               targetQuestion={q}
               onDelete={onQuestionDelete}

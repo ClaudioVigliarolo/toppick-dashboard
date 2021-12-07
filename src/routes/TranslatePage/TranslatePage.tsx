@@ -70,6 +70,7 @@ const NO_TOPIC: Topic = {
   ref_id: -1,
   description: "",
   image: "",
+  active: false,
 };
 
 export default function TranslatePage({
@@ -214,6 +215,7 @@ export default function TranslatePage({
     newLevel: TopicLevel,
     newDescription: string,
     newImage: string,
+    newActive: boolean,
     selectedCategories: CategoryTopic[],
     selectedRelated: Related[]
   ) => {
@@ -229,6 +231,7 @@ export default function TranslatePage({
       timestamp: new Date(),
       categories: selectedCategories,
       ref_id: selectedTopicToTranslate.ref_id,
+      active: newActive,
     };
 
     await onTopicAdd(
@@ -382,6 +385,7 @@ export default function TranslatePage({
         image={selectedTopicToTranslate.image}
         headerText="Add New Topic"
         topic=""
+        active={selectedTopic.active}
         placeholderTitle={selectedTopicToTranslate.source_title}
         onConfirm={onTranslatedTopicAdd}
         onRefuse={onReset}

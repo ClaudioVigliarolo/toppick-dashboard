@@ -114,3 +114,11 @@ export const isSelected = (arr: Value[], val: Value) => {
 export const refreshPage = () => {
   window.location.reload();
 };
+
+//check if the current imput has an accepted value
+export const hasVal = (input: any): boolean => {
+  if (input == null) {
+    return false;
+  }
+  return true;
+};

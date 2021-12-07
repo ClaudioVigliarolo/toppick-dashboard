@@ -75,6 +75,7 @@ export default function CreatePageBody({
         <div style={{ marginBottom: 50 }}>
           {questions.map((q, i) => (
             <QuestionField
+              key={i}
               index={i}
               onDelete={onQuestionDelete}
               onChange={onQuestionChange}

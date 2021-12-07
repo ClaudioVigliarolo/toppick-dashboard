@@ -1,5 +1,5 @@
 import React from "react";
-import { PageProps } from "../../interfaces/Interfaces";
+import { MaterialUiColor, PageProps } from "../../interfaces/Interfaces";
 import DBChartBar from "../../components/charts/DBChartBar";
 import UpdatesChart from "../../components/charts/UpdatesChart";
 import UserChart from "../../components/charts/UserChart";
@@ -110,8 +110,9 @@ export default function StartPage({ token, currentLanguage }: PageProps) {
         >
           <Switch
             text="Maintenance"
+            color={MaterialUiColor.Secondary}
             handleChange={onMaintenanceChange}
-            value={maintanance ? true : false}
+            value={maintanance}
           />
         </div>
         <div className={classes.tabsContainer}>

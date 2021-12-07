@@ -1,5 +1,5 @@
+import React from "react";
 import { RouteProps } from "react-router-dom";
-
 export interface Topic {
   id: number;
   ref_id: number;
@@ -12,6 +12,7 @@ export interface Topic {
   related: Related[];
   description?: string;
   image?: string;
+  active: boolean;
 }
 
 export interface TopicCategory {
@@ -278,4 +279,10 @@ export enum TopicLevel {
   EASY,
   MEDIUM,
   HARD,
+}
+
+export enum MaterialUiColor {
+  Primary = "primary",
+  Secondary = "secondary",
+  Default = "default",
 }

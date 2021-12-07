@@ -54,7 +54,6 @@ export default function ReportDialog(props: ReportDialogProps) {
 
         <DialogContent style={{ minWidth: 600 }}>
           <TextField
-            autoFocus
             error={error}
             InputLabelProps={{ shrink: true }}
             margin="dense"

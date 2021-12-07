@@ -5,7 +5,7 @@ import { Value } from "src/interfaces/Interfaces";
 interface CustomSelectProps {
   value: Value;
   handleChange: (index: number) => void;
-  defaultValue: Value;
+  defaultValue?: Value;
   values: Value[];
   color?: string;
   header?: string;
@@ -33,11 +33,12 @@ export default function CustomSelect({
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={value.title}
-        defaultValue="ss"
       >
-        <MenuItem onClick={() => handleChange(-1)} value={defaultValue.title}>
-          {defaultValue.title}
-        </MenuItem>
+        {defaultValue && (
+          <MenuItem onClick={() => handleChange(-1)} value={defaultValue.title}>
+            {defaultValue.title}
+          </MenuItem>
+        )}
         {values.map((val: Value, index: number) => (
           <MenuItem
             key={index}
