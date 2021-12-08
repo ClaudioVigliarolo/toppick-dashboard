@@ -34,7 +34,7 @@ export default function ReportsChart({
         setReportStats(retrievedStats);
       }
     })();
-  }, [currentLanguage, until]);
+  }, [currentLanguage, until, from, token]);
 
   return (
     <div className={classes.container}>

@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
       }
       setLoading(false);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSetIsAuthenticated = (newVal: boolean) => {

@@ -95,9 +95,15 @@ export default function TopicDialog(props: TopicDialogProps) {
   }, [
     props.categories,
     props.topic,
-    props.source,
     props.preselectedCategories,
     props.source,
+    props.active,
+    props.description,
+    props.image,
+    props.level,
+    props.preselectedRelated,
+    props.related,
+    props.type,
   ]);
 
   const onSubmit = async (

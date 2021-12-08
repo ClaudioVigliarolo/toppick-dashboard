@@ -37,7 +37,7 @@ export default function DBChartBar({
         setContentStats(retrievedStats);
       }
     })();
-  }, [currentLanguage, from]);
+  }, [currentLanguage, from, token, until]);
 
   return (
     <div className={classes.container}>

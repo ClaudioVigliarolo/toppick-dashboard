@@ -24,15 +24,12 @@ export default function DBChartBar({
     categoriesAdded: 0,
     categoriesUpdated: 0,
     categoriesDeleted: 0,
-
     topicsAdded: 0,
     topicsUpdated: 0,
     topicsDeleted: 0,
-
     questionsAdded: 0,
     questionsUpdated: 0,
     questionsDeleted: 0,
-
     totranslateDeleted: 0,
     translatedTopics: 0,
     translatedQuestions: 0,
@@ -58,7 +55,7 @@ export default function DBChartBar({
         }
       }
     })();
-  }, []);
+  }, [currentLanguage, from, index, token, until]);
 
   React.useEffect(() => {
     (async () => {
@@ -74,7 +71,7 @@ export default function DBChartBar({
         setUserStats(retrievedStats);
       }
     })();
-  }, [index, currentLanguage, from]);
+  }, [index, currentLanguage, from, token, until, users]);
 
   return (
     <>

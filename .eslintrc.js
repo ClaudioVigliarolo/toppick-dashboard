@@ -39,6 +39,14 @@ module.exports = {
         "jsx-a11y/no-static-element-interactions": "off",
         "jsx-a11y/no-autofocus": "off",
         "jsx-a11y/no-autofocus": "off",
+        "no-unused-vars": "off",
+        "no-console": "off",
+        "comma-dangle": "off",
+        "sort-keys": "off",
+        "sort-imports": "off",
+        "react/jsx-curly-spacing": "off",
+        "import/order": "off",
+        "comma-dangle": "off",
       },
     },
   ],
@@ -55,7 +63,6 @@ module.exports = {
   ],
   root: true, // For configuration cascading.
   rules: {
-    "comma-dangle": ["warn", "never"],
     "eol-last": "error",
     "import/order": [
       "warn",

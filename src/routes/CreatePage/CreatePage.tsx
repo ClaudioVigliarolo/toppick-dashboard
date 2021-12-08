@@ -80,6 +80,7 @@ export default function CreatePage({
       }
       setLoading(false);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
   const handleTopicChange = async (index: number) => {

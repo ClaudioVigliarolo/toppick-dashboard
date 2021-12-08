@@ -69,7 +69,8 @@ export default function ReportsPage({
       }
       setLoading(false);
     })();
-  }, [currentLanguage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, currentLanguage]);
 
   const handleTopicChange = (index: number) => {
     setFilterTopic(topics[index]);

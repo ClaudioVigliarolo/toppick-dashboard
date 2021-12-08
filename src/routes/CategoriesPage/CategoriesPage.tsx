@@ -8,9 +8,8 @@ import {
 } from "../../interfaces/Interfaces";
 import TableCategories from "../../components/tables/TableCategories";
 import CustomButton from "../../components/buttons/CustomButton";
+import CategoryDialog from "../../components/dialogs/CategoryDialog";
 import SearchBar from "../../components/input/SearchBar";
-import AddDialog from "../../components/dialogs/CategoryDialog";
-import EditDialog from "../../components/dialogs/CategoryDialog";
 import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../../styles/common";
 import {
@@ -29,7 +28,7 @@ const NO_CATEGORY: Category = {
   categoryTopics: [],
 };
 
-export default function ViewPage({
+export default function CategoryPage({
   token,
   currentLanguage,
   setLoading,
@@ -63,6 +62,8 @@ export default function ViewPage({
       }
       setLoading(false);
     })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
   const onEdit = (categ: Category) => {
@@ -183,7 +184,7 @@ export default function ViewPage({
         onEdit={onEdit}
       />
 
-      <AddDialog
+      <CategoryDialog
         category=""
         loading={loading}
         headerText="Add new Category"
@@ -197,7 +198,7 @@ export default function ViewPage({
         }}
       />
 
-      <EditDialog
+      <CategoryDialog
         open={editDialog}
         loading={loading}
         description={currentCategory.description}

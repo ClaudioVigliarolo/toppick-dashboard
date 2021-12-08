@@ -44,8 +44,7 @@ export default function QuestionsList({
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     React.useState<number>(-1);
 
-  const renderRow = (props: ListChildComponentProps) => {
-    const { index } = props;
+  const renderRow = ({ index }: ListChildComponentProps) => {
     return (
       <ListItem
         button

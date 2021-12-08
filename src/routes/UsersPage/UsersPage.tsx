@@ -1,21 +1,14 @@
 import React from "react";
-import { getUsers } from "../../api/api";
-import {
-  CreatedUser,
-  EmailSubject,
-  EmailType,
-  Lang,
-  PageProps,
-} from "../../interfaces/Interfaces";
 import TableUsers from "../../components/tables/TableUsers";
 import { AuthContext } from "../../context/AuthContext";
 import SearchBar from "../../components/input/SearchBar";
 import CustomButton from "../../components/buttons/CustomButton";
-import UserAddDialog from "../../components/dialogs/UserDialog";
-import UserEditDialog from "../../components/dialogs/UserDialog";
+import UserDialog from "../../components/dialogs/UserDialog";
 import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import MessageDialog from "../../components/dialogs/MessageDialog";
+import { getHash, noSpace } from "src/utils/utils";
 import { useAppStyles } from "../../styles/common";
+import { getUsers } from "../../api/api";
 import { CONSTANTS } from "src/constants/constants";
 import {
   onUserAdd,
@@ -23,7 +16,13 @@ import {
   onUserMessage,
   onUserUpdate,
 } from "src/utils/users";
-import { getHash, noSpace } from "src/utils/utils";
+import {
+  CreatedUser,
+  EmailSubject,
+  EmailType,
+  Lang,
+  PageProps,
+} from "../../interfaces/Interfaces";
 
 const NO_USER: CreatedUser = {
   id: -1,
@@ -61,7 +60,8 @@ export default function UsersPage({
       }
       setLoading(false);
     })();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const onEdit = (user: CreatedUser) => {
     setCurrentUser(user);
@@ -102,7 +102,7 @@ export default function UsersPage({
         searchText={searchText}
       />
 
-      <UserAddDialog
+      <UserDialog
         email=""
         password=""
         username=""
@@ -149,7 +149,7 @@ export default function UsersPage({
         }}
       />
 
-      <UserEditDialog
+      <UserDialog
         email={currentUser.userMail}
         password=""
         loading={loading}

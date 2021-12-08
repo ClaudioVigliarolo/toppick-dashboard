@@ -13,8 +13,7 @@ import {
 import TableTopics from "../../components/tables/TableTopics";
 import CustomButton from "../../components/buttons/CustomButton";
 import SearchBar from "../../components/input/SearchBar";
-import TopicAddDialog from "../../components/dialogs/TopicDialog";
-import TopicEditDialog from "../../components/dialogs/TopicDialog";
+import TopicDialog from "../../components/dialogs/TopicDialog";
 import Switch from "../../components/select/Switch";
 import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../../styles/common";
@@ -74,8 +73,7 @@ export default function ViewPage({
       }
       setLoading(false);
     })();
-  }, [currentLanguage]);
-
+  }, [currentLanguage, setLoading]);
   const onEdit = (topic: Topic) => {
     setCurrentTopic(topic);
     setEditDialog(true);
@@ -182,7 +180,7 @@ export default function ViewPage({
         topics={topics}
       />
 
-      <TopicEditDialog
+      <TopicDialog
         open={editDialog}
         loading={loading}
         related={topics}
@@ -204,7 +202,7 @@ export default function ViewPage({
         headerText="Edit Topic"
       />
 
-      <TopicAddDialog
+      <TopicDialog
         open={topicAddDialog}
         preselectedCategories={[]}
         preselectedRelated={[]}

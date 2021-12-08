@@ -1,13 +1,5 @@
 /* utils for inserting, modifing, removing topics  */
 import {
-  Category,
-  Lang,
-  Question,
-  ReportHandled,
-  Topic,
-  ToTranslateTopic,
-} from "../interfaces/Interfaces";
-import {
   addCategory,
   addQuestions,
   addTopic,
@@ -23,6 +15,14 @@ import {
   updateCategory,
   updateTopic,
 } from "../api/api";
+import {
+  Category,
+  Lang,
+  Question,
+  ReportHandled,
+  Topic,
+  ToTranslateTopic,
+} from "../interfaces/Interfaces";
 import { getLinesFromText, getQuestionHash } from "../utils/utils";
 
 export const onCategoryAdd = async (

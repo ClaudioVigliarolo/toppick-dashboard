@@ -38,7 +38,12 @@ export default function CategoryDialog(props: CategoryDialogProps) {
     setSelectedCategTopics(props.preselectedCategTopics);
     hasVal(props.description) && setDescription(props.description as string);
     hasVal(props.image) && setImageUrl(props.image as string);
-  }, [props.category, props.image, props.preselectedCategTopics]);
+  }, [
+    props.category,
+    props.image,
+    props.preselectedCategTopics,
+    props.description,
+  ]);
 
   const onSubmit = async () => {
     setError(false);

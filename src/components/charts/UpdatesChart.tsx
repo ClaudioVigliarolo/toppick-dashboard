@@ -35,7 +35,7 @@ export default function UpdatesChart({
         setClientUpdates(retrievedStats);
       }
     })();
-  }, [currentLanguage, from]);
+  }, [currentLanguage, from, token, until]);
 
   return (
     <div className={classes.container}>

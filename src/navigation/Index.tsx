@@ -1,7 +1,6 @@
 import React from "react";
-import { Redirect, Switch } from "react-router-dom";
+import { Redirect, Switch, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { useLocation } from "react-router-dom";
 import CustomRoute from "./CustomRoute";
 import Menu from "./Menu";
 import { getUpdates } from "../api/api";

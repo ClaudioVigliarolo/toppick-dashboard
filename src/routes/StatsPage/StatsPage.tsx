@@ -75,7 +75,7 @@ const chartButtons: ChartButton[] = [
   { label: "Updates", chartIndex: ChartIndex.UpdatesChart },
 ];
 
-export default function StartPage({ token, currentLanguage }: PageProps) {
+export default function StatsPage({ token, currentLanguage }: PageProps) {
   const [chartIndex, setChartIndex] = React.useState<number>(0);
   const [dateIndex, setDateIndex] = React.useState<number>(-1);
   const [until, setUntilDate] = React.useState<Date>(CONSTANTS.DEF_UNTIL_DATE);
@@ -88,7 +88,7 @@ export default function StartPage({ token, currentLanguage }: PageProps) {
     (async () => {
       setMaintenance(await getMaintenanceStatus(currentLanguage, token));
     })();
-  }, [currentLanguage]);
+  }, [currentLanguage, token]);
 
   const onMaintenanceChange = async (event) => {
     const newVal = !maintanance;

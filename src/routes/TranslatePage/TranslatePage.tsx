@@ -126,7 +126,8 @@ export default function TranslatePage({
 
       setLoading(false);
     })();
-  }, [currentLanguage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLanguage, token]);
 
   React.useEffect(() => {
     (async () => {
@@ -145,7 +146,7 @@ export default function TranslatePage({
       }
       setLoading(false);
     })();
-  }, [archived]);
+  }, [archived, setLoading, token, currentLanguage]);
 
   const onSelectTranslate = (index: number) => {
     console.log("CURRR", toTranslateTopics[index]);
