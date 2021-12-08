@@ -146,7 +146,7 @@ export default function TranslatePage({
       }
       setLoading(false);
     })();
-  }, [archived, setLoading, token, currentLanguage]);
+  }, [archived, token, currentLanguage]);
 
   const onSelectTranslate = (index: number) => {
     console.log("CURRR", toTranslateTopics[index]);

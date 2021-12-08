@@ -73,7 +73,7 @@ export default function ViewPage({
       }
       setLoading(false);
     })();
-  }, [currentLanguage, setLoading]);
+  }, [currentLanguage]);
   const onEdit = (topic: Topic) => {
     setCurrentTopic(topic);
     setEditDialog(true);
