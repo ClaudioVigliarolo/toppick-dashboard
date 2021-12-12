@@ -14,15 +14,15 @@ import {
   CategoryTopic,
   PageProps,
   Question,
-  Related,
+  TopicRelated,
   Topic,
   TopicLevel,
   TopicType,
 } from "../../interfaces/Interfaces";
-import TopicAddDialog from "../../components/dialogs/TopicDialog";
+import TopicAddDialog from "../../components/dialogs/TopicDialog1";
 import { useAppStyles } from "../../styles/common";
-import CreatePageHeader from "./CreatePageHeader";
-import CreatePageBody from "./CreatePageBody";
+import CreatePageHeader from "./sections/CreatePageHeader";
+import CreatePageBody from "./sections/CreatePageBody";
 
 import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
 import { getHash } from "src/utils/utils";
@@ -40,6 +40,7 @@ const NO_TOPIC: Topic = {
   description: "",
   image: "",
   active: false,
+  approved: false,
 };
 
 export default function CreatePage({
@@ -71,7 +72,7 @@ export default function CreatePage({
         setCategories(retrievedCategories);
       }
 
-      const retrievedTopics = await getTopics(currentLanguage);
+      const retrievedTopics = await getTopics(currentLanguage, token);
       //sort by timestamp
       if (retrievedTopics != null) {
         setTopics(
@@ -168,7 +169,8 @@ export default function CreatePage({
     newImage: string,
     newActive: boolean,
     selectedCategories: CategoryTopic[],
-    selectedRelated: Related[]
+    selectedRelated: TopicRelated[],
+    newApproved: boolean
   ) => {
     const newID = getHash(newTitle, currentLanguage);
     const newTopic: Topic = {
@@ -184,6 +186,7 @@ export default function CreatePage({
       categories: selectedCategories,
       ref_id: newID,
       active: newActive,
+      approved: newApproved,
     };
     await onTopicAdd(
       newTopic,
@@ -246,6 +249,7 @@ export default function CreatePage({
         related={topics}
         headerText="Add New Topic"
         topic=""
+        approved={true}
         onConfirm={onConfirmTopicAdd}
         onRefuse={onRefuseTopicAdd}
       />

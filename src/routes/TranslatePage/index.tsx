@@ -1,6 +1,6 @@
 import React from "react";
 import { getCategories, getTopics, getToTranslateTopics } from "../../api/api";
-import TranslationAddDialog from "../../components/dialogs/TopicDialog";
+import TranslationAddDialog from "../../components/dialogs/TopicDialog1";
 import {
   onaAchiveToTranslateTopic,
   ondeleteToTranslateTopic,
@@ -16,15 +16,15 @@ import {
   Lang,
   PageProps,
   Question,
-  Related,
+  TopicRelated,
   Topic,
   TopicLevel,
   TopicType,
   ToTranslateTopic,
 } from "../../interfaces/Interfaces";
 import { useAppStyles } from "src/styles/common";
-import TranslatePageHeader from "./TranslatePageHeader";
-import TranslatePageBody from "./TranslatePageBody";
+import TranslatePageBody from "./sections/TranslatePageBody";
+import TranslatePageHeader from "./sections/TranslatePageHeader";
 
 const NEW_TARGET_QUESTION: Question = {
   id: -1,
@@ -71,6 +71,7 @@ const NO_TOPIC: Topic = {
   description: "",
   image: "",
   active: false,
+  approved: false,
 };
 
 export default function TranslatePage({
@@ -105,7 +106,7 @@ export default function TranslatePage({
         setCategories(retrievedCategories);
       }
 
-      const retrievedTopics = await getTopics(currentLanguage);
+      const retrievedTopics = await getTopics(currentLanguage, token);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
@@ -218,7 +219,7 @@ export default function TranslatePage({
     newImage: string,
     newActive: boolean,
     selectedCategories: CategoryTopic[],
-    selectedRelated: Related[]
+    selectedRelated: TopicRelated[]
   ) => {
     const newTopic: Topic = {
       id: getHash(newTitle, currentLanguage),
@@ -233,6 +234,7 @@ export default function TranslatePage({
       categories: selectedCategories,
       ref_id: selectedTopicToTranslate.ref_id,
       active: newActive,
+      approved: true,
     };
 
     await onTopicAdd(
@@ -387,9 +389,10 @@ export default function TranslatePage({
         headerText="Add New Topic"
         topic=""
         active={selectedTopic.active}
-        placeholderTitle={selectedTopicToTranslate.source_title}
+        titlePlaceholder={selectedTopicToTranslate.source_title}
         onConfirm={onTranslatedTopicAdd}
         onRefuse={onReset}
+        approved={selectedTopic.approved}
       />
     </div>
   );

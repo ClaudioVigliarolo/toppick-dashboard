@@ -21,16 +21,21 @@ export const getQuestionHash = (
   return getHash(title + "*" + topic + "*" + index);
 };
 
-export const getFormattedDate = (inputDate: Date): string => {
-  const todaysDate = new Date();
-  // call setHours to take the time out of the comparison
-  if (
-    new Date(inputDate).setHours(0, 0, 0, 0) == todaysDate.setHours(0, 0, 0, 0)
-  ) {
-    // Date equals today's date
-    return "today";
+export const getFormattedDate = (input: Date): string => {
+  const inputDate = new Date(input);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  if (inputDate.toLocaleDateString() == today.toLocaleDateString()) {
+    return "Today";
+  } else if (inputDate.toLocaleDateString() == yesterday.toLocaleDateString()) {
+    return "Yesterday";
   }
-  return new Date(inputDate).toLocaleString().slice(0, 10);
+  return inputDate.toLocaleDateString("en-EN", {
+    day: "2-digit",
+    month: "short",
+    year: "2-digit",
+  });
 };
 
 export const getCurrentTime = (): string => {

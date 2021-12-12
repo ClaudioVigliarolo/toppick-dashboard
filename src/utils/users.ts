@@ -1,11 +1,11 @@
 /* utils for inserting, modifing, removing users  */
 import { addUser, deleteUser, emailUser, updateUser } from "../api/api";
-import { CreatedUser, EmailInfo, EmailType } from "../interfaces/Interfaces";
+import { UserCreated, EmailInfo, EmailType } from "../interfaces/Interfaces";
 
 export const onUserDelete = async (
-  deletedUser: CreatedUser,
-  users: CreatedUser[],
-  setUsers: (users: CreatedUser[]) => void,
+  deletedUser: UserCreated,
+  users: UserCreated[],
+  setUsers: (users: UserCreated[]) => void,
   emailtype: EmailType,
   emailinfo: EmailInfo,
   token: string,
@@ -22,7 +22,7 @@ export const onUserDelete = async (
     return onError();
   }
   const newUsers = users.filter(
-    (user: CreatedUser) => user.id !== deletedUser.id
+    (user: UserCreated) => user.id !== deletedUser.id
   );
   setUsers([...newUsers]);
   setLoading(false);
@@ -30,9 +30,9 @@ export const onUserDelete = async (
 };
 
 export const onUserUpdate = async (
-  updatedUser: CreatedUser,
-  users: CreatedUser[],
-  setUsers: (users: CreatedUser[]) => void,
+  updatedUser: UserCreated,
+  users: UserCreated[],
+  setUsers: (users: UserCreated[]) => void,
   emailtype: EmailType,
   emailinfo: EmailInfo,
   token: string,
@@ -51,10 +51,10 @@ export const onUserUpdate = async (
     return onError();
   }
   const newUsers = users;
-  newUsers.forEach(function (u: CreatedUser) {
+  newUsers.forEach(function (u: UserCreated) {
     if (u.id == updatedUser.id) {
       (u.username = updatedUser.username),
-        (u.userMail = updatedUser.userMail),
+        (u.mail = updatedUser.mail),
         (u.password = updatedUser.password),
         (u.type = updatedUser.type),
         (u.languages = updatedUser.languages);
@@ -67,9 +67,9 @@ export const onUserUpdate = async (
 };
 
 export const onUserAdd = async (
-  newUser: CreatedUser,
-  users: CreatedUser[],
-  setUsers: (users: CreatedUser[]) => void,
+  newUser: UserCreated,
+  users: UserCreated[],
+  setUsers: (users: UserCreated[]) => void,
   emailtype: EmailType,
   emailinfo: EmailInfo,
   token: string,
@@ -94,7 +94,7 @@ export const onUserAdd = async (
 };
 
 export const onUserMessage = async (
-  user: CreatedUser,
+  user: UserCreated,
   emailtype: EmailType,
   emailinfo: EmailInfo,
   token: string,

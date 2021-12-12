@@ -1,8 +1,8 @@
 import React from "react";
 import { Redirect, Switch, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import CustomRoute from "./CustomRoute";
-import Menu from "./Menu";
+import CustomRoute from "./components/CustomRoute";
+import Menu from "./components/Menu";
 import { getUpdates } from "../api/api";
 import { Lang } from "src/interfaces/Interfaces";
 import { StatusContext } from "src/context/StatusContext";

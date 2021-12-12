@@ -35,6 +35,7 @@ const NO_TOPIC: Topic = {
   title: "Filter by topic",
   ref_id: -1,
   active: false,
+  approved: false,
 };
 
 export default function ReportsPage({
@@ -63,7 +64,7 @@ export default function ReportsPage({
       if (reports != null) {
         setReports(reports);
       }
-      const retrievedTopics = await getTopics(currentLanguage);
+      const retrievedTopics = await getTopics(currentLanguage, token);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }

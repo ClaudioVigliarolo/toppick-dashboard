@@ -1,12 +1,12 @@
 import axios from "axios";
 import {
   Category,
-  CreatedUser,
+  UserCreated,
   Question,
   Report,
   ReportHandled,
   Topic,
-  LoggedUser,
+  UserLogged,
   UpdatesResponse,
   EmailType,
   EmailInfo,
@@ -66,7 +66,7 @@ export const getCategoryTopics = async (
 
 export const getUsers = async (
   token: string
-): Promise<CreatedUser[] | null> => {
+): Promise<UserCreated[] | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/users`, {
       headers: {
@@ -81,10 +81,15 @@ export const getUsers = async (
   }
 };
 
-export const getTopics = async (lang: Lang): Promise<Topic[] | null> => {
+export const getTopics = async (
+  lang: Lang,
+  token: string
+): Promise<Topic[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topics/` + lang, {
-      headers: {},
+    const response = await axios.get(`${HOSTNAME}/topics-dashboard/` + lang, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
     });
     return response.status === 200 ? response.data : null;
   } catch (err) {
@@ -407,7 +412,7 @@ export const deleteUser = async (
 
 //updateCategory
 export const addUser = async (
-  user: CreatedUser,
+  user: UserCreated,
   token: string
 ): Promise<boolean> => {
   try {
@@ -431,7 +436,7 @@ export const addUser = async (
 };
 
 export const updateUser = async (
-  user: CreatedUser,
+  user: UserCreated,
   token: string
 ): Promise<boolean> => {
   try {
@@ -456,7 +461,7 @@ export const updateUser = async (
 export const emailUser = async (
   emailtype: EmailType,
   emailinfo: EmailInfo,
-  user: CreatedUser,
+  user: UserCreated,
   token: string
 ): Promise<boolean> => {
   try {
@@ -715,7 +720,7 @@ export const getQuestions = async (
 export const login = async (
   email: string,
   password: string
-): Promise<LoggedUser | null> => {
+): Promise<UserLogged | null> => {
   try {
     const response = await axios.post(`${HOSTNAME}/users/login`, {
       email,
@@ -728,7 +733,7 @@ export const login = async (
   }
 };
 
-export const getUser = async (token: string): Promise<LoggedUser | null> => {
+export const getUser = async (token: string): Promise<UserLogged | null> => {
   try {
     const response = await axios.get(`${HOSTNAME}/users/me`, {
       headers: {

@@ -271,17 +271,14 @@ export const onTopicUpdate = async (
   }
   //new topic updated successfully, update locally
   const newTopics = topics;
+
   const topicIndex = topics.findIndex(
     (topic: Topic) => topic.id == updatedTopic.id
   );
-  newTopics[topicIndex].title = updatedTopic.title;
-  newTopics[topicIndex].timestamp = new Date();
-  newTopics[topicIndex].categories = updatedTopic.categories;
-  newTopics[topicIndex].related = updatedTopic.related;
-  newTopics[topicIndex].level = updatedTopic.level;
-  newTopics[topicIndex].type = updatedTopic.type;
-  newTopics[topicIndex].source = updatedTopic.source;
-  newTopics[topicIndex].active = updatedTopic.active;
+
+  if (topicIndex !== -1) {
+    topics[topicIndex] = updatedTopic;
+  }
 
   //push new updated arrays
   setTopics([...newTopics]);

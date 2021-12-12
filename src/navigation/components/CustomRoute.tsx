@@ -16,8 +16,6 @@ interface CustomRouteProps {
   success: boolean;
 }
 
-const getLastUrl = () => "categories";
-
 const CustomRoute = ({
   path,
   Component,

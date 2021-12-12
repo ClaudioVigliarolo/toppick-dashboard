@@ -6,17 +6,17 @@ import {
   StyledTableRow,
   useStyles,
 } from "./TableStyles";
-import { CreatedUser, Lang } from "../../interfaces/Interfaces";
+import { UserCreated, Lang } from "../../interfaces/Interfaces";
 import MailIcon from "@material-ui/icons/MailOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 interface TableUsersProps {
-  users: CreatedUser[];
+  users: UserCreated[];
   languages: Lang[];
-  onEdit: (user: CreatedUser) => void;
-  onDelete: (user: CreatedUser) => void;
-  onMessage: (user: CreatedUser) => void;
+  onEdit: (user: UserCreated) => void;
+  onDelete: (user: UserCreated) => void;
+  onMessage: (user: UserCreated) => void;
   searchText: string;
 }
 
@@ -29,13 +29,13 @@ export default function TableUsers({
 }: TableUsersProps) {
   const classes = useStyles();
 
-  const renderRows = (users: CreatedUser[]) => {
-    return users.map((user: CreatedUser, index: number) => {
+  const renderRows = (users: UserCreated[]) => {
+    return users.map((user: UserCreated, index: number) => {
       if (user.username.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
             <StyledTableCell> {user.username}</StyledTableCell>
-            <StyledTableCell> {user.userMail}</StyledTableCell>
+            <StyledTableCell> {user.mail}</StyledTableCell>
             <StyledTableCell>{user.type}</StyledTableCell>
             <StyledEditCell>
               {user.languages &&

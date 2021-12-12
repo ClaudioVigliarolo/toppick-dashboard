@@ -1,8 +1,12 @@
 import React from "react";
-import { Question, Topic, ToTranslateTopic } from "../../interfaces/Interfaces";
-import TranslateField from "../../components/input/TranslateQuestionField";
-import CustomButton from "../../components/buttons/CustomButton";
-import QuestionsReview from "../../components/lists/QuestionsReview";
+import {
+  Question,
+  Topic,
+  ToTranslateTopic,
+} from "../../../interfaces/Interfaces";
+import TranslateField from "../../../components/input/TranslateQuestionField";
+import CustomButton from "../../../components/buttons/Button";
+import QuestionsReview from "../../../components/lists/QuestionsReview";
 
 const MIN_QUESTIONS = 10;
 export default function CreatePageBody({

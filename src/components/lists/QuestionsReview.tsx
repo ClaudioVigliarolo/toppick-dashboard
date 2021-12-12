@@ -11,7 +11,7 @@ import BookmarkAddedIcon from "@material-ui/icons/Bookmark";
 import { CONSTANTS } from "src/constants/constants";
 import ArticlesDialog from "../dialogs/ArticlesDialog";
 import { Question } from "src/interfaces/Interfaces";
-import CustomButton from "../buttons/CustomButton";
+import CustomButton from "../buttons/Button";
 import { COLORS } from "src/constants/Colors";
 const LIST_ITEM_HEIGTH = 100;
 const LIST_ITEM_MARGIN = 25;

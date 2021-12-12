@@ -2,16 +2,12 @@ import React from "react";
 import { getCategories, getTopics } from "../../api/api";
 import {
   Category,
-  CategoryTopic,
   MaterialUiColor,
   PageProps,
-  Related,
   Topic,
-  TopicLevel,
-  TopicType,
 } from "../../interfaces/Interfaces";
 import TableTopics from "../../components/tables/TableTopics";
-import CustomButton from "../../components/buttons/CustomButton";
+import CustomButton from "../../components/buttons/Button";
 import SearchBar from "../../components/input/SearchBar";
 import TopicDialog from "../../components/dialogs/TopicDialog";
 import Switch from "../../components/select/Switch";
@@ -38,7 +34,7 @@ const NO_TOPIC: Topic = {
   description: "",
   image: "",
   active: false,
-  //#endregion
+  approved: false,
 };
 
 export default function ViewPage({
@@ -63,7 +59,7 @@ export default function ViewPage({
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedTopics = await getTopics(currentLanguage);
+      const retrievedTopics = await getTopics(currentLanguage, token);
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
@@ -84,32 +80,9 @@ export default function ViewPage({
     setDeleteDialog(true);
   };
 
-  const onEditSubmit = async (
-    newTitle: string,
-    newSource: string,
-    newType: TopicType,
-    newLevel: TopicLevel,
-    newDescription: string,
-    newImage: string,
-    newActive: boolean,
-    selectedCategories: CategoryTopic[],
-    selectedRelated: Related[]
-  ) => {
+  const onEditSubmit = async (newTopic: Topic) => {
     await onTopicUpdate(
-      {
-        id: currentTopic.id,
-        title: newTitle,
-        related: selectedRelated,
-        source: newSource,
-        description: newDescription,
-        image: newImage,
-        type: newType,
-        level: newLevel,
-        active: newActive,
-        timestamp: new Date(),
-        categories: selectedCategories,
-        ref_id: currentTopic.ref_id,
-      },
+      newTopic,
       topics,
       currentLanguage,
       token,
@@ -122,31 +95,13 @@ export default function ViewPage({
     setEditDialog(false);
   };
 
-  const onAddSubmit = async (
-    newTitle: string,
-    newSource: string,
-    newType: TopicType,
-    newLevel: TopicLevel,
-    newDescription: string,
-    newImage: string,
-    newActive: boolean,
-    selectedCategories: CategoryTopic[],
-    selectedRelated: Related[]
-  ) => {
+  const onAddSubmit = async (newTopic: Topic) => {
     await onTopicAdd(
       {
-        id: getHash(newTitle, currentLanguage),
-        title: newTitle,
-        type: newType,
-        image: newImage,
-        description: newDescription,
-        related: selectedRelated,
-        source: newSource,
-        level: newLevel,
-        active: newActive,
+        ...newTopic,
+        id: getHash(newTopic.title, currentLanguage),
         timestamp: new Date(),
-        categories: selectedCategories,
-        ref_id: getHash(newTitle, currentLanguage),
+        ref_id: getHash(newTopic.title, currentLanguage),
       },
       topics,
       currentLanguage,
@@ -184,16 +139,8 @@ export default function ViewPage({
         open={editDialog}
         loading={loading}
         related={topics}
-        source={currentTopic.source}
-        type={currentTopic.type}
-        active={currentTopic.active}
-        preselectedRelated={currentTopic.related}
-        preselectedCategories={currentTopic.categories}
-        topic={currentTopic.title}
-        level={currentTopic.level}
-        image={currentTopic.image}
-        description={currentTopic.description}
         categories={categories}
+        topic={currentTopic}
         onConfirm={onEditSubmit}
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
@@ -204,14 +151,11 @@ export default function ViewPage({
 
       <TopicDialog
         open={topicAddDialog}
-        preselectedCategories={[]}
-        preselectedRelated={[]}
-        active={false}
         categories={categories}
         related={topics}
         loading={loading}
         headerText="Add New Topic"
-        topic=""
+        topic={NO_TOPIC}
         onConfirm={onAddSubmit}
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);

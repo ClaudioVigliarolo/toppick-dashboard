@@ -1,7 +1,7 @@
 import React from "react";
-import { ToTranslateTopic } from "../../interfaces/Interfaces";
-import Select from "../../components/select/TranslateSelect";
-import TabButton from "../../components/buttons/TabButton";
+import { ToTranslateTopic } from "../../../interfaces/Interfaces";
+import Select from "../../../components/select/TranslateSelect";
+import TabButton from "../../../components/buttons/TabButton";
 export default function TranslatePageHeader({
   isReview,
   selectedTopic,

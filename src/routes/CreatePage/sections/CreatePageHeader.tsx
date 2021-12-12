@@ -1,7 +1,7 @@
 import React from "react";
-import Select from "../../components/select/ObjectSelect";
-import { Topic } from "../../interfaces/Interfaces";
-import CustomButton from "../../components/buttons/CustomButton";
+import Select from "../../../components/select/ObjectSelect";
+import { Topic } from "../../../interfaces/Interfaces";
+import CustomButton from "../../../components/buttons/Button";
 export default function CreatePageHeader({
   isReview,
   selectedTopic,

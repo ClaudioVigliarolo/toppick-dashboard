@@ -1,11 +1,11 @@
-import ReportsPage from "../routes/ReportsPage/ReportsPage";
-import CategoriesPage from "../routes/CategoriesPage/CategoriesPage";
-import UsersPage from "../routes/UsersPage/UsersPage";
-import TopicsPage from "../routes/TopicsPage/TopicsPage";
-import LoginPage from "../routes/LoginPage/LoginPage";
-import CreatePage from "../routes/CreatePage/CreatePage";
-import TranslatePage from "../routes/TranslatePage/TranslatePage";
-import StatisticsPage from "../routes/StatsPage/StatsPage";
+import ReportsPage from "../routes/ReportsPage";
+import CategoriesPage from "../routes/CategoriesPage";
+import UsersPage from "../routes/UsersPage";
+import TopicsPage from "../routes/TopicsPage";
+import LoginPage from "../routes/LoginPage";
+import CreatePage from "../routes/CreatePage";
+import TranslatePage from "../routes/TranslatePage";
+import StatisticsPage from "../routes/StatsPage";
 import { Route } from "src/interfaces/Interfaces";
 
 export const routes: Route[] = [

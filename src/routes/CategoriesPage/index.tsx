@@ -7,7 +7,7 @@ import {
   PageProps,
 } from "../../interfaces/Interfaces";
 import TableCategories from "../../components/tables/TableCategories";
-import CustomButton from "../../components/buttons/CustomButton";
+import CustomButton from "../../components/buttons/Button";
 import CategoryDialog from "../../components/dialogs/CategoryDialog";
 import SearchBar from "../../components/input/SearchBar";
 import DeleteDialog from "../../components/dialogs/ConfirmDialog";

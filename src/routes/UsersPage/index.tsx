@@ -2,7 +2,7 @@ import React from "react";
 import TableUsers from "../../components/tables/TableUsers";
 import { AuthContext } from "../../context/AuthContext";
 import SearchBar from "../../components/input/SearchBar";
-import CustomButton from "../../components/buttons/CustomButton";
+import CustomButton from "../../components/buttons/Button";
 import UserDialog from "../../components/dialogs/UserDialog";
 import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import MessageDialog from "../../components/dialogs/MessageDialog";
@@ -17,17 +17,17 @@ import {
   onUserUpdate,
 } from "src/utils/users";
 import {
-  CreatedUser,
+  UserCreated,
   EmailSubject,
   EmailType,
   Lang,
   PageProps,
 } from "../../interfaces/Interfaces";
 
-const NO_USER: CreatedUser = {
+const NO_USER: UserCreated = {
   id: -1,
   username: "",
-  userMail: "",
+  mail: "",
   languages: [],
   password: "",
   type: "",
@@ -40,9 +40,9 @@ export default function UsersPage({
   loading,
   onSuccess,
 }: PageProps) {
-  const { languages, userMail, username } = React.useContext(AuthContext);
-  const [users, setUsers] = React.useState<CreatedUser[]>([]);
-  const [currentUser, setCurrentUser] = React.useState<CreatedUser>(NO_USER);
+  const { languages, mail, username } = React.useContext(AuthContext);
+  const [users, setUsers] = React.useState<UserCreated[]>([]);
+  const [currentUser, setCurrentUser] = React.useState<UserCreated>(NO_USER);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [messageDialog, setMessageDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
@@ -63,17 +63,17 @@ export default function UsersPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const onEdit = (user: CreatedUser) => {
+  const onEdit = (user: UserCreated) => {
     setCurrentUser(user);
     setEditDialog(true);
   };
 
-  const onDelete = (user: CreatedUser) => {
+  const onDelete = (user: UserCreated) => {
     setCurrentUser(user);
     setDeleteDialog(true);
   };
 
-  const onMessage = (user: CreatedUser) => {
+  const onMessage = (user: UserCreated) => {
     setCurrentUser(user);
     setMessageDialog(true);
   };
@@ -121,7 +121,7 @@ export default function UsersPage({
         ) => {
           onUserAdd(
             {
-              userMail: noSpace(newMail),
+              mail: noSpace(newMail),
               password: noSpace(password),
               languages,
               id: getHash(newUsername),
@@ -133,7 +133,7 @@ export default function UsersPage({
             EmailType.Registration,
             {
               email: noSpace(newMail),
-              fromEmail: userMail,
+              fromEmail: mail,
               fromName: username,
               subject: EmailSubject.Registration,
             },
@@ -150,7 +150,7 @@ export default function UsersPage({
       />
 
       <UserDialog
-        email={currentUser.userMail}
+        email={currentUser.mail}
         password=""
         loading={loading}
         username={currentUser.username}
@@ -168,7 +168,7 @@ export default function UsersPage({
           onUserUpdate(
             {
               username: noSpace(newUsername),
-              userMail: noSpace(email),
+              mail: noSpace(email),
               id: currentUser.id,
               languages,
               password: noSpace(password),
@@ -179,7 +179,7 @@ export default function UsersPage({
             EmailType.Update,
             {
               email: noSpace(email),
-              fromEmail: userMail,
+              fromEmail: mail,
               fromName: username,
               subject: EmailSubject.Update,
             },
@@ -208,8 +208,8 @@ export default function UsersPage({
             currentUser,
             EmailType.Message,
             {
-              email: currentUser.userMail,
-              fromEmail: userMail,
+              email: currentUser.mail,
+              fromEmail: mail,
               fromName: username,
               subject: EmailSubject.Message,
               message: message,
@@ -235,8 +235,8 @@ export default function UsersPage({
             setUsers,
             EmailType.Removal,
             {
-              email: currentUser.userMail,
-              fromEmail: userMail,
+              email: currentUser.mail,
+              fromEmail: mail,
               fromName: username,
               subject: EmailSubject.Remove,
             },

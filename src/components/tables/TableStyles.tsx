@@ -139,7 +139,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       right: 30,
       color: "orange",
       top: "30%",
-      cursor: "pointer",
       width: 80,
       display: "flex",
       flexDirection: "row",
@@ -165,7 +164,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRadius: "50%",
       textAlign: "center",
       alignSelf: "center",
-      marginLeft: -20,
     },
   })
 );

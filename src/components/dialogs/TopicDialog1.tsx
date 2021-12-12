@@ -6,7 +6,7 @@ import {
   CategoryTopic,
   MaterialUiColor,
   RadioButton,
-  Related,
+  TopicRelated,
   Topic,
   TopicLevel,
   TopicType,
@@ -31,17 +31,19 @@ interface TopicDialogProps {
     image: string,
     active: boolean,
     selectedCategories: CategoryTopic[],
-    selectedRelated: Related[]
+    selectedRelated: TopicRelated[],
+    approved: boolean
   ) => void;
   onRefuse: () => void;
   categories: CategoryTopic[];
   preselectedCategories: CategoryTopic[];
-  preselectedRelated: Related[];
+  preselectedRelated: TopicRelated[];
   headerText: string;
   type?: TopicType;
   level?: TopicLevel;
   related: Topic[];
-  placeholderTitle?: string;
+  approved: boolean;
+  titlePlaceholder?: string;
   placeholderCategories?: string;
   source?: string;
   description?: string;
@@ -57,13 +59,16 @@ export default function TopicDialog(props: TopicDialogProps) {
   const [topicType, setTopicType] = React.useState<RadioButton>(
     CONSTANTS.TOPIC_TYPES_RADIO[0]
   );
-  const [related, setRelated] = React.useState<Related[]>([]);
+  const [related, setRelated] = React.useState<TopicRelated[]>([]);
   const [active, setActive] = React.useState<boolean>(false);
+  const [approved, setApproved] = React.useState<boolean>(false);
   const [level, setLevel] = React.useState<string>(CONSTANTS.TOPIC_LEVELS[1]);
   const [source, setSource] = React.useState<string>(
     CONSTANTS.TOPIC_SOURCES[0]
   );
-  const [selectedRelated, setSelectedRelated] = React.useState<Related[]>([]);
+  const [selectedRelated, setSelectedRelated] = React.useState<TopicRelated[]>(
+    []
+  );
   const [selectedCategories, setSelectedCategories] = React.useState<
     CategoryTopic[]
   >([]);
@@ -88,6 +93,8 @@ export default function TopicDialog(props: TopicDialogProps) {
     }
     hasVal(props.source) && setSource(props.source as string);
     hasVal(props.active) && setActive(props.active);
+    hasVal(props.active) && setActive(props.active);
+    hasVal(props.approved) && setApproved(props.approved);
     hasVal(props.description) && setDescription(props.description as string);
     hasVal(props.image) && setImageUrl(props.image as string);
     hasVal(props.level) &&
@@ -104,6 +111,7 @@ export default function TopicDialog(props: TopicDialogProps) {
     props.preselectedRelated,
     props.related,
     props.type,
+    props.approved,
   ]);
 
   const onSubmit = async (
@@ -119,7 +127,8 @@ export default function TopicDialog(props: TopicDialogProps) {
       imageUrl,
       active,
       selectedCategories,
-      selectedRelated
+      selectedRelated,
+      approved
     );
   };
 
@@ -187,7 +196,7 @@ export default function TopicDialog(props: TopicDialogProps) {
           </div>
 
           <TextField
-            placeholder={props.placeholderTitle}
+            placeholder={props.titlePlaceholder}
             InputLabelProps={{ shrink: true }}
             margin="dense"
             label="Title"
@@ -198,7 +207,7 @@ export default function TopicDialog(props: TopicDialogProps) {
           />
 
           <TextField
-            placeholder={props.placeholderTitle}
+            placeholder={props.titlePlaceholder}
             InputLabelProps={{ shrink: true }}
             margin="dense"
             label="Description"
@@ -238,11 +247,7 @@ export default function TopicDialog(props: TopicDialogProps) {
             values={props.categories.sort((a, b) =>
               a.title.localeCompare(b.title)
             )}
-            header={
-              props.placeholderCategories
-                ? props.placeholderCategories
-                : "Related Categories"
-            }
+            header="Related Categories"
             handleChange={handleCategoriesChange}
           />
           <Chip
@@ -286,6 +291,17 @@ export default function TopicDialog(props: TopicDialogProps) {
               defaultValue={level}
             />
           </div>
+          <div style={{ alignSelf: "center", marginTop: 20, marginBottom: 20 }}>
+            <TypeSelect
+              value={topicType}
+              handleChange={handleRadioChange}
+              width={300}
+              color="black"
+              header="Type"
+              values={CONSTANTS.TOPIC_TYPES_RADIO}
+            />
+          </div>
+
           <div style={{ alignSelf: "center", marginTop: 20, marginBottom: 20 }}>
             <TypeSelect
               value={topicType}

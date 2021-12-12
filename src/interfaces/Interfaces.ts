@@ -1,5 +1,6 @@
 import React from "react";
 import { RouteProps } from "react-router-dom";
+
 export interface Topic {
   id: number;
   ref_id: number;
@@ -9,10 +10,12 @@ export interface Topic {
   timestamp: Date;
   level: TopicLevel;
   categories: TopicCategory[];
-  related: Related[];
+  related: TopicRelated[];
   description?: string;
   image?: string;
   active: boolean;
+  users_approved?: UserApproved[];
+  approved: boolean;
 }
 
 export interface TopicCategory {
@@ -31,7 +34,7 @@ export interface ToTranslateTopic {
   source_lang: Lang;
   source_title: string;
   type: TopicType;
-  source_related: Related[];
+  source_related: TopicRelated[];
   source_categories: TopicCategory[];
   source: string;
   level: TopicLevel;
@@ -57,7 +60,7 @@ export interface CategoryTopic {
   title: string;
 }
 
-export interface Related {
+export interface TopicRelated {
   title: string;
   ref_id: number;
   id: number;
@@ -111,16 +114,21 @@ export interface LocalsEmail {
 export interface User {
   type: string;
   username: string;
-  userMail: string;
+  mail: string;
   languages: Lang[];
 }
-export interface LoggedUser extends User {
-  token: string;
+
+export interface UserCreated extends User {
+  password: string;
+  id: number;
 }
 
-export interface CreatedUser extends User {
+export interface UserLogged extends User {
+  token: string;
+}
+export interface UserApproved {
+  username: string;
   id: number;
-  password: string;
 }
 
 export interface PageProps {

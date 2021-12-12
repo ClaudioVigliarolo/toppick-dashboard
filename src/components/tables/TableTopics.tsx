@@ -6,11 +6,12 @@ import {
   useStyles,
   StyledTableCell,
 } from "./TableStyles";
-import { Topic, Related } from "../../interfaces/Interfaces";
+import { Topic, TopicRelated } from "../../interfaces/Interfaces";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { getFormattedDate } from "../../utils/utils";
-import CircleIcon from "@material-ui/icons/CloudCircleOutlined";
+import SpellcheckIcon from "@material-ui/icons/Spellcheck";
+import UserAvatar from "react-user-avatar";
 interface TableTopicsProps {
   topics: Topic[];
   searchText: string;
@@ -32,21 +33,31 @@ export default function TableTopics({
         return (
           <StyledTableRow key={index}>
             <StyledTableCell>{topic.title}</StyledTableCell>
-            <StyledTableCell>{topic.source}</StyledTableCell>
             <StyledTableCell>
               {getFormattedDate(topic.timestamp)}
             </StyledTableCell>
             <StyledEditCell
               style={{ color: topic.related.length === 0 ? "red" : "black" }}
             >
-              {topic.related.map((r: Related) => r.title + " ")}
+              {topic.related
+                .slice(0, 3)
+                .map((r: TopicRelated) => r.title + " ")}
+              {topic.related.length > 3 && "..."}
               {topic.related.length === 0 && "Warning, no related topic!"}
-              <div className={classes.iconsContainer}>
+              <div className={classes.iconsContainer} style={{ width: 150 }}>
+                <div>
+                  <SpellcheckIcon
+                    style={{
+                      color: topic.approved ? "lime" : "orangered",
+                    }}
+                  />
+                </div>
                 <div
                   className={classes.circle}
-                  style={{ backgroundColor: topic.active ? "lime" : "red" }}
+                  style={{
+                    backgroundColor: topic.active ? "lime" : "orangered",
+                  }}
                 />
-
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
@@ -69,8 +80,8 @@ export default function TableTopics({
 
   return (
     <CustomTable
-      columns={["15%", "20%", "20%", "45%"]}
-      columnNames={["title", "source", "last update", "related"]}
+      columns={["15%", "20%", "45%"]}
+      columnNames={["title", "last update", "related"]}
       body={renderRows(topics)}
     />
   );

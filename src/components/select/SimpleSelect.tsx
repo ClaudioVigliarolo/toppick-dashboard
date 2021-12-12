@@ -4,7 +4,7 @@ import { Value } from "src/interfaces/Interfaces";
 
 interface CustomSelectProps {
   value: string;
-  handleChange: (val: any) => void;
+  handleChange: (event: React.ChangeEvent<any>) => void;
   defaultValue: string;
   values: string[];
   color?: string;

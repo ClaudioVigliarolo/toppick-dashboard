@@ -35,7 +35,9 @@
     "react-jss": "10.6.0",
     "react-loading-overlay": "1.0.1",
     "react-material-ui-carousel": "2.1.0",
+    "react-native-text-avatar": "1.0.7",
     "react-router-dom": "^5.2.0",
+    "react-user-avatar": "1.10.0",
     "react-window": "^1.8.6",
     "victory": "35.5.1"
   },

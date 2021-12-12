@@ -2,7 +2,7 @@ import React from "react";
 import CardNumber from "../cards/CardNumber";
 import Button from "../buttons/TabButton";
 import StatsCarousel from "../carousels/StatsCarousel";
-import { CreatedUser, Lang, UserStats } from "src/interfaces/Interfaces";
+import { UserCreated, Lang, UserStats } from "src/interfaces/Interfaces";
 import { getUsers, getUserStats } from "src/api/api";
 import { useChartStyles } from "./ChartStyles";
 
@@ -18,7 +18,7 @@ export default function DBChartBar({
   from,
   until,
 }: DBChartBarProps) {
-  const [users, setUsers] = React.useState<CreatedUser[]>([]);
+  const [users, setUsers] = React.useState<UserCreated[]>([]);
   const [index, setIndex] = React.useState<number>(0);
   const [userStats, setUserStats] = React.useState<UserStats>({
     categoriesAdded: 0,

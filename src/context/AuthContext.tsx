@@ -11,13 +11,13 @@ export const AuthContext = React.createContext({
   setUserType: (newVal: string) => {},
   userType: "",
   setUsername: (newVal: string) => {},
-  setUserMail: (newVal: string) => {},
+  setmail: (newVal: string) => {},
   setUserLanguages: (newLangs: Lang[]) => {},
   setUserToken: (newVal: string) => {},
   setCurrentLanguage: (newLang: Lang) => {},
   userToken: "",
   username: "",
-  userMail: "",
+  mail: "",
   languages: [Lang.EN],
   currentLanguage: Lang.EN,
 });
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
     React.useState<Lang>(DEFAULT_LANG);
   const [userType, setUserType] = React.useState<string>("");
   const [username, setUsername] = React.useState<string>("");
-  const [userMail, setUserMail] = React.useState<string>("");
+  const [mail, setmail] = React.useState<string>("");
   const [userToken, setUserToken] = React.useState<string>("");
   const { setLoading } = React.useContext(StatusContext);
 
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
           setUserLanguages(retrievedUser.languages);
           setCurrentLanguage(prevLanguage);
           setUsername(retrievedUser.username);
-          setUserMail(retrievedUser.userMail);
+          setmail(retrievedUser.mail);
           setUserToken(retrievedUser.token);
           setUserType(retrievedUser.type);
           setIsAuthenticated(true);
@@ -69,8 +69,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
     setUsername(newVal);
   };
 
-  const onsetUserMail = (newVal: string) => {
-    setUserMail(newVal);
+  const onsetmail = (newVal: string) => {
+    setmail(newVal);
   };
 
   const onSetCurrentLanguage = (newLang: Lang) => {
@@ -93,14 +93,14 @@ export const AuthProvider = ({ children }: { children: any }) => {
         setUserType: onSetUserType,
         userType,
         setUsername: onSetUserName,
-        setUserMail: onsetUserMail,
+        setmail: onsetmail,
         setUserLanguages: onSetUserLangs,
         setUserToken: onSetUserToken,
         setCurrentLanguage: onSetCurrentLanguage,
         userToken,
         currentLanguage,
         username,
-        userMail,
+        mail,
         languages,
       }}
     >

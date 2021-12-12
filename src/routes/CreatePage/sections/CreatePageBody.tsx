@@ -1,7 +1,7 @@
 import React from "react";
-import { Question, Topic } from "../../interfaces/Interfaces";
-import QuestionField from "../../components/input/CreateQuestionField";
-import CustomButton from "../../components/buttons/CustomButton";
+import { Question, Topic } from "../../../interfaces/Interfaces";
+import QuestionField from "../../../components/input/CreateQuestionField";
+import CustomButton from "../../../components/buttons/Button";
 import QuestionsReview from "src/components/lists/QuestionsReview";
 import QuestionsQuickAddDialog from "src/components/dialogs/QuestionsQuickAddDialog";
 import { getHash } from "src/utils/utils";
