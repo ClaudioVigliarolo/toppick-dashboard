@@ -13,7 +13,6 @@ export const getCondition = (
   path: string,
   isAuthenticated: boolean
 ) => {
-  console.log("ussty", userType);
   switch (path) {
     case "/login":
       return !isAuthenticated;
