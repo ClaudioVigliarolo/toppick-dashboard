@@ -9,7 +9,7 @@ import {
 import LinkOutlinedIcon from "@material-ui/icons/LinkOutlined";
 import BookmarkAddedIcon from "@material-ui/icons/Bookmark";
 import { CONSTANTS } from "src/constants/constants";
-import ArticlesDialog from "../dialogs/ArticlesDialog";
+import QuestionDialog from "../dialogs/QuestionDialog";
 import { Question } from "src/interfaces/Interfaces";
 import CustomButton from "../buttons/Button";
 import { COLORS } from "src/constants/Colors";
@@ -111,14 +111,14 @@ export default function QuestionsList({
           </div>
         )}{" "}
       </div>
-      <ArticlesDialog
+      <QuestionDialog
         open={articlesDialog}
         onConfirm={(q) => {
           onChange(currentQuestionIndex, q);
           setCurrentQuestion(NO_QUESTION);
           setArticlesDialog(false);
         }}
-        headerText="Add Articles"
+        headerText="Edit Question"
         question={currentQuestion}
         onRefuse={() => {
           setCurrentQuestion(NO_QUESTION);

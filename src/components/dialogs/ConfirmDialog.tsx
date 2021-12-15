@@ -8,6 +8,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { COLORS } from "../../constants/Colors";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  contentContainer: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+  },
+}));
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -24,7 +33,7 @@ interface AlertDialogSlideProps {
   onRefuse: () => void;
   children?: React.ReactNode;
 }
-export default function AlertDialogSlide({
+export default function ConfirmDialog({
   children,
   description,
   onConfirm,
@@ -32,6 +41,7 @@ export default function AlertDialogSlide({
   open,
   title,
 }: AlertDialogSlideProps) {
+  const classes = useStyles();
   return (
     <Dialog
       open={open}
@@ -45,15 +55,7 @@ export default function AlertDialogSlide({
         <DialogContentText id="alert-dialog-slide-description">
           {description}
         </DialogContentText>
-        <div
-          style={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {children}
-        </div>
+        <div className={classes.contentContainer}>{children}</div>
       </DialogContent>
       <DialogActions>
         <Button onClick={onRefuse} style={{ color: COLORS.darkerOrange }}>

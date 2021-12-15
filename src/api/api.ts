@@ -555,7 +555,7 @@ export const addQuestions = async (
   }
 };
 
-export const addCategory = async (
+export const createCategory = async (
   category: Category,
   lang: Lang,
   token: string

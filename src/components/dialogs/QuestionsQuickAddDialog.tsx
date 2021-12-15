@@ -3,7 +3,7 @@ import React from "react";
 import { Question, Topic } from "src/interfaces/Interfaces";
 import { generateQuestions } from "src/utils/topics";
 import { countTextLines } from "../../utils/utils";
-import { CustomDialog } from "./DialogStyles";
+import { CustomDialog, TabData } from "./DialogStyles";
 
 interface QuestionsQuickAddDialogProps {
   open: boolean;
@@ -18,35 +18,19 @@ export default function QuestionsQuickAddDialog(
   props: QuestionsQuickAddDialogProps
 ) {
   const [text, setText] = React.useState<string>("");
-  const [error, setError] = React.useState(false);
 
   let linesN = countTextLines(text);
 
   const onSubmit = async (text: string) => {
-    if (linesN < props.minQuestions) {
-      setError(true);
-    } else {
-      props.onConfirm(generateQuestions(text, props.topic));
-      setError(false);
-    }
+    props.onConfirm(generateQuestions(text, props.topic));
   };
 
-  return (
-    <>
-      <CustomDialog
-        loading={props.loading}
-        open={props.open}
-        headerText={"Quick Add to " + props.topic.title}
-        minWidth={600}
-        confirmButtonText="Continue"
-        refuseButtonText="Close"
-        minHeigth={300}
-        onConfirm={() => onSubmit(text)}
-        onRefuse={props.onRefuse}
-      >
+  const tabs: TabData[] = [
+    {
+      label: "Questions",
+      children: (
         <>
           <TextField
-            error={error}
             placeholder="Paste your questions here..."
             multiline
             rows={10}
@@ -67,7 +51,26 @@ export default function QuestionsQuickAddDialog(
             Questions: {linesN}
           </h2>
         </>
-      </CustomDialog>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <CustomDialog
+        loading={props.loading}
+        open={props.open}
+        minWidth={600}
+        confirmButtonText="Continue"
+        refuseButtonText="Close"
+        headerText={"Quick Add to " + props.topic.title}
+        minHeigth={300}
+        onConfirm={() => onSubmit(text)}
+        onRefuse={props.onRefuse}
+        confirmButtonDisabled={linesN < props.minQuestions}
+        tabData={tabs}
+        showTabs={false}
+      />
     </>
   );
 }

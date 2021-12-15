@@ -13,7 +13,7 @@ interface TableReportsProps {
   reports: ReportHandled[];
   topics: Topic[];
   filterTopic: string;
-  onEdit: (report: ReportHandled) => void;
+  onUpdate: (report: ReportHandled) => void;
   onDelete: (report: ReportHandled) => void;
   onIgnore: (report: ReportHandled) => void;
   searchText: string;
@@ -22,7 +22,7 @@ interface TableReportsProps {
 export default function TableCategories({
   searchText,
   onDelete,
-  onEdit,
+  onUpdate,
   reports,
   topics,
   filterTopic,
@@ -49,7 +49,7 @@ export default function TableCategories({
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
-                    onEdit(report);
+                    onUpdate(report);
                   }}
                 />
                 <DeleteIcon

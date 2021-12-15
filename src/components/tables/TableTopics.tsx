@@ -15,7 +15,7 @@ import UserAvatar from "react-user-avatar";
 interface TableTopicsProps {
   topics: Topic[];
   searchText: string;
-  onEdit: (categ: Topic) => void;
+  onUpdate: (categ: Topic) => void;
   onDelete: (categ: Topic) => void;
 }
 
@@ -23,7 +23,7 @@ export default function TableTopics({
   searchText,
   topics,
   onDelete,
-  onEdit,
+  onUpdate,
 }: TableTopicsProps) {
   const classes = useStyles();
 
@@ -61,7 +61,7 @@ export default function TableTopics({
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
-                    onEdit(topic);
+                    onUpdate(topic);
                   }}
                 />
                 <DeleteIcon

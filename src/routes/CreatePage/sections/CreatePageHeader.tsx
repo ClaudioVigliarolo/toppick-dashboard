@@ -9,7 +9,7 @@ export default function CreatePageHeader({
   defaultTopic,
   classes,
   handleTopicChange,
-  onTopicAdd,
+  onTopicCreate,
   topics,
 }: {
   isReview: boolean;
@@ -17,7 +17,7 @@ export default function CreatePageHeader({
   isUpdate: boolean;
   classes: any;
   defaultTopic: Topic;
-  onTopicAdd: () => void;
+  onTopicCreate: () => void;
   handleTopicChange: (index: number) => void;
   topics: Topic[];
 }) {
@@ -58,7 +58,7 @@ export default function CreatePageHeader({
           />
 
           {isAddnewTopicVisible() && (
-            <CustomButton onClick={onTopicAdd} title="Create new Topic" />
+            <CustomButton onClick={onTopicCreate} title="Create new Topic" />
           )}
         </div>
       )}

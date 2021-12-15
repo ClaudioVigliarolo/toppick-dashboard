@@ -16,7 +16,7 @@ export default function CreatePageBody({
   loading,
   onSubmit,
   onQuestionDelete,
-  onQuestionAdd,
+  onQuestionCreate,
   sourceQuestions,
   targetQuestions,
   onQuestionChange,
@@ -28,7 +28,7 @@ export default function CreatePageBody({
   isReview: boolean;
   onSubmit: () => void;
   onQuestionDelete: (index: number) => void;
-  onQuestionAdd: (index: number) => void;
+  onQuestionCreate: (index: number) => void;
   sourceQuestions: Question[];
   targetQuestions: Question[];
   onQuestionChange: (index: number, question: Question) => void;
@@ -56,7 +56,7 @@ export default function CreatePageBody({
               targetQuestion={q}
               onDelete={onQuestionDelete}
               onChange={onQuestionChange}
-              onAdd={onQuestionAdd}
+              onCreate={onQuestionCreate}
             />
           ))}
         </div>

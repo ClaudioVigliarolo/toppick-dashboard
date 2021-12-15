@@ -7,7 +7,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 interface QuestionTextFieldProps {
   index: number;
   onChange: (index: number, question: Question) => void;
-  onAdd: (index: number) => void;
+  onCreate: (index: number) => void;
   onDelete: (index: number) => void;
   question: Question;
 }
@@ -52,7 +52,7 @@ export default function QuestionTextField({
   onChange,
   question,
   onDelete,
-  onAdd,
+  onCreate,
   index,
 }: QuestionTextFieldProps) {
   const [showAdd, setShowAdd] = React.useState<boolean>(false);
@@ -80,7 +80,7 @@ export default function QuestionTextField({
         {showAdd && (
           <AddIcon
             style={{ color: "white", cursor: "pointer" }}
-            onClick={() => onAdd(index)}
+            onClick={() => onCreate(index)}
           />
         )}
       </div>

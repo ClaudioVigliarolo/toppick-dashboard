@@ -13,7 +13,7 @@ import {
 interface CustomChipProps {
   handleChange: (val: any) => void;
   values: string[];
-  error: boolean;
+  error?: boolean;
   width: number;
   selectedValues: string[];
   header: string;

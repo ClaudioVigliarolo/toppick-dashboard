@@ -17,7 +17,7 @@ export default function CreatePageBody({
   onSubmit,
   resetTopic,
   onQuestionDelete,
-  onQuestionAdd,
+  onQuestionCreate,
   questions,
   onQuestionChange,
   onSubmitReview,
@@ -32,7 +32,7 @@ export default function CreatePageBody({
   isReview: boolean;
   onSubmit: (questions: Question[]) => void;
   onQuestionDelete: (index: number) => void;
-  onQuestionAdd: (index: number) => void;
+  onQuestionCreate: (index: number) => void;
   questions: Question[];
   setQuestions: (questions: Question[]) => void;
   onQuestionChange: (index: number, question: Question) => void;
@@ -80,7 +80,7 @@ export default function CreatePageBody({
               onDelete={onQuestionDelete}
               onChange={onQuestionChange}
               question={q}
-              onAdd={onQuestionAdd}
+              onCreate={onQuestionCreate}
             />
           ))}
         </div>

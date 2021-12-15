@@ -1,8 +1,15 @@
 import React from "react";
 import { NO_IMAGE_URL } from "../../../../constants/constants";
-import Switch from "../../../select/Switch";
 import { makeStyles, TextField } from "@material-ui/core";
-import { MaterialUiColor } from "../../../../interfaces/Interfaces";
+
+interface OverviewProps {
+  title: string;
+  image: string;
+  description: string;
+  setTitle: (event: React.ChangeEvent<any>) => void;
+  setImage: (event: React.ChangeEvent<any>) => void;
+  setDescription: (event: React.ChangeEvent<any>) => void;
+}
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -11,45 +18,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  switchContainer: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-    cursor: "pointer",
-    color: "orange",
-    fontSize: 30,
-  },
   textField: {
-    marginTop: 20,
     width: "90%",
   },
   image: {
     height: 200,
     marginTop: 20,
+    marginBottom: 10,
   },
 }));
 
-interface OverviewProps {
-  active: boolean;
-  title: string;
-  titlePlaceholder?: string;
-  descriptionPlaceholder?: string;
-  image?: string;
-  description?: string;
-  setTitle: (event: React.ChangeEvent<any>) => void;
-  setImage: (event: React.ChangeEvent<any>) => void;
-  setDescription: (event: React.ChangeEvent<any>) => void;
-  toggleActive: () => void;
-}
 export default function Overview({
-  active,
   title,
-  titlePlaceholder,
-  descriptionPlaceholder,
   image,
   setImage,
   description,
-  toggleActive,
   setTitle,
   setDescription,
 }: OverviewProps) {
@@ -57,17 +40,8 @@ export default function Overview({
 
   return (
     <div className={classes.container}>
-      <div className={classes.switchContainer}>
-        <Switch
-          text=""
-          color={MaterialUiColor.Primary}
-          handleChange={toggleActive}
-          value={active}
-        />
-      </div>
-
       <TextField
-        placeholder={titlePlaceholder}
+        placeholder="Title"
         InputLabelProps={{ shrink: true }}
         margin="dense"
         label="Title"
@@ -78,13 +52,13 @@ export default function Overview({
       />
 
       <TextField
-        placeholder={descriptionPlaceholder}
+        placeholder="Type or paste description here..."
         InputLabelProps={{ shrink: true }}
         margin="dense"
         label="Description"
         id="outlined-multiline-flexible"
         multiline
-        rows={3}
+        rows={5}
         value={description}
         onChange={setDescription}
         className={classes.textField}
@@ -92,7 +66,7 @@ export default function Overview({
 
       <img
         src={image ? image : NO_IMAGE_URL}
-        alt={title}
+        alt="img"
         className={classes.image}
       />
       <TextField

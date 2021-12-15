@@ -7,7 +7,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 interface TranslateQuestionFieldProps {
   index: number;
   onChange: (index: number, question: Question) => void;
-  onAdd: (index: number) => void;
+  onCreate: (index: number) => void;
   onDelete: (index: number) => void;
   sourceQuestion: Question;
   targetQuestion: Question;
@@ -56,7 +56,7 @@ export default function TranslateQuestionField({
   sourceQuestion,
   targetQuestion,
   onDelete,
-  onAdd,
+  onCreate,
   index,
 }: TranslateQuestionFieldProps) {
   const [showAdd, setShowAdd] = React.useState<boolean>(false);
@@ -94,7 +94,7 @@ export default function TranslateQuestionField({
         {showAdd && (
           <AddIcon
             style={{ color: "white", cursor: "pointer" }}
-            onClick={() => onAdd(index)}
+            onClick={() => onCreate(index)}
           />
         )}
       </div>

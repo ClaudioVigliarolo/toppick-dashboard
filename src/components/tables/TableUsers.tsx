@@ -14,7 +14,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 interface TableUsersProps {
   users: UserCreated[];
   languages: Lang[];
-  onEdit: (user: UserCreated) => void;
+  onUpdate: (user: UserCreated) => void;
   onDelete: (user: UserCreated) => void;
   onMessage: (user: UserCreated) => void;
   searchText: string;
@@ -22,7 +22,7 @@ interface TableUsersProps {
 
 export default function TableUsers({
   onDelete,
-  onEdit,
+  onUpdate,
   onMessage,
   searchText,
   users,
@@ -50,7 +50,7 @@ export default function TableUsers({
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
-                    onEdit(user);
+                    onUpdate(user);
                   }}
                 />
                 <DeleteIcon

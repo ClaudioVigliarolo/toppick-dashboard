@@ -1,10 +1,8 @@
 import React from "react";
-import { CustomDialog, TabData } from "../DialogsStyles2";
+import { CustomDialog, TabData } from "../DialogStyles";
 import {
   CategoryTopic,
-  MaterialUiColor,
   RadioButton,
-  TopicRelated,
   Topic,
   TopicLevel,
 } from "../../../interfaces/Interfaces";
@@ -14,17 +12,6 @@ import Info from "./sections/Info";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import { CONSTANTS } from "../../../constants/constants";
-interface TopicDialogProps {
-  open: boolean;
-  loading: boolean;
-  onConfirm: (newTopic: Topic) => void;
-  topic: Topic;
-  onRefuse: () => void;
-  categories: CategoryTopic[];
-  headerText: string;
-  related: Topic[];
-  titlePlaceholder?: string;
-}
 
 const NO_TOPIC: Topic = {
   categories: [],
@@ -42,6 +29,19 @@ const NO_TOPIC: Topic = {
   approved: false,
 };
 
+interface TopicDialogProps {
+  open: boolean;
+  loading: boolean;
+  onConfirm: (newTopic: Topic) => void;
+  topic: Topic;
+  onRefuse: () => void;
+  categories: CategoryTopic[];
+  headerText: string;
+  related: Topic[];
+  titlePlaceholder?: string;
+  descriptionPlaceholder?: string;
+}
+
 export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<Topic>(NO_TOPIC);
   const [topicType, setTopicType] = React.useState<RadioButton>(
@@ -54,7 +54,6 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   React.useEffect(() => {
     setTopic(props.topic);
-    const newRelated = [...props.related];
     if (props.topic.type) {
       const topicType = CONSTANTS.TOPIC_TYPES_RADIO.find(
         (t) => t.value == props.topic.type
@@ -68,7 +67,7 @@ export default function TopicDialog(props: TopicDialogProps) {
       setLevel(CONSTANTS.TOPIC_LEVELS[props.topic.level as TopicLevel]);
   }, [props.categories, props.topic, props.related]);
 
-  const onSubmit = async () => {
+  const onConfirm = async () => {
     props.onConfirm({
       ...topic,
       level: CONSTANTS.TOPIC_LEVELS.indexOf(level),
@@ -133,14 +132,11 @@ export default function TopicDialog(props: TopicDialogProps) {
   };
 
   const isSubmitEnabled = (): boolean =>
-    topic.title.length > 0 &&
+    topic.title != "" &&
     topic.image !== "" &&
-    level.length > 0 &&
+    level != "" &&
     topic.categories.length > 0;
   topic.related.length > 0;
-  {
-    console.log("myyyy", topic.users_approved);
-  }
 
   const tabs: TabData[] = [
     {
@@ -155,6 +151,7 @@ export default function TopicDialog(props: TopicDialogProps) {
           setTitle={setTitle}
           title={topic.title}
           titlePlaceholder={props.titlePlaceholder}
+          descriptionPlaceholder={props.descriptionPlaceholder}
           toggleActive={toggleActive}
         />
       ),
@@ -201,7 +198,7 @@ export default function TopicDialog(props: TopicDialogProps) {
         loading={props.loading}
         tabData={tabs}
         confirmButtonDisabled={!isSubmitEnabled()}
-        onConfirm={onSubmit}
+        onConfirm={onConfirm}
         onRefuse={props.onRefuse}
       />
     </>

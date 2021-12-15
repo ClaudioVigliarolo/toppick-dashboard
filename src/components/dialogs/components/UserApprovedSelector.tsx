@@ -1,14 +1,40 @@
 import React from "react";
+import UserAvatar from "react-user-avatar";
+import CheckIcon from "@material-ui/icons/Check";
+import { Button, makeStyles, TextField } from "@material-ui/core";
+import { AuthContext } from "src/context/AuthContext";
 import { UserApproved } from "src/interfaces/Interfaces";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  contentContainer: {
+    display: "flex",
+    flexDirection: "row",
+    position: "relative",
+    width: 100,
+    height: 20,
+  },
+  userAvatarContainer: {
+    position: "absolute",
+    top: 0,
+  },
+  userAvatar: {
+    color: "white",
+  },
+  buttonContainer: {
+    marginTop: 50,
+  },
+}));
+
 interface UserApprovedProps {
   users: UserApproved[];
   onToggle: () => void;
   approved: boolean;
 }
-import CheckIcon from "@material-ui/icons/Check";
-import { Button, TextField } from "@material-ui/core";
-import UserAvatar from "react-user-avatar";
-import { AuthContext } from "src/context/AuthContext";
 
 export default function UserApprovedSection({
   users,
@@ -16,29 +42,15 @@ export default function UserApprovedSection({
   onToggle,
 }: UserApprovedProps) {
   const { username } = React.useContext(AuthContext);
+  const classes = useStyles();
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          width: 100,
-          backgroundColor: "red",
-        }}
-      >
+    <div className={classes.container}>
+      <div className={classes.contentContainer}>
         {users &&
           users.map((u, i) => (
             <div
+              className={classes.userAvatar}
               style={{
-                position: "absolute",
-                top: 0,
                 left: i * 25,
               }}
               key={i}
@@ -47,14 +59,13 @@ export default function UserApprovedSection({
                 size="35"
                 name={u.username.substring(0, 2).toUpperCase()}
                 colors={["orange"]}
-                style={{ color: "white" }}
+                className={classes.userAvatar}
               />
             </div>
           ))}
         <div
+          className={classes.userAvatar}
           style={{
-            position: "absolute",
-            top: 0,
             left: users.length * 25,
             display: approved ? "flex" : "none",
           }}
@@ -63,11 +74,11 @@ export default function UserApprovedSection({
             size="35"
             name={username.substring(0, 2).toUpperCase()}
             colors={["orange"]}
-            style={{ color: "white" }}
+            className={classes.userAvatar}
           />
         </div>
       </div>
-      <div style={{ marginTop: 50 }}>
+      <div className={classes.buttonContainer}>
         <Button
           color={approved ? "primary" : "secondary"}
           size="small"

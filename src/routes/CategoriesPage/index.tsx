@@ -26,6 +26,8 @@ const NO_CATEGORY: Category = {
   ref_id: -1,
   title: "",
   categoryTopics: [],
+  description: "",
+  image: "",
 };
 
 export default function CategoryPage({
@@ -66,7 +68,7 @@ export default function CategoryPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
-  const onEdit = (categ: Category) => {
+  const onUpdate = (categ: Category) => {
     setCurrentCategory(categ);
     setEditDialog(true);
   };
@@ -76,20 +78,13 @@ export default function CategoryPage({
     setDeleteDialog(true);
   };
 
-  const onAddSubmit = async (
-    newCategory: string,
-    newDescription: string,
-    newImageUrl: string,
-    newCategTopics: CategoryTopic[]
-  ) => {
+  const onCreateSubmit = async (newCategory: Category) => {
+    const newId = getHash(newCategory.title, currentLanguage);
     await onCategoryAdd(
       {
-        id: getHash(newCategory, currentLanguage),
-        title: newCategory,
-        ref_id: getHash(newCategory, currentLanguage),
-        categoryTopics: newCategTopics,
-        description: newDescription,
-        image: newImageUrl,
+        ...newCategory,
+        id: newId,
+        ref_id: newId,
       },
       categories,
       currentLanguage,
@@ -105,21 +100,9 @@ export default function CategoryPage({
     );
   };
 
-  const onEditSubmit = async (
-    newCategory: string,
-    newDescription: string,
-    newImageUrl: string,
-    newCategTopics: CategoryTopic[]
-  ) => {
+  const onUpdateSubmit = async (newCategory: Category) => {
     await onCategoryUpdate(
-      {
-        id: currentCategory.id,
-        title: newCategory,
-        ref_id: currentCategory.ref_id,
-        image: newImageUrl,
-        categoryTopics: newCategTopics,
-        description: newDescription,
-      },
+      newCategory,
       categories,
       currentLanguage,
       token,
@@ -181,17 +164,16 @@ export default function CategoryPage({
         currentLanguage={currentLanguage}
         searchText={searchText}
         onDelete={onDelete}
-        onEdit={onEdit}
+        onUpdate={onUpdate}
       />
 
       <CategoryDialog
-        category=""
+        category={NO_CATEGORY}
         loading={loading}
         headerText="Add new Category"
         open={addDialog}
-        preselectedCategTopics={[]}
-        categTopics={categoryTopics}
-        onConfirm={onAddSubmit}
+        categoryTopics={categoryTopics}
+        onConfirm={onCreateSubmit}
         onRefuse={() => {
           setAddDialog(false);
           setCurrentCategory(NO_CATEGORY);
@@ -200,18 +182,15 @@ export default function CategoryPage({
 
       <CategoryDialog
         open={editDialog}
+        categoryTopics={categoryTopics}
         loading={loading}
-        description={currentCategory.description}
-        image={currentCategory.image}
-        preselectedCategTopics={currentCategory.categoryTopics}
-        categTopics={categoryTopics}
-        onConfirm={onEditSubmit}
+        onConfirm={onUpdateSubmit}
         headerText="Editing Category"
         onRefuse={() => {
           setEditDialog(false);
           setCurrentCategory(NO_CATEGORY);
         }}
-        category={currentCategory.title}
+        category={currentCategory}
       />
 
       <DeleteDialog

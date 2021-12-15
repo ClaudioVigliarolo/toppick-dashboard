@@ -77,7 +77,7 @@ export default function ReportsPage({
     setFilterTopic(topics[index]);
   };
 
-  const onEdit = (report: ReportHandled) => {
+  const onUpdate = (report: ReportHandled) => {
     setCurrentReport(report);
     setReportDialog(true);
   };
@@ -123,7 +123,7 @@ export default function ReportsPage({
           topics={topics.sort((a, b) => a.title.localeCompare(b.title))}
           filterTopic={filterTopic === NO_TOPIC ? "" : filterTopic.title}
           onDelete={onDelete}
-          onEdit={onEdit}
+          onUpdate={onUpdate}
           searchText={searchText}
           onIgnore={onIgnore}
         />

@@ -1,129 +1,136 @@
-import { TextField } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
 import { CustomDialog } from "./DialogStyles";
-import Chip from "../select/SimpleChip";
-import { useStyles } from "../input/Form";
-import { Lang } from "src/interfaces/Interfaces";
+import Chip from "../select/ObjectChip";
+import { Lang, UserCreated } from "src/interfaces/Interfaces";
+import { TabData } from "./DialogStyles";
+import { noSpace } from "src/utils/utils";
 
 interface UserDialogProps {
   open: boolean;
-  onConfirm: (
-    username: string,
-    email: string,
-    password: string,
-    languages: Lang[],
-    usertype?: string
-  ) => void;
+  onConfirm: (user: UserCreated) => void;
   onRefuse: () => void;
-  email: string;
-  username: string;
-  password: string;
-  type: string;
+  user: UserCreated;
   headerText: string;
   languages: Lang[];
-  selectedLanguages: Lang[];
   loading: boolean;
 }
 
-export default function UserDialog({
-  email,
-  username,
-  password,
-  languages,
-  type,
-  headerText,
-  onRefuse,
-  onConfirm,
-  selectedLanguages,
-  open,
-  loading,
-}: UserDialogProps) {
-  const classes = useStyles();
-  const [usernameState, setUsernameState] = React.useState<string>("");
-  const [emailState, setEmailState] = React.useState<string>("");
-  const [passwordState, setPasswordState] = React.useState<string>("");
+const NO_USER: UserCreated = {
+  id: -1,
+  username: "",
+  mail: "",
+  languages: [],
+  password: "",
+  type: "",
+};
 
-  const [selectedLanguagesState, setSelectedLanguagesState] = React.useState<
-    Lang[]
-  >([]);
-  const [error, setError] = React.useState<boolean>(false);
+const useStyles = makeStyles((theme) => ({
+  textField: {
+    margin: 10,
+    width: "90%",
+  },
+
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+}));
+
+export default function UserDialog(props: UserDialogProps) {
+  const classes = useStyles();
+  const [user, setUser] = React.useState<UserCreated>(NO_USER);
 
   React.useEffect(() => {
-    setUsernameState(username);
-    setSelectedLanguagesState(selectedLanguages);
-    setEmailState(email);
-    setPasswordState(password);
-  }, [username, email, password, selectedLanguages]);
+    setUser(user);
+  }, [props.user]);
 
-  const onSubmit = async (): Promise<void> => {
-    setError(false);
-    if (
-      !usernameState ||
-      !passwordState ||
-      !emailState ||
-      selectedLanguagesState.length == 0
-    ) {
-      setError(true);
-      return;
+  const onConfirm = () => {
+    props.onConfirm({
+      ...user,
+      mail: noSpace(user.mail),
+      password: noSpace(user.password),
+    });
+  };
+
+  const handleLanguagesChange = (index: number) => {
+    const newUser = { ...user };
+    console.log(user.languages, index);
+    if (user.languages.includes(props.languages[index])) {
+      newUser.languages = user.languages.filter(
+        (l) => l !== props.languages[index]
+      );
+    } else {
+      console.log("aggiungi", props.languages[index], props.languages);
+      newUser.languages = [...newUser.languages, props.languages[index]];
     }
-    onConfirm(usernameState, emailState, passwordState, selectedLanguagesState);
+    setUser(newUser);
   };
 
-  const handleChange = (event: React.ChangeEvent<any>) => {
-    setSelectedLanguagesState(event.target.value);
-  };
+  const isSubmitEnabled = (): boolean =>
+    user.username != "" && user.mail != "" && user.password != "";
 
-  return (
-    <>
-      <CustomDialog
-        open={open}
-        loading={loading}
-        headerText={headerText}
-        minWidth={400}
-        onConfirm={onSubmit}
-        onRefuse={onRefuse}
-      >
-        <>
+  const tabs: TabData[] = [
+    {
+      label: "User",
+      children: (
+        <div className={classes.container}>
           <TextField
-            onChange={(e) => setUsernameState(e.currentTarget.value)}
+            onChange={(e) =>
+              setUser({ ...user, username: e.currentTarget.value })
+            }
             id="standard-basic"
             label="Username"
             className={classes.textField}
-            value={usernameState}
-            error={error}
+            value={user.username}
           />
 
           <TextField
-            onChange={(e) => setEmailState(e.currentTarget.value)}
+            onChange={(e) => setUser({ ...user, mail: e.currentTarget.value })}
             id="standard-basic"
             label="Email"
             className={classes.textField}
-            value={emailState}
-            error={error}
+            value={user.mail}
           />
 
           <TextField
-            onChange={(e) => setPasswordState(e.currentTarget.value)}
+            onChange={(e) =>
+              setUser({ ...user, password: e.currentTarget.value })
+            }
             id="standard-basic"
             label="Digit new password"
             type="password"
-            value={passwordState}
+            value={user.password}
             className={classes.textField}
-            error={error}
           />
 
-          <div style={{ alignSelf: "center" }}>
+          <div>
             <Chip
               width={200}
-              selectedValues={selectedLanguagesState}
-              values={languages}
+              selectedValues={user.languages.map((l) => ({ title: l }))}
+              values={props.languages.map((l) => ({ title: l }))}
               header="Languages"
-              error={error}
-              handleChange={handleChange}
+              handleChange={handleLanguagesChange}
             />
           </div>
-        </>
-      </CustomDialog>
+        </div>
+      ),
+    },
+  ];
+  return (
+    <>
+      <CustomDialog
+        open={props.open}
+        loading={props.loading}
+        headerText={props.headerText}
+        minWidth={400}
+        onConfirm={onConfirm}
+        onRefuse={props.onRefuse}
+        tabData={tabs}
+        showTabs={false}
+        confirmButtonDisabled={!isSubmitEnabled()}
+      />
     </>
   );
 }

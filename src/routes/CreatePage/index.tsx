@@ -19,12 +19,12 @@ import {
   TopicLevel,
   TopicType,
 } from "../../interfaces/Interfaces";
-import TopicAddDialog from "../../components/dialogs/TopicDialog1";
 import { useAppStyles } from "../../styles/common";
+import TopicDialog from "src/components/dialogs/TopicDialog";
 import CreatePageHeader from "./sections/CreatePageHeader";
 import CreatePageBody from "./sections/CreatePageBody";
 
-import { onQuestionsAdd, onTopicAdd } from "src/utils/topics";
+import { onQuestionsAdd, onTopicCreate } from "src/utils/topics";
 import { getHash } from "src/utils/utils";
 
 const NO_TOPIC: Topic = {
@@ -52,7 +52,7 @@ export default function CreatePage({
   onSuccess,
 }: PageProps) {
   const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
-  const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
+  const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
   const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
     []
   );
@@ -131,7 +131,7 @@ export default function CreatePage({
     }
   };
 
-  const onQuestionAdd = (index: number) => {
+  const onQuestionCreate = (index: number) => {
     const newQuestions = [...currentQuestions];
     const newQuestion = { ...NEW_QUESTION, topic: selectedTopic };
     newQuestions.splice(index + 1, 0, newQuestion);
@@ -160,35 +160,14 @@ export default function CreatePage({
     );
   };
 
-  const onConfirmTopicAdd = async (
-    newTitle: string,
-    newSource: string,
-    newType: TopicType,
-    newLevel: TopicLevel,
-    newDescription: string,
-    newImage: string,
-    newActive: boolean,
-    selectedCategories: CategoryTopic[],
-    selectedRelated: TopicRelated[],
-    newApproved: boolean
-  ) => {
-    const newID = getHash(newTitle, currentLanguage);
-    const newTopic: Topic = {
-      id: newID,
-      type: newType,
-      level: newLevel,
-      title: newTitle,
-      related: selectedRelated,
-      description: newDescription,
-      image: newImage,
-      source: newSource,
+  const onConfirmTopicCreate = async (topic: Topic) => {
+    const newTopic = {
+      ...topic,
+      id: getHash(topic.title, currentLanguage),
       timestamp: new Date(),
-      categories: selectedCategories,
-      ref_id: newID,
-      active: newActive,
-      approved: newApproved,
+      ref_id: getHash(topic.title, currentLanguage),
     };
-    await onTopicAdd(
+    await onTopicCreate(
       newTopic,
       topics,
       currentLanguage,
@@ -197,16 +176,17 @@ export default function CreatePage({
       setLoading,
       async () => {
         setSelectedTopic(newTopic);
-        setTopicAddDialog(false);
+        setTopicCreateDialog(false);
         setIsUpdate(false);
         onSuccess();
       },
       onError
     );
   };
-  const onRefuseTopicAdd = async () => {
+
+  const onRefuseTopicCreate = async () => {
     setSelectedTopic(NO_TOPIC);
-    setTopicAddDialog(false);
+    setTopicCreateDialog(false);
   };
 
   return (
@@ -218,7 +198,7 @@ export default function CreatePage({
         handleTopicChange={handleTopicChange}
         isReview={isReview}
         isUpdate={isUpdate}
-        onTopicAdd={() => setTopicAddDialog(true)}
+        onTopicCreate={() => setTopicCreateDialog(true)}
         selectedTopic={selectedTopic}
       />
 
@@ -227,7 +207,7 @@ export default function CreatePage({
         isReview={isReview}
         setReview={setReview}
         onQuestionChange={onQuestionChange}
-        onQuestionAdd={onQuestionAdd}
+        onQuestionCreate={onQuestionCreate}
         onSubmitReview={onSubmitReview}
         setQuestions={setCurrentQuestions}
         onQuestionDelete={onQuestionDelete}
@@ -239,19 +219,15 @@ export default function CreatePage({
         selectedTopic={selectedTopic}
       />
 
-      <TopicAddDialog
+      <TopicDialog
         open={topicAddDialog}
-        preselectedCategories={[]}
-        active={false}
-        preselectedRelated={[]}
-        categories={categories}
         loading={loading}
         related={topics}
-        headerText="Add New Topic"
-        topic=""
-        approved={true}
-        onConfirm={onConfirmTopicAdd}
-        onRefuse={onRefuseTopicAdd}
+        categories={categories}
+        topic={{ ...NO_TOPIC, title: "" }}
+        headerText="Create New Topic"
+        onConfirm={onConfirmTopicCreate}
+        onRefuse={onRefuseTopicCreate}
       />
     </div>
   );

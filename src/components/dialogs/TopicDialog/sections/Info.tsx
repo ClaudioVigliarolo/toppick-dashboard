@@ -4,6 +4,26 @@ import Select from "../../../select/SimpleSelect";
 import TypeSelect from "../../../select/ObjectSelect";
 import { RadioButton, UserApproved } from "../../../../interfaces/Interfaces";
 import UserApprovedSelector from "../../components/UserApprovedSelector";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    position: "relative",
+    alignItems: "center",
+  },
+  userApprovedContainer: {
+    display: "flex",
+    flexDirection: "row",
+    position: "relative",
+  },
+  selectContainer: {
+    marginTop: 20,
+  },
+}));
+
 interface InfoProps {
   handleSourceChange: (event: React.ChangeEvent<any>) => void;
   handleLevelChange: (event: React.ChangeEvent<any>) => void;
@@ -26,18 +46,12 @@ export default function Info({
   users_approved = [],
   toggleApprove,
 }: InfoProps) {
+  const classes = useStyles();
+
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          position: "relative",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ marginTop: 20 }}>
+      <div className={classes.container}>
+        <div className={classes.selectContainer}>
           <Select
             handleChange={handleSourceChange}
             value={source}
@@ -48,7 +62,7 @@ export default function Info({
             defaultValue={CONSTANTS.TOPIC_SOURCES[0]}
           />
         </div>
-        <div style={{ marginTop: 20 }}>
+        <div className={classes.selectContainer}>
           <Select
             handleChange={handleLevelChange}
             value={level}
@@ -59,7 +73,7 @@ export default function Info({
             defaultValue={level}
           />
         </div>
-        <div style={{ marginTop: 20, marginBottom: 20 }}>
+        <div className={classes.selectContainer} style={{ marginBottom: 20 }}>
           <TypeSelect
             value={topicType}
             handleChange={handleRadioChange}
@@ -69,25 +83,12 @@ export default function Info({
             values={CONSTANTS.TOPIC_TYPES_RADIO}
           />
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              position: "relative",
-            }}
-          >
-            <UserApprovedSelector
-              approved={approved}
-              users={users_approved}
-              onToggle={toggleApprove}
-            />
-          </div>
+        <div className={classes.userApprovedContainer}>
+          <UserApprovedSelector
+            approved={approved}
+            users={users_approved}
+            onToggle={toggleApprove}
+          />
         </div>
       </div>
     </>

@@ -9,7 +9,6 @@ import MessageDialog from "../../components/dialogs/MessageDialog";
 import { getHash, noSpace } from "src/utils/utils";
 import { useAppStyles } from "../../styles/common";
 import { getUsers } from "../../api/api";
-import { CONSTANTS } from "src/constants/constants";
 import {
   onUserAdd,
   onUserDelete,
@@ -26,7 +25,7 @@ import {
 
 const NO_USER: UserCreated = {
   id: -1,
-  username: "",
+  username: "ds",
   mail: "",
   languages: [],
   password: "",
@@ -63,7 +62,56 @@ export default function UsersPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const onEdit = (user: UserCreated) => {
+  const onCreateSubmit = (user: UserCreated) => {
+    onUserAdd(
+      {
+        ...user,
+        id: user.id,
+      },
+      users,
+      setUsers,
+      EmailType.Registration,
+      {
+        email: noSpace(user.mail),
+        fromEmail: mail,
+        fromName: username,
+        subject: EmailSubject.Registration,
+      },
+      token,
+      setLoading,
+      () => {
+        setEditDialog(false);
+        setCurrentUser(NO_USER);
+        onSuccess();
+      },
+      onError
+    );
+    setUserAddDialog(false);
+  };
+
+  const onUpdateSubmit = (user: UserCreated) => {
+    onUserUpdate(
+      {
+        ...user,
+        id: user.id,
+      },
+      users,
+      setUsers,
+      EmailType.Update,
+      {
+        email: user.mail,
+        fromEmail: mail,
+        fromName: username,
+        subject: EmailSubject.Update,
+      },
+      token,
+      setLoading,
+      onSuccess,
+      onError
+    );
+  };
+
+  const onUpdate = (user: UserCreated) => {
     setCurrentUser(user);
     setEditDialog(true);
   };
@@ -93,106 +141,35 @@ export default function UsersPage({
           />
         </div>
       </div>
+
       <TableUsers
         users={users}
         languages={languages}
         onMessage={onMessage}
         onDelete={onDelete}
-        onEdit={onEdit}
+        onUpdate={onUpdate}
         searchText={searchText}
       />
 
       <UserDialog
-        email=""
-        password=""
-        username=""
-        selectedLanguages={[]}
+        user={NO_USER}
         loading={loading}
-        type={CONSTANTS.NO_USER_TYPE}
         headerText="Register new User"
         languages={languages}
         open={userAddDialog}
-        onConfirm={(
-          newUsername: string,
-          newMail: string,
-          password: string,
-          languages: Lang[],
-          type: string = CONSTANTS.NO_USER_TYPE
-        ) => {
-          onUserAdd(
-            {
-              mail: noSpace(newMail),
-              password: noSpace(password),
-              languages,
-              id: getHash(newUsername),
-              type,
-              username: noSpace(newUsername),
-            },
-            users,
-            setUsers,
-            EmailType.Registration,
-            {
-              email: noSpace(newMail),
-              fromEmail: mail,
-              fromName: username,
-              subject: EmailSubject.Registration,
-            },
-            token,
-            setLoading,
-            onSuccess,
-            onError
-          );
-          setUserAddDialog(false);
-        }}
+        onConfirm={onCreateSubmit}
         onRefuse={() => {
           setUserAddDialog(false);
         }}
       />
 
       <UserDialog
-        email={currentUser.mail}
-        password=""
+        user={currentUser}
         loading={loading}
-        username={currentUser.username}
-        type={currentUser.type}
         open={editDialog}
         languages={languages}
-        selectedLanguages={currentUser.languages}
-        onConfirm={(
-          newUsername: string,
-          email: string,
-          password: string,
-          languages: Lang[],
-          type: string = CONSTANTS.NO_USER_TYPE
-        ) => {
-          onUserUpdate(
-            {
-              username: noSpace(newUsername),
-              mail: noSpace(email),
-              id: currentUser.id,
-              languages,
-              password: noSpace(password),
-              type,
-            },
-            users,
-            setUsers,
-            EmailType.Update,
-            {
-              email: noSpace(email),
-              fromEmail: mail,
-              fromName: username,
-              subject: EmailSubject.Update,
-            },
-            token,
-            setLoading,
-            onSuccess,
-            onError
-          );
-
-          setEditDialog(false);
-          setCurrentUser(NO_USER);
-        }}
-        headerText="Editing User"
+        onConfirm={onUpdateSubmit}
+        headerText="Edit User"
         onRefuse={() => {
           setEditDialog(false);
           setCurrentUser(NO_USER);

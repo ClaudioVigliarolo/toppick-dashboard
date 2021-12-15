@@ -1,10 +1,37 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { login } from "../../api/api";
-import { Form, useStyles } from "../../components/input/Form";
 import { AuthContext } from "../../context/AuthContext";
-import { TextField } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 import { PageProps } from "../../interfaces/Interfaces";
+import Button from "../../components/buttons/Button";
+
+const useStyles = makeStyles((theme) => ({
+  form: {
+    margin: theme.spacing(5),
+    width: "60ch",
+    padding: 50,
+    backgroundColor: "white",
+    borderRadius: 5,
+  },
+
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: 300,
+  },
+
+  textField: {
+    margin: 10,
+    width: "100%",
+  },
+
+  button: {
+    marginTop: 50,
+  },
+}));
+
 export default function LoginPage({
   setLoading,
   onError,
@@ -54,8 +81,8 @@ export default function LoginPage({
   };
 
   return (
-    <Form onSubmit={onSubmit} height="40ch" loading={loading}>
-      <>
+    <form className={classes.form} noValidate autoComplete="off">
+      <div className={classes.container}>
         <TextField
           onChange={(e) => setEmailState(e.currentTarget.value)}
           id="standard-basic"
@@ -75,7 +102,15 @@ export default function LoginPage({
           className={classes.textField}
           error={error}
         />
-      </>
-    </Form>
+        <div className={classes.button}>
+          <Button
+            onClick={onSubmit}
+            title="Submit"
+            submit={true}
+            disabled={loading}
+          />
+        </div>
+      </div>
+    </form>
   );
 }

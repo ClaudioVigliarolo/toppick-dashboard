@@ -1,6 +1,7 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
 import { CustomDialog } from "./DialogStyles";
+import { TabData } from "./DialogStyles";
 
 interface MessageDialogProps {
   open: boolean;
@@ -23,6 +24,30 @@ export default function MessageDialog(props: MessageDialogProps) {
     props.onSend(newCategory);
   };
 
+  const tabs: TabData[] = [
+    {
+      label: "Message",
+      children: (
+        <>
+          <TextField
+            error={error}
+            placeholder="Type email message here..."
+            multiline
+            rows={10}
+            rowsMax={10}
+            InputLabelProps={{ shrink: true }}
+            margin="dense"
+            label="text"
+            id="standard-helperText"
+            value={message}
+            onChange={(e) => setMessage(e.currentTarget.value)}
+            fullWidth
+          />
+        </>
+      ),
+    },
+  ];
+
   return (
     <>
       <CustomDialog
@@ -35,22 +60,10 @@ export default function MessageDialog(props: MessageDialogProps) {
         minHeigth={300}
         onConfirm={() => onSubmit(message)}
         onRefuse={props.onRefuse}
-      >
-        <TextField
-          error={error}
-          placeholder="Type email message here..."
-          multiline
-          rows={10}
-          rowsMax={10}
-          InputLabelProps={{ shrink: true }}
-          margin="dense"
-          label="text"
-          id="standard-helperText"
-          value={message}
-          onChange={(e) => setMessage(e.currentTarget.value)}
-          fullWidth
-        />
-      </CustomDialog>
+        tabData={tabs}
+        showTabs={false}
+        confirmButtonDisabled={false}
+      ></CustomDialog>
     </>
   );
 }

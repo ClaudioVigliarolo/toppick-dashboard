@@ -1,6 +1,6 @@
 import React from "react";
 import { CONSTANTS } from "../constants/constants";
-import CustomAlert from "../components/alerts";
+import CustomAlert from "../components/alerts/Alert";
 
 export const StatusContext = React.createContext({
   loading: false,

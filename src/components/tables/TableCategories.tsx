@@ -14,7 +14,7 @@ interface TableCategoriesProps {
   categories: Category[];
   token: string;
   currentLanguage: Lang;
-  onEdit: (categ: Category) => void;
+  onUpdate: (categ: Category) => void;
   onDelete: (categ: Category) => void;
   searchText: string;
 }
@@ -23,7 +23,7 @@ export default function TableCategories({
   categories,
   searchText,
   onDelete,
-  onEdit,
+  onUpdate,
 }: TableCategoriesProps) {
   const classes = useStyles();
 
@@ -44,7 +44,7 @@ export default function TableCategories({
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
-                    onEdit(category);
+                    onUpdate(category);
                   }}
                 />
                 <DeleteIcon

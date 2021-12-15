@@ -14,7 +14,7 @@ import Switch from "../../components/select/Switch";
 import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../../styles/common";
 import {
-  onTopicAdd,
+  onTopicCreate,
   onTopicDeleteMany,
   onTopicDeleteUnique,
   onTopicUpdate,
@@ -48,7 +48,7 @@ export default function ViewPage({
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [currentTopic, setCurrentTopic] = React.useState<Topic>(NO_TOPIC);
-  const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
+  const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
@@ -70,7 +70,7 @@ export default function ViewPage({
       setLoading(false);
     })();
   }, [currentLanguage]);
-  const onEdit = (topic: Topic) => {
+  const onUpdate = (topic: Topic) => {
     setCurrentTopic(topic);
     setEditDialog(true);
   };
@@ -80,7 +80,7 @@ export default function ViewPage({
     setDeleteDialog(true);
   };
 
-  const onEditSubmit = async (newTopic: Topic) => {
+  const onUpdateSubmit = async (newTopic: Topic) => {
     await onTopicUpdate(
       newTopic,
       topics,
@@ -95,8 +95,8 @@ export default function ViewPage({
     setEditDialog(false);
   };
 
-  const onAddSubmit = async (newTopic: Topic) => {
-    await onTopicAdd(
+  const onCreateSubmit = async (newTopic: Topic) => {
+    await onTopicCreate(
       {
         ...newTopic,
         id: getHash(newTopic.title, currentLanguage),
@@ -112,7 +112,7 @@ export default function ViewPage({
       onError
     );
 
-    setTopicAddDialog(false);
+    setTopicCreateDialog(false);
   };
 
   return (
@@ -124,14 +124,14 @@ export default function ViewPage({
           searchText={searchText}
         />
         <CustomButton
-          onClick={() => setTopicAddDialog(true)}
+          onClick={() => setTopicCreateDialog(true)}
           title="INSERT NEW TOPIC"
         />
       </div>
       <TableTopics
         searchText={searchText}
         onDelete={onDelete}
-        onEdit={onEdit}
+        onUpdate={onUpdate}
         topics={topics}
       />
 
@@ -141,7 +141,7 @@ export default function ViewPage({
         related={topics}
         categories={categories}
         topic={currentTopic}
-        onConfirm={onEditSubmit}
+        onConfirm={onUpdateSubmit}
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
           setEditDialog(false);
@@ -156,10 +156,10 @@ export default function ViewPage({
         loading={loading}
         headerText="Add New Topic"
         topic={NO_TOPIC}
-        onConfirm={onAddSubmit}
+        onConfirm={onCreateSubmit}
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
-          setTopicAddDialog(false);
+          setTopicCreateDialog(false);
         }}
       />
 

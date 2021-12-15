@@ -1,6 +1,6 @@
 /* utils for inserting, modifing, removing topics  */
 import {
-  addCategory,
+  createCategory,
   addQuestions,
   addTopic,
   archiveToTranslateTopic,
@@ -36,7 +36,7 @@ export const onCategoryAdd = async (
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
-  const val = await addCategory(newCategory, currentLanguage, token);
+  const val = await createCategory(newCategory, currentLanguage, token);
   const newCategories = categories;
   if (!val) {
     setLoading(false);
@@ -127,7 +127,7 @@ export const onCategoryDeleteUnique = async (
   onSuccess();
 };
 
-export const onQuestionAdd = async (
+export const onQuestionCreate = async (
   newQuestion: Question,
   questions: Question[],
   currentLanguage: Lang,
@@ -205,7 +205,7 @@ export const onQuestionDelete = async (
   onSuccess();
 };
 
-export const onTopicAdd = async (
+export const onTopicCreate = async (
   newTopic: Topic,
   topics: Topic[],
   currentLanguage: Lang,
@@ -247,6 +247,8 @@ export const getCategoriesFromTitles = (
         title: category.title,
         ref_id: category.ref_id,
         categoryTopics: category.categoryTopics,
+        description: category.description,
+        image: category.image,
       });
     }
   });

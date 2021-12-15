@@ -1,11 +1,10 @@
 import React from "react";
 import { getCategories, getTopics, getToTranslateTopics } from "../../api/api";
-import TranslationAddDialog from "../../components/dialogs/TopicDialog1";
 import {
   onaAchiveToTranslateTopic,
   ondeleteToTranslateTopic,
   onQuestionsAdd,
-  onTopicAdd,
+  onTopicCreate,
   onUnarchiveToTranslateTopic,
 } from "src/utils/topics";
 import { getHash, getQuestionHash } from "src/utils/utils";
@@ -25,6 +24,7 @@ import {
 import { useAppStyles } from "src/styles/common";
 import TranslatePageBody from "./sections/TranslatePageBody";
 import TranslatePageHeader from "./sections/TranslatePageHeader";
+import TopicDialog from "src/components/dialogs/TopicDialog";
 
 const NEW_TARGET_QUESTION: Question = {
   id: -1,
@@ -66,7 +66,7 @@ const NO_TOPIC: Topic = {
   type: 0,
   level: 0,
   timestamp: new Date(),
-  title: "Select A Topic",
+  title: "",
   ref_id: -1,
   description: "",
   image: "",
@@ -91,7 +91,7 @@ export default function TranslatePage({
   const [isReview, setReview] = React.useState<boolean>(false);
   const [archived, setArchive] = React.useState<boolean>(false);
   const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
-  const [topicAddDialog, setTopicAddDialog] = React.useState<boolean>(false);
+  const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
   const [toTranslateTopics, setToTranslateTopics] = React.useState<
     ToTranslateTopic[]
   >([]);
@@ -152,7 +152,7 @@ export default function TranslatePage({
   const onSelectTranslate = (index: number) => {
     console.log("CURRR", toTranslateTopics[index]);
     setselectedTopicToTranslate(toTranslateTopics[index]);
-    setTopicAddDialog(true);
+    setTopicCreateDialog(true);
   };
 
   const onSetOriginalQuestions = async (topicID: number, token: string) => {
@@ -210,35 +210,14 @@ export default function TranslatePage({
     );
   };
 
-  const onTranslatedTopicAdd = async (
-    newTitle: string,
-    newSource: string,
-    newType: TopicType,
-    newLevel: TopicLevel,
-    newDescription: string,
-    newImage: string,
-    newActive: boolean,
-    selectedCategories: CategoryTopic[],
-    selectedRelated: TopicRelated[]
-  ) => {
-    const newTopic: Topic = {
-      id: getHash(newTitle, currentLanguage),
-      title: newTitle,
-      type: newType,
-      level: newLevel,
-      image: newImage,
-      description: newDescription,
-      related: selectedRelated,
-      source: newSource,
-      timestamp: new Date(),
-      categories: selectedCategories,
-      ref_id: selectedTopicToTranslate.ref_id,
-      active: newActive,
-      approved: true,
-    };
-
-    await onTopicAdd(
-      newTopic,
+  const onTranslatedTopicCreate = async (newTopic: Topic) => {
+    await onTopicCreate(
+      {
+        ...newTopic,
+        id: getHash(newTopic.title, currentLanguage),
+        timestamp: new Date(),
+        ref_id: selectedTopicToTranslate.ref_id,
+      },
       topics,
       currentLanguage,
       token,
@@ -254,9 +233,7 @@ export default function TranslatePage({
           currentLanguage,
           token
         );
-
         await onSetOriginalQuestions(selectedTopicToTranslate.topic_id, token);
-
         await onGoogleTranslateQuestions(
           selectedTopicToTranslate.topic_id,
           selectedTopicToTranslate.source_lang,
@@ -266,7 +243,7 @@ export default function TranslatePage({
         setLoading(false);
         onSuccess();
         setselectedTopicToTranslate(NO_TOTRANSLATE_TOPIC);
-        setTopicAddDialog(false);
+        setTopicCreateDialog(false);
       },
       onError
     );
@@ -285,11 +262,11 @@ export default function TranslatePage({
     setTargetQuestions([]);
     setSourceQuestions([]);
     window.scrollTo(0, 0);
-    setTopicAddDialog(false);
+    setTopicCreateDialog(false);
     setReview(false);
   };
 
-  const onQuestionAdd = (index: number) => {
+  const onQuestionCreate = (index: number) => {
     const newTargetQuestions = [...targetQuestions];
     const newSourceQuestions = [...sourceQuestions];
     const newTargetQuestion = { ...NEW_TARGET_QUESTION, topic: selectedTopic };
@@ -368,31 +345,23 @@ export default function TranslatePage({
         onSubmitReview={onSubmitReview}
         onSubmit={onSubmit}
         onQuestionDelete={onQuestionDelete}
-        onQuestionAdd={onQuestionAdd}
+        onQuestionCreate={onQuestionCreate}
         onQuestionChange={onQuestionChange}
         sourceQuestions={sourceQuestions}
         targetQuestions={targetQuestions}
       />
 
-      <TranslationAddDialog
+      <TopicDialog
         open={topicAddDialog}
         loading={loading}
-        preselectedCategories={selectedTopicToTranslate.source_categories}
-        preselectedRelated={selectedTopicToTranslate.source_related}
         categories={categories}
         related={topics}
-        level={selectedTopicToTranslate.level}
-        source={selectedTopicToTranslate.source}
-        type={selectedTopicToTranslate.type}
-        description={selectedTopicToTranslate.description}
-        image={selectedTopicToTranslate.image}
-        headerText="Add New Topic"
-        topic=""
-        active={selectedTopic.active}
+        headerText="Translate Topic"
         titlePlaceholder={selectedTopicToTranslate.source_title}
-        onConfirm={onTranslatedTopicAdd}
+        descriptionPlaceholder={selectedTopicToTranslate.description}
+        onConfirm={onTranslatedTopicCreate}
         onRefuse={onReset}
-        approved={selectedTopic.approved}
+        topic={selectedTopic}
       />
     </div>
   );

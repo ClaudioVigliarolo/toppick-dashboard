@@ -7,7 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { COLORS } from "../../constants/Colors";
-import { TextField } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -24,9 +24,17 @@ interface ReportDialogProps {
   onConfirm: (title: string) => void;
   onRefuse: () => void;
 }
+
+const useStyles = makeStyles((theme) => ({
+  dialogContent: {
+    minWidth: 600,
+  },
+}));
+
 export default function ReportDialog(props: ReportDialogProps) {
   const [title, setTitle] = React.useState<string>("");
   const [error, setError] = React.useState(false);
+  const classes = useStyles();
 
   React.useEffect(() => {
     setTitle(props.title);
@@ -52,7 +60,7 @@ export default function ReportDialog(props: ReportDialogProps) {
       >
         <DialogTitle id="alert-dialog-slide-title">{props.header}</DialogTitle>
 
-        <DialogContent style={{ minWidth: 600 }}>
+        <DialogContent className={classes.dialogContent}>
           <TextField
             error={error}
             InputLabelProps={{ shrink: true }}
