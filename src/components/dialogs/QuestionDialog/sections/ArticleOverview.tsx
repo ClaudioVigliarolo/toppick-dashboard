@@ -11,27 +11,26 @@ const useStyles = makeStyles((theme) => ({
     color: "orange",
     fontSize: 30,
   },
+  linkTextField: {
+    marginTop: 10,
+  },
 }));
 
 interface OverviewProps {
   open: boolean;
   title: string;
-  description: string;
   url: string;
   setTitle: (event: React.ChangeEvent<any>) => void;
   setUrl: (event: React.ChangeEvent<any>) => void;
-  setDescription: (event: React.ChangeEvent<any>) => void;
   openPreview: () => void;
 }
 export default function ArticleOverview({
   open,
   title,
-  description,
   url,
   setUrl,
   setTitle,
   openPreview,
-  setDescription,
 }: OverviewProps) {
   const classes = useStyles();
 
@@ -39,10 +38,12 @@ export default function ArticleOverview({
     <>
       {open && (
         <>
-          <VisibilityOutlinedIcon
-            className={classes.icon}
-            onClick={openPreview}
-          />
+          {url && (
+            <VisibilityOutlinedIcon
+              className={classes.icon}
+              onClick={openPreview}
+            />
+          )}
           <TextField
             InputLabelProps={{ shrink: true }}
             margin="dense"
@@ -53,18 +54,7 @@ export default function ArticleOverview({
             fullWidth
           />
           <TextField
-            placeholder="Type or Paste the Description here..."
-            multiline
-            rows={10}
-            rowsMax={10}
-            InputLabelProps={{ shrink: true }}
-            margin="dense"
-            label="title"
-            id="standard-helperText"
-            value={description}
-            onChange={setDescription}
-          />
-          <TextField
+            className={classes.linkTextField}
             InputLabelProps={{ shrink: true }}
             margin="dense"
             label="Link"

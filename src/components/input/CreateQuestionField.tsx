@@ -65,7 +65,8 @@ export default function QuestionTextField({
         id="outlined-multiline-flexible"
         label={"Question " + (index + 1)}
         style={{ width: "50vw" }}
-        rowsMax={2}
+        rowsMax={4}
+        multiline
         value={question.title}
         onChange={(e) =>
           onChange(index, { ...question, title: e.target.value })

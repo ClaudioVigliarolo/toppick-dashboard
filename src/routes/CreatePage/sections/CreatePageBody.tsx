@@ -4,7 +4,6 @@ import QuestionField from "../../../components/input/CreateQuestionField";
 import CustomButton from "../../../components/buttons/Button";
 import QuestionsReview from "src/components/lists/QuestionsReview";
 import QuestionsQuickAddDialog from "src/components/dialogs/QuestionsQuickAddDialog";
-import { getHash } from "src/utils/utils";
 
 const MIN_QUESTIONS = 10;
 export default function CreatePageBody({
@@ -20,7 +19,8 @@ export default function CreatePageBody({
   onQuestionCreate,
   questions,
   onQuestionChange,
-  onSubmitReview,
+  onSubmitToReview,
+  onRevertFromReview,
   setQuestions,
 }: {
   classes: any;
@@ -30,13 +30,14 @@ export default function CreatePageBody({
   setReview: (val: boolean) => void;
   resetTopic: () => void;
   isReview: boolean;
-  onSubmit: (questions: Question[]) => void;
+  onSubmitToReview: () => void;
   onQuestionDelete: (index: number) => void;
   onQuestionCreate: (index: number) => void;
+  onRevertFromReview: () => void;
   questions: Question[];
   setQuestions: (questions: Question[]) => void;
   onQuestionChange: (index: number, question: Question) => void;
-  onSubmitReview: () => void;
+  onSubmit: (questions: Question[]) => void;
 }) {
   const isReviewButtonVisible = () => {
     return (
@@ -91,13 +92,13 @@ export default function CreatePageBody({
           questions={questions}
           onChange={onQuestionChange}
           onSubmit={() => onSubmit(questions)}
-          onClose={() => setReview(false)}
+          onClose={onRevertFromReview}
           loading={loading}
         />
       )}
       {isReviewButtonVisible() && (
         <div className={classes.buttonContainer}>
-          <CustomButton onClick={onSubmitReview} title="Submit For Review" />
+          <CustomButton onClick={onSubmitToReview} title="Submit For Review" />
         </div>
       )}
     </>

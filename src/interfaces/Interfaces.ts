@@ -89,15 +89,21 @@ export interface ReportHandled {
   reason: string;
 }
 
+export interface Example {
+  title: string;
+}
+
+export interface Article {
+  url: string;
+}
+
 export interface Question {
   id: number;
   title: string;
-  timestamp: Date;
-  topic_id: number;
   n?: number;
   new?: boolean;
-  link?: string;
-  description?: string;
+  examples: Example[];
+  article?: Article;
 }
 
 export interface EditItem {

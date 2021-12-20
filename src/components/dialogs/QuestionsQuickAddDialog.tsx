@@ -21,8 +21,13 @@ export default function QuestionsQuickAddDialog(
 
   let linesN = countTextLines(text);
 
-  const onSubmit = async (text: string) => {
+  const onConfirm = async () => {
     props.onConfirm(generateQuestions(text, props.topic));
+  };
+
+  const onRefuse = async () => {
+    setText("");
+    props.onRefuse();
   };
 
   const tabs: TabData[] = [
@@ -65,8 +70,8 @@ export default function QuestionsQuickAddDialog(
         refuseButtonText="Close"
         headerText={"Quick Add to " + props.topic.title}
         minHeigth={300}
-        onConfirm={() => onSubmit(text)}
-        onRefuse={props.onRefuse}
+        onConfirm={onConfirm}
+        onRefuse={onRefuse}
         confirmButtonDisabled={linesN < props.minQuestions}
         tabData={tabs}
         showTabs={false}

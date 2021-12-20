@@ -28,18 +28,16 @@ import TopicDialog from "src/components/dialogs/TopicDialog";
 
 const NEW_TARGET_QUESTION: Question = {
   id: -1,
-  timestamp: new Date(),
   title: "",
   new: true,
-  topic_id: -1,
+  examples: [],
 };
 
 const NEW_SOURCE_QUESTION: Question = {
   id: -1,
-  timestamp: new Date(),
   title: "Custom Question",
   new: true,
-  topic_id: -1,
+  examples: [],
 };
 
 const NO_TOTRANSLATE_TOPIC: ToTranslateTopic = {
@@ -301,15 +299,9 @@ export default function TranslatePage({
   };
 
   const onSubmit = async () => {
-    console.log(
-      "Myselecteftopic",
-      selectedTopic,
-      targetQuestions,
-      currentLanguage
-    );
     await onQuestionsAdd(
       targetQuestions,
-      selectedTopic,
+      selectedTopic.id,
       currentLanguage,
       token,
       setLoading,

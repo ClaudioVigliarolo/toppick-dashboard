@@ -128,6 +128,7 @@ export const onCategoryDeleteUnique = async (
 };
 
 export const onQuestionCreate = async (
+  topicId: number,
   newQuestion: Question,
   questions: Question[],
   currentLanguage: Lang,
@@ -139,7 +140,12 @@ export const onQuestionCreate = async (
 ) => {
   setLoading(true);
 
-  const val = await addQuestions([newQuestion], currentLanguage, token);
+  const val = await addQuestions(
+    [newQuestion],
+    topicId,
+    currentLanguage,
+    token
+  );
   const newQuestions = questions;
 
   if (!val) {
@@ -363,7 +369,7 @@ export const onReportDelete = async (
 
 export const onQuestionsAdd = async (
   questions: Question[],
-  selectedTopic: Topic,
+  topicId: number,
   currentLanguage: Lang,
   token: string,
   setLoading: (val: boolean) => void,
@@ -371,11 +377,17 @@ export const onQuestionsAdd = async (
   onError: () => void
 ) => {
   setLoading(true);
-  if (!selectedTopic || questions.length < 0) {
+  if (topicId < 0 || questions.length < 0) {
     setLoading(false);
     return onError();
   }
-  const val = await addQuestions(questions, currentLanguage, token);
+
+  //assign index to question number
+  questions.forEach((q, index) => {
+    q.n = index;
+  });
+
+  const val = await addQuestions(questions, topicId, currentLanguage, token);
   if (!val) {
     setLoading(false);
     return onError();
@@ -459,7 +471,8 @@ export const generateQuestions = (text: string, topic: Topic): Question[] => {
     id: getQuestionHash(title, topic.title, index),
     timestamp: new Date(),
     title: title,
-    topic_id: topic.id,
+    examples: [],
+    new: true,
   }));
 
   return questions;

@@ -98,20 +98,6 @@ export const getTopics = async (
   }
 };
 
-export const getQuestionTopics = async (
-  lang: Lang
-): Promise<QuestionTopic[] | null> => {
-  try {
-    const response = await axios.get(`${HOSTNAME}/question/topics/` + lang, {
-      headers: {},
-    });
-    return response.status === 200 ? response.data : null;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-};
-
 export const getToTranslateTopics = async (
   lang: Lang,
   archived: boolean,
@@ -532,6 +518,7 @@ export const deleteCategoryUnique = async (
 
 export const addQuestions = async (
   questions: Question[],
+  topicId: number,
   lang: Lang,
   token: string
 ): Promise<boolean> => {
@@ -540,6 +527,7 @@ export const addQuestions = async (
       `${HOSTNAME}/questions`,
       {
         questions,
+        topic_id: topicId,
         lang,
       },
       {
@@ -786,7 +774,7 @@ export const getGoogleTranslatedQuestions = async (
 ): Promise<Question[] | null> => {
   try {
     const response = await axios.get(
-      `${HOSTNAME}/totranslate/googletranslations/${id}/${from}/${to}`,
+      `${HOSTNAME}/totranslate/google_translations/${id}/${from}/${to}`,
       {
         headers: {
           Authorization: "Bearer " + token,

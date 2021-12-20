@@ -3,21 +3,16 @@ import { getCategories, getQuestionsByTopic, getTopics } from "../../api/api";
 
 const NEW_QUESTION: Question = {
   id: -1,
-  timestamp: new Date(),
   title: "",
   new: true,
-  topic_id: -1,
+  examples: [],
 };
-
 import {
   Category,
-  CategoryTopic,
+  Example,
   PageProps,
   Question,
-  TopicRelated,
   Topic,
-  TopicLevel,
-  TopicType,
 } from "../../interfaces/Interfaces";
 import { useAppStyles } from "../../styles/common";
 import TopicDialog from "src/components/dialogs/TopicDialog";
@@ -25,7 +20,12 @@ import CreatePageHeader from "./sections/CreatePageHeader";
 import CreatePageBody from "./sections/CreatePageBody";
 
 import { onQuestionsAdd, onTopicCreate } from "src/utils/topics";
-import { getHash } from "src/utils/utils";
+import {
+  generateExamples,
+  getHash,
+  parseExamples,
+  removeExamples,
+} from "src/utils/utils";
 
 const NO_TOPIC: Topic = {
   categories: [],
@@ -92,8 +92,14 @@ export default function CreatePage({
     if (topics[index] !== NO_TOPIC) {
       setLoading(true);
       const retrievedQuestions = await getQuestionsByTopic(topics[index].id);
+      console.log("MY RETREIVD!!!!", retrievedQuestions);
       if (retrievedQuestions !== null) {
-        setCurrentQuestions(retrievedQuestions);
+        const newQuestions = [...retrievedQuestions].map((q) => ({
+          ...q,
+          examples: [],
+          title: generateExamples(q.title, q.examples as Example[]),
+        }));
+        setCurrentQuestions(newQuestions);
         if (retrievedQuestions.length > 0) {
           setIsUpdate(true);
         } else {
@@ -104,11 +110,29 @@ export default function CreatePage({
     }
   };
 
-  const onSubmitReview = () => {
-    const newQuestions = [...currentQuestions].filter((q) => q.title);
+  const onSubmitToReview = () => {
+    const newQuestions = [...currentQuestions]
+      .filter((q) => q.title)
+      .map((q) => ({
+        ...q,
+        title: removeExamples(q.title),
+        examples: parseExamples(q.title),
+      }));
     setCurrentQuestions(newQuestions);
     window.scrollTo(0, 0);
     setReview(true);
+  };
+
+  const onRevertFromReview = () => {
+    const newQuestions = [...currentQuestions].map((q) => ({
+      ...q,
+      examples: [],
+      title: generateExamples(q.title, q.examples as Example[]),
+    }));
+    //take current questions and push the examples
+    setCurrentQuestions(newQuestions);
+
+    setReview(false);
   };
 
   const onReset = async () => {
@@ -149,9 +173,10 @@ export default function CreatePage({
   };
 
   const onSubmit = async (questions: Question[]) => {
+    console.log("MY QQQ", questions);
     await onQuestionsAdd(
       questions,
-      selectedTopic,
+      selectedTopic.id,
       currentLanguage,
       token,
       setLoading,
@@ -208,13 +233,14 @@ export default function CreatePage({
         setReview={setReview}
         onQuestionChange={onQuestionChange}
         onQuestionCreate={onQuestionCreate}
-        onSubmitReview={onSubmitReview}
+        onSubmit={onSubmit}
         setQuestions={setCurrentQuestions}
         onQuestionDelete={onQuestionDelete}
         questions={currentQuestions}
         defaultTopic={NO_TOPIC}
         loading={loading}
-        onSubmit={onSubmit}
+        onSubmitToReview={onSubmitToReview}
+        onRevertFromReview={onRevertFromReview}
         resetTopic={() => setSelectedTopic(NO_TOPIC)}
         selectedTopic={selectedTopic}
       />

@@ -1,8 +1,8 @@
-import { Topic, Value } from "src/interfaces/Interfaces";
+import { Example, Topic, Value } from "src/interfaces/Interfaces";
 
 export const getHash = (str1: string, str2: string = "") => {
   const str = str1 + "*" + str2 + new Date().toISOString();
-  var hash = 0,
+  let hash = 0,
     i,
     chr;
   for (i = 0; i < str.length; i++) {
@@ -127,3 +127,34 @@ export const hasVal = (input: any): boolean => {
   }
   return true;
 };
+
+export function parseExamples(input: string): Example[] {
+  const regex = /\[EX\](.*?)\[\/EX\]/g;
+  let matches: any[],
+    output: Example[] = [];
+  while ((matches = regex.exec(input) as any)) {
+    output.push({ title: matches[1] });
+  }
+  return output;
+}
+
+export function removeExamples(input: string): string {
+  return input.split("[EX]")[0];
+}
+
+export function generateExamples(title: string, examples: Example[]): string {
+  title += examples.map((e) => " [EX]" + e.title + "[/EX] ").join("");
+  return title;
+}
+
+/*
+export function parseExamples(question:Question): string[] {
+  const regex = /\[EX\](.*?)\[\/EX\]/g;
+  let matches: any[],
+    output: string[] = [];
+  while ((matches = regex.exec(question.input) as any)) {
+    output.push(matches[1]);
+  }
+  return output;
+}
+*/
