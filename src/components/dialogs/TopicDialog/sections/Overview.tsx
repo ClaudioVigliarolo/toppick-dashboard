@@ -60,7 +60,7 @@ export default function Overview({
       <div className={classes.switchContainer}>
         <Switch
           text=""
-          color={MaterialUiColor.Primary}
+          switchColor={MaterialUiColor.Primary}
           handleChange={toggleActive}
           value={active}
         />

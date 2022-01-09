@@ -18,6 +18,8 @@ import {
   getYesterdayStart,
 } from "src/utils/utils";
 import { getMaintenanceStatus, updateMaintenance } from "../../api/api";
+import { makeStyles } from "@material-ui/core";
+import { COLORS } from "src/constants/Colors";
 
 interface ChartButton {
   label: string;
@@ -75,6 +77,48 @@ const chartButtons: ChartButton[] = [
   { label: "Updates", chartIndex: ChartIndex.UpdatesChart },
 ];
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+  },
+  innerContainer: {
+    alignSelf: "flex-end",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  closeButton: {
+    color: COLORS.darkerOrange,
+  },
+
+  confirmButton: {
+    color: COLORS.blue,
+  },
+
+  tabsContainer: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+  },
+  statsContainer: {
+    width: "60vw",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  chartContainer: {
+    backgroundColor: "red",
+  },
+  buttonsHeader: {
+    margin: 80,
+    textAlign: "center",
+    color: COLORS.white,
+    fontSize: 25,
+  },
+}));
+
 export default function StatsPage({ token, currentLanguage }: PageProps) {
   const [chartIndex, setChartIndex] = React.useState<number>(0);
   const [dateIndex, setDateIndex] = React.useState<number>(-1);
@@ -82,7 +126,7 @@ export default function StatsPage({ token, currentLanguage }: PageProps) {
   const [from, setFromDate] = React.useState<Date>(CONSTANTS.DEF_FROM_DATE);
   const [maintanance, setMaintenance] = React.useState<boolean>(false);
 
-  const classes = useAppStyles();
+  const classes = useStyles();
 
   React.useEffect(() => {
     (async () => {
@@ -99,18 +143,11 @@ export default function StatsPage({ token, currentLanguage }: PageProps) {
 
   return (
     <>
-      <div className={classes.statsContainer}>
-        <div
-          style={{
-            alignSelf: "flex-end",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
+      <div className={classes.container}>
+        <div>
           <Switch
             text="Maintenance"
-            color={MaterialUiColor.Secondary}
+            switchColor={MaterialUiColor.Secondary}
             handleChange={onMaintenanceChange}
             value={maintanance}
           />

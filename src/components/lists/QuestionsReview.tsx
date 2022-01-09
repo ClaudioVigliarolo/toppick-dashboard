@@ -5,6 +5,7 @@ import {
   CircularProgress,
   ListItemIcon,
   ListItemText,
+  makeStyles,
 } from "@material-ui/core";
 import LinkOutlinedIcon from "@material-ui/icons/LinkOutlined";
 import BookmarkAddedIcon from "@material-ui/icons/Bookmark";
@@ -20,21 +21,39 @@ const NO_QUESTION: Question = {
   id: -1,
   title: "",
   examples: [],
+  ext_resources: [],
 };
 
-export default function QuestionsList({
+const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: 50,
+    justifyContent: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingBottom: 30,
+  },
+
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    width: 600,
+    justifyContent: "space-evenly",
+    paddingBottom: 100,
+  },
+}));
+
+export default function QuestionsReview({
   questions,
   onSubmit,
   onChange,
   loading,
-  classes,
   onClose,
 }: {
   questions: Question[];
   onSubmit: () => void;
   onChange: (index: number, question: Question) => void;
   loading: boolean;
-  classes: any;
   onClose: () => void;
 }) {
   const [articlesDialog, setArticlesDialog] = React.useState<boolean>(false);
@@ -42,6 +61,8 @@ export default function QuestionsList({
     React.useState<Question>(NO_QUESTION);
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     React.useState<number>(-1);
+
+  const classes = useStyles();
 
   const renderRow = ({ index }: ListChildComponentProps) => {
     return (
@@ -55,8 +76,8 @@ export default function QuestionsList({
         }}
       >
         <ListItemIcon>
-          {questions[index].article ||
-          (questions[index].examples as Example[]).length > 0 ? (
+          {questions[index].ext_resources.length > 0 ||
+          questions[index].examples.length > 0 ? (
             <BookmarkAddedIcon
               onClick={() => {
                 setCurrentQuestion(questions[index]);
@@ -80,7 +101,7 @@ export default function QuestionsList({
   };
 
   return (
-    <div className={classes.QuestionsReviewContainer}>
+    <div className={classes.container}>
       <FixedSizeList
         width={
           window.innerWidth > CONSTANTS.SMALL_SCREEN
@@ -109,11 +130,12 @@ export default function QuestionsList({
               title="Submit, everything's fine"
             />
           </div>
-        )}{" "}
+        )}
       </div>
       <QuestionDialog
         open={articlesDialog}
         onConfirm={(q) => {
+          console.log("1111111");
           onChange(currentQuestionIndex, q);
           setCurrentQuestion(NO_QUESTION);
           setArticlesDialog(false);

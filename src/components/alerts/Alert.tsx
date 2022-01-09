@@ -1,5 +1,15 @@
+import { makeStyles } from "@material-ui/core";
 import { Alert, Color } from "@material-ui/lab";
 import React from "react";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    alignSelf: "center",
+    position: "fixed",
+    bottom: 50,
+    left: "50%",
+  },
+}));
 
 export default function CustomAlert({
   visible,
@@ -10,19 +20,16 @@ export default function CustomAlert({
   type: Color;
   text: string;
 }) {
+  const classes = useStyles();
   return (
-    <div
-      style={{
-        display: visible ? "flex" : "none",
-        alignSelf: "center",
-        position: "fixed",
-        bottom: 50,
-        left: "50%",
-      }}
-    >
-      <Alert severity={type} variant="filled">
-        {text}
-      </Alert>
-    </div>
+    <>
+      {visible && (
+        <div className={classes.container}>
+          <Alert severity={type} variant="filled">
+            {text}
+          </Alert>
+        </div>
+      )}
+    </>
   );
 }

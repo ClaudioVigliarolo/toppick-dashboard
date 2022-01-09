@@ -99,7 +99,7 @@ export default function CategoryDialog(props: CategoryDialogProps) {
         open={props.open}
         headerText={props.headerText}
         minWidth={600}
-        minHeigth={600}
+        minHeight={600}
         onConfirm={onConfirm}
         onRefuse={props.onRefuse}
         loading={props.loading}

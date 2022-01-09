@@ -13,14 +13,75 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { COLORS } from "../../constants/Colors";
 import { routes } from "../routes";
-import { LinearProgress, MenuItem, withStyles } from "@material-ui/core";
+import {
+  createStyles,
+  LinearProgress,
+  makeStyles,
+  MenuItem,
+  Theme,
+  withStyles,
+} from "@material-ui/core";
 import LanguageSelect from "../../components/select/LanguageSelect";
 import HeaderSection from "../../components/layout/HeaderSection";
 import { getCondition } from "..";
 import { logoutUser } from "../../api/api";
 import { Lang } from "src/interfaces/Interfaces";
-import { useAppStyles } from "src/styles/common";
 import { refreshPage } from "src/utils/utils";
+import { CONSTANTS } from "src/constants/constants";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    exitToApp: {
+      color: COLORS.menuIcon,
+    },
+    menu: {
+      display: "flex",
+    },
+    languageSelectContainer: {
+      position: "absolute",
+      right: 20,
+      top: 0,
+    },
+    appBar: {
+      width: `calc(100% - ${CONSTANTS.DRAWER_WIDTH}px)`,
+      marginLeft: CONSTANTS.DRAWER_WIDTH,
+      backgroundColor: "#fff",
+      color: COLORS.primaryOrange,
+    },
+    drawer: {
+      width: CONSTANTS.DRAWER_WIDTH,
+      flexShrink: 0,
+    },
+    drawerItem: {
+      color: COLORS.menuText,
+      textTransform: "uppercase",
+      fontWeight: "bolder",
+      float: "left",
+    },
+    childrenContainer: {
+      paddingTop: 100,
+      backgroundColor: COLORS.primaryBackground,
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      minHeight: "100vh",
+      width: "100%",
+
+      "@media (max-width: 500px)": {
+        padding: 100,
+        width: "200%",
+      },
+    },
+
+    drawerPaper: {
+      width: CONSTANTS.DRAWER_WIDTH,
+      background: COLORS.menuContainer,
+      color: "#fff",
+    },
+
+    toolbar: theme.mixins.toolbar,
+  })
+);
 
 const StyledLinearProgress = withStyles({
   colorPrimary: {
@@ -52,10 +113,9 @@ export default function PersistentDrawerLeft({
   currentLanguage: Lang;
   loading: boolean;
 }) {
-  const classes = useAppStyles();
   const [path, setPath] = React.useState("");
-
-  let location = useLocation();
+  const classes = useStyles();
+  const location = useLocation();
 
   React.useEffect(() => {
     setPath(location.pathname);
@@ -81,17 +141,13 @@ export default function PersistentDrawerLeft({
   return (
     <div className={classes.menu}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={classes.appBar}
-        style={{ backgroundColor: "#fff", color: COLORS.primaryOrange }}
-      >
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" noWrap>
             TOP Pick
           </Typography>
           {isAuthenticated && (
-            <div style={{ position: "absolute", right: 20, top: 0 }}>
+            <div className={classes.languageSelectContainer}>
               <LanguageSelect
                 languages={languages}
                 currentLanguage={currentLanguage}
@@ -145,7 +201,7 @@ export default function PersistentDrawerLeft({
               }}
             >
               <ListItemIcon>
-                <ExitToAppIcon style={{ color: COLORS.menuIcon }} />
+                <ExitToAppIcon className={classes.exitToApp} />
               </ListItemIcon>
               (
               <ListItemText primary="logout" className={classes.drawerItem} />)

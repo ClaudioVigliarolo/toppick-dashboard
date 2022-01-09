@@ -1,9 +1,10 @@
 import React from "react";
 import UserAvatar from "react-user-avatar";
 import CheckIcon from "@material-ui/icons/Check";
-import { Button, makeStyles, TextField } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import { AuthContext } from "src/context/AuthContext";
 import { UserApproved } from "src/interfaces/Interfaces";
+import { useAppStyles } from "src/styles/common";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -25,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
   userAvatar: {
     color: "white",
   },
-  buttonContainer: {
-    marginTop: 50,
-  },
 }));
 
 interface UserApprovedProps {
@@ -43,6 +41,7 @@ export default function UserApprovedSection({
 }: UserApprovedProps) {
   const { username } = React.useContext(AuthContext);
   const classes = useStyles();
+  const appClasses = useAppStyles();
   return (
     <div className={classes.container}>
       <div className={classes.contentContainer}>
@@ -78,7 +77,7 @@ export default function UserApprovedSection({
           />
         </div>
       </div>
-      <div className={classes.buttonContainer}>
+      <div className={appClasses.buttonContainer}>
         <Button
           color={approved ? "primary" : "secondary"}
           size="small"

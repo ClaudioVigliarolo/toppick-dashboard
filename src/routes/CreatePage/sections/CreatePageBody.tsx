@@ -4,11 +4,21 @@ import QuestionField from "../../../components/input/CreateQuestionField";
 import CustomButton from "../../../components/buttons/Button";
 import QuestionsReview from "src/components/lists/QuestionsReview";
 import QuestionsQuickAddDialog from "src/components/dialogs/QuestionsQuickAddDialog";
+import { createStyles, makeStyles } from "@material-ui/core";
+import { useAppStyles } from "src/styles/common";
 
 const MIN_QUESTIONS = 10;
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    questionFieldContainer: {
+      marginTop: 50,
+    },
+  })
+);
+
 export default function CreatePageBody({
   selectedTopic,
-  classes,
   defaultTopic,
   setReview,
   isReview,
@@ -23,7 +33,6 @@ export default function CreatePageBody({
   onRevertFromReview,
   setQuestions,
 }: {
-  classes: any;
   selectedTopic: Topic;
   defaultTopic: Topic;
   loading: boolean;
@@ -39,6 +48,9 @@ export default function CreatePageBody({
   onQuestionChange: (index: number, question: Question) => void;
   onSubmit: (questions: Question[]) => void;
 }) {
+  const classes = useStyles();
+  const appClasses = useAppStyles();
+
   const isReviewButtonVisible = () => {
     return (
       !isReview &&
@@ -73,7 +85,7 @@ export default function CreatePageBody({
         onRefuse={resetTopic}
       />
       {isQuestionListVisible() && (
-        <div style={{ marginBottom: 50 }}>
+        <div className={classes.questionFieldContainer}>
           {questions.map((q, i) => (
             <QuestionField
               key={i}
@@ -88,7 +100,6 @@ export default function CreatePageBody({
       )}
       {isReview && (
         <QuestionsReview
-          classes={classes}
           questions={questions}
           onChange={onQuestionChange}
           onSubmit={() => onSubmit(questions)}
@@ -97,7 +108,7 @@ export default function CreatePageBody({
         />
       )}
       {isReviewButtonVisible() && (
-        <div className={classes.buttonContainer}>
+        <div className={appClasses.buttonContainer}>
           <CustomButton onClick={onSubmitToReview} title="Submit For Review" />
         </div>
       )}

@@ -5,6 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import { RadioButton } from "src/interfaces/Interfaces";
+import { createStyles, makeStyles } from "@material-ui/core";
 
 interface RadioButtonsGroupProps {
   values: RadioButton[];
@@ -13,28 +14,36 @@ interface RadioButtonsGroupProps {
   handleRadioChange(val: any): void;
 }
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    formLabel: {
+      textAlign: "center",
+    },
+    formControlLabelContainer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+    },
+  })
+);
+
 export default function RadioButtonsGroup({
   header,
   values,
   value,
   handleRadioChange,
 }: RadioButtonsGroupProps) {
+  const classes = useStyles();
   return (
     <FormControl component="fieldset">
-      <FormLabel style={{ textAlign: "center" }}>{header}</FormLabel>
+      <FormLabel className={classes.formLabel}>{header}</FormLabel>
       <RadioGroup
         aria-label={header}
         name={header}
         value={value}
         onChange={handleRadioChange}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
+        <div className={classes.formControlLabelContainer}>
           {values.map((val, i) => (
             <FormControlLabel
               key={i}

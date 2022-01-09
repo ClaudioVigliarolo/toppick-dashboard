@@ -4,7 +4,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  icon: {
+  closeIcon: {
     position: "absolute",
     top: 20,
     right: 20,
@@ -19,14 +19,18 @@ interface PreviewProps {
   url: string;
   open: boolean;
 }
-export default function Preview({ closePreview, url, open }: PreviewProps) {
+export default function ExtResourcePreview({
+  closePreview,
+  url,
+  open,
+}: PreviewProps) {
   const classes = useStyles();
 
   return (
     <>
       {open && (
         <>
-          <CloseIcon className={classes.icon} onClick={closePreview} />
+          <CloseIcon className={classes.closeIcon} onClick={closePreview} />
           <LinkPreview url={url} width="400px" height="400px" />
         </>
       )}

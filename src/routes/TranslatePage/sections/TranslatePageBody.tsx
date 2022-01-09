@@ -7,10 +7,16 @@ import {
 import TranslateField from "../../../components/input/TranslateQuestionField";
 import CustomButton from "../../../components/buttons/Button";
 import QuestionsReview from "../../../components/lists/QuestionsReview";
+import { makeStyles } from "@material-ui/core";
+import { useAppStyles } from "src/styles/common";
 
-const MIN_QUESTIONS = 10;
+const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: 50,
+  },
+}));
+
 export default function CreatePageBody({
-  classes,
   setReview,
   isReview,
   loading,
@@ -22,7 +28,6 @@ export default function CreatePageBody({
   onQuestionChange,
   onSubmitReview,
 }: {
-  classes: any;
   loading: boolean;
   setReview: (val: boolean) => void;
   isReview: boolean;
@@ -34,6 +39,9 @@ export default function CreatePageBody({
   onQuestionChange: (index: number, question: Question) => void;
   onSubmitReview: () => void;
 }) {
+  const appClasses = useAppStyles();
+  const classes = useStyles();
+
   const isQuestionListVisible = () => {
     return (
       !isReview && sourceQuestions.length > 0 && targetQuestions.length > 0
@@ -47,7 +55,7 @@ export default function CreatePageBody({
   return (
     <>
       {isQuestionListVisible() && (
-        <div style={{ marginBottom: 50 }}>
+        <div className={classes.container}>
           {targetQuestions.map((q, i) => (
             <TranslateField
               index={i}
@@ -63,7 +71,6 @@ export default function CreatePageBody({
       )}
       {isReview && (
         <QuestionsReview
-          classes={classes}
           questions={targetQuestions}
           onChange={onQuestionChange}
           onSubmit={onSubmit}
@@ -72,7 +79,7 @@ export default function CreatePageBody({
         />
       )}
       {isReviewButtonVisible() && (
-        <div className={classes.buttonContainer}>
+        <div className={appClasses.buttonContainer}>
           <CustomButton onClick={onSubmitReview} title="Submit For Review" />
         </div>
       )}

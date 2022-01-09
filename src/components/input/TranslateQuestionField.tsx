@@ -48,6 +48,18 @@ const useStyles = makeStyles(() =>
       backgroundColor: "transparent",
       paddingLeft: 60,
     },
+    addIcon: {
+      color: "white",
+      cursor: "pointer",
+    },
+
+    deleteIcon: {
+      cursor: "pointer",
+      color: "red",
+    },
+    textField: {
+      width: "50vw",
+    },
   })
 );
 
@@ -68,7 +80,7 @@ export default function TranslateQuestionField({
       <TextField
         id="outlined-multiline-flexible"
         label={"Source n°" + (index + 1)}
-        style={{ width: "50vw" }}
+        className={classes.textField}
         multiline
         disabled={true}
         rowsMax={2}
@@ -77,7 +89,7 @@ export default function TranslateQuestionField({
       <TextField
         id="outlined-multiline-flexible"
         label={"Translated n°" + (index + 1)}
-        style={{ width: "50vw", marginTop: 20 }}
+        style={{ marginTop: 20 }}
         multiline
         rowsMax={2}
         value={targetQuestion.title}
@@ -93,7 +105,7 @@ export default function TranslateQuestionField({
       >
         {showAdd && (
           <AddIcon
-            style={{ color: "white", cursor: "pointer" }}
+            className={classes.addIcon}
             onClick={() => onCreate(index)}
           />
         )}
@@ -107,7 +119,7 @@ export default function TranslateQuestionField({
         {showDelete && (
           <div>
             <DeleteIcon
-              style={{ cursor: "pointer", color: "red" }}
+              className={classes.deleteIcon}
               onClick={() => {
                 onDelete(index);
               }}

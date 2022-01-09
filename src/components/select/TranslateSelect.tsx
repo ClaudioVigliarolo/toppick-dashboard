@@ -1,5 +1,12 @@
 import React from "react";
-import { InputLabel, ListItem, MenuItem, Select } from "@material-ui/core";
+import {
+  createStyles,
+  InputLabel,
+  ListItem,
+  makeStyles,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import ArchiveIcon from "@material-ui/icons/Archive";
 import UnarchiveIcon from "@material-ui/icons/Unarchive";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -15,6 +22,41 @@ interface TranslateSelectProps {
   onUnarchive: (index: number) => void;
   onSelect: (index: number) => void;
 }
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    menuItemContainer: {
+      width: "100%",
+      backgroundColor: "blue",
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+    },
+    menuItemInnerContainer: {
+      display: "flex",
+      flexDirection: "row",
+      position: "absolute",
+      right: 0,
+      width: 80,
+      justifyContent: "space-between",
+    },
+
+    archiveIcon: {
+      color: COLORS.primaryOrange,
+    },
+
+    deleteIcon: {
+      color: COLORS.red,
+    },
+    select: {
+      textTransform: "capitalize",
+      width: 500,
+      fontSize: 20,
+      color: "#fff",
+    },
+  })
+);
+
 export default function TranslateSelect({
   value,
   defaultValue,
@@ -26,16 +68,12 @@ export default function TranslateSelect({
   onUnarchive,
   archived,
 }: TranslateSelectProps) {
+  const classes = useStyles();
   return (
     <>
       <InputLabel id="demo-mutiple-chip-label">{header}</InputLabel>
       <Select
-        style={{
-          textTransform: "capitalize",
-          width: 500,
-          fontSize: 20,
-          color: "#fff",
-        }}
+        className={classes.select}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={value}
@@ -51,28 +89,11 @@ export default function TranslateSelect({
             }}
           >
             {val}
-            <div
-              style={{
-                width: "100%",
-                backgroundColor: "blue",
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  position: "absolute",
-                  right: 0,
-                  width: 80,
-                  justifyContent: "space-between",
-                }}
-              >
+            <div className={classes.menuItemContainer}>
+              <div className={classes.menuItemInnerContainer}>
                 {!archived ? (
                   <ArchiveIcon
-                    style={{ color: COLORS.primaryOrange }}
+                    className={classes.archiveIcon}
                     onClick={(e) => {
                       onArchive(index);
                       e.stopPropagation();
@@ -81,7 +102,7 @@ export default function TranslateSelect({
                   />
                 ) : (
                   <UnarchiveIcon
-                    style={{ color: COLORS.primaryOrange }}
+                    className={classes.archiveIcon}
                     onClick={(e) => {
                       onUnarchive(index);
                       e.stopPropagation();
@@ -90,7 +111,7 @@ export default function TranslateSelect({
                   />
                 )}
                 <DeleteIcon
-                  style={{ color: COLORS.red }}
+                  className={classes.deleteIcon}
                   onClick={(e) => {
                     onDelete(index);
                     e.stopPropagation();

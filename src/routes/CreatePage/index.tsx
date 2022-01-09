@@ -6,6 +6,7 @@ const NEW_QUESTION: Question = {
   title: "",
   new: true,
   examples: [],
+  ext_resources: [],
 };
 import {
   Category,
@@ -151,7 +152,9 @@ export default function CreatePage({
         );
       }
       newQuestions[index] = question;
+      console.log("MT NNNN", question);
       setCurrentQuestions(newQuestions);
+      console.log("MT ALLLLL", newQuestions);
     }
   };
 
@@ -173,7 +176,6 @@ export default function CreatePage({
   };
 
   const onSubmit = async (questions: Question[]) => {
-    console.log("MY QQQ", questions);
     await onQuestionsAdd(
       questions,
       selectedTopic.id,
@@ -228,7 +230,6 @@ export default function CreatePage({
       />
 
       <CreatePageBody
-        classes={classes}
         isReview={isReview}
         setReview={setReview}
         onQuestionChange={onQuestionChange}

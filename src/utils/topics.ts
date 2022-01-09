@@ -472,6 +472,7 @@ export const generateQuestions = (text: string, topic: Topic): Question[] => {
     timestamp: new Date(),
     title: title,
     examples: [],
+    ext_resources: [],
     new: true,
   }));
 

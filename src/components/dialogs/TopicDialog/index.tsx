@@ -194,7 +194,7 @@ export default function TopicDialog(props: TopicDialogProps) {
         open={props.open}
         headerText={props.headerText}
         minWidth={600}
-        minHeigth={560}
+        minHeight={560}
         loading={props.loading}
         tabData={tabs}
         confirmButtonDisabled={!isSubmitEnabled()}

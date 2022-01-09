@@ -69,7 +69,7 @@ export default function QuestionsQuickAddDialog(
         confirmButtonText="Continue"
         refuseButtonText="Close"
         headerText={"Quick Add to " + props.topic.title}
-        minHeigth={300}
+        minHeight={300}
         onConfirm={onConfirm}
         onRefuse={onRefuse}
         confirmButtonDisabled={linesN < props.minQuestions}

@@ -45,6 +45,17 @@ const useStyles = makeStyles(() =>
       backgroundColor: "transparent",
       paddingLeft: 60,
     },
+    deleteIcon: {
+      cursor: "pointer",
+      color: "red",
+    },
+    addIcon: {
+      color: "white",
+      cursor: "pointer",
+    },
+    textField: {
+      width: "50vw",
+    },
   })
 );
 
@@ -64,7 +75,7 @@ export default function QuestionTextField({
       <TextField
         id="outlined-multiline-flexible"
         label={"Question " + (index + 1)}
-        style={{ width: "50vw" }}
+        className={classes.textField}
         rowsMax={4}
         multiline
         value={question.title}
@@ -80,7 +91,7 @@ export default function QuestionTextField({
       >
         {showAdd && (
           <AddIcon
-            style={{ color: "white", cursor: "pointer" }}
+            className={classes.addIcon}
             onClick={() => onCreate(index)}
           />
         )}
@@ -94,7 +105,7 @@ export default function QuestionTextField({
         {showDelete && (
           <div>
             <DeleteIcon
-              style={{ cursor: "pointer", color: "red" }}
+              className={classes.deleteIcon}
               onClick={() => {
                 onDelete(index);
               }}

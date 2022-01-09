@@ -205,7 +205,7 @@ export default function CategoryPage({
         <Switch
           text="Multiple Delete"
           textColor="black"
-          color={MaterialUiColor.Secondary}
+          switchColor={MaterialUiColor.Secondary}
           handleChange={() => setMultipleDelete(!multipleDelete)}
           value={multipleDelete}
         />

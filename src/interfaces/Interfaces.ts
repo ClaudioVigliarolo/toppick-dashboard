@@ -93,7 +93,7 @@ export interface Example {
   title: string;
 }
 
-export interface Article {
+export interface ExternalResource {
   url: string;
 }
 
@@ -103,7 +103,7 @@ export interface Question {
   n?: number;
   new?: boolean;
   examples: Example[];
-  article?: Article;
+  ext_resources: ExternalResource[];
 }
 
 export interface EditItem {

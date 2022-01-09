@@ -16,6 +16,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
+  closeButton: {
+    color: COLORS.darkerOrange,
+  },
+
+  confirmButton: {
+    color: COLORS.blue,
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(
@@ -58,10 +65,10 @@ export default function ConfirmDialog({
         <div className={classes.contentContainer}>{children}</div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onRefuse} style={{ color: COLORS.darkerOrange }}>
+        <Button onClick={onRefuse} className={classes.closeButton}>
           Close
         </Button>
-        <Button onClick={onConfirm} style={{ color: COLORS.blue }}>
+        <Button onClick={onConfirm} className={classes.confirmButton}>
           Confirm
         </Button>
       </DialogActions>

@@ -1,6 +1,11 @@
 import React from "react";
-import { InputLabel, MenuItem, Select } from "@material-ui/core";
-import { Value } from "src/interfaces/Interfaces";
+import {
+  createStyles,
+  InputLabel,
+  makeStyles,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 
 interface CustomSelectProps {
   value: string;
@@ -11,6 +16,16 @@ interface CustomSelectProps {
   header?: string;
   width?: number;
 }
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    select: {
+      textTransform: "capitalize",
+      fontSize: 20,
+    },
+  })
+);
+
 export default function CustomSelect({
   value,
   defaultValue,
@@ -20,17 +35,14 @@ export default function CustomSelect({
   header,
   width = 200,
 }: CustomSelectProps) {
+  const classes = useStyles();
   return (
     <>
       <InputLabel id="demo-mutiple-chip-label">{header}</InputLabel>
       <Select
-        style={{
-          textTransform: "capitalize",
-          width,
-          fontSize: 20,
-          color: color,
-        }}
+        className={classes.select}
         onChange={handleChange}
+        style={{ width, color }}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={value}

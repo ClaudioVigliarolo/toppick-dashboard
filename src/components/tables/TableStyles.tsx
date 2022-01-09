@@ -165,6 +165,17 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
       alignSelf: "center",
     },
+
+    tableCell: {
+      color: "#fff",
+      fontSize: 16,
+      textTransform: "uppercase",
+    },
+
+    tableRow: {
+      color: "#fff",
+      backgroundColor: COLORS.darkerOrange,
+    },
   })
 );
 
@@ -181,21 +192,9 @@ export const CustomTable = (props: CommonStylesProps) => {
           </colgroup>
 
           <TableHead>
-            <TableRow
-              style={{
-                color: "#fff",
-                backgroundColor: COLORS.darkerOrange,
-              }}
-            >
+            <TableRow className={classes.tableRow}>
               {props.columnNames.map((colName: string, index: number) => (
-                <TableCell
-                  key={index}
-                  style={{
-                    color: "#fff",
-                    fontSize: 16,
-                    textTransform: "uppercase",
-                  }}
-                >
+                <TableCell key={index} className={classes.tableCell}>
                   {colName}
                 </TableCell>
               ))}

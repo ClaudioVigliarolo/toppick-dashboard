@@ -29,6 +29,12 @@ const useStyles = makeStyles((theme) => ({
   dialogContent: {
     minWidth: 600,
   },
+  confirmButton: {
+    color: COLORS.blue,
+  },
+  refuseButton: {
+    color: COLORS.darkerOrange,
+  },
 }));
 
 export default function ReportDialog(props: ReportDialogProps) {
@@ -73,13 +79,10 @@ export default function ReportDialog(props: ReportDialogProps) {
           />
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={props.onRefuse}
-            style={{ color: COLORS.darkerOrange }}
-          >
+          <Button onClick={props.onRefuse} className={classes.refuseButton}>
             Revert
           </Button>
-          <Button onClick={onSubmit} style={{ color: COLORS.blue }}>
+          <Button onClick={onSubmit} className={classes.confirmButton}>
             Update
           </Button>
         </DialogActions>

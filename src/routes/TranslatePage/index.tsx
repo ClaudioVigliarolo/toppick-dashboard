@@ -31,6 +31,7 @@ const NEW_TARGET_QUESTION: Question = {
   title: "",
   new: true,
   examples: [],
+  ext_resources: [],
 };
 
 const NEW_SOURCE_QUESTION: Question = {
@@ -38,6 +39,7 @@ const NEW_SOURCE_QUESTION: Question = {
   title: "Custom Question",
   new: true,
   examples: [],
+  ext_resources: [],
 };
 
 const NO_TOTRANSLATE_TOPIC: ToTranslateTopic = {
@@ -330,7 +332,6 @@ export default function TranslatePage({
       />
 
       <TranslatePageBody
-        classes={classes}
         setReview={setReview}
         isReview={isReview}
         loading={loading}

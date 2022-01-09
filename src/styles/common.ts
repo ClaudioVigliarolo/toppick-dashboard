@@ -128,14 +128,6 @@ export const useAppStyles = makeStyles((theme: Theme) =>
       paddingBottom: 100,
     },
 
-    QuestionsReviewContainer: {
-      marginTop: 50,
-      justifyContent: "center",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      paddingBottom: 30,
-    },
     QuestionTextFieldContainer: {
       marginBottom: 80,
     },

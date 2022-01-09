@@ -57,7 +57,7 @@ export default function MessageDialog(props: MessageDialogProps) {
         minWidth={600}
         confirmButtonText="Send"
         refuseButtonText="Close"
-        minHeigth={300}
+        minHeight={300}
         onConfirm={() => onSubmit(message)}
         onRefuse={props.onRefuse}
         tabData={tabs}

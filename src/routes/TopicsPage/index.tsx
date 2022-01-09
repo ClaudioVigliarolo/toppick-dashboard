@@ -200,7 +200,7 @@ export default function ViewPage({
         <Switch
           text="Multiple Delete"
           textColor="black"
-          color={MaterialUiColor.Secondary}
+          switchColor={MaterialUiColor.Secondary}
           handleChange={() => setMultipleDelete(!multipleDelete)}
           value={multipleDelete}
         />

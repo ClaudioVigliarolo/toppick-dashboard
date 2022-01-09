@@ -12,6 +12,9 @@ import { createStyles, makeStyles, Tab, Tabs } from "@material-ui/core";
 
 const useStyles = makeStyles(() =>
   createStyles({
+    container: {
+      position: "relative",
+    },
     dialogContentContainer: {
       display: "flex",
       flexDirection: "column",
@@ -35,6 +38,13 @@ const useStyles = makeStyles(() =>
       width: "100%",
       marginTop: 20,
     },
+    closeButton: {
+      color: COLORS.darkerOrange,
+    },
+
+    confirmButton: {
+      color: COLORS.blue,
+    },
   })
 );
 
@@ -57,7 +67,7 @@ interface CustomDialogProps {
   headerText: string;
   tabData: TabData[];
   minWidth?: number;
-  minHeigth?: number;
+  minHeight?: number;
   confirmButtonDisabled?: boolean;
   showTabs?: boolean;
 }
@@ -94,7 +104,7 @@ export const CustomDialog = ({
   headerText,
   tabData = [],
   minWidth = 400,
-  minHeigth = 400,
+  minHeight = 400,
   loading,
   showTabs = true,
   confirmButtonDisabled = false,
@@ -107,7 +117,7 @@ export const CustomDialog = ({
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className={classes.container}>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -120,8 +130,8 @@ export const CustomDialog = ({
         <DialogContent
           className={classes.dialogContentContainer}
           style={{
-            minWidth: minWidth,
-            minHeight: minHeigth,
+            minWidth,
+            minHeight,
           }}
         >
           {showTabs && (
@@ -129,7 +139,7 @@ export const CustomDialog = ({
               value={value}
               onChange={handleChange}
               indicatorColor="primary"
-              textColor="primary"
+              color="primary"
               centered
             >
               {tabData.map((t, i) => (
@@ -147,11 +157,11 @@ export const CustomDialog = ({
         <DialogActions>
           {loading ? (
             <div className={classes.dialogActionContainer}>
-              <CircularProgress style={{ color: COLORS.primaryOrange }} />
+              <CircularProgress className={classes.circularProgress} />
             </div>
           ) : (
             <>
-              <Button onClick={onRefuse} style={{ color: COLORS.darkerOrange }}>
+              <Button onClick={onRefuse} className={classes.closeButton}>
                 {refuseButtonText}
               </Button>
               <Button
