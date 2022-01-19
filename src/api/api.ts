@@ -17,13 +17,13 @@ import {
   UserStats,
   StatsUpdates,
   CategoryTopic,
-  QuestionTopic,
 } from "../interfaces/Interfaces";
+
 import { HOSTNAME } from "../config/config";
 
 export const getCategories = async (lang: Lang): Promise<Category[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/categories/` + lang, {
+    const response = await axios.get(`${HOSTNAME}/categories/all/` + lang, {
       headers: {},
     });
     return response.status === 200 ? response.data : null;
@@ -86,11 +86,14 @@ export const getTopics = async (
   token: string
 ): Promise<Topic[] | null> => {
   try {
-    const response = await axios.get(`${HOSTNAME}/topics-dashboard/` + lang, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const response = await axios.get(
+      `${HOSTNAME}/topics-dashboard/all/` + lang,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return response.status === 200 ? response.data : null;
   } catch (err) {
     console.error(err);
@@ -550,7 +553,7 @@ export const createCategory = async (
 ): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${HOSTNAME}/categories`,
+      `${HOSTNAME}/categories/`,
       {
         category,
         lang,
