@@ -210,14 +210,6 @@ export interface StatsContent {
   questions: number;
 }
 
-export interface StatsUpdates {
-  updates: number;
-}
-
-export interface StatsReport {
-  reports: number;
-}
-
 export interface Data {
   label: string;
   value: number;

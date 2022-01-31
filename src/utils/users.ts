@@ -1,5 +1,5 @@
 /* utils for inserting, modifing, removing users  */
-import { addUser, deleteUser, emailUser, updateUser } from "../api/api";
+import { addUser, deleteUser, emailUser, updateUser } from "../services/api";
 import { UserCreated, EmailInfo, EmailType } from "../interfaces/Interfaces";
 
 export const onUserDelete = async (

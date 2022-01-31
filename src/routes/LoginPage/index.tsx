@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { login } from "../../api/api";
+import { login } from "../../services/api";
 import { AuthContext } from "../../context/AuthContext";
 import { makeStyles, TextField } from "@material-ui/core";
 import { PageProps } from "../../interfaces/Interfaces";

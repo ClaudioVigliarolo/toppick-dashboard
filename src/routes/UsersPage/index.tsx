@@ -8,7 +8,7 @@ import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import MessageDialog from "../../components/dialogs/MessageDialog";
 import { getHash, noSpace } from "src/utils/utils";
 import { useAppStyles } from "../../styles/common";
-import { getUsers } from "../../api/api";
+import { getUsers } from "../../services/api";
 import {
   onUserAdd,
   onUserDelete,

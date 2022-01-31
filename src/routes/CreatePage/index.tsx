@@ -1,5 +1,9 @@
 import React from "react";
-import { getCategories, getQuestionsByTopic, getTopics } from "../../api/api";
+import {
+  getCategories,
+  getQuestionsByTopic,
+  getTopics,
+} from "../../services/api";
 
 const NEW_QUESTION: Question = {
   id: -1,
@@ -68,7 +72,7 @@ export default function CreatePage({
     (async () => {
       onReset();
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage);
+      const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
@@ -92,8 +96,10 @@ export default function CreatePage({
     setSelectedTopic(topics[index]);
     if (topics[index] !== NO_TOPIC) {
       setLoading(true);
-      const retrievedQuestions = await getQuestionsByTopic(topics[index].id);
-      console.log("MY RETREIVD!!!!", retrievedQuestions);
+      const retrievedQuestions = await getQuestionsByTopic(
+        topics[index].id,
+        token
+      );
       if (retrievedQuestions !== null) {
         const newQuestions = [...retrievedQuestions].map((q) => ({
           ...q,

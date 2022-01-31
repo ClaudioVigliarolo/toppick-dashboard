@@ -1,12 +1,9 @@
 import React from "react";
 import { MaterialUiColor, PageProps } from "../../interfaces/Interfaces";
 import DBChartBar from "../../components/charts/DBChartBar";
-import UpdatesChart from "../../components/charts/UpdatesChart";
 import UserChart from "../../components/charts/UserChart";
-import ReportsChart from "../../components/charts/ReportsChart";
 import Button from "../../components/buttons/TabButton";
 import { CONSTANTS } from "../../constants/constants";
-import { useAppStyles } from "src/styles/common";
 import Switch from "../../components/select/Switch";
 import {
   getTodayEnd,
@@ -17,7 +14,7 @@ import {
   getLastMonthStart,
   getYesterdayStart,
 } from "src/utils/utils";
-import { getMaintenanceStatus, updateMaintenance } from "../../api/api";
+import { getMaintenanceStatus, updateMaintenance } from "../../services/api";
 import { makeStyles } from "@material-ui/core";
 import { COLORS } from "src/constants/Colors";
 
@@ -33,9 +30,7 @@ interface DateButton {
 }
 
 enum ChartIndex {
-  UpdatesChart,
   UsersChart,
-  ReportsChart,
 }
 
 const dateButtons: DateButton[] = [
@@ -72,9 +67,7 @@ const dateButtons: DateButton[] = [
 ];
 
 const chartButtons: ChartButton[] = [
-  { label: "Reports", chartIndex: ChartIndex.ReportsChart },
   { label: "Users", chartIndex: ChartIndex.UsersChart },
-  { label: "Updates", chartIndex: ChartIndex.UpdatesChart },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -192,24 +185,6 @@ export default function StatsPage({ token, currentLanguage }: PageProps) {
             />
           ))}
         </div>
-
-        {chartIndex === ChartIndex.ReportsChart && (
-          <ReportsChart
-            currentLanguage={currentLanguage}
-            token={token}
-            until={until}
-            from={from}
-          />
-        )}
-
-        {chartIndex === ChartIndex.UpdatesChart && (
-          <UpdatesChart
-            currentLanguage={currentLanguage}
-            token={token}
-            until={until}
-            from={from}
-          />
-        )}
         {chartIndex === ChartIndex.UsersChart && (
           <UserChart
             currentLanguage={currentLanguage}

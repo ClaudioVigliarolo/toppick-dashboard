@@ -3,7 +3,6 @@ import { Redirect, Switch, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import CustomRoute from "./components/CustomRoute";
 import Menu from "./components/Menu";
-import { getUpdates } from "../api/api";
 import { Lang } from "src/interfaces/Interfaces";
 import { StatusContext } from "src/context/StatusContext";
 import { routes } from "./routes";
@@ -20,9 +19,6 @@ export const getCondition = (
       return isAuthenticated && userType == "root";
     case "/stats":
       return isAuthenticated && userType == "root";
-
-    case "/translate": //userType == "translated"
-      return isAuthenticated;
 
     case "/categories":
       return isAuthenticated;
@@ -53,13 +49,8 @@ export const Navigation = () => {
 
   const { setLoading, loading, onError, onSuccess, error, success } =
     React.useContext(StatusContext);
-
-  React.useEffect(() => {
-    (async () => {
-      console.log("ggg", await getUpdates("Sun May 11,2014", Lang.IT, 12));
-    })();
-  }, []);
   const location = useLocation();
+
   return (
     <Menu
       loading={loading}

@@ -124,7 +124,7 @@ export default function TopicDialog(props: TopicDialogProps) {
   };
 
   const toggleActive = () => {
-    setTopic({ ...topic, active: !topic.approved });
+    setTopic({ ...topic, active: !topic.active });
   };
 
   const toggleApprove = () => {

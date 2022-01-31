@@ -1,5 +1,5 @@
 import React from "react";
-import { getCategories, getTopics } from "../../api/api";
+import { getCategories, getTopics } from "../../services/api";
 import {
   Category,
   MaterialUiColor,
@@ -15,7 +15,6 @@ import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../../styles/common";
 import {
   onTopicCreate,
-  onTopicDeleteMany,
   onTopicDeleteUnique,
   onTopicUpdate,
 } from "src/utils/topics";
@@ -52,7 +51,6 @@ export default function ViewPage({
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const [multipleDelete, setMultipleDelete] = React.useState<boolean>(true);
 
   const classes = useAppStyles();
 
@@ -63,7 +61,7 @@ export default function ViewPage({
       if (retrievedTopics != null) {
         setTopics(retrievedTopics);
       }
-      const retrievedCategories = await getCategories(currentLanguage);
+      const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
@@ -75,7 +73,7 @@ export default function ViewPage({
     setEditDialog(true);
   };
 
-  const onDelete = (topic: Topic) => {
+  const onDeleteShow = (topic: Topic) => {
     setCurrentTopic(topic);
     setDeleteDialog(true);
   };
@@ -95,6 +93,20 @@ export default function ViewPage({
     setEditDialog(false);
   };
 
+  const onDeleteSubmit = () => {
+    onTopicDeleteUnique(
+      currentTopic.id,
+      topics,
+      currentLanguage,
+      token,
+      setTopics,
+      setLoading,
+      onSuccess,
+      onError
+    );
+    setCurrentTopic(NO_TOPIC);
+    setDeleteDialog(false);
+  };
   const onCreateSubmit = async (newTopic: Topic) => {
     await onTopicCreate(
       {
@@ -130,7 +142,7 @@ export default function ViewPage({
       </div>
       <TableTopics
         searchText={searchText}
-        onDelete={onDelete}
+        onDelete={onDeleteShow}
         onUpdate={onUpdate}
         topics={topics}
       />
@@ -165,46 +177,14 @@ export default function ViewPage({
 
       <DeleteDialog
         open={deleteDialog}
-        onConfirm={() => {
-          multipleDelete
-            ? onTopicDeleteMany(
-                currentTopic.ref_id,
-                topics,
-                currentLanguage,
-                token,
-                setTopics,
-                setLoading,
-                onSuccess,
-                onError
-              )
-            : onTopicDeleteUnique(
-                currentTopic.id,
-                topics,
-                currentLanguage,
-                token,
-                setTopics,
-                setLoading,
-                onSuccess,
-                onError
-              );
-          setCurrentTopic(NO_TOPIC);
-          setDeleteDialog(false);
-        }}
+        onConfirm={onDeleteSubmit}
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setCurrentTopic(NO_TOPIC);
           setDeleteDialog(false);
         }}
-      >
-        <Switch
-          text="Multiple Delete"
-          textColor="black"
-          switchColor={MaterialUiColor.Secondary}
-          handleChange={() => setMultipleDelete(!multipleDelete)}
-          value={multipleDelete}
-        />
-      </DeleteDialog>
+      ></DeleteDialog>
     </>
   );
 }

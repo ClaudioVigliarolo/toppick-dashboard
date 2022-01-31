@@ -1,9 +1,8 @@
 import React from "react";
-import { getCategories, getCategoryTopics } from "../../api/api";
+import { getCategories, getCategoryTopics } from "../../services/api";
 import {
   Category,
   CategoryTopic,
-  MaterialUiColor,
   PageProps,
 } from "../../interfaces/Interfaces";
 import TableCategories from "../../components/tables/TableCategories";
@@ -14,12 +13,10 @@ import DeleteDialog from "../../components/dialogs/ConfirmDialog";
 import { useAppStyles } from "../../styles/common";
 import {
   onCategoryAdd,
-  onCategoryDeleteMany,
   onCategoryDeleteUnique,
   onCategoryUpdate,
 } from "src/utils/topics";
 import { getHash } from "src/utils/utils";
-import Switch from "src/components/select/Switch";
 
 const NO_CATEGORY: Category = {
   id: -1,
@@ -48,17 +45,19 @@ export default function CategoryPage({
   const [addDialog, setAddDialog] = React.useState<boolean>(false);
   const [currentCategory, setCurrentCategory] =
     React.useState<Category>(NO_CATEGORY);
-  const [multipleDelete, setMultipleDelete] = React.useState<boolean>(false);
   const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage);
+      const retrievedCategories = await getCategories(currentLanguage, token);
       if (retrievedCategories != null) {
         setCategories(retrievedCategories);
       }
-      const retrievedCategTopics = await getCategoryTopics(currentLanguage);
+      const retrievedCategTopics = await getCategoryTopics(
+        currentLanguage,
+        token
+      );
       if (retrievedCategTopics != null) {
         setCategoryTopics(retrievedCategTopics);
       }
@@ -73,7 +72,7 @@ export default function CategoryPage({
     setEditDialog(true);
   };
 
-  const onDelete = (categ: Category) => {
+  const onDeleteShow = (categ: Category) => {
     setCurrentCategory(categ);
     setDeleteDialog(true);
   };
@@ -119,29 +118,17 @@ export default function CategoryPage({
     setCurrentCategory(NO_CATEGORY);
   };
 
-  const onMultipleDelete = () => {
-    multipleDelete
-      ? onCategoryDeleteMany(
-          currentCategory.ref_id,
-          categories,
-          currentLanguage,
-          token,
-          setCategories,
-          setLoading,
-          onSuccess,
-          onError
-        )
-      : onCategoryDeleteUnique(
-          currentCategory.id,
-          categories,
-          currentLanguage,
-          token,
-          setCategories,
-          setLoading,
-          onSuccess,
-          onError
-        );
-
+  const onDeleteSubmit = () => {
+    onCategoryDeleteUnique(
+      currentCategory.id,
+      categories,
+      currentLanguage,
+      token,
+      setCategories,
+      setLoading,
+      onSuccess,
+      onError
+    );
     setDeleteDialog(false);
   };
 
@@ -163,7 +150,7 @@ export default function CategoryPage({
         categories={categories}
         currentLanguage={currentLanguage}
         searchText={searchText}
-        onDelete={onDelete}
+        onDelete={onDeleteShow}
         onUpdate={onUpdate}
       />
 
@@ -195,21 +182,13 @@ export default function CategoryPage({
 
       <DeleteDialog
         open={deleteDialog}
-        onConfirm={onMultipleDelete}
+        onConfirm={onDeleteSubmit}
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setDeleteDialog(false);
         }}
-      >
-        <Switch
-          text="Multiple Delete"
-          textColor="black"
-          switchColor={MaterialUiColor.Secondary}
-          handleChange={() => setMultipleDelete(!multipleDelete)}
-          value={multipleDelete}
-        />
-      </DeleteDialog>
+      ></DeleteDialog>
     </>
   );
 }

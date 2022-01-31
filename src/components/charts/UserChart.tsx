@@ -3,7 +3,7 @@ import CardNumber from "../cards/CardNumber";
 import Button from "../buttons/TabButton";
 import StatsCarousel from "../carousels/StatsCarousel";
 import { UserCreated, Lang, UserStats } from "src/interfaces/Interfaces";
-import { getUsers, getUserStats } from "src/api/api";
+import { getUsers, getUserStats } from "../../services/api";
 import { useChartStyles } from "./ChartStyles";
 
 interface DBChartBarProps {
@@ -97,34 +97,6 @@ export default function DBChartBar({
               <CardNumber
                 label="Questions Added"
                 value={userStats.questionsAdded}
-              />
-            </div>,
-            <div className={classes.cardnumbersContainer} key={1}>
-              <CardNumber
-                label="Discarded Translation"
-                value={userStats.totranslateDeleted}
-              />
-              <CardNumber
-                label="Questions Deleted"
-                value={userStats.questionsDeleted}
-              />
-              <CardNumber
-                label="Questions Updated"
-                value={userStats.questionsUpdated}
-              />
-            </div>,
-            <div className={classes.cardnumbersContainer} key={2}>
-              <CardNumber
-                label="Translated topics"
-                value={userStats.translatedTopics}
-              />
-              <CardNumber
-                label="Translated questions"
-                value={userStats.translatedQuestions}
-              />
-              <CardNumber
-                label="Handled Reports"
-                value={userStats.deletedReports}
               />
             </div>,
           ]}

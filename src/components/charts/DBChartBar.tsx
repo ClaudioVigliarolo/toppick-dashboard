@@ -1,7 +1,7 @@
 import React from "react";
 import CardNumber from "../cards/CardNumber";
 import { Lang, StatsContent } from "../../interfaces/Interfaces";
-import { getStatsContent } from "../../api/api";
+import { getStatsContent } from "../../services/api";
 import { useChartStyles } from "./ChartStyles";
 
 interface DBChartBarProps {

@@ -24,7 +24,7 @@ import {
 import LanguageSelect from "../../components/select/LanguageSelect";
 import HeaderSection from "../../components/layout/HeaderSection";
 import { getCondition } from "..";
-import { logoutUser } from "../../api/api";
+import { logoutUser } from "../../services/api";
 import { Lang } from "src/interfaces/Interfaces";
 import { refreshPage } from "src/utils/utils";
 import { CONSTANTS } from "src/constants/constants";

@@ -3,25 +3,18 @@ import {
   createCategory,
   addQuestions,
   addTopic,
-  archiveToTranslateTopic,
-  deleteCategoryMany,
   deleteCategoryUnique,
   deleteQuestion,
-  deleteReport,
-  deleteTopicMany,
   deleteTopicUnique,
-  deleteToTranslateTopic,
-  unarchiveToTranslateTopic,
   updateCategory,
   updateTopic,
-} from "../api/api";
+} from "../services/api";
 import {
   Category,
   Lang,
   Question,
   ReportHandled,
   Topic,
-  ToTranslateTopic,
 } from "../interfaces/Interfaces";
 import { getLinesFromText, getQuestionHash } from "../utils/utils";
 
@@ -74,31 +67,6 @@ export const onCategoryUpdate = async (
       item.image = category.image;
     }
   });
-  setCategories([...newCategories]);
-  setLoading(false);
-  onSuccess();
-};
-
-export const onCategoryDeleteMany = async (
-  ref_id: number,
-  categories: Category[],
-  currentLanguage: Lang,
-  token: string,
-  setCategories: (categories: Category[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-) => {
-  setLoading(true);
-  const val = await deleteCategoryMany(ref_id, currentLanguage, token);
-  if (!val) {
-    setLoading(false);
-    onError();
-    return;
-  }
-  const newCategories = categories.filter(
-    (categ: Category) => categ.ref_id !== ref_id
-  );
   setCategories([...newCategories]);
   setLoading(false);
   onSuccess();
@@ -318,55 +286,6 @@ export const onTopicDeleteUnique = async (
   onSuccess();
 };
 
-export const onTopicDeleteMany = async (
-  ref_id: number,
-  topics: Topic[],
-  currentLanguage: Lang,
-  token: string,
-  setTopics: (topics: Topic[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-): Promise<void> => {
-  setLoading(true);
-  const val = await deleteTopicMany(ref_id, currentLanguage, token);
-  if (!val) {
-    setLoading(false);
-    return onError();
-  }
-  const newTopics = topics.filter((topic: Topic) => topic.ref_id !== ref_id);
-  setTopics([...newTopics]);
-  setLoading(false);
-  onSuccess();
-};
-
-export const onReportDelete = async (
-  question_id: number,
-  reports: ReportHandled[],
-  setReports: (reports: ReportHandled[]) => void,
-  currentLanguage: Lang,
-  token: string,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-) => {
-  setLoading(true);
-  const val = await deleteReport(question_id, currentLanguage, token);
-
-  if (!val) {
-    setLoading(false);
-    return onError();
-  }
-  //update locally
-  const newReports = reports.filter(function (item: ReportHandled) {
-    return item.question_id !== question_id;
-  });
-
-  setReports([...newReports]);
-  setLoading(false);
-  onSuccess();
-};
-
 export const onQuestionsAdd = async (
   questions: Question[],
   topicId: number,
@@ -394,75 +313,6 @@ export const onQuestionsAdd = async (
   }
   setLoading(false);
   onSuccess();
-};
-
-export const ondeleteToTranslateTopic = async (
-  id: number,
-  toTranslateTopics: ToTranslateTopic[],
-  setToTranslateTopics: (toTranslateTopics: ToTranslateTopic[]) => void,
-  lang: Lang,
-  token: string
-) => {
-  const val = await deleteToTranslateTopic(id, lang, token);
-
-  if (!val) {
-    //unnecessary further error handling
-    return;
-  }
-  //update locally
-  const newToTranslateTopics = toTranslateTopics.filter(function (
-    item: ToTranslateTopic
-  ) {
-    return item.id !== id;
-  });
-
-  setToTranslateTopics([...newToTranslateTopics]);
-};
-
-export const onaAchiveToTranslateTopic = async (
-  id: number,
-  toTranslateTopics: ToTranslateTopic[],
-  setToTranslateTopics: (toTranslateTopics: ToTranslateTopic[]) => void,
-  lang: Lang,
-  token: string
-) => {
-  const val = await archiveToTranslateTopic(id, lang, token);
-  if (!val) {
-    //unnecessary further error handling
-    return;
-  }
-  console.log("muvallll", val);
-  console.log(toTranslateTopics);
-  //update locally
-  const newToTranslateTopics = toTranslateTopics.filter(function (
-    item: ToTranslateTopic
-  ) {
-    return item.id !== id;
-  });
-
-  setToTranslateTopics([...newToTranslateTopics]);
-};
-
-export const onUnarchiveToTranslateTopic = async (
-  id: number,
-  toTranslateTopics: ToTranslateTopic[],
-  setToTranslateTopics: (toTranslateTopics: ToTranslateTopic[]) => void,
-  lang: Lang,
-  token: string
-) => {
-  const val = await unarchiveToTranslateTopic(id, lang, token);
-  if (!val) {
-    //unnecessary further error handling
-    return;
-  }
-  //update locally
-  const newToTranslateTopics = toTranslateTopics.filter(function (
-    item: ToTranslateTopic
-  ) {
-    return item.id !== id;
-  });
-
-  setToTranslateTopics([...newToTranslateTopics]);
 };
 
 export const generateQuestions = (text: string, topic: Topic): Question[] => {

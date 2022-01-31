@@ -1,6 +1,6 @@
 import React from "react";
 import { Lang } from "src/interfaces/Interfaces";
-import { getUser } from "../api/api";
+import { getUser } from "../services/api";
 import { StatusContext } from "./StatusContext";
 
 const DEFAULT_LANG: Lang = Lang.EN;

@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     position: "relative",
     width: 100,
-    height: 20,
+    height: 50,
   },
   userAvatarContainer: {
     position: "absolute",
