@@ -93,8 +93,11 @@ export interface Example {
   title: string;
 }
 
-export interface ExternalResource {
+export interface QuestionExtResource {
   url: string;
+  title?: string;
+  snippet?: string;
+  thumbnail?: string;
 }
 
 export interface Question {
@@ -103,7 +106,7 @@ export interface Question {
   n?: number;
   new?: boolean;
   examples: Example[];
-  ext_resources: ExternalResource[];
+  ext_resources: QuestionExtResource[];
 }
 
 export interface EditItem {

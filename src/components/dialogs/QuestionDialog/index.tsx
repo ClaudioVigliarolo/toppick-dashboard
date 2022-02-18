@@ -5,7 +5,7 @@ import ArticleOverview from "./sections/ExtResourceOverview";
 import ExamplesPreview from "./sections/Examples";
 import {
   Example,
-  ExternalResource,
+  QuestionExtResource,
   Question,
 } from "../../../interfaces/Interfaces";
 interface QuestionDialogProps {
@@ -18,7 +18,7 @@ interface QuestionDialogProps {
 
 export default function QuestionDialog(props: QuestionDialogProps) {
   const [title, setTitle] = React.useState<string>("");
-  const [extResources, setExtResources] = React.useState<ExternalResource[]>(
+  const [extResources, setExtResources] = React.useState<QuestionExtResource[]>(
     []
   );
   const [currentPreviewUrl, setCurrentPreviewUrl] = React.useState<string>("");
