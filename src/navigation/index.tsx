@@ -1,11 +1,10 @@
 import React from "react";
 import { Redirect, Switch, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import CustomRoute from "./components/CustomRoute";
-import Menu from "./components/Menu";
-import { Lang } from "src/interfaces/Interfaces";
-import { StatusContext } from "src/context/StatusContext";
+import { StatusContext } from "@/context/StatusContext";
 import { routes } from "./routes";
+import CustomRoute from "../components/ui/CustomRoute";
+import Menu from "../components/ui/Menu";
 
 export const getCondition = (
   userType: string,

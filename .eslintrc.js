@@ -165,5 +165,14 @@ module.exports = {
     react: {
       version: "detect", // Detect react version
     },
+    "import/resolver": {
+      alias: {
+        map: [
+          // And all your import aliases
+          ["@/", "./src/*"],
+        ],
+        extensions: [".ts", ".js", ".jsx", ".json"],
+      },
+    },
   },
 };

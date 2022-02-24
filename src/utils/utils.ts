@@ -1,4 +1,5 @@
-import { Example, Topic, Value } from "src/interfaces/Interfaces";
+import { Value } from "@/interfaces/app";
+import { Example } from "@/interfaces/dash_topics";
 
 export const getHash = (str1: string, str2: string = "") => {
   const str = str1 + "*" + str2 + new Date().toISOString();

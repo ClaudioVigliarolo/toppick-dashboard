@@ -1,10 +1,10 @@
-import CategoriesPage from "../routes/CategoriesPage";
-import UsersPage from "../routes/UsersPage";
-import TopicsPage from "../routes/TopicsPage";
-import LoginPage from "../routes/LoginPage";
-import CreatePage from "../routes/CreatePage";
-import StatisticsPage from "../routes/StatsPage";
-import { Route } from "src/interfaces/Interfaces";
+import CategoriesPage from "../routes/category";
+import UsersPage from "../routes/user";
+import TopicsPage from "../routes/topic";
+import LoginPage from "../routes/login";
+import CreatePage from "../routes/create";
+import StatisticsPage from "../routes/stats";
+import { Route } from "@/interfaces/app";
 
 export const routes: Route[] = [
   {

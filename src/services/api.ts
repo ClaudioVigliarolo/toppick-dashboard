@@ -1,19 +1,16 @@
 import axios from "axios";
 import {
   Category,
-  UserCreated,
   Question,
   Topic,
-  UserLogged,
-  EmailType,
-  EmailInfo,
-  Lang,
-  StatsContent,
-  UserStats,
   CategoryTopic,
-} from "../interfaces/Interfaces";
+} from "../interfaces/dash_topics";
 
 import { HOSTNAME } from "../config/config";
+import { UserCreated, UserLogged } from "@/interfaces/dash_user";
+import { EmailInfo, EmailType } from "@/interfaces/dash_mail";
+import { StatsContent, UserStats } from "@/interfaces/stats";
+import { Lang } from "@/interfaces/app";
 
 export const getCategories = async (
   lang: Lang,

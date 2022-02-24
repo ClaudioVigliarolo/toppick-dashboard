@@ -9,14 +9,9 @@ import {
   updateCategory,
   updateTopic,
 } from "../services/api";
-import {
-  Category,
-  Lang,
-  Question,
-  ReportHandled,
-  Topic,
-} from "../interfaces/Interfaces";
 import { getLinesFromText, getQuestionHash } from "../utils/utils";
+import { Category, Question, Topic } from "../interfaces/dash_topics";
+import { Lang } from "@/interfaces/app";
 
 export const onCategoryAdd = async (
   newCategory: Category,

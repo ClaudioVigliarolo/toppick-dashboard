@@ -1,5 +1,5 @@
 import React from "react";
-import { Lang } from "src/interfaces/Interfaces";
+import { Lang } from "@/interfaces/app";
 import { getUser } from "../services/api";
 import { StatusContext } from "./StatusContext";
 
