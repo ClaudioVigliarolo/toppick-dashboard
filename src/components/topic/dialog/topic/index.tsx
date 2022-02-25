@@ -118,19 +118,20 @@ export default function TopicDialog(props: TopicDialogProps) {
   };
 
   const onTagAdd = (tag: string) => {
-    const newTopic = { ...topic };
-    newTopic.tags.push({
+    const newTags = topic.tags.filter((t) => t.title !== tag);
+    newTags.push({
       title: tag,
     });
-    setTopic(newTopic);
+    setTopic({ ...topic, tags: newTags });
   };
 
   const isSubmitEnabled = (): boolean =>
     topic.title != "" &&
     topic.image !== "" &&
-    level != "" &&
-    topic.categories.length > 0;
-  topic.related.length > 0;
+    level !== "" &&
+    topic.categories.length > 0 &&
+    topic.tags.length > 0 &&
+    topic.related.length > 0;
 
   const tabs: TabData[] = [
     {

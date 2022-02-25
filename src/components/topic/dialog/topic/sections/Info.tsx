@@ -14,10 +14,8 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     alignItems: "center",
   },
-  userApprovedContainer: {
-    display: "flex",
-    flexDirection: "row",
-    position: "relative",
+  TagSelectorContainer: {
+    marginTop: 20,
   },
   selectContainer: {
     marginTop: 20,
@@ -75,7 +73,7 @@ export default function Info({
             defaultValue={level}
           />
         </div>
-        <div className={classes.userApprovedContainer}>
+        <div className={classes.TagSelectorContainer}>
           <TagSelector tags={tags} onRemove={onTagRemove} onAdd={onTagAdd} />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import TagItem from "./TagItem";
 import { TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { TopicTag } from "@/interfaces/dash_topics";
 
 interface TagSelectorProps {
@@ -9,12 +10,22 @@ interface TagSelectorProps {
   onAdd: (tag: string) => void;
 }
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    minHeight: 100,
+    flexWrap: "wrap",
+    display: "flex",
+    maxWidth: 400,
+  },
+}));
+
 export default function TagSelector({
   tags,
   onRemove,
   onAdd,
 }: TagSelectorProps) {
   const [title, setTitle] = React.useState("");
+  const classes = useStyles();
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -25,7 +36,7 @@ export default function TagSelector({
 
   return (
     <div>
-      <div style={{ minHeight: 100, backgroundColor: "red" }}>
+      <div className={classes.container}>
         {tags.map((tag, i) => (
           <TagItem onRemove={() => onRemove(i)} tag={tag.title} key={i} />
         ))}
@@ -35,7 +46,7 @@ export default function TagSelector({
           InputLabelProps={{ shrink: true }}
           margin="dense"
           onKeyDown={handleKeyDown}
-          label="Title"
+          label="Tag"
           placeholder="Type new tag..."
           id="standard-helperText"
           value={title}
