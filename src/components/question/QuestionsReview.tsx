@@ -11,14 +11,13 @@ import LinkOutlinedIcon from "@material-ui/icons/LinkOutlined";
 import BookmarkAddedIcon from "@material-ui/icons/Bookmark";
 import { CONSTANTS } from "@/constants/app";
 import QuestionDialog from "./dialog";
-import { Example, Question } from "@/interfaces/dash_topics";
+import { CreatedQuestion, Question } from "@/interfaces/dash_topics";
 import CustomButton from "@/components/ui/buttons/Button";
 import { COLORS } from "@/constants/colors";
 const LIST_ITEM_HEIGTH = 100;
 const LIST_ITEM_MARGIN = 25;
 
-const NO_QUESTION: Question = {
-  id: -1,
+const NO_QUESTION: CreatedQuestion = {
   title: "",
   examples: [],
   ext_resources: [],
@@ -50,15 +49,15 @@ export default function QuestionsReview({
   loading,
   onClose,
 }: {
-  questions: Question[];
+  questions: CreatedQuestion[];
   onSubmit: () => void;
-  onChange: (index: number, question: Question) => void;
+  onChange: (index: number, question: CreatedQuestion) => void;
   loading: boolean;
   onClose: () => void;
 }) {
   const [articlesDialog, setArticlesDialog] = React.useState<boolean>(false);
   const [currentQuestion, setCurrentQuestion] =
-    React.useState<Question>(NO_QUESTION);
+    React.useState<CreatedQuestion>(NO_QUESTION);
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     React.useState<number>(-1);
 

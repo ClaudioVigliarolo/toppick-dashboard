@@ -3,7 +3,7 @@ import { CONSTANTS } from "../constants/app";
 import CustomAlert from "../components/ui/Alert";
 
 export const StatusContext = React.createContext({
-  loading: false,
+  loading: true,
   setLoading: (newVal: boolean) => {},
   onSuccess: () => {},
   onError: () => {},

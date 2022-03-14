@@ -5,9 +5,10 @@ import { StatusContext } from "@/context/StatusContext";
 import { routes } from "./routes";
 import CustomRoute from "../components/ui/CustomRoute";
 import Menu from "../components/ui/Menu";
+import { UserRole } from "@/interfaces/user";
 
 export const getCondition = (
-  userType: string,
+  userRole: UserRole,
   path: string,
   isAuthenticated: boolean
 ) => {
@@ -15,9 +16,9 @@ export const getCondition = (
     case "/login":
       return !isAuthenticated;
     case "/users":
-      return isAuthenticated && userType == "root";
+      return isAuthenticated && userRole == UserRole.ADMIN;
     case "/stats":
-      return isAuthenticated && userType == "root";
+      return isAuthenticated && userRole == UserRole.ADMIN;
 
     case "/categories":
       return isAuthenticated;
@@ -36,33 +37,23 @@ export const getCondition = (
 };
 
 export const Navigation = () => {
-  const {
-    isAuthenticated,
-    userType,
-    userToken,
-    username,
-    languages,
-    setCurrentLanguage,
-    currentLanguage,
-  } = React.useContext(AuthContext);
+  const { isAuthenticated, userRole, username, currentLanguage, authToken } =
+    React.useContext(AuthContext);
 
-  const { setLoading, loading, onError, onSuccess, error, success } =
-    React.useContext(StatusContext);
+  const { loading, error, success } = React.useContext(StatusContext);
   const location = useLocation();
-
+  console.log("????", loading);
   return (
     <Menu
       loading={loading}
-      userType={userType}
+      userRole={userRole}
       isAuthenticated={isAuthenticated}
-      token={userToken}
+      token={authToken}
       username={username}
-      setCurrentLanguage={setCurrentLanguage}
-      languages={languages}
       currentLanguage={currentLanguage}
     >
       <Switch>
-        {!loading && !isAuthenticated && location.pathname !== "/login" && (
+        {!isAuthenticated && !loading && location.pathname !== "/login" && (
           <Redirect to="/login" />
         )}
         {isAuthenticated && <Redirect exact from="/" to="/categories" />}
@@ -71,14 +62,10 @@ export const Navigation = () => {
           <CustomRoute
             key={index}
             path={route.path}
-            condition={getCondition(userType, route.path, isAuthenticated)}
+            condition={getCondition(userRole, route.path, isAuthenticated)}
             Component={route.component}
-            token={userToken}
+            token={authToken}
             currentLanguage={currentLanguage}
-            setLoading={setLoading}
-            loading={loading}
-            onError={onError}
-            onSuccess={onSuccess}
             error={error}
             success={success}
           />

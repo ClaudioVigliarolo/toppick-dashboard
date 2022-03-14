@@ -24,10 +24,11 @@ import {
 import LanguageSelect from "./select/LanguageSelect";
 import HeaderSection from "./Header";
 import { getCondition } from "@/navigation";
-import { logoutUser } from "@/services/api";
 import { Lang } from "@/interfaces/app";
 import { refreshPage } from "@/utils/utils";
 import { CONSTANTS } from "@/constants/app";
+import { UserRole } from "@/interfaces/user";
+import { auth } from "@/services/firebase";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,24 +93,20 @@ const StyledLinearProgress = withStyles({
   },
 })(LinearProgress);
 
-export default function PersistentDrawerLeft({
+export default function Menu({
   children,
-  userType,
+  userRole,
   isAuthenticated,
   token,
   username,
-  languages,
-  setCurrentLanguage,
   currentLanguage,
   loading,
 }: {
   children: React.ReactNode;
-  userType: string;
+  userRole: UserRole;
   isAuthenticated: boolean;
   token: string;
   username: string;
-  languages: Lang[];
-  setCurrentLanguage: (newLang: Lang) => void;
   currentLanguage: Lang;
   loading: boolean;
 }) {
@@ -129,7 +126,7 @@ export default function PersistentDrawerLeft({
     if (loading) {
       return "Please wait...";
     }
-    if (getCondition(userType, path, isAuthenticated)) {
+    if (getCondition(userRole, path, isAuthenticated)) {
       const route = routes.find((route) => route.path == path);
       if (route) {
         return route.navbarName;
@@ -148,11 +145,7 @@ export default function PersistentDrawerLeft({
           </Typography>
           {isAuthenticated && (
             <div className={classes.languageSelectContainer}>
-              <LanguageSelect
-                languages={languages}
-                currentLanguage={currentLanguage}
-                onLanguageChange={setCurrentLanguage}
-              />
+              <LanguageSelect currentLanguage={currentLanguage} />
             </div>
           )}
         </Toolbar>
@@ -171,7 +164,7 @@ export default function PersistentDrawerLeft({
         <List>
           {routes.map(
             (prop: any, key: number) =>
-              getCondition(userType, prop.path, isAuthenticated) && (
+              getCondition(userRole, prop.path, isAuthenticated) && (
                 <Link
                   to={prop.path}
                   style={{ textDecoration: "none" }}
@@ -193,10 +186,8 @@ export default function PersistentDrawerLeft({
           {isAuthenticated && (
             <ListItem
               button
-              onClick={() => {
-                logoutUser(token);
-                localStorage.removeItem("token");
-                localStorage.removeItem("language");
+              onClick={async () => {
+                await auth.signOut();
                 refreshPage();
               }}
             >

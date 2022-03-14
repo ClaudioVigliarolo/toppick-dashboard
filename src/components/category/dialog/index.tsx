@@ -1,6 +1,6 @@
 import React from "react";
 import { isSelected } from "@/utils/utils";
-import { CustomDialog, TabData } from "@/components/ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import { Category, CategoryTopic } from "@/interfaces/dash_topics";
@@ -94,7 +94,7 @@ export default function CategoryDialog(props: CategoryDialogProps) {
 
   return (
     <>
-      <CustomDialog
+      <AppDialog
         open={props.open}
         headerText={props.headerText}
         minWidth={600}

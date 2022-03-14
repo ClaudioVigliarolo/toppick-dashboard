@@ -1,10 +1,10 @@
 import React from "react";
 import { makeStyles, TextField, Button } from "@material-ui/core";
-import { Example } from "@/interfaces/dash_topics";
+import { CreatedExample, Example } from "@/interfaces/dash_topics";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 interface ExamplesProps {
-  examples: Example[];
+  examples: CreatedExample[];
   onAdd: () => void;
   onDelete: (index: number) => void;
   onChange: (event: React.ChangeEvent<any>, index: number) => void;

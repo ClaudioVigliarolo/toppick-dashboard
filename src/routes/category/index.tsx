@@ -1,6 +1,4 @@
 import React from "react";
-import { getCategories, getCategoryTopics } from "@/services/api";
-import { PageProps } from "@/interfaces/app";
 import TableCategories from "@/components/category/TableCategories";
 import CustomButton from "@/components/ui/buttons/Button";
 import CategoryDialog from "@/components/category/dialog";
@@ -14,6 +12,9 @@ import {
 } from "@/utils/topics";
 import { getHash } from "@/utils/utils";
 import { Category, CategoryTopic } from "@/interfaces/dash_topics";
+import { StatusContext } from "@/context/StatusContext";
+import { AuthContext } from "@/context/AuthContext";
+import { getCategories, getCategoryTopics } from "@/services/topics";
 
 const NO_CATEGORY: Category = {
   id: -1,
@@ -24,14 +25,7 @@ const NO_CATEGORY: Category = {
   image: "",
 };
 
-export default function CategoryPage({
-  token,
-  currentLanguage,
-  setLoading,
-  loading,
-  onError,
-  onSuccess,
-}: PageProps) {
+export default function CategoryPage() {
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [categoryTopics, setCategoryTopics] = React.useState<CategoryTopic[]>(
     []
@@ -42,21 +36,31 @@ export default function CategoryPage({
   const [addDialog, setAddDialog] = React.useState<boolean>(false);
   const [currentCategory, setCurrentCategory] =
     React.useState<Category>(NO_CATEGORY);
+  const { setLoading, onSuccess, onError, loading } =
+    React.useContext(StatusContext);
+  const { authToken, currentLanguage } = React.useContext(AuthContext);
   const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage, token);
-      if (retrievedCategories != null) {
-        setCategories(retrievedCategories);
-      }
-      const retrievedCategTopics = await getCategoryTopics(
-        currentLanguage,
-        token
-      );
-      if (retrievedCategTopics != null) {
-        setCategoryTopics(retrievedCategTopics);
+      try {
+        const retrievedCategories = await getCategories(
+          currentLanguage,
+          authToken
+        );
+        if (retrievedCategories) {
+          setCategories(retrievedCategories);
+        }
+        const retrievedCategTopics = await getCategoryTopics(
+          currentLanguage,
+          authToken
+        );
+        if (retrievedCategTopics) {
+          setCategoryTopics(retrievedCategTopics);
+        }
+      } catch (error) {
+        onError();
       }
       setLoading(false);
     })();
@@ -84,7 +88,7 @@ export default function CategoryPage({
       },
       categories,
       currentLanguage,
-      token,
+      authToken,
       setCategories,
       setLoading,
       () => {
@@ -101,7 +105,7 @@ export default function CategoryPage({
       newCategory,
       categories,
       currentLanguage,
-      token,
+      authToken,
       setCategories,
       setLoading,
       () => {
@@ -120,7 +124,7 @@ export default function CategoryPage({
       currentCategory.id,
       categories,
       currentLanguage,
-      token,
+      authToken,
       setCategories,
       setLoading,
       onSuccess,
@@ -143,9 +147,7 @@ export default function CategoryPage({
         />
       </div>
       <TableCategories
-        token={token}
         categories={categories}
-        currentLanguage={currentLanguage}
         searchText={searchText}
         onDelete={onDeleteShow}
         onUpdate={onUpdate}

@@ -1,7 +1,6 @@
 import React from "react";
 import TagItem from "./TagItem";
-import { TextField } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
+import { TextField, makeStyles } from "@material-ui/core";
 import { TopicTag } from "@/interfaces/dash_topics";
 
 interface TagSelectorProps {
@@ -26,14 +25,12 @@ export default function TagSelector({
 }: TagSelectorProps) {
   const [title, setTitle] = React.useState("");
   const classes = useStyles();
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       onAdd(title);
       setTitle("");
     }
   };
-
   return (
     <div>
       <div className={classes.container}>

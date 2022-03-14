@@ -1,5 +1,5 @@
 import React from "react";
-import { CustomDialog, TabData } from "@/components/ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import { hasVal, isSelected } from "@/utils/utils";
 
 import Info from "./sections/Info";
@@ -21,7 +21,6 @@ const NO_TOPIC: Topic = {
   description: "",
   image: "",
   active: false,
-  approved: false,
   tags: [],
 };
 
@@ -47,7 +46,6 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   React.useEffect(() => {
     setTopic(props.topic);
-
     hasVal(props.topic.level) &&
       setLevel(CONSTANTS.TOPIC_LEVELS[props.topic.level as TopicLevel]);
   }, [props.categories, props.topic, props.related]);
@@ -105,10 +103,6 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   const toggleActive = () => {
     setTopic({ ...topic, active: !topic.active });
-  };
-
-  const toggleApprove = () => {
-    setTopic({ ...topic, approved: !topic.approved });
   };
 
   const onTagRemove = (i: number) => {
@@ -169,12 +163,9 @@ export default function TopicDialog(props: TopicDialogProps) {
       label: "Info",
       children: (
         <Info
-          approved={topic.approved}
-          users_approved={topic.users_approved}
           handleLevelChange={handleLevelChange}
           handleSourceChange={handleSourceChange}
           level={level}
-          toggleApprove={toggleApprove}
           source={source}
           tags={topic.tags}
           onTagAdd={onTagAdd}
@@ -186,7 +177,7 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   return (
     <>
-      <CustomDialog
+      <AppDialog
         open={props.open}
         headerText={props.headerText}
         minWidth={600}

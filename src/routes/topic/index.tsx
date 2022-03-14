@@ -1,12 +1,9 @@
 import React from "react";
-import { getCategories, getTopics } from "@/services/api";
 import { Category, Topic } from "@/interfaces/dash_topics";
-import { MaterialUiColor, PageProps } from "@/interfaces/app";
 import TableTopics from "@/components/topic/TableTopics";
 import CustomButton from "@/components/ui/buttons/Button";
 import SearchBar from "@/components/ui/SearchBar";
 import TopicDialog from "@/components/topic/dialog/topic";
-import Switch from "@/components/ui/select/Switch";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
 import {
@@ -15,6 +12,9 @@ import {
   onTopicUpdate,
 } from "@/utils/topics";
 import { getHash } from "@/utils/utils";
+import { AuthContext } from "@/context/AuthContext";
+import { StatusContext } from "@/context/StatusContext";
+import { getTopics, getCategories } from "@/services/topics";
 
 const NO_TOPIC: Topic = {
   categories: [],
@@ -22,25 +22,16 @@ const NO_TOPIC: Topic = {
   related: [],
   source: "",
   level: 0,
-
   timestamp: new Date(),
   title: "",
   ref_id: -1,
   description: "",
   image: "",
   active: false,
-  approved: false,
   tags: [],
 };
 
-export default function ViewPage({
-  token,
-  currentLanguage,
-  setLoading,
-  onError,
-  loading,
-  onSuccess,
-}: PageProps) {
+export default function ViewPage() {
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [currentTopic, setCurrentTopic] = React.useState<Topic>(NO_TOPIC);
@@ -48,19 +39,29 @@ export default function ViewPage({
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
+  const { setLoading, onSuccess, onError, loading } =
+    React.useContext(StatusContext);
+  const { authToken, currentLanguage } = React.useContext(AuthContext);
 
   const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const retrievedTopics = await getTopics(currentLanguage, token);
-      if (retrievedTopics != null) {
-        setTopics(retrievedTopics);
-      }
-      const retrievedCategories = await getCategories(currentLanguage, token);
-      if (retrievedCategories != null) {
-        setCategories(retrievedCategories);
+      try {
+        const retrievedTopics = await getTopics(currentLanguage, authToken);
+        if (retrievedTopics) {
+          setTopics(retrievedTopics);
+        }
+        const retrievedCategories = await getCategories(
+          currentLanguage,
+          authToken
+        );
+        if (retrievedCategories) {
+          setCategories(retrievedCategories);
+        }
+      } catch (error) {
+        onError();
       }
       setLoading(false);
     })();
@@ -80,7 +81,7 @@ export default function ViewPage({
       newTopic,
       topics,
       currentLanguage,
-      token,
+      authToken,
       setTopics,
       setLoading,
       onSuccess,
@@ -95,7 +96,7 @@ export default function ViewPage({
       currentTopic.id,
       topics,
       currentLanguage,
-      token,
+      authToken,
       setTopics,
       setLoading,
       onSuccess,
@@ -114,7 +115,7 @@ export default function ViewPage({
       },
       topics,
       currentLanguage,
-      token,
+      authToken,
       setTopics,
       setLoading,
       onSuccess,

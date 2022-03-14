@@ -57,7 +57,7 @@ interface TabPanelProps extends TabData {
   value: number;
 }
 
-interface CustomDialogProps {
+interface AppDialogProps {
   open: boolean;
   onConfirm: () => void;
   loading: boolean;
@@ -95,7 +95,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const CustomDialog = ({
+export const AppDialog = ({
   open,
   onConfirm,
   confirmButtonText = "Confirm",
@@ -108,7 +108,7 @@ export const CustomDialog = ({
   loading,
   showTabs = true,
   confirmButtonDisabled = false,
-}: CustomDialogProps) => {
+}: AppDialogProps) => {
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 

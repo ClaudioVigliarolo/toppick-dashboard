@@ -1,7 +1,6 @@
 import React from "react";
-import { MaterialUiColor, PageProps } from "@/interfaces/app";
+import { MaterialUiColor } from "@/interfaces/app";
 import DBChartBar from "@/components/stats/DBChartBar";
-import UserChart from "@/components/stats/UserChart";
 import Button from "@/components/ui/buttons/TabButton";
 import { CONSTANTS } from "@/constants/app";
 import Switch from "@/components/ui/select/Switch";
@@ -14,9 +13,10 @@ import {
   getLastMonthStart,
   getYesterdayStart,
 } from "@/utils/utils";
-import { getMaintenanceStatus, updateMaintenance } from "@/services/api";
 import { makeStyles } from "@material-ui/core";
 import { COLORS } from "@/constants/colors";
+import { AuthContext } from "@/context/AuthContext";
+import { getMaintenanceStatus, updateMaintenance } from "@/services/db";
 
 interface ChartButton {
   label: string;
@@ -66,10 +66,6 @@ const dateButtons: DateButton[] = [
   },
 ];
 
-const chartButtons: ChartButton[] = [
-  { label: "Users", chartIndex: ChartIndex.UsersChart },
-];
-
 const useStyles = makeStyles((theme) => ({
   container: {
     alignItems: "center",
@@ -112,25 +108,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StatsPage({ token, currentLanguage }: PageProps) {
-  const [chartIndex, setChartIndex] = React.useState<number>(0);
+export default function StatsPage() {
   const [dateIndex, setDateIndex] = React.useState<number>(-1);
   const [until, setUntilDate] = React.useState<Date>(CONSTANTS.DEF_UNTIL_DATE);
   const [from, setFromDate] = React.useState<Date>(CONSTANTS.DEF_FROM_DATE);
   const [maintanance, setMaintenance] = React.useState<boolean>(false);
+  const { authToken, currentLanguage } = React.useContext(AuthContext);
 
   const classes = useStyles();
 
   React.useEffect(() => {
     (async () => {
-      setMaintenance(await getMaintenanceStatus(currentLanguage, token));
+      try {
+        setMaintenance(await getMaintenanceStatus(currentLanguage, authToken));
+      } catch (error) {
+        console.log(error);
+      }
     })();
-  }, [currentLanguage, token]);
+  }, [currentLanguage, authToken]);
 
   const onMaintenanceChange = async (event) => {
     const newVal = !maintanance;
-    if (await updateMaintenance(newVal, currentLanguage, token)) {
+    try {
+      await updateMaintenance(newVal, currentLanguage, authToken);
       setMaintenance(newVal);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -167,32 +170,10 @@ export default function StatsPage({ token, currentLanguage }: PageProps) {
         </div>
         <DBChartBar
           currentLanguage={currentLanguage}
-          token={token}
+          token={authToken}
           until={until}
           from={from}
         />
-
-        <div className={classes.buttonsHeader}>
-          Visualize {chartButtons[chartIndex].label}
-        </div>
-        <div className={classes.tabsContainer}>
-          {chartButtons.map((t) => (
-            <Button
-              key={t.chartIndex}
-              label={t.label}
-              selected={chartIndex === t.chartIndex}
-              onClick={() => setChartIndex(t.chartIndex)}
-            />
-          ))}
-        </div>
-        {chartIndex === ChartIndex.UsersChart && (
-          <UserChart
-            currentLanguage={currentLanguage}
-            token={token}
-            until={until}
-            from={from}
-          />
-        )}
       </div>
     </>
   );

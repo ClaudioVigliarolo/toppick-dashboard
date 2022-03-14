@@ -6,48 +6,35 @@ import {
   StyledTableRow,
   useStyles,
 } from "../ui/TableStyles";
-import MailIcon from "@material-ui/icons/MailOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { UserCreated } from "@/interfaces/dash_user";
-import { Lang } from "@/interfaces/app";
+import { UserDashboard } from "@/interfaces/user";
 
 interface TableUsersProps {
-  users: UserCreated[];
-  languages: Lang[];
-  onUpdate: (user: UserCreated) => void;
-  onDelete: (user: UserCreated) => void;
-  onMessage: (user: UserCreated) => void;
+  users: UserDashboard[];
+  onUpdate: (user: UserDashboard) => void;
+  onDelete: (user: UserDashboard) => void;
   searchText: string;
 }
 
 export default function TableUsers({
   onDelete,
   onUpdate,
-  onMessage,
   searchText,
   users,
 }: TableUsersProps) {
   const classes = useStyles();
 
-  const renderRows = (users: UserCreated[]) => {
-    return users.map((user: UserCreated, index: number) => {
+  const renderRows = (users: UserDashboard[]) => {
+    return users.map((user: UserDashboard, index: number) => {
       if (user.username.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
             <StyledTableCell> {user.username}</StyledTableCell>
-            <StyledTableCell> {user.mail}</StyledTableCell>
-            <StyledTableCell>{user.type}</StyledTableCell>
+            <StyledTableCell> {user.email}</StyledTableCell>
             <StyledEditCell>
-              {user.languages &&
-                user.languages.map((lang: Lang) => lang.toUpperCase() + "  ")}
+              {user.role}
               <div className={classes.userIconsContainer}>
-                <MailIcon
-                  onClick={() => {
-                    onMessage(user);
-                  }}
-                />
-
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
@@ -70,8 +57,8 @@ export default function TableUsers({
 
   return (
     <CustomTable
-      columns={["20%", "20%", "20%", "60%"]}
-      columnNames={["username", "email", "type", "languages"]}
+      columns={["40%", "40%", "20%"]}
+      columnNames={["username", "email", "role"]}
       body={renderRows(users)}
     />
   );

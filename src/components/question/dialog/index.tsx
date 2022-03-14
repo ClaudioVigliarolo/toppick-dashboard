@@ -1,18 +1,21 @@
 import React from "react";
-import { CustomDialog, TabData } from "@/components/ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import ArticlePreview from "./sections/ExtResourcePreview";
 import ArticleOverview from "./sections/ExtResourceOverview";
 import ExamplesPreview from "./sections/Examples";
 import {
   Example,
   QuestionExtResource,
-  Question,
+  CreatedQuestion,
+  CreatedExample,
 } from "@/interfaces/dash_topics";
+import { AuthContext } from "@/context/AuthContext";
+import { getHash } from "@/utils/utils";
 interface QuestionDialogProps {
   open: boolean;
-  onConfirm: (q: Question) => void;
+  onConfirm: (q: CreatedQuestion) => void;
   onRefuse: () => void;
-  question: Question;
+  question: CreatedQuestion;
   headerText: string;
 }
 
@@ -22,7 +25,8 @@ export default function QuestionDialog(props: QuestionDialogProps) {
     []
   );
   const [currentPreviewUrl, setCurrentPreviewUrl] = React.useState<string>("");
-  const [examples, setExamples] = React.useState<Example[]>([]);
+  const [examples, setExamples] = React.useState<CreatedExample[]>([]);
+  const { userId } = React.useContext(AuthContext);
 
   React.useEffect(() => {
     setTitle(props.question.title);
@@ -36,7 +40,7 @@ export default function QuestionDialog(props: QuestionDialogProps) {
   const isSubmitEnabled = (): boolean => title !== "";
 
   const onConfirm = async () => {
-    const newQuestion: Question = {
+    const newQuestion: CreatedQuestion = {
       ...props.question,
       title,
       examples: examples.filter((e) => e.title !== ""),
@@ -46,14 +50,15 @@ export default function QuestionDialog(props: QuestionDialogProps) {
   };
 
   const onExamplesChange = (e: React.ChangeEvent<any>, i: number) => {
-    const newExamples = [...examples];
-    newExamples[i].title = e.target.value;
-    setExamples(newExamples);
+    const newExample = [...examples];
+    newExample[i].title = e.target.value;
+    setExamples(newExample);
   };
   const onChangeExtResource = (e: React.ChangeEvent<any>, i: number) => {
-    const newUrls = [...extResources];
-    newUrls[i].url = e.target.value;
-    setExtResources(newUrls);
+    const newResource = [...extResources];
+    newResource[i].url = e.target.value;
+    newResource[i].id = getHash(newResource[i].url);
+    setExtResources(newResource);
   };
 
   const tabs: TabData[] = [
@@ -70,7 +75,10 @@ export default function QuestionDialog(props: QuestionDialogProps) {
               setExtResources(extResources.filter((item, i) => i !== delIndex))
             }
             onAdd={() =>
-              setExtResources((extResources) => [...extResources, { url: "" }])
+              setExtResources((extResources) => [
+                ...extResources,
+                { url: "", user_id: userId, id: 0 },
+              ])
             }
             title={title}
             extResources={extResources}
@@ -90,7 +98,10 @@ export default function QuestionDialog(props: QuestionDialogProps) {
           <ExamplesPreview
             examples={examples}
             onAdd={() =>
-              setExamples((examples) => [...examples, { title: "" }])
+              setExamples((examples) => [
+                ...examples,
+                { title: "", user_id: userId, id: 0 },
+              ])
             }
             onChange={onExamplesChange}
             onDelete={(delIndex) =>
@@ -104,7 +115,7 @@ export default function QuestionDialog(props: QuestionDialogProps) {
 
   return (
     <>
-      <CustomDialog
+      <AppDialog
         open={props.open}
         headerText={currentPreviewUrl ? "Preview" : props.headerText}
         minWidth={600}

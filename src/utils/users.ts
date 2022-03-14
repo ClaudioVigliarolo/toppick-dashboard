@@ -1,115 +1,57 @@
 /* utils for inserting, modifing, removing users  */
-import { addUser, deleteUser, emailUser, updateUser } from "../services/api";
-import { EmailType, EmailInfo } from "@/interfaces/dash_mail";
-import { UserCreated } from "@/interfaces/dash_user";
+import { UserDashboard } from "@/interfaces/user";
+import { deleteUser, updateUser } from "@/services/user";
 
 export const onUserDelete = async (
-  deletedUser: UserCreated,
-  users: UserCreated[],
-  setUsers: (users: UserCreated[]) => void,
-  emailtype: EmailType,
-  emailinfo: EmailInfo,
+  deletedUser: UserDashboard,
+  users: UserDashboard[],
+  setUsers: (users: UserDashboard[]) => void,
   token: string,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
-  const val1 = await deleteUser(deletedUser.id, token);
-  const val2 = await emailUser(emailtype, emailinfo, deletedUser, token);
-
-  if (!val1 || !val2) {
-    setLoading(false);
-    return onError();
+  try {
+    await deleteUser(deletedUser.uid, token);
+    const newUsers = users.filter(
+      (user: UserDashboard) => user.uid !== deletedUser.uid
+    );
+    setUsers([...newUsers]);
+    onSuccess();
+  } catch (error) {
+    onError();
   }
-  const newUsers = users.filter(
-    (user: UserCreated) => user.id !== deletedUser.id
-  );
-  setUsers([...newUsers]);
   setLoading(false);
-  onSuccess();
 };
 
 export const onUserUpdate = async (
-  updatedUser: UserCreated,
-  users: UserCreated[],
-  setUsers: (users: UserCreated[]) => void,
-  emailtype: EmailType,
-  emailinfo: EmailInfo,
+  updatedUser: UserDashboard,
+  users: UserDashboard[],
+  setUsers: (users: UserDashboard[]) => void,
   token: string,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
+  try {
+    await updateUser(updatedUser, token);
 
-  const val1 = await updateUser(updatedUser, token);
+    const newUsers = users;
 
-  const val2 = await emailUser(emailtype, emailinfo, updatedUser, token);
+    const userIndex = users.findIndex(
+      (user: UserDashboard) => user.uid == updatedUser.uid
+    );
 
-  if (!val1 || !val2) {
-    setLoading(false);
-    return onError();
-  }
-  const newUsers = users;
-  newUsers.forEach(function (u: UserCreated) {
-    if (u.id == updatedUser.id) {
-      (u.username = updatedUser.username),
-        (u.mail = updatedUser.mail),
-        (u.password = updatedUser.password),
-        (u.type = updatedUser.type),
-        (u.languages = updatedUser.languages);
+    if (userIndex !== -1) {
+      users[userIndex] = updatedUser;
     }
-  });
 
-  setUsers([...newUsers]);
-  setLoading(false);
-  onSuccess();
-};
-
-export const onUserAdd = async (
-  newUser: UserCreated,
-  users: UserCreated[],
-  setUsers: (users: UserCreated[]) => void,
-  emailtype: EmailType,
-  emailinfo: EmailInfo,
-  token: string,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-): Promise<void> => {
-  setLoading(true);
-  const val1 = await addUser(newUser, token);
-  const val2 = await emailUser(emailtype, emailinfo, newUser, token);
-
-  if (!val1 || !val2) {
-    setLoading(false);
-    return onError();
-  }
-
-  const newUsers = users;
-  newUsers.unshift(newUser);
-  setUsers([...newUsers]);
-  setLoading(false);
-  onSuccess();
-};
-
-export const onUserMessage = async (
-  user: UserCreated,
-  emailtype: EmailType,
-  emailinfo: EmailInfo,
-  token: string,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-): Promise<void> => {
-  setLoading(true);
-  const val = await emailUser(emailtype, emailinfo, user, token);
-
-  if (!val) {
-    setLoading(false);
-    return onError();
+    setUsers([...newUsers]);
+    onSuccess();
+  } catch (error) {
+    onError();
   }
   setLoading(false);
-  onSuccess();
 };

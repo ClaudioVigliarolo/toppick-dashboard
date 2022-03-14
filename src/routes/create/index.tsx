@@ -1,13 +1,4 @@
 import React from "react";
-import { getCategories, getQuestionsByTopic, getTopics } from "@/services/api";
-
-const NEW_QUESTION: Question = {
-  id: -1,
-  title: "",
-  new: true,
-  examples: [],
-  ext_resources: [],
-};
 import { useAppStyles } from "@/styles/common";
 import TopicDialog from "@/components/topic/dialog/topic";
 import CreatePageHeader from "./sections/CreatePageHeader";
@@ -20,14 +11,34 @@ import {
   parseExamples,
   removeExamples,
 } from "@/utils/utils";
-import { PageProps } from "@/interfaces/app";
-import { Question, Topic, Category, Example } from "@/interfaces/dash_topics";
+import {
+  Question,
+  Topic,
+  Category,
+  Example,
+  CreatedQuestion,
+} from "@/interfaces/dash_topics";
+import { StatusContext } from "@/context/StatusContext";
+import { AuthContext } from "@/context/AuthContext";
+import {
+  getCategories,
+  getQuestionsByTopic,
+  getTopics,
+} from "@/services/topics";
+
+const NEW_QUESTION: Question = {
+  id: -1,
+  title: "",
+  new: true,
+  examples: [],
+  ext_resources: [],
+  user_id: "",
+};
 
 const NO_TOPIC: Topic = {
   categories: [],
   id: -1,
   related: [],
-
   level: 0,
   source: "",
   timestamp: new Date(),
@@ -36,27 +47,22 @@ const NO_TOPIC: Topic = {
   description: "",
   image: "",
   active: false,
-  approved: false,
   tags: [],
 };
 
-export default function CreatePage({
-  token,
-  currentLanguage,
-  setLoading,
-  loading,
-  onError,
-  onSuccess,
-}: PageProps) {
+export default function CreatePage() {
   const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
   const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
-  const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
-    []
-  );
+  const [currentQuestions, setCurrentQuestions] = React.useState<
+    CreatedQuestion[]
+  >([]);
   const [isUpdate, setIsUpdate] = React.useState<boolean>(false);
   const [isReview, setReview] = React.useState<boolean>(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [topics, setTopics] = React.useState<Topic[]>([]);
+  const { setLoading, onSuccess, onError, loading } =
+    React.useContext(StatusContext);
+  const { authToken, currentLanguage } = React.useContext(AuthContext);
 
   const classes = useAppStyles();
 
@@ -64,17 +70,24 @@ export default function CreatePage({
     (async () => {
       onReset();
       setLoading(true);
-      const retrievedCategories = await getCategories(currentLanguage, token);
-      if (retrievedCategories != null) {
-        setCategories(retrievedCategories);
-      }
-
-      const retrievedTopics = await getTopics(currentLanguage, token);
-      //sort by timestamp
-      if (retrievedTopics != null) {
-        setTopics(
-          retrievedTopics.sort((a, b) => a.title.localeCompare(b.title))
+      try {
+        const retrievedCategories = await getCategories(
+          currentLanguage,
+          authToken
         );
+        if (retrievedCategories) {
+          setCategories(retrievedCategories);
+        }
+
+        const retrievedTopics = await getTopics(currentLanguage, authToken);
+        //sort by timestamp
+        if (retrievedTopics) {
+          setTopics(
+            retrievedTopics.sort((a, b) => a.title.localeCompare(b.title))
+          );
+        }
+      } catch (error) {
+        onError();
       }
       setLoading(false);
     })();
@@ -88,22 +101,27 @@ export default function CreatePage({
     setSelectedTopic(topics[index]);
     if (topics[index] !== NO_TOPIC) {
       setLoading(true);
-      const retrievedQuestions = await getQuestionsByTopic(
-        topics[index].id,
-        token
-      );
-      if (retrievedQuestions !== null) {
-        const newQuestions = [...retrievedQuestions].map((q) => ({
-          ...q,
-          examples: [],
-          title: generateExamples(q.title, q.examples as Example[]),
-        }));
-        setCurrentQuestions(newQuestions);
-        if (retrievedQuestions.length > 0) {
-          setIsUpdate(true);
-        } else {
-          setIsUpdate(false);
+      try {
+        const retrievedQuestions = await getQuestionsByTopic(
+          topics[index].id,
+          authToken
+        );
+
+        if (retrievedQuestions !== null) {
+          const newQuestions = [...retrievedQuestions].map((q) => ({
+            ...q,
+            examples: [],
+            title: generateExamples(q.title, q.examples as Example[]),
+          }));
+          setCurrentQuestions(newQuestions);
+          if (retrievedQuestions.length > 0) {
+            setIsUpdate(true);
+          } else {
+            setIsUpdate(false);
+          }
         }
+      } catch (error) {
+        onError();
       }
       setLoading(false);
     }
@@ -141,14 +159,9 @@ export default function CreatePage({
     setCurrentQuestions([]);
   };
 
-  const onQuestionChange = (index: number, question: Question) => {
+  const onQuestionChange = (index: number, question: CreatedQuestion) => {
     {
       const newQuestions = [...currentQuestions];
-      if (question.new) {
-        question.id = getHash(
-          question.title + "*" + question.title + "*" + index
-        );
-      }
       newQuestions[index] = question;
       console.log("MT NNNN", question);
       setCurrentQuestions(newQuestions);
@@ -173,12 +186,12 @@ export default function CreatePage({
     onSuccess();
   };
 
-  const onSubmit = async (questions: Question[]) => {
+  const onSubmit = async (questions: CreatedQuestion[]) => {
     await onQuestionsAdd(
       questions,
       selectedTopic.id,
       currentLanguage,
-      token,
+      authToken,
       setLoading,
       onSubmitCallback,
       onError
@@ -196,7 +209,7 @@ export default function CreatePage({
       newTopic,
       topics,
       currentLanguage,
-      token,
+      authToken,
       setTopics,
       setLoading,
       async () => {

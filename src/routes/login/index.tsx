@@ -1,10 +1,8 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { login } from "@/services/api";
-import { AuthContext } from "@/context/AuthContext";
 import { makeStyles, TextField } from "@material-ui/core";
-import { PageProps } from "@/interfaces/app";
 import Button from "@/components/ui/buttons/Button";
+import { auth } from "@/services/firebase";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -32,65 +30,60 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginPage({
-  setLoading,
-  onError,
-  onSuccess,
-  error,
-  loading,
-  success,
-}: PageProps) {
-  const {
-    setIsAuthenticated,
-    setUserType,
-    setUserLanguages,
-    setUserToken,
-    setCurrentLanguage,
-    userToken,
-    setmail,
-  } = React.useContext(AuthContext);
+import CustomAlert from "@/components/ui/Alert";
 
+export default function LoginPage() {
   //renamed  setEmail to setEmailState for context function ovverriding problem
-  const [emailState, setEmailState] = React.useState<string>("");
+  const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [error, setError] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const classes = useStyles();
   const history = useHistory();
+
+  const validDateForm = () => {
+    if (!email || !password) {
+      throw new Error("Fill all fields");
+    }
+  };
+
+  const signIn = async (): Promise<void> => {
+    try {
+      console.log(email, password);
+      await auth.signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      throw new Error("Invalid Credentials");
+    }
+  };
+
   const onSubmit = async (): Promise<void> => {
-    if (!emailState || !password) {
-      onError();
-      return;
-    }
     setLoading(true);
-    const user = await login(emailState, password);
-    if (user) {
-      localStorage.setItem("token", user.token);
-      setUserType(user.type);
-      setmail(user.username);
-      setmail(user.mail);
-      setUserToken(user.token);
-      setUserLanguages(user.languages);
-      setCurrentLanguage(user.languages[0]);
-      setIsAuthenticated(true);
+    try {
+      //pre-validation
+      validDateForm();
+      //sign in
+      console.log("Ok prima");
+      await signIn();
+      console.log("ok dopo");
       history.push("/categories");
-      setLoading(false);
-    } else {
-      onError();
-      setLoading(false);
+    } catch (error) {
+      const { message } = error as Error;
+      setError(message);
     }
+    setLoading(false);
   };
 
   return (
     <form className={classes.form} noValidate autoComplete="off">
       <div className={classes.container}>
         <TextField
-          onChange={(e) => setEmailState(e.currentTarget.value)}
+          onChange={(e) => setEmail(e.currentTarget.value)}
           id="standard-basic"
           label="Email"
           type="email"
           className={classes.textField}
-          value={emailState}
-          error={error}
+          value={email}
         />
 
         <TextField
@@ -100,7 +93,6 @@ export default function LoginPage({
           type="password"
           value={password}
           className={classes.textField}
-          error={error}
         />
         <div className={classes.button}>
           <Button
@@ -111,6 +103,7 @@ export default function LoginPage({
           />
         </div>
       </div>
+      <CustomAlert visible={error.length > 0} text={error} type="error" />
     </form>
   );
 }

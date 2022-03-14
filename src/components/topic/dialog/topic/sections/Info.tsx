@@ -3,7 +3,6 @@ import { CONSTANTS } from "@/constants/app";
 import Select from "@/components/ui/select/SimpleSelect";
 import { makeStyles } from "@material-ui/core";
 import TagSelector from "@/components/ui/select/TagSelector";
-import { UserApproved } from "@/interfaces/dash_user";
 import { TopicTag } from "@/interfaces/dash_topics";
 
 const useStyles = makeStyles((theme) => ({
@@ -27,9 +26,6 @@ interface InfoProps {
   handleLevelChange: (event: React.ChangeEvent<any>) => void;
   source: string;
   level: string;
-  approved: boolean;
-  users_approved?: UserApproved[];
-  toggleApprove: () => void;
   onTagRemove: (i: number) => void;
   onTagAdd: (title: string) => void;
   tags: TopicTag[];
@@ -39,9 +35,6 @@ export default function Info({
   source,
   handleLevelChange,
   level,
-  approved,
-  users_approved = [],
-  toggleApprove,
   onTagRemove,
   tags,
   onTagAdd,

@@ -10,8 +10,6 @@ import { Topic, TopicRelated } from "@/interfaces/dash_topics";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { getFormattedDate } from "@/utils/utils";
-import SpellcheckIcon from "@material-ui/icons/Spellcheck";
-import UserAvatar from "react-user-avatar";
 interface TableTopicsProps {
   topics: Topic[];
   searchText: string;
@@ -44,14 +42,7 @@ export default function TableTopics({
                 .map((r: TopicRelated) => r.title + " ")}
               {topic.related.length > 3 && "..."}
               {topic.related.length === 0 && "Warning, no related topic!"}
-              <div className={classes.iconsContainer} style={{ width: 150 }}>
-                <div>
-                  <SpellcheckIcon
-                    style={{
-                      color: topic.approved ? "lime" : "orangered",
-                    }}
-                  />
-                </div>
+              <div className={classes.iconsContainer} style={{ width: 100 }}>
                 <div
                   className={classes.circle}
                   style={{
@@ -80,7 +71,7 @@ export default function TableTopics({
 
   return (
     <CustomTable
-      columns={["15%", "20%", "45%"]}
+      columns={["15%", "20%", "40%"]}
       columnNames={["title", "last update", "related"]}
       body={renderRows(topics)}
     />

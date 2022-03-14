@@ -1,5 +1,5 @@
 import { Value } from "@/interfaces/app";
-import { Example } from "@/interfaces/dash_topics";
+import { CreatedExample, Example } from "@/interfaces/dash_topics";
 
 export const getHash = (str1: string, str2: string = "") => {
   const str = str1 + "*" + str2 + new Date().toISOString();
@@ -129,10 +129,10 @@ export const hasVal = (input: any): boolean => {
   return true;
 };
 
-export function parseExamples(input: string): Example[] {
+export function parseExamples(input: string): CreatedExample[] {
   const regex = /\[EX\](.*?)\[\/EX\]/g;
   let matches: any[],
-    output: Example[] = [];
+    output: CreatedExample[] = [];
   while ((matches = regex.exec(input) as any)) {
     output.push({ title: matches[1] });
   }

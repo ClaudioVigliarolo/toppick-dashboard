@@ -1,9 +1,9 @@
 import React from "react";
 import CardNumber from "../ui/CardNumber";
-import { getStatsContent } from "@/services/api";
 import { useChartStyles } from "../ui/ChartStyles";
 import { StatsContent } from "@/interfaces/stats";
 import { Lang } from "@/interfaces/app";
+import { getContentStats } from "@/services/stats";
 
 interface DBChartBarProps {
   currentLanguage: Lang;
@@ -28,14 +28,18 @@ export default function DBChartBar({
 
   React.useEffect(() => {
     (async () => {
-      const retrievedStats = await getStatsContent(
-        from,
-        until,
-        currentLanguage,
-        token
-      );
-      if (retrievedStats != null) {
-        setContentStats(retrievedStats);
+      try {
+        const retrievedStats = await getContentStats(
+          from,
+          until,
+          currentLanguage,
+          token
+        );
+        if (retrievedStats) {
+          setContentStats(retrievedStats);
+        }
+      } catch (error) {
+        console.log(error);
       }
     })();
   }, [currentLanguage, from, token, until]);

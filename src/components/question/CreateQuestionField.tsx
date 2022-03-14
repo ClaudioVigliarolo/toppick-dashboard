@@ -1,15 +1,15 @@
 import React from "react";
 import { createStyles, makeStyles, TextField } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { Question } from "@/interfaces/dash_topics";
+import { CreatedQuestion } from "@/interfaces/dash_topics";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 interface QuestionTextFieldProps {
   index: number;
-  onChange: (index: number, question: Question) => void;
+  onChange: (index: number, question: CreatedQuestion) => void;
   onCreate: (index: number) => void;
   onDelete: (index: number) => void;
-  question: Question;
+  question: CreatedQuestion;
 }
 
 const useStyles = makeStyles(() =>

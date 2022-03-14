@@ -1,33 +1,29 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
-import { CustomDialog, TabData } from "../ui/dialog/DialogStyles";
-import Chip from "../ui/select/ObjectChip";
-import { noSpace } from "@/utils/utils";
+import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
 import { Lang } from "@/interfaces/app";
-import { UserCreated } from "@/interfaces/dash_user";
+import { UserDashboard, UserRole } from "@/interfaces/user";
+import Select from "../ui/select/SimpleSelect";
 
 interface UserDialogProps {
   open: boolean;
-  onConfirm: (user: UserCreated) => void;
+  onConfirm: (user: UserDashboard) => void;
   onRefuse: () => void;
-  user: UserCreated;
+  user: UserDashboard;
   headerText: string;
-  languages: Lang[];
   loading: boolean;
 }
 
-const NO_USER: UserCreated = {
-  id: -1,
+const NO_USER: UserDashboard = {
+  uid: "",
   username: "",
-  mail: "",
-  languages: [],
-  password: "",
-  type: "",
+  email: "",
+  role: UserRole.DEFAULT,
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   textField: {
-    margin: 10,
+    marginBottom: 20,
     width: "90%",
   },
 
@@ -40,37 +36,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserDialog(props: UserDialogProps) {
   const classes = useStyles();
-  const [user, setUser] = React.useState<UserCreated>(NO_USER);
+  const [user, setUser] = React.useState<UserDashboard>(NO_USER);
 
   React.useEffect(() => {
-    setUser(user);
+    setUser(props.user);
+    console.log("MUll", props.user);
   }, [props.user]);
 
   const onConfirm = () => {
-    props.onConfirm({
-      ...user,
-      mail: noSpace(user.mail),
-      password: noSpace(user.password),
-    });
+    props.onConfirm(user);
   };
 
-  const handleLanguagesChange = (index: number) => {
-    const newUser = { ...user };
-    console.log(user.languages, index);
-    if (user.languages.includes(props.languages[index])) {
-      newUser.languages = user.languages.filter(
-        (l) => l !== props.languages[index]
-      );
-    } else {
-      console.log("aggiungi", props.languages[index], props.languages);
-      newUser.languages = [...newUser.languages, props.languages[index]];
-    }
-    setUser(newUser);
+  const isSubmitEnabled = (): boolean => true;
+
+  const handleRoleChange = (e: React.ChangeEvent<any>) => {
+    setUser({ ...user, role: e.target.value });
   };
-
-  const isSubmitEnabled = (): boolean =>
-    user.username != "" && user.mail != "" && user.password != "";
-
   const tabs: TabData[] = [
     {
       label: "User",
@@ -84,43 +65,32 @@ export default function UserDialog(props: UserDialogProps) {
             label="Username"
             className={classes.textField}
             value={user.username}
+            disabled={true}
           />
 
           <TextField
-            onChange={(e) => setUser({ ...user, mail: e.currentTarget.value })}
-            id="standard-basic"
+            onChange={(e) => setUser({ ...user, email: e.currentTarget.value })}
             label="Email"
             className={classes.textField}
-            value={user.mail}
+            value={user.email}
+            disabled={true}
           />
 
-          <TextField
-            onChange={(e) =>
-              setUser({ ...user, password: e.currentTarget.value })
-            }
-            id="standard-basic"
-            label="Digit new password"
-            type="password"
-            value={user.password}
-            className={classes.textField}
+          <Select
+            handleChange={handleRoleChange}
+            value={user.role}
+            values={Object.values(UserRole)}
+            color="black"
+            width={300}
+            defaultValue={user.role}
           />
-
-          <div>
-            <Chip
-              width={200}
-              selectedValues={user.languages.map((l) => ({ title: l }))}
-              values={props.languages.map((l) => ({ title: l }))}
-              header="Languages"
-              handleChange={handleLanguagesChange}
-            />
-          </div>
         </div>
       ),
     },
   ];
   return (
     <>
-      <CustomDialog
+      <AppDialog
         open={props.open}
         loading={props.loading}
         headerText={props.headerText}

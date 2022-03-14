@@ -9,12 +9,9 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Category } from "@/interfaces/dash_topics";
-import { Lang } from "@/interfaces/app";
 
 interface TableCategoriesProps {
   categories: Category[];
-  token: string;
-  currentLanguage: Lang;
   onUpdate: (categ: Category) => void;
   onDelete: (categ: Category) => void;
   searchText: string;

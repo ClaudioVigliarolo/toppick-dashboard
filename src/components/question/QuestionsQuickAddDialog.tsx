@@ -3,7 +3,8 @@ import React from "react";
 import { Question, Topic } from "@/interfaces/dash_topics";
 import { generateQuestions } from "@/utils/topics";
 import { countTextLines } from "@/utils/utils";
-import { CustomDialog, TabData } from "../ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
+import { AuthContext } from "@/context/AuthContext";
 
 interface QuestionsQuickAddDialogProps {
   open: boolean;
@@ -18,11 +19,12 @@ export default function QuestionsQuickAddDialog(
   props: QuestionsQuickAddDialogProps
 ) {
   const [text, setText] = React.useState<string>("");
+  const { userId } = React.useContext(AuthContext);
 
   let linesN = countTextLines(text);
 
   const onConfirm = async () => {
-    props.onConfirm(generateQuestions(text, props.topic));
+    props.onConfirm(generateQuestions(text, props.topic, userId));
   };
 
   const onRefuse = async () => {
@@ -62,7 +64,7 @@ export default function QuestionsQuickAddDialog(
 
   return (
     <>
-      <CustomDialog
+      <AppDialog
         loading={props.loading}
         open={props.open}
         minWidth={600}

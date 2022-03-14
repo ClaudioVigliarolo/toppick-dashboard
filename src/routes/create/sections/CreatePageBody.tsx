@@ -1,5 +1,5 @@
 import React from "react";
-import { Question, Topic } from "@/interfaces/dash_topics";
+import { CreatedQuestion, Topic } from "@/interfaces/dash_topics";
 import QuestionField from "@/components/question/CreateQuestionField";
 import CustomButton from "@/components/ui/buttons/Button";
 import QuestionsReview from "@/components/question/QuestionsReview";
@@ -43,10 +43,10 @@ export default function CreatePageBody({
   onQuestionDelete: (index: number) => void;
   onQuestionCreate: (index: number) => void;
   onRevertFromReview: () => void;
-  questions: Question[];
-  setQuestions: (questions: Question[]) => void;
-  onQuestionChange: (index: number, question: Question) => void;
-  onSubmit: (questions: Question[]) => void;
+  questions: CreatedQuestion[];
+  setQuestions: (questions: CreatedQuestion[]) => void;
+  onQuestionChange: (index: number, question: CreatedQuestion) => void;
+  onSubmit: (questions: CreatedQuestion[]) => void;
 }) {
   const classes = useStyles();
   const appClasses = useAppStyles();
@@ -77,7 +77,7 @@ export default function CreatePageBody({
       <QuestionsQuickAddDialog
         minQuestions={MIN_QUESTIONS}
         loading={loading}
-        onConfirm={(questions: Question[]) => {
+        onConfirm={(questions: CreatedQuestion[]) => {
           setQuestions(questions);
         }}
         topic={selectedTopic}

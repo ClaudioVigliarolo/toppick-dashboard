@@ -8,10 +8,6 @@ interface CustomRouteProps {
   Component: any;
   token: string;
   currentLanguage: Lang;
-  setLoading: (newVal: boolean) => void;
-  loading: boolean;
-  onError: () => void;
-  onSuccess: () => void;
   error: boolean;
   success: boolean;
 }
@@ -20,12 +16,6 @@ const CustomRoute = ({
   path,
   Component,
   condition,
-  token,
-  currentLanguage,
-  setLoading,
-  loading,
-  onError,
-  onSuccess,
   error,
   success,
 }: CustomRouteProps) => {
@@ -36,12 +26,6 @@ const CustomRoute = ({
       render={(routeProps) => (
         <Component
           navigationProps={routeProps}
-          token={token}
-          currentLanguage={currentLanguage}
-          setLoading={setLoading}
-          loading={loading}
-          onError={onError}
-          onSuccess={onSuccess}
           error={error}
           success={success}
         />

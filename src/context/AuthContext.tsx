@@ -1,107 +1,67 @@
 import React from "react";
 import { Lang } from "@/interfaces/app";
-import { getUser } from "../services/api";
 import { StatusContext } from "./StatusContext";
+import { UserAppState, UserRole } from "@/interfaces/user";
+import { auth } from "@/services/firebase";
 
-const DEFAULT_LANG: Lang = Lang.EN;
+export const DEFAULT_USER_APP_STATE: UserAppState = {
+  displayName: "",
+  isAuthenticated: false,
+  photoURL: "",
+  token: "",
+  uid: "",
+  role: UserRole.DEFAULT,
+};
 
 export const AuthContext = React.createContext({
-  isAuthenticated: false,
-  setIsAuthenticated: (newVal: boolean) => {},
-  setUserType: (newVal: string) => {},
-  userType: "",
-  setUsername: (newVal: string) => {},
-  setmail: (newVal: string) => {},
-  setUserLanguages: (newLangs: Lang[]) => {},
-  setUserToken: (newVal: string) => {},
-  setCurrentLanguage: (newLang: Lang) => {},
-  userToken: "",
-  username: "",
-  mail: "",
-  languages: [Lang.EN],
   currentLanguage: Lang.EN,
+  username: DEFAULT_USER_APP_STATE.displayName,
+  userId: DEFAULT_USER_APP_STATE.uid,
+  userImage: DEFAULT_USER_APP_STATE.photoURL,
+  isAuthenticated: DEFAULT_USER_APP_STATE.isAuthenticated,
+  authToken: DEFAULT_USER_APP_STATE.token,
+  userRole: DEFAULT_USER_APP_STATE.role,
 });
 
 export const AuthProvider = ({ children }: { children: any }) => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
-  const [languages, setUserLanguages] = React.useState<Lang[]>([]);
-  const [currentLanguage, setCurrentLanguage] =
-    React.useState<Lang>(DEFAULT_LANG);
-  const [userType, setUserType] = React.useState<string>("");
-  const [username, setUsername] = React.useState<string>("");
-  const [mail, setmail] = React.useState<string>("");
-  const [userToken, setUserToken] = React.useState<string>("");
+  const [user, setUser] = React.useState<UserAppState>(DEFAULT_USER_APP_STATE);
+  const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(Lang.EN);
   const { setLoading } = React.useContext(StatusContext);
 
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const storedJwt = localStorage.getItem("token");
-      const prevLanguage: any = localStorage.getItem("language");
-      if (storedJwt !== null && prevLanguage !== null) {
-        const retrievedUser = await getUser(storedJwt);
-
-        if (retrievedUser && retrievedUser.languages) {
-          //the user was already authenticated, set up his data
-          setUserLanguages(retrievedUser.languages);
-          setCurrentLanguage(prevLanguage);
-          setUsername(retrievedUser.username);
-          setmail(retrievedUser.mail);
-          setUserToken(retrievedUser.token);
-          setUserType(retrievedUser.type);
-          setIsAuthenticated(true);
+      //authenticate user
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          setUser(DEFAULT_USER_APP_STATE);
+        } else {
+          const { claims } = await user.getIdTokenResult(true);
+          setUser({
+            displayName: user.displayName || "",
+            isAuthenticated: true,
+            photoURL: user.photoURL || "",
+            token: await user.getIdToken(),
+            uid: user.uid,
+            role: claims.role,
+          });
         }
-      }
-      setLoading(false);
+        setLoading(false);
+      });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSetIsAuthenticated = (newVal: boolean) => {
-    setIsAuthenticated(newVal);
-  };
-
-  const onSetUserType = (newVal: string) => {
-    setUserType(newVal);
-  };
-
-  const onSetUserName = (newVal: string) => {
-    setUsername(newVal);
-  };
-
-  const onsetmail = (newVal: string) => {
-    setmail(newVal);
-  };
-
-  const onSetCurrentLanguage = (newLang: Lang) => {
-    localStorage.setItem("language", newLang);
-    setCurrentLanguage(newLang);
-  };
-
-  const onSetUserLangs = (newVals: Lang[]) => {
-    setUserLanguages(newVals);
-  };
-  const onSetUserToken = (newVal: string) => {
-    setUserToken(newVal);
-  };
-
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
-        setIsAuthenticated: onSetIsAuthenticated,
-        setUserType: onSetUserType,
-        userType,
-        setUsername: onSetUserName,
-        setmail: onsetmail,
-        setUserLanguages: onSetUserLangs,
-        setUserToken: onSetUserToken,
-        setCurrentLanguage: onSetCurrentLanguage,
-        userToken,
         currentLanguage,
-        username,
-        mail,
-        languages,
+        username: user.displayName,
+        userId: user.uid,
+        userImage: user.photoURL,
+        isAuthenticated: user.isAuthenticated,
+        authToken: user.token,
+        userRole: user.role,
       }}
     >
       {children}
