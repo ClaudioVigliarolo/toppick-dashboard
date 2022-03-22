@@ -42,7 +42,6 @@ export const Navigation = () => {
 
   const { loading, error, success } = React.useContext(StatusContext);
   const location = useLocation();
-  console.log("????", loading);
   return (
     <Menu
       loading={loading}

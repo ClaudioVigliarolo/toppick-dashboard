@@ -12,8 +12,6 @@ const TOPIC_SOURCES = [
   "ESL Conversation Questions",
 ];
 
-const TOPIC_LEVELS = ["Easy", "Medium", "Hard"];
-
 export const NO_IMAGE_URL =
   "https://icon-library.com/images/add-photo-icon/add-photo-icon-19.jpg";
 
@@ -26,5 +24,4 @@ export const CONSTANTS = {
   DEF_FROM_DATE,
   DEF_UNTIL_DATE,
   TOPIC_SOURCES,
-  TOPIC_LEVELS,
 };

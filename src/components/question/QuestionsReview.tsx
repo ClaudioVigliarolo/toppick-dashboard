@@ -11,16 +11,19 @@ import LinkOutlinedIcon from "@material-ui/icons/LinkOutlined";
 import BookmarkAddedIcon from "@material-ui/icons/Bookmark";
 import { CONSTANTS } from "@/constants/app";
 import QuestionDialog from "./dialog";
-import { CreatedQuestion, Question } from "@/interfaces/dash_topics";
-import CustomButton from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
 import { COLORS } from "@/constants/colors";
+import { QuestionCreated } from "@toppick/common";
 const LIST_ITEM_HEIGTH = 100;
 const LIST_ITEM_MARGIN = 25;
 
-const NO_QUESTION: CreatedQuestion = {
+const NO_QUESTION: QuestionCreated = {
   title: "",
   examples: [],
-  ext_resources: [],
+  id: -1,
+  n: 0,
+  new: true,
+  resources: [],
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -49,15 +52,15 @@ export default function QuestionsReview({
   loading,
   onClose,
 }: {
-  questions: CreatedQuestion[];
+  questions: QuestionCreated[];
   onSubmit: () => void;
-  onChange: (index: number, question: CreatedQuestion) => void;
+  onChange: (index: number, question: QuestionCreated) => void;
   loading: boolean;
   onClose: () => void;
 }) {
   const [articlesDialog, setArticlesDialog] = React.useState<boolean>(false);
   const [currentQuestion, setCurrentQuestion] =
-    React.useState<CreatedQuestion>(NO_QUESTION);
+    React.useState<QuestionCreated>(NO_QUESTION);
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     React.useState<number>(-1);
 
@@ -75,7 +78,7 @@ export default function QuestionsReview({
         }}
       >
         <ListItemIcon>
-          {questions[index].ext_resources.length > 0 ||
+          {questions[index].resources.length > 0 ||
           questions[index].examples.length > 0 ? (
             <BookmarkAddedIcon
               onClick={() => {
@@ -118,12 +121,12 @@ export default function QuestionsReview({
           <CircularProgress />
         ) : (
           <div className={classes.buttonContainer}>
-            <CustomButton
+            <Button
               onClick={onClose}
               color="red"
               title="Revert, change something"
             />
-            <CustomButton
+            <Button
               onClick={onSubmit}
               color={COLORS.blue}
               title="Submit, everything's fine"
@@ -134,7 +137,6 @@ export default function QuestionsReview({
       <QuestionDialog
         open={articlesDialog}
         onConfirm={(q) => {
-          console.log("1111111");
           onChange(currentQuestionIndex, q);
           setCurrentQuestion(NO_QUESTION);
           setArticlesDialog(false);

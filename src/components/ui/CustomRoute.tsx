@@ -19,7 +19,6 @@ const CustomRoute = ({
   error,
   success,
 }: CustomRouteProps) => {
-  console.log("condom", condition);
   return condition ? (
     <Route
       path={path}

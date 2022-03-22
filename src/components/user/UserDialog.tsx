@@ -40,7 +40,6 @@ export default function UserDialog(props: UserDialogProps) {
 
   React.useEffect(() => {
     setUser(props.user);
-    console.log("MUll", props.user);
   }, [props.user]);
 
   const onConfirm = () => {

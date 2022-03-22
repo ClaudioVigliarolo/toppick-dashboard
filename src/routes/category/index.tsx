@@ -1,41 +1,28 @@
 import React from "react";
 import TableCategories from "@/components/category/TableCategories";
-import CustomButton from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
 import CategoryDialog from "@/components/category/dialog";
 import SearchBar from "@/components/ui/SearchBar";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
 import {
-  onCategoryAdd,
-  onCategoryDeleteUnique,
+  onCategoryCreate,
+  onCategoryDelete,
   onCategoryUpdate,
 } from "@/utils/topics";
-import { getHash } from "@/utils/utils";
-import { Category, CategoryTopic } from "@/interfaces/dash_topics";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
-import { getCategories, getCategoryTopics } from "@/services/topics";
-
-const NO_CATEGORY: Category = {
-  id: -1,
-  ref_id: -1,
-  title: "",
-  categoryTopics: [],
-  description: "",
-  image: "",
-};
+import { getFeaturedCategories } from "@/services/topics";
+import { CategoryFeatured, CategoryCreated } from "@toppick/common";
 
 export default function CategoryPage() {
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [categoryTopics, setCategoryTopics] = React.useState<CategoryTopic[]>(
-    []
-  );
+  const [categories, setCategories] = React.useState<CategoryFeatured[]>([]);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
   const [addDialog, setAddDialog] = React.useState<boolean>(false);
   const [currentCategory, setCurrentCategory] =
-    React.useState<Category>(NO_CATEGORY);
+    React.useState<CategoryFeatured | null>(null);
   const { setLoading, onSuccess, onError, loading } =
     React.useContext(StatusContext);
   const { authToken, currentLanguage } = React.useContext(AuthContext);
@@ -45,19 +32,9 @@ export default function CategoryPage() {
     (async () => {
       setLoading(true);
       try {
-        const retrievedCategories = await getCategories(
-          currentLanguage,
-          authToken
-        );
+        const retrievedCategories = await getFeaturedCategories();
         if (retrievedCategories) {
           setCategories(retrievedCategories);
-        }
-        const retrievedCategTopics = await getCategoryTopics(
-          currentLanguage,
-          authToken
-        );
-        if (retrievedCategTopics) {
-          setCategoryTopics(retrievedCategTopics);
         }
       } catch (error) {
         onError();
@@ -68,24 +45,20 @@ export default function CategoryPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
-  const onUpdate = (categ: Category) => {
+  const onUpdate = (categ: CategoryFeatured) => {
     setCurrentCategory(categ);
     setEditDialog(true);
   };
 
-  const onDeleteShow = (categ: Category) => {
+  const onDelete = (categ: CategoryFeatured) => {
+    //get detail category here?
     setCurrentCategory(categ);
     setDeleteDialog(true);
   };
 
-  const onCreateSubmit = async (newCategory: Category) => {
-    const newId = getHash(newCategory.title, currentLanguage);
-    await onCategoryAdd(
-      {
-        ...newCategory,
-        id: newId,
-        ref_id: newId,
-      },
+  const onCreateSubmit = async (newCategory: CategoryCreated) => {
+    await onCategoryCreate(
+      newCategory,
       categories,
       currentLanguage,
       authToken,
@@ -93,14 +66,14 @@ export default function CategoryPage() {
       setLoading,
       () => {
         setAddDialog(false);
-        setCurrentCategory(NO_CATEGORY);
+        setCurrentCategory(null);
         onSuccess();
       },
       onError
     );
   };
 
-  const onUpdateSubmit = async (newCategory: Category) => {
+  const onUpdateSubmit = async (newCategory: CategoryCreated) => {
     await onCategoryUpdate(
       newCategory,
       categories,
@@ -110,18 +83,18 @@ export default function CategoryPage() {
       setLoading,
       () => {
         setAddDialog(false);
-        setCurrentCategory(NO_CATEGORY);
+        setCurrentCategory(null);
         onSuccess();
       },
       onError
     );
     setEditDialog(false);
-    setCurrentCategory(NO_CATEGORY);
+    setCurrentCategory(null);
   };
 
   const onDeleteSubmit = () => {
-    onCategoryDeleteUnique(
-      currentCategory.id,
+    onCategoryDelete(
+      (currentCategory as CategoryFeatured).id,
       categories,
       currentLanguage,
       authToken,
@@ -141,40 +114,38 @@ export default function CategoryPage() {
           setSearchText={(text) => setSearchText(text)}
           searchText={searchText}
         />
-        <CustomButton
+        <Button
           onClick={() => setAddDialog(true)}
-          title="INSERT NEW CATEGORY"
+          title="CREATE NEW CATEGORY"
         />
       </div>
       <TableCategories
         categories={categories}
         searchText={searchText}
-        onDelete={onDeleteShow}
+        onDelete={onDelete}
         onUpdate={onUpdate}
       />
 
       <CategoryDialog
-        category={NO_CATEGORY}
+        category={null}
         loading={loading}
         headerText="Add new Category"
         open={addDialog}
-        categoryTopics={categoryTopics}
         onConfirm={onCreateSubmit}
         onRefuse={() => {
           setAddDialog(false);
-          setCurrentCategory(NO_CATEGORY);
+          setCurrentCategory(null);
         }}
       />
 
       <CategoryDialog
         open={editDialog}
-        categoryTopics={categoryTopics}
         loading={loading}
         onConfirm={onUpdateSubmit}
         headerText="Editing Category"
         onRefuse={() => {
           setEditDialog(false);
-          setCurrentCategory(NO_CATEGORY);
+          setCurrentCategory(null);
         }}
         category={currentCategory}
       />

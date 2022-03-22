@@ -1,18 +1,18 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
-import { Question, Topic } from "@/interfaces/dash_topics";
 import { generateQuestions } from "@/utils/topics";
 import { countTextLines } from "@/utils/utils";
 import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
 import { AuthContext } from "@/context/AuthContext";
+import { DashLabel, QuestionCreated } from "@toppick/common";
 
 interface QuestionsQuickAddDialogProps {
   open: boolean;
   loading: boolean;
-  onConfirm: (questions: Question[]) => void;
+  onConfirm: (questions: QuestionCreated[]) => void;
   onRefuse: () => void;
   minQuestions: number;
-  topic: Topic;
+  topic: DashLabel;
 }
 
 export default function QuestionsQuickAddDialog(

@@ -3,66 +3,49 @@ import { useAppStyles } from "@/styles/common";
 import TopicDialog from "@/components/topic/dialog/topic";
 import CreatePageHeader from "./sections/CreatePageHeader";
 import CreatePageBody from "./sections/CreatePageBody";
-
 import { onQuestionsAdd, onTopicCreate } from "@/utils/topics";
-import {
-  generateExamples,
-  getHash,
-  parseExamples,
-  removeExamples,
-} from "@/utils/utils";
-import {
-  Question,
-  Topic,
-  Category,
-  Example,
-  CreatedQuestion,
-} from "@/interfaces/dash_topics";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
+import { getQuestionsByTopic, getTopicsLabels } from "@/services/topics";
 import {
-  getCategories,
-  getQuestionsByTopic,
-  getTopics,
-} from "@/services/topics";
+  DashLabel,
+  QuestionCreated,
+  QuestionDetail,
+  TopicCreated,
+  TopicFeatured,
+  TopicLevel,
+} from "@toppick/common";
 
-const NEW_QUESTION: Question = {
+const NO_TOPIC: TopicFeatured = {
+  active: false,
   id: -1,
+  timestamp: new Date(),
+  title: "select a topic to update",
+  description: "",
+  image: "",
+  level: TopicLevel.EASY,
+};
+
+const NEW_QUESTION: QuestionCreated = {
   title: "",
-  new: true,
   examples: [],
-  ext_resources: [],
+  resources: [],
+  new: false,
   user_id: "",
 };
 
-const NO_TOPIC: Topic = {
-  categories: [],
-  id: -1,
-  related: [],
-  level: 0,
-  source: "",
-  timestamp: new Date(),
-  title: "Select A Topic",
-  ref_id: -1,
-  description: "",
-  image: "",
-  active: false,
-  tags: [],
-};
-
 export default function CreatePage() {
-  const [selectedTopic, setSelectedTopic] = React.useState<Topic>(NO_TOPIC);
+  const [selectedTopic, setSelectedTopic] = React.useState<DashLabel>(NO_TOPIC);
   const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
   const [currentQuestions, setCurrentQuestions] = React.useState<
-    CreatedQuestion[]
+    QuestionCreated[]
   >([]);
   const [isUpdate, setIsUpdate] = React.useState<boolean>(false);
   const [isReview, setReview] = React.useState<boolean>(false);
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [topics, setTopics] = React.useState<Topic[]>([]);
+  const [topics, setTopics] = React.useState<DashLabel[]>([]);
   const { setLoading, onSuccess, onError, loading } =
     React.useContext(StatusContext);
-  const { authToken, currentLanguage } = React.useContext(AuthContext);
+  const { authToken, currentLanguage, userId } = React.useContext(AuthContext);
 
   const classes = useAppStyles();
 
@@ -71,27 +54,13 @@ export default function CreatePage() {
       onReset();
       setLoading(true);
       try {
-        const retrievedCategories = await getCategories(
-          currentLanguage,
-          authToken
-        );
-        if (retrievedCategories) {
-          setCategories(retrievedCategories);
-        }
-
-        const retrievedTopics = await getTopics(currentLanguage, authToken);
-        //sort by timestamp
-        if (retrievedTopics) {
-          setTopics(
-            retrievedTopics.sort((a, b) => a.title.localeCompare(b.title))
-          );
-        }
+        const allTopics = await getTopicsLabels("all");
+        setTopics(allTopics);
       } catch (error) {
         onError();
       }
       setLoading(false);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
   const handleTopicChange = async (index: number) => {
@@ -99,55 +68,53 @@ export default function CreatePage() {
       return onReset();
     }
     setSelectedTopic(topics[index]);
-    if (topics[index] !== NO_TOPIC) {
-      setLoading(true);
-      try {
-        const retrievedQuestions = await getQuestionsByTopic(
-          topics[index].id,
-          authToken
-        );
-
-        if (retrievedQuestions !== null) {
-          const newQuestions = [...retrievedQuestions].map((q) => ({
-            ...q,
-            examples: [],
-            title: generateExamples(q.title, q.examples as Example[]),
-          }));
-          setCurrentQuestions(newQuestions);
-          if (retrievedQuestions.length > 0) {
-            setIsUpdate(true);
-          } else {
-            setIsUpdate(false);
-          }
-        }
-      } catch (error) {
-        onError();
-      }
-      setLoading(false);
+    if (topics[index] === NO_TOPIC) {
+      return;
     }
+    setLoading(true);
+    try {
+      const retrievedQuestions = await getQuestionsByTopic(topics[index].id);
+      if (retrievedQuestions) {
+        const newQuestions: QuestionCreated[] = [...retrievedQuestions].map(
+          (q) => ({
+            ...q,
+            examples: q.examples.map((ex) => ({
+              id: ex.id,
+              user_id: ex.users!.uid,
+              title: ex.title,
+            })),
+            title: q.title,
+            resources: q.resources.map((res) => ({
+              id: res.id,
+              title: res.title,
+              user_id: res.users!.uid,
+              url: res.url,
+            })),
+            new: false,
+            user_id: q.user_id,
+          })
+        );
+        setCurrentQuestions(newQuestions);
+        if (retrievedQuestions.length > 0) {
+          setIsUpdate(true);
+        } else {
+          setIsUpdate(false);
+        }
+      }
+    } catch (error) {
+      onError();
+    }
+    setLoading(false);
   };
 
   const onSubmitToReview = () => {
-    const newQuestions = [...currentQuestions]
-      .filter((q) => q.title)
-      .map((q) => ({
-        ...q,
-        title: removeExamples(q.title),
-        examples: parseExamples(q.title),
-      }));
-    setCurrentQuestions(newQuestions);
+    setCurrentQuestions([...currentQuestions]);
     window.scrollTo(0, 0);
     setReview(true);
   };
 
   const onRevertFromReview = () => {
-    const newQuestions = [...currentQuestions].map((q) => ({
-      ...q,
-      examples: [],
-      title: generateExamples(q.title, q.examples as Example[]),
-    }));
-    //take current questions and push the examples
-    setCurrentQuestions(newQuestions);
+    setCurrentQuestions([...currentQuestions]);
 
     setReview(false);
   };
@@ -159,19 +126,21 @@ export default function CreatePage() {
     setCurrentQuestions([]);
   };
 
-  const onQuestionChange = (index: number, question: CreatedQuestion) => {
+  const onQuestionChange = (index: number, question: QuestionCreated) => {
     {
       const newQuestions = [...currentQuestions];
       newQuestions[index] = question;
-      console.log("MT NNNN", question);
       setCurrentQuestions(newQuestions);
-      console.log("MT ALLLLL", newQuestions);
     }
   };
 
   const onQuestionCreate = (index: number) => {
     const newQuestions = [...currentQuestions];
-    const newQuestion = { ...NEW_QUESTION, topic: selectedTopic };
+    const newQuestion = {
+      ...NEW_QUESTION,
+      topic: selectedTopic,
+      user_id: userId,
+    };
     newQuestions.splice(index + 1, 0, newQuestion);
     setCurrentQuestions(newQuestions);
   };
@@ -186,7 +155,7 @@ export default function CreatePage() {
     onSuccess();
   };
 
-  const onSubmit = async (questions: CreatedQuestion[]) => {
+  const onSubmit = async (questions: QuestionCreated[]) => {
     await onQuestionsAdd(
       questions,
       selectedTopic.id,
@@ -198,22 +167,19 @@ export default function CreatePage() {
     );
   };
 
-  const onConfirmTopicCreate = async (topic: Topic) => {
-    const newTopic = {
-      ...topic,
-      id: getHash(topic.title, currentLanguage),
-      timestamp: new Date(),
-      ref_id: getHash(topic.title, currentLanguage),
-    };
+  const onCreateTopicSubmit = async (newTopic: TopicCreated) => {
     await onTopicCreate(
       newTopic,
-      topics,
+      topics as TopicFeatured[],
       currentLanguage,
       authToken,
       setTopics,
       setLoading,
       async () => {
-        setSelectedTopic(newTopic);
+        setSelectedTopic({
+          id: topics[0].id,
+          title: topics[0].title,
+        });
         setTopicCreateDialog(false);
         setIsUpdate(false);
         onSuccess();
@@ -260,11 +226,9 @@ export default function CreatePage() {
       <TopicDialog
         open={topicAddDialog}
         loading={loading}
-        related={topics}
-        categories={categories}
-        topic={{ ...NO_TOPIC, title: "" }}
         headerText="Create New Topic"
-        onConfirm={onConfirmTopicCreate}
+        topic={null}
+        onConfirm={onCreateTopicSubmit}
         onRefuse={onRefuseTopicCreate}
       />
     </div>

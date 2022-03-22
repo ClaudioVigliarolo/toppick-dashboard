@@ -1,37 +1,83 @@
 import React from "react";
-import { isSelected } from "@/utils/utils";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
-import { Category, CategoryTopic } from "@/interfaces/dash_topics";
+import {
+  CategoryDetail,
+  CategoryFeatured,
+  Lang,
+  DashLabel,
+  CategoryCreated,
+} from "@toppick/common";
+import { getTopicsLabels, getCategoryDetails } from "@/services/topics";
 
 interface CategoryDialogProps {
   open: boolean;
   loading: boolean;
-  onConfirm: (category: Category) => void;
+  onConfirm: (category: CategoryCreated) => void;
   onRefuse: () => void;
-  categoryTopics: CategoryTopic[];
   headerText: string;
-  category: Category;
+  category: CategoryFeatured | null;
 }
 
-const NO_CATEGORY: Category = {
+const NO_CATEGORY: CategoryDetail = {
   id: -1,
-  ref_id: -1,
   title: "",
-  categoryTopics: [],
   description: "",
   image: "",
+  topicCounter: 0,
 };
 
 export default function CategoryDialog(props: CategoryDialogProps) {
-  const [category, setCategory] = React.useState<Category>(NO_CATEGORY);
+  const [category, setCategory] = React.useState<CategoryDetail>(NO_CATEGORY);
+  const [topics, setTopics] = React.useState<DashLabel[]>([]);
+  const [selectedTopics, setSelectedTopics] = React.useState<DashLabel[]>([]);
+
   React.useEffect(() => {
-    setCategory(props.category);
+    (async () => {
+      try {
+        if (props.category) {
+          const categoryDetail = await getCategoryDetails(props.category.title);
+          setCategory(categoryDetail);
+          const selectedTopics = await getTopicsLabels(
+            props.category.id,
+            "category"
+          );
+          setSelectedTopics(selectedTopics);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   }, [props.category]);
 
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const allTopics = await getTopicsLabels("all");
+        setTopics(allTopics);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
   const onConfirm = async () => {
-    props.onConfirm(category);
+    const newCategory: CategoryCreated = {
+      id: category.id,
+      description: category.description,
+      image: category.image,
+      title: category.title,
+      topics: selectedTopics.map((topic) => ({
+        lang: Lang.EN,
+        topic_id: topic.id,
+      })),
+    };
+    props.onConfirm(newCategory);
+
+    //reset state
+    setSelectedTopics([]);
+    setCategory(NO_CATEGORY);
   };
 
   const setDescription = (e: React.ChangeEvent<any>) => {
@@ -49,21 +95,21 @@ export default function CategoryDialog(props: CategoryDialogProps) {
   const isSubmitEnabled = (): boolean =>
     category.description != "" &&
     category.image != "" &&
-    category.categoryTopics.length > 0;
+    selectedTopics.length > 0;
 
   const handleCategoriesChange = (index: number) => {
-    const newCategory = { ...category };
-    if (isSelected(category.categoryTopics, props.categoryTopics[index])) {
-      newCategory.categoryTopics = category.categoryTopics.filter(
-        (s) => s.title !== props.categoryTopics[index].title
-      );
+    const newSelectedTopics = [...selectedTopics];
+    const selectedIndex = selectedTopics.findIndex(
+      (selected) => topics[index].id === selected.id
+    );
+    if (selectedIndex < 0) {
+      //selected
+      newSelectedTopics.push(topics[index]);
     } else {
-      newCategory.categoryTopics = [
-        ...newCategory.categoryTopics,
-        props.categoryTopics[index],
-      ];
+      //select
+      newSelectedTopics.splice(selectedIndex, 1);
     }
-    setCategory(newCategory);
+    setSelectedTopics(newSelectedTopics);
   };
 
   const tabs: TabData[] = [
@@ -84,9 +130,9 @@ export default function CategoryDialog(props: CategoryDialogProps) {
       label: "Related",
       children: (
         <Related
-          selectedCategoryTopics={category.categoryTopics}
+          selectedTopics={selectedTopics}
           handleCategoriesChange={handleCategoriesChange}
-          categoryTopics={props.categoryTopics}
+          topics={topics}
         />
       ),
     },

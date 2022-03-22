@@ -6,15 +6,15 @@ import {
   useStyles,
   StyledTableCell,
 } from "../ui/TableStyles";
-import { Topic, TopicRelated } from "@/interfaces/dash_topics";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { getFormattedDate } from "@/utils/utils";
+import { TopicFeatured } from "@toppick/common";
 interface TableTopicsProps {
-  topics: Topic[];
+  topics: TopicFeatured[];
   searchText: string;
-  onUpdate: (categ: Topic) => void;
-  onDelete: (categ: Topic) => void;
+  onUpdate: (topic: TopicFeatured) => void;
+  onDelete: (topic: TopicFeatured) => void;
 }
 
 export default function TableTopics({
@@ -25,8 +25,8 @@ export default function TableTopics({
 }: TableTopicsProps) {
   const classes = useStyles();
 
-  const renderRows = (topics: Topic[]) => {
-    return topics.map((topic: Topic, index: number) => {
+  const renderRows = (topics: TopicFeatured[]) => {
+    return topics.map((topic: TopicFeatured, index: number) => {
       if (topic.title.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
@@ -34,14 +34,7 @@ export default function TableTopics({
             <StyledTableCell>
               {getFormattedDate(topic.timestamp)}
             </StyledTableCell>
-            <StyledEditCell
-              style={{ color: topic.related.length === 0 ? "red" : "black" }}
-            >
-              {topic.related
-                .slice(0, 3)
-                .map((r: TopicRelated) => r.title + " ")}
-              {topic.related.length > 3 && "..."}
-              {topic.related.length === 0 && "Warning, no related topic!"}
+            <StyledEditCell>
               <div className={classes.iconsContainer} style={{ width: 100 }}>
                 <div
                   className={classes.circle}
@@ -71,8 +64,8 @@ export default function TableTopics({
 
   return (
     <CustomTable
-      columns={["15%", "20%", "40%"]}
-      columnNames={["title", "last update", "related"]}
+      columns={["30%", "40%", "30%"]}
+      columnNames={["title", "last update", ""]}
       body={renderRows(topics)}
     />
   );

@@ -2,7 +2,7 @@ import React from "react";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles, TextField, Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { QuestionExtResource } from "@/interfaces/dash_topics";
+import { QuestionResource } from "@toppick/common";
 const useStyles = makeStyles((theme) => ({
   linkTextField: {
     marginTop: 10,
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 interface ExtResourceOverviewProps {
   open: boolean;
   title: string;
-  extResources: QuestionExtResource[];
+  resources: QuestionResource[];
   setTitle: (event: React.ChangeEvent<any>) => void;
   onChange: (event: React.ChangeEvent<any>, index: number) => void;
   onPreview: (url: string) => void;
@@ -60,7 +60,7 @@ interface ExtResourceOverviewProps {
 export default function ExtResourceOverview({
   open,
   title,
-  extResources,
+  resources,
   onChange,
   setTitle,
   onPreview,
@@ -84,7 +84,7 @@ export default function ExtResourceOverview({
           />
 
           {/* urls list */}
-          {extResources.map((r, i) => (
+          {resources.map((r, i) => (
             <div className={classes.articleContainer} key={i}>
               <div className={classes.urlContainer}>
                 <TextField

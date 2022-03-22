@@ -1,14 +1,8 @@
 /* utils for inserting, modifing, removing topics  */
-import { getLinesFromText, getQuestionHash } from "../utils/utils";
-import {
-  Category,
-  CreatedQuestion,
-  Question,
-  Topic,
-} from "../interfaces/dash_topics";
+import { getLinesFromText } from "../utils/utils";
 import { Lang } from "@/interfaces/app";
 import {
-  addTopic,
+  createTopic,
   updateTopic,
   deleteTopic,
   addQuestions,
@@ -17,24 +11,40 @@ import {
   deleteQuestion,
   updateCategory,
 } from "@/services/topics";
+import {
+  CategoryDetail,
+  CategoryFeatured,
+  DashLabel,
+  TopicDetail,
+  TopicCreated,
+  TopicFeatured,
+  CategoryCreated,
+  QuestionCreated,
+} from "@toppick/common";
 
-export const onCategoryAdd = async (
-  newCategory: Category,
-  categories: Category[],
+export const onCategoryCreate = async (
+  category: CategoryCreated,
+  categories: CategoryFeatured[],
   currentLanguage: Lang,
   token: string,
-  setCategories: (categories: Category[]) => void,
+  setCategories: (categories: CategoryFeatured[]) => void,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
   try {
-    await createCategory(newCategory, currentLanguage, token);
-    const newCategories = categories;
-
-    newCategories.unshift(newCategory);
-    setCategories([...newCategories]);
+    const newCategory = await createCategory(category, currentLanguage, token);
+    const newCategories = [...categories];
+    newCategories.unshift({
+      id: newCategory.id,
+      image: newCategory.image,
+      title: newCategory.title,
+      _count: {
+        topic_categories: category.topics.length,
+      },
+    });
+    setCategories(newCategories);
     onSuccess();
   } catch (error) {
     onError();
@@ -43,27 +53,30 @@ export const onCategoryAdd = async (
 };
 
 export const onCategoryUpdate = async (
-  category: Category,
-  categories: Category[],
+  category: CategoryCreated,
+  categories: CategoryFeatured[],
   currentLanguage: Lang,
   token: string,
-  setCategories: (categories: Category[]) => void,
+  setCategories: (categories: CategoryFeatured[]) => void,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
 ) => {
   setLoading(true);
   try {
-    await updateCategory(category, currentLanguage, token);
-    const newCategories = categories;
-    newCategories.forEach(function (item: Category) {
-      if (item.id == category.id) {
-        item.title = category.title;
-        item.description = category.description;
-        item.image = category.image;
-      }
-    });
-    setCategories([...newCategories]);
+    const newCategory = await updateCategory(category, currentLanguage, token);
+    const newCategories = [...categories];
+    const updatedIndex = newCategories.findIndex(
+      (cat) => cat.id === newCategory.id
+    );
+    newCategories[updatedIndex] = {
+      _count: { topic_categories: category.topics.length },
+      image: newCategory.image,
+      title: newCategory.title,
+      id: newCategory.id,
+    };
+
+    setCategories(newCategories);
     onSuccess();
   } catch (error) {
     onError();
@@ -71,12 +84,12 @@ export const onCategoryUpdate = async (
   setLoading(false);
 };
 
-export const onCategoryDeleteUnique = async (
+export const onCategoryDelete = async (
   id: number,
-  categories: Category[],
+  categories: CategoryFeatured[],
   currentLanguage: Lang,
   token: string,
-  setCategories: (categories: Category[]) => void,
+  setCategories: (categories: CategoryFeatured[]) => void,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
@@ -84,90 +97,8 @@ export const onCategoryDeleteUnique = async (
   setLoading(true);
   try {
     await deleteCategory(id, currentLanguage, token);
-
-    const newCategories = categories.filter(
-      (categ: Category) => categ.id !== id
-    );
+    const newCategories = categories.filter((categ) => categ.id !== id);
     setCategories([...newCategories]);
-    onSuccess();
-  } catch (error) {
-    onError();
-  }
-  setLoading(false);
-};
-
-export const onQuestionCreate = async (
-  topicId: number,
-  newQuestion: Question,
-  questions: Question[],
-  currentLanguage: Lang,
-  token: string,
-  setQuestions: (categories: Question[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-) => {
-  setLoading(true);
-  try {
-    await addQuestions([newQuestion], topicId, currentLanguage, token);
-    const newQuestions = questions;
-
-    newQuestions.unshift(newQuestion);
-    setQuestions([...newQuestions]);
-    setLoading(false);
-    onSuccess();
-  } catch (error) {
-    onError();
-  }
-  setLoading(false);
-};
-
-export const onQuestionUpdate = async (
-  question: Question,
-  questions: Question[],
-  currentLanguage: Lang,
-  token: string,
-  setQuestions: (categories: Question[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-) => {
-  /*setLoading(true);
-  const val = await addQuestions(questions, currentLanguage, token);
-  if (!val) {
-    setLoading(false);
-    return onError();
-  }
-  const newQuestions = questions;
-  newQuestions.forEach(function (item: Question) {
-    if (item.id == question.id) {
-      item.title = question.title;
-      item.topic.title = question.topic.title;
-      item.topic.id = question.topic.id;
-      item.timestamp = new Date();
-    }
-  });
-  setQuestions([...newQuestions]);
-  setLoading(false);
-  onSuccess();*/
-};
-
-export const onQuestionDelete = async (
-  id: number,
-  questions: Question[],
-  currentLanguage: Lang,
-  token: string,
-  setQuestions: (categories: Question[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
-): Promise<void> => {
-  setLoading(true);
-  try {
-    await deleteQuestion(id, currentLanguage, token);
-
-    const newQuestions = questions.filter((categ: Question) => categ.id != id);
-    setQuestions([...newQuestions]);
     onSuccess();
   } catch (error) {
     onError();
@@ -176,27 +107,33 @@ export const onQuestionDelete = async (
 };
 
 export const onTopicCreate = async (
-  newTopic: Topic,
-  topics: Topic[],
+  topic: TopicCreated,
+  topics: TopicFeatured[],
   currentLanguage: Lang,
   token: string,
-  setTopics: (topics: Topic[]) => void,
+  setTopics: (topics: TopicFeatured[]) => void,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
   try {
-    await addTopic(newTopic, currentLanguage, token);
-
-    //new topic added successfully, add locally
-    const newTopics = topics;
+    const { id, active, description, image, level, timestamp, title } =
+      await createTopic(topic, currentLanguage, token);
 
     //update topic array
-    newTopics.unshift(newTopic);
+    topics.unshift({
+      active: active!,
+      description,
+      id,
+      image,
+      level,
+      timestamp,
+      title,
+    });
 
     //push new updated arrays
-    setTopics([...newTopics]);
+    setTopics([...topics]);
 
     setLoading(false);
     onSuccess();
@@ -205,54 +142,34 @@ export const onTopicCreate = async (
   }
 };
 
-export const getCategoriesFromTitles = (
-  categories: Category[],
-  selectedCategoriesTitles: string[]
-) => {
-  const updatedCategories: Category[] = [];
-  selectedCategoriesTitles.forEach((title: string) => {
-    const category = categories.find((x) => x.title === title);
-    if (category) {
-      updatedCategories.push({
-        id: category.id,
-        title: category.title,
-        ref_id: category.ref_id,
-        categoryTopics: category.categoryTopics,
-        description: category.description,
-        image: category.image,
-      });
-    }
-  });
-  return updatedCategories;
-};
-
 export const onTopicUpdate = async (
-  updatedTopic: Topic,
-  topics: Topic[],
+  updatedTopic: TopicCreated,
+  topics: TopicFeatured[],
   currentLanguage: Lang,
   token: string,
-  setTopics: (topics: Topic[]) => void,
+  setTopics: (topics: TopicFeatured[]) => void,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
 ): Promise<void> => {
   setLoading(true);
   try {
-    await updateTopic(updatedTopic, currentLanguage, token);
-    //new topic updated successfully, update locally
-    const newTopics = topics;
+    const { id, active, description, image, level, timestamp, title } =
+      await updateTopic(updatedTopic, currentLanguage, token);
 
-    const topicIndex = topics.findIndex(
-      (topic: Topic) => topic.id == updatedTopic.id
-    );
+    const index = topics.findIndex((topic) => topic.id == updatedTopic.id);
 
-    if (topicIndex !== -1) {
-      topics[topicIndex] = updatedTopic;
-    }
+    topics[index] = {
+      id,
+      active: active!,
+      description,
+      image,
+      level,
+      timestamp,
+      title,
+    };
+    setTopics([...topics]);
     onSuccess();
-
-    //push new updated arrays
-    setTopics([...newTopics]);
   } catch (error) {
     onError();
   }
@@ -260,12 +177,12 @@ export const onTopicUpdate = async (
   setLoading(false);
 };
 
-export const onTopicDeleteUnique = async (
+export const onTopicDelete = async (
   id: number,
-  topics: Topic[],
+  topics: TopicFeatured[],
   currentLanguage: Lang,
   token: string,
-  setTopics: (topics: Topic[]) => void,
+  setTopics: (topics: TopicFeatured[]) => void,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
   onError: () => void
@@ -273,7 +190,7 @@ export const onTopicDeleteUnique = async (
   setLoading(true);
   try {
     await deleteTopic(id, currentLanguage, token);
-    const newTopics = topics.filter((topic: Topic) => topic.id !== id);
+    const newTopics = topics.filter((topic) => topic.id !== id);
     setTopics([...newTopics]);
     setLoading(false);
     onSuccess();
@@ -283,7 +200,7 @@ export const onTopicDeleteUnique = async (
 };
 
 export const onQuestionsAdd = async (
-  questions: CreatedQuestion[],
+  questions: QuestionCreated[],
   topicId: number,
   currentLanguage: Lang,
   token: string,
@@ -307,18 +224,17 @@ export const onQuestionsAdd = async (
 
 export const generateQuestions = (
   text: string,
-  topic: Topic,
+  topic: DashLabel,
   userId: string
-): Question[] => {
+): QuestionCreated[] => {
   const questionsStr = getLinesFromText(text);
-  const questions: Question[] = questionsStr.map((title, index) => ({
-    id: getQuestionHash(title, topic.title, index),
+  const questions: any[] = questionsStr.map((title, index) => ({
     timestamp: new Date(),
     title: title,
     examples: [],
-    ext_resources: [],
     new: true,
     user_id: userId,
+    resources: [],
   }));
 
   return questions;

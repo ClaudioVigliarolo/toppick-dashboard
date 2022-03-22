@@ -1,7 +1,7 @@
 import React from "react";
 import TagItem from "./TagItem";
 import { TextField, makeStyles } from "@material-ui/core";
-import { TopicTag } from "@/interfaces/dash_topics";
+import { TopicTag } from "@toppick/common";
 
 interface TagSelectorProps {
   tags: TopicTag[];

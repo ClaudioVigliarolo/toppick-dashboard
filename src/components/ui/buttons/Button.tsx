@@ -1,9 +1,9 @@
-import { Button, makeStyles } from "@material-ui/core";
+import { Button as MaterialUIButton, makeStyles } from "@material-ui/core";
 import { COLORS } from "@/constants/colors";
 
 import React from "react";
 
-interface CustomButtonProps {
+interface ButtonProps {
   color?: string;
   title: string;
   onClick: any;
@@ -17,17 +17,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomButton({
+export default function Button({
   color = COLORS.primaryOrange,
   title,
   onClick,
   submit,
   disabled = false,
-}: CustomButtonProps) {
+}: ButtonProps) {
   const classes = useStyles();
   return (
     <div>
-      <Button
+      <MaterialUIButton
         variant="contained"
         disabled={disabled}
         className={classes.button}
@@ -38,7 +38,7 @@ export default function CustomButton({
         onClick={onClick}
       >
         {title}
-      </Button>
+      </MaterialUIButton>
     </div>
   );
 }

@@ -1,5 +1,3 @@
-import { UserApproved } from "./user";
-
 export interface TopicCategory {
   id: number;
   ref_id: number;
@@ -45,11 +43,11 @@ export interface CreatedExample {
   title: string;
 }
 
-export interface CreatedQuestionExtResource {
+export interface QuestionCreatedExtResource {
   url: string;
 }
 
-export interface CreatedQuestion {
+export interface QuestionCreated {
   title: string;
   examples: CreatedExample[];
   ext_resources: QuestionExtResource[];

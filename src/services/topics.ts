@@ -1,66 +1,121 @@
-import axios from "axios";
-import {
-  Category,
-  Question,
-  Topic,
-  CategoryTopic,
-  CreatedQuestion,
-} from "../interfaces/dash_topics";
+import axios, { AxiosResponse } from "axios";
 
 import { HOSTNAME } from "../config/config";
 import { Lang } from "@/interfaces/app";
+import {
+  CategoryDetail,
+  CategoryFeatured,
+  TopicDetail,
+  TopicFeatured,
+  DashLabel,
+  TopicCreated,
+  CategoryCreated,
+  QuestionCreated,
+  QuestionDetail,
+} from "@toppick/common";
 
-export const getCategories = async (
-  lang: Lang,
-  token: string
-): Promise<Category[]> => {
+export async function getFeaturedCategories(): Promise<CategoryFeatured[]> {
   const response = await axios.get(
-    `${HOSTNAME}/api/content/categories-dashboard/` + lang,
-    {
-      headers: { Authorization: "Bearer " + token },
-    }
+    `${HOSTNAME}/api/content/categories/featured`
   );
-
   return response.data;
-};
+}
 
-export const getCategoryTopics = async (
-  lang: Lang,
-  token: string
-): Promise<CategoryTopic[]> => {
+export const getTopicsByCategory = async (
+  id: number,
+  limit: number,
+  skip: number
+): Promise<TopicFeatured[]> => {
   const response = await axios.get(
-    `${HOSTNAME}/api/content/categories-dashboard/topics/` + lang,
+    `${HOSTNAME}/api/content/categories/${id}/topics`,
     {
-      headers: {
-        Authorization: "Bearer " + token,
+      params: {
+        limit,
+        skip,
       },
     }
   );
   return response.data;
 };
 
-export const getTopics = async (
-  lang: Lang,
-  token: string
-): Promise<Topic[]> => {
+export const getTopicsList = async (
+  id: number,
+  limit: number,
+  skip: number
+): Promise<TopicFeatured[]> => {
+  const response = await axios.get(`${HOSTNAME}/api/content/topics/list`, {
+    params: {
+      limit,
+      skip,
+    },
+  });
+  return response.data;
+};
+
+export const getAllTopics = async (): Promise<TopicFeatured[]> => {
+  const response = await axios.get(`${HOSTNAME}/api/content/topics/all`, {
+    params: {
+      limit: 10000,
+      skip: 0,
+      category_id: null,
+      include_inactive: true,
+      sort_by_timestamp: true,
+    },
+  });
+  return response.data;
+};
+
+export const getTopicDetails = async (title: string): Promise<TopicDetail> => {
   const response = await axios.get(
-    `${HOSTNAME}/api/content/topics-dashboard/` + lang,
+    `${HOSTNAME}/api/content/topics/${title}/details`
+  );
+  return response.data;
+};
+
+export const getTopicsLabels = async (
+  id: number | string,
+  type?: string
+): Promise<DashLabel[]> => {
+  const response = await axios.get(`${HOSTNAME}/api/content/topics/labels`, {
+    params: {
+      id,
+      type,
+    },
+  });
+  return response.data;
+};
+
+export const getCategoriesLabels = async (
+  id: number | string
+): Promise<DashLabel[]> => {
+  const response = await axios.get(
+    `${HOSTNAME}/api/content/categories/labels`,
     {
-      headers: {
-        Authorization: "Bearer " + token,
+      params: {
+        id,
       },
     }
   );
   return response.data;
 };
 
-export const addTopic = async (
-  topic: Topic,
+export const getCategoryDetails = async (
+  title: string
+): Promise<CategoryDetail> => {
+  const response = await axios.get(
+    `${HOSTNAME}/api/content/categories/${title}/details`,
+    {}
+  );
+  return response.data;
+};
+
+export const createTopic = async (
+  topic: TopicCreated,
   lang: Lang,
   token: string
-): Promise<void> => {
-  await axios.post(
-    `${HOSTNAME}/api/content/topics-dashboard`,
+): Promise<TopicDetail> => {
+  const res = await axios.post(
+    `${HOSTNAME}/api/content/topics`,
     {
       topic,
       lang,
@@ -71,15 +126,16 @@ export const addTopic = async (
       },
     }
   );
+  return res.data;
 };
 
 export const updateTopic = async (
-  topic: Topic,
+  topic: TopicCreated,
   lang: Lang,
   token: string
-): Promise<void> => {
-  await axios.put(
-    `${HOSTNAME}/api/content/topics-dashboard`,
+): Promise<TopicDetail> => {
+  const res = await axios.patch(
+    `${HOSTNAME}/api/content/topics/${topic.id}`,
     {
       topic,
       lang,
@@ -90,6 +146,7 @@ export const updateTopic = async (
       },
     }
   );
+  return res.data;
 };
 
 export const deleteTopic = async (
@@ -117,7 +174,7 @@ export const deleteCategory = async (
   lang: Lang,
   token: string
 ): Promise<void> => {
-  await axios.delete(`${HOSTNAME}/api/content/categories-dashboard/`, {
+  await axios.delete(`${HOSTNAME}/api/content/categories/`, {
     data: {
       id,
       lang,
@@ -129,13 +186,13 @@ export const deleteCategory = async (
 };
 
 export const addQuestions = async (
-  questions: CreatedQuestion[],
+  questions: QuestionCreated[],
   topicId: number,
   lang: Lang,
   token: string
-): Promise<void> => {
-  await axios.post(
-    `${HOSTNAME}/api/content/questions-dashboard`,
+): Promise<AxiosResponse> => {
+  const res = await axios.put(
+    `${HOSTNAME}/api/content/questions/batch`,
     {
       questions,
       topic_id: topicId,
@@ -147,15 +204,16 @@ export const addQuestions = async (
       },
     }
   );
+  return res.data;
 };
 
 export const createCategory = async (
-  category: Category,
+  category: CategoryCreated,
   lang: Lang,
   token: string
-): Promise<void> => {
-  await axios.post(
-    `${HOSTNAME}/api/content/categories-dashboard`,
+): Promise<CategoryDetail> => {
+  const res = await axios.post(
+    `${HOSTNAME}/api/content/categories`,
     {
       category,
       lang,
@@ -166,15 +224,17 @@ export const createCategory = async (
       },
     }
   );
+  return res.data;
 };
 
 export const updateCategory = async (
-  category: Category,
+  category: CategoryCreated,
   lang: Lang,
   token: string
-): Promise<void> => {
-  await axios.put(
-    `${HOSTNAME}/api/content/categories-dashboard`,
+): Promise<CategoryDetail> => {
+  console.log("TO UPPP", category.topics);
+  const response = await axios.patch(
+    `${HOSTNAME}/api/content/categories/${category.id}`,
     {
       category,
       lang,
@@ -185,6 +245,7 @@ export const updateCategory = async (
       },
     }
   );
+  return response.data;
 };
 
 //todo
@@ -205,16 +266,15 @@ export const deleteQuestion = async (
 };
 
 export const getQuestionsByTopic = async (
-  id: number,
-  token: string
-): Promise<Question[] | null> => {
-  const response = await axios.get(
-    `${HOSTNAME}/api/content/questions-dashboard/topic/${id}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
+  topic_id: number
+): Promise<QuestionDetail[]> => {
+  const response = await axios.get(`${HOSTNAME}/api/content/questions`, {
+    params: {
+      topic_id,
+      order_by_n: true,
+      limit: 1000,
+      skip: 0,
+    },
+  });
   return response.data;
 };

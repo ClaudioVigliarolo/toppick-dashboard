@@ -8,12 +8,12 @@ import {
 } from "../ui/TableStyles";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Category } from "@/interfaces/dash_topics";
+import { CategoryFeatured } from "@toppick/common";
 
 interface TableCategoriesProps {
-  categories: Category[];
-  onUpdate: (categ: Category) => void;
-  onDelete: (categ: Category) => void;
+  categories: CategoryFeatured[];
+  onUpdate: (categ: CategoryFeatured) => void;
+  onDelete: (categ: CategoryFeatured) => void;
   searchText: string;
 }
 
@@ -25,19 +25,13 @@ export default function TableCategories({
 }: TableCategoriesProps) {
   const classes = useStyles();
 
-  const renderRows = (categories: Category[]) => {
-    return categories.map((category: Category, index: number) => {
+  const renderRows = (categories: CategoryFeatured[]) => {
+    return categories.map((category: CategoryFeatured, index: number) => {
       if (category.title.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
             <StyledTableCell> {category.title}</StyledTableCell>
-            <StyledEditCell
-              style={{
-                color: category.categoryTopics.length === 0 ? "red" : "black",
-              }}
-            >
-              {category.categoryTopics.length === 0 &&
-                "Warning, no topic in this category !"}
+            <StyledEditCell>
               <div className={classes.iconsContainer}>
                 <EditIcon
                   className={classes.editIcon}

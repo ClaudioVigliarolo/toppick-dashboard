@@ -1,92 +1,154 @@
 import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
-import { hasVal, isSelected } from "@/utils/utils";
-
 import Info from "./sections/Info";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
+import {
+  TopicFeatured,
+  TopicDetail,
+  DashLabel,
+  TopicLevel,
+  TopicCreated,
+  Lang,
+} from "@toppick/common";
+import {
+  getCategoriesLabels,
+  getTopicDetails,
+  getTopicsLabels,
+} from "@/services/topics";
 import { CONSTANTS } from "@/constants/app";
-import { Topic, CategoryTopic, TopicLevel } from "@/interfaces/dash_topics";
 
-const NO_TOPIC: Topic = {
-  categories: [],
+const NO_TOPIC: TopicDetail = {
   id: -1,
-  related: [],
-  source: "",
-  level: 0,
-
-  timestamp: new Date(),
+  source: CONSTANTS.TOPIC_SOURCES[0],
   title: "",
-  ref_id: -1,
   description: "",
   image: "",
+  articleCounter: 0,
+  imageCounter: 0,
+  level: TopicLevel.MEDIUM,
+  questionCounter: 0,
+  related_topics_related_topics_source_idTotopics: [],
+  topic_categories: [],
+  topic_tags: [],
+  timestamp: new Date(),
+  videoCounter: 0,
   active: false,
-  tags: [],
 };
 
 interface TopicDialogProps {
   open: boolean;
   loading: boolean;
-  onConfirm: (newTopic: Topic) => void;
-  topic: Topic;
+  onConfirm: (newTopic: TopicCreated) => void;
+  topic: TopicFeatured | null;
   onRefuse: () => void;
-  categories: CategoryTopic[];
   headerText: string;
-  related: Topic[];
   titlePlaceholder?: string;
   descriptionPlaceholder?: string;
 }
 
 export default function TopicDialog(props: TopicDialogProps) {
-  const [topic, setTopic] = React.useState<Topic>(NO_TOPIC);
-  const [level, setLevel] = React.useState<string>(CONSTANTS.TOPIC_LEVELS[1]);
-  const [source, setSource] = React.useState<string>(
-    CONSTANTS.TOPIC_SOURCES[0]
-  );
+  const [topic, setTopic] = React.useState<TopicDetail>(NO_TOPIC);
+  const [topics, setTopics] = React.useState<DashLabel[]>([]);
+  const [categories, setCategories] = React.useState<DashLabel[]>([]);
+  const [selectedTopics, setSelectedTopics] = React.useState<DashLabel[]>([]);
+  const [selectedCategories, setSelectedCategories] = React.useState<
+    DashLabel[]
+  >([]);
 
   React.useEffect(() => {
-    setTopic(props.topic);
-    hasVal(props.topic.level) &&
-      setLevel(CONSTANTS.TOPIC_LEVELS[props.topic.level as TopicLevel]);
-  }, [props.categories, props.topic, props.related]);
+    (async () => {
+      try {
+        if (props.topic) {
+          const topicDetail = await getTopicDetails(props.topic.title);
+          setTopic(topicDetail);
+          //get preselected
+          const selectedTopics = await getTopicsLabels(props.topic.id, "topic");
+          const selectedCategories = await getCategoriesLabels(props.topic.id);
+          setSelectedTopics(selectedTopics);
+          setSelectedCategories(selectedCategories);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [props.topic]);
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const allTopics = await getTopicsLabels("all");
+        const allCategories = await getCategoriesLabels("all");
+        setTopics(allTopics);
+        setCategories(allCategories);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   const onConfirm = async () => {
-    props.onConfirm({
-      ...topic,
-      level: CONSTANTS.TOPIC_LEVELS.indexOf(level),
-    });
+    const newTopic: TopicCreated = {
+      description: topic.description,
+      image: topic.image,
+      title: topic.title,
+      active: topic.active!,
+      level: topic.level,
+      source: topic.source,
+      topic_tags: topic.topic_tags,
+      id: topic.id,
+      categories: selectedCategories.map((category) => ({
+        category_id: category.id,
+      })),
+      topics: selectedTopics.map((topic) => ({
+        dest_id: topic.id,
+      })),
+    };
+
+    props.onConfirm(newTopic);
+
+    //reset state
+    setSelectedTopics([]);
+    setSelectedCategories([]);
+    setTopic(NO_TOPIC);
   };
 
   const handleCategoriesChange = (index: number) => {
-    const newTopic = { ...topic };
-    if (isSelected(topic.categories, props.categories[index])) {
-      newTopic.categories = topic.categories.filter(
-        (s) => s.title !== props.categories[index].title
-      );
+    const newSelectedCategories = [...selectedCategories];
+    const selectedIndex = selectedCategories.findIndex(
+      (selected) => categories[index].id === selected.id
+    );
+    if (selectedIndex < 0) {
+      //selected
+      newSelectedCategories.push(categories[index]);
     } else {
-      newTopic.categories = [...topic.categories, props.categories[index]];
+      //select
+      newSelectedCategories.splice(selectedIndex, 1);
     }
-    setTopic(newTopic);
+    setSelectedCategories(newSelectedCategories);
   };
 
-  const handleRelatedChange = (index: number) => {
-    const newTopic = { ...topic };
-    if (isSelected(topic.related, props.related[index])) {
-      newTopic.related = topic.related.filter(
-        (s) => s.title !== props.related[index].title
-      );
+  const handleTopicsChange = (index: number) => {
+    const newSelectedTopics = [...selectedTopics];
+    const selectedIndex = selectedTopics.findIndex(
+      (selected) => topics[index].id === selected.id
+    );
+    if (selectedIndex < 0) {
+      //selected
+      newSelectedTopics.push(topics[index]);
     } else {
-      newTopic.related = [...topic.related, props.related[index]];
+      //select
+      newSelectedTopics.splice(selectedIndex, 1);
     }
-    setTopic(newTopic);
+    setSelectedTopics(newSelectedTopics);
   };
 
   const handleSourceChange = (e: React.ChangeEvent<any>) => {
-    setSource(e.target.value);
+    setTopic({ ...topic, source: e.target.value });
   };
 
   const handleLevelChange = (e: React.ChangeEvent<any>) => {
-    setLevel(e.target.value);
+    setTopic({ ...topic, level: e.target.value });
   };
 
   const setDescription = (e: React.ChangeEvent<any>) => {
@@ -107,32 +169,31 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   const onTagRemove = (i: number) => {
     const newTopic = { ...topic };
-    newTopic.tags.splice(i, 1);
+    newTopic.topic_tags.splice(i, 1);
     setTopic(newTopic);
   };
 
   const onTagAdd = (tag: string) => {
-    const newTags = topic.tags.filter((t) => t.title !== tag);
+    const newTags = topic.topic_tags.filter((t) => t.title !== tag);
     newTags.push({
       title: tag,
     });
-    setTopic({ ...topic, tags: newTags });
+    setTopic({ ...topic, topic_tags: newTags });
   };
 
   const isSubmitEnabled = (): boolean =>
     topic.title != "" &&
     topic.image !== "" &&
-    level !== "" &&
-    topic.categories.length > 0 &&
-    topic.tags.length > 0 &&
-    topic.related.length > 0;
+    topic.topic_tags.length > 0 &&
+    selectedTopics.length > 0 &&
+    selectedCategories.length > 0;
 
   const tabs: TabData[] = [
     {
       label: "Overview",
       children: (
         <Overview
-          active={topic.active}
+          active={topic.active!}
           description={topic.description}
           image={topic.image}
           setDescription={setDescription}
@@ -149,11 +210,11 @@ export default function TopicDialog(props: TopicDialogProps) {
       label: "Related",
       children: (
         <Related
-          categories={props.categories}
-          topics={props.related}
-          selectedCategories={topic.categories}
-          selectedTopics={topic.related}
-          handleRelatedChange={handleRelatedChange}
+          categories={categories}
+          topics={topics}
+          selectedCategories={selectedCategories}
+          selectedTopics={selectedTopics}
+          handleTopicsChange={handleTopicsChange}
           handleCategoriesChange={handleCategoriesChange}
         />
       ),
@@ -165,16 +226,15 @@ export default function TopicDialog(props: TopicDialogProps) {
         <Info
           handleLevelChange={handleLevelChange}
           handleSourceChange={handleSourceChange}
-          level={level}
-          source={source}
-          tags={topic.tags}
+          level={topic.level}
+          source={topic.source}
+          tags={topic.topic_tags}
           onTagAdd={onTagAdd}
           onTagRemove={onTagRemove}
         />
       ),
     },
   ];
-
   return (
     <>
       <AppDialog

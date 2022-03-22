@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "@/components/ui/select/ObjectSelect";
-import { Topic } from "@/interfaces/dash_topics";
-import CustomButton from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
+import { DashLabel } from "@toppick/common";
 export default function CreatePageHeader({
   isReview,
   selectedTopic,
@@ -13,13 +13,13 @@ export default function CreatePageHeader({
   topics,
 }: {
   isReview: boolean;
-  selectedTopic: Topic;
+  selectedTopic: DashLabel;
   isUpdate: boolean;
   classes: any;
-  defaultTopic: Topic;
+  defaultTopic: DashLabel;
   onTopicCreate: () => void;
   handleTopicChange: (index: number) => void;
-  topics: Topic[];
+  topics: DashLabel[];
 }) {
   const isHeaderSectionVisible = () => {
     return !isReview;
@@ -56,9 +56,8 @@ export default function CreatePageHeader({
             defaultValue={defaultTopic}
             width={400}
           />
-
           {isAddnewTopicVisible() && (
-            <CustomButton onClick={onTopicCreate} title="Create new Topic" />
+            <Button onClick={onTopicCreate} title="Create new Topic" />
           )}
         </div>
       )}

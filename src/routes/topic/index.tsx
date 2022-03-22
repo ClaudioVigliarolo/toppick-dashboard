@@ -1,40 +1,26 @@
 import React from "react";
-import { Category, Topic } from "@/interfaces/dash_topics";
 import TableTopics from "@/components/topic/TableTopics";
-import CustomButton from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
 import SearchBar from "@/components/ui/SearchBar";
 import TopicDialog from "@/components/topic/dialog/topic";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
-import {
-  onTopicCreate,
-  onTopicDeleteUnique,
-  onTopicUpdate,
-} from "@/utils/topics";
-import { getHash } from "@/utils/utils";
 import { AuthContext } from "@/context/AuthContext";
 import { StatusContext } from "@/context/StatusContext";
-import { getTopics, getCategories } from "@/services/topics";
-
-const NO_TOPIC: Topic = {
-  categories: [],
-  id: -1,
-  related: [],
-  source: "",
-  level: 0,
-  timestamp: new Date(),
-  title: "",
-  ref_id: -1,
-  description: "",
-  image: "",
-  active: false,
-  tags: [],
-};
+import { getAllTopics } from "@/services/topics";
+import {
+  DashLabel,
+  TopicCreated,
+  TopicFeatured,
+  TopicDetail,
+} from "@toppick/common";
+import { onTopicCreate, onTopicDelete, onTopicUpdate } from "@/utils/topics";
 
 export default function ViewPage() {
-  const [topics, setTopics] = React.useState<Topic[]>([]);
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [currentTopic, setCurrentTopic] = React.useState<Topic>(NO_TOPIC);
+  const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
+  const [currentTopic, setCurrentTopic] = React.useState<TopicFeatured | null>(
+    null
+  );
   const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
@@ -49,16 +35,9 @@ export default function ViewPage() {
     (async () => {
       setLoading(true);
       try {
-        const retrievedTopics = await getTopics(currentLanguage, authToken);
+        const retrievedTopics = await getAllTopics();
         if (retrievedTopics) {
           setTopics(retrievedTopics);
-        }
-        const retrievedCategories = await getCategories(
-          currentLanguage,
-          authToken
-        );
-        if (retrievedCategories) {
-          setCategories(retrievedCategories);
         }
       } catch (error) {
         onError();
@@ -66,17 +45,18 @@ export default function ViewPage() {
       setLoading(false);
     })();
   }, [currentLanguage]);
-  const onUpdate = (topic: Topic) => {
+
+  const onUpdate = (topic: TopicFeatured) => {
     setCurrentTopic(topic);
     setEditDialog(true);
   };
 
-  const onDeleteShow = (topic: Topic) => {
+  const onDeleteShow = (topic: TopicFeatured) => {
     setCurrentTopic(topic);
     setDeleteDialog(true);
   };
 
-  const onUpdateSubmit = async (newTopic: Topic) => {
+  const onUpdateSubmit = async (newTopic: TopicCreated) => {
     await onTopicUpdate(
       newTopic,
       topics,
@@ -87,13 +67,13 @@ export default function ViewPage() {
       onSuccess,
       onError
     );
-    setCurrentTopic(NO_TOPIC);
+    setCurrentTopic(null);
     setEditDialog(false);
   };
 
   const onDeleteSubmit = () => {
-    onTopicDeleteUnique(
-      currentTopic.id,
+    onTopicDelete(
+      currentTopic!.id,
       topics,
       currentLanguage,
       authToken,
@@ -102,17 +82,12 @@ export default function ViewPage() {
       onSuccess,
       onError
     );
-    setCurrentTopic(NO_TOPIC);
+    setCurrentTopic(null);
     setDeleteDialog(false);
   };
-  const onCreateSubmit = async (newTopic: Topic) => {
+  const onCreateSubmit = async (newTopic: TopicCreated) => {
     await onTopicCreate(
-      {
-        ...newTopic,
-        id: getHash(newTopic.title, currentLanguage),
-        timestamp: new Date(),
-        ref_id: getHash(newTopic.title, currentLanguage),
-      },
+      newTopic,
       topics,
       currentLanguage,
       authToken,
@@ -121,8 +96,9 @@ export default function ViewPage() {
       onSuccess,
       onError
     );
-
     setTopicCreateDialog(false);
+    setCurrentTopic(null);
+    setEditDialog(false);
   };
 
   return (
@@ -133,9 +109,9 @@ export default function ViewPage() {
           setSearchText={(text) => setSearchText(text)}
           searchText={searchText}
         />
-        <CustomButton
+        <Button
           onClick={() => setTopicCreateDialog(true)}
-          title="INSERT NEW TOPIC"
+          title="CREATE NEW TOPIC"
         />
       </div>
       <TableTopics
@@ -148,12 +124,10 @@ export default function ViewPage() {
       <TopicDialog
         open={editDialog}
         loading={loading}
-        related={topics}
-        categories={categories}
         topic={currentTopic}
         onConfirm={onUpdateSubmit}
         onRefuse={() => {
-          setCurrentTopic(NO_TOPIC);
+          setCurrentTopic(null);
           setEditDialog(false);
         }}
         headerText="Edit Topic"
@@ -161,14 +135,12 @@ export default function ViewPage() {
 
       <TopicDialog
         open={topicAddDialog}
-        categories={categories}
-        related={topics}
         loading={loading}
-        headerText="Add New Topic"
-        topic={NO_TOPIC}
+        headerText="Create New Topic"
+        topic={null}
         onConfirm={onCreateSubmit}
         onRefuse={() => {
-          setCurrentTopic(NO_TOPIC);
+          setCurrentTopic(null);
           setTopicCreateDialog(false);
         }}
       />
@@ -179,7 +151,7 @@ export default function ViewPage() {
         title="Proceed to Delete the question?"
         description="The question record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
-          setCurrentTopic(NO_TOPIC);
+          setCurrentTopic(null);
           setDeleteDialog(false);
         }}
       ></DeleteDialog>

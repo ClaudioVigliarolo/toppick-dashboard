@@ -19,7 +19,6 @@ export const getContentStats = async (
       lang,
     },
   });
-  console.log("mY RRR STATS", response.data);
   return response.data;
 };
 

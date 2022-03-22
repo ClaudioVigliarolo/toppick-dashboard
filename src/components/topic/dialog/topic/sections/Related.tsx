@@ -1,14 +1,14 @@
 import React from "react";
-import { TopicCategory, TopicRelated } from "@/interfaces/dash_topics";
 import Chip from "@/components/ui/select/ObjectChip";
+import { DashLabel } from "@toppick/common";
 
 interface RelatedProps {
-  categories: TopicCategory[];
-  topics: TopicRelated[];
-  selectedCategories: TopicCategory[];
-  selectedTopics: TopicRelated[];
+  categories: DashLabel[];
+  topics: DashLabel[];
+  selectedCategories: DashLabel[];
+  selectedTopics: DashLabel[];
   handleCategoriesChange: (i: number) => void;
-  handleRelatedChange: (i: number) => void;
+  handleTopicsChange: (i: number) => void;
 }
 export default function Related({
   categories,
@@ -16,7 +16,7 @@ export default function Related({
   selectedCategories,
   selectedTopics,
   handleCategoriesChange,
-  handleRelatedChange,
+  handleTopicsChange,
 }: RelatedProps) {
   return (
     <>
@@ -32,7 +32,7 @@ export default function Related({
         selectedValues={selectedTopics}
         values={topics.sort((a, b) => a.title.localeCompare(b.title))}
         header="Related Topics"
-        handleChange={handleRelatedChange}
+        handleChange={handleTopicsChange}
       />
     </>
   );

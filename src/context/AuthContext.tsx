@@ -32,22 +32,26 @@ export const AuthProvider = ({ children }: { children: any }) => {
     (async () => {
       setLoading(true);
       //authenticate user
-      auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-          setUser(DEFAULT_USER_APP_STATE);
-        } else {
-          const { claims } = await user.getIdTokenResult(true);
-          setUser({
-            displayName: user.displayName || "",
-            isAuthenticated: true,
-            photoURL: user.photoURL || "",
-            token: await user.getIdToken(),
-            uid: user.uid,
-            role: claims.role,
-          });
-        }
-        setLoading(false);
-      });
+      try {
+        auth.onAuthStateChanged(async (user) => {
+          if (!user) {
+            setUser(DEFAULT_USER_APP_STATE);
+          } else {
+            const { claims } = await user.getIdTokenResult(true);
+            setUser({
+              displayName: user.displayName || "",
+              isAuthenticated: true,
+              photoURL: user.photoURL || "",
+              token: await user.getIdToken(),
+              uid: user.uid,
+              role: claims.role,
+            });
+          }
+          setLoading(false);
+        });
+      } catch {
+        console.error("Failed To Connect to Firebase");
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

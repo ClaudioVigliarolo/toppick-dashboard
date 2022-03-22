@@ -3,7 +3,7 @@ import { CONSTANTS } from "@/constants/app";
 import Select from "@/components/ui/select/SimpleSelect";
 import { makeStyles } from "@material-ui/core";
 import TagSelector from "@/components/ui/select/TagSelector";
-import { TopicTag } from "@/interfaces/dash_topics";
+import { TopicLevel, TopicTag } from "@toppick/common";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -25,11 +25,13 @@ interface InfoProps {
   handleSourceChange: (event: React.ChangeEvent<any>) => void;
   handleLevelChange: (event: React.ChangeEvent<any>) => void;
   source: string;
-  level: string;
+  level: TopicLevel;
   onTagRemove: (i: number) => void;
   onTagAdd: (title: string) => void;
   tags: TopicTag[];
 }
+const TOPIC_LEVELS = Object.values(TopicLevel);
+
 export default function Info({
   handleSourceChange,
   source,
@@ -40,14 +42,15 @@ export default function Info({
   onTagAdd,
 }: InfoProps) {
   const classes = useStyles();
-
   return (
     <>
       <div className={classes.container}>
         <div className={classes.selectContainer}>
           <Select
             handleChange={handleSourceChange}
-            value={source}
+            value={
+              CONSTANTS.TOPIC_SOURCES[CONSTANTS.TOPIC_SOURCES.indexOf(source)]
+            }
             values={CONSTANTS.TOPIC_SOURCES}
             color="black"
             width={300}
@@ -59,7 +62,7 @@ export default function Info({
           <Select
             handleChange={handleLevelChange}
             value={level}
-            values={CONSTANTS.TOPIC_LEVELS}
+            values={TOPIC_LEVELS}
             color="black"
             width={300}
             header="Level"

@@ -1,26 +1,4 @@
 import { Value } from "@/interfaces/app";
-import { CreatedExample, Example } from "@/interfaces/dash_topics";
-
-export const getHash = (str1: string, str2: string = "") => {
-  const str = str1 + "*" + str2 + new Date().toISOString();
-  let hash = 0,
-    i,
-    chr;
-  for (i = 0; i < str.length; i++) {
-    chr = str.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0; // Convert to 32bit integer
-  }
-  return Math.abs(hash);
-};
-
-export const getQuestionHash = (
-  title: string,
-  topic: string,
-  index: number
-) => {
-  return getHash(title + "*" + topic + "*" + index);
-};
 
 export const getFormattedDate = (input: Date): string => {
   const inputDate = new Date(input);
@@ -128,34 +106,3 @@ export const hasVal = (input: any): boolean => {
   }
   return true;
 };
-
-export function parseExamples(input: string): CreatedExample[] {
-  const regex = /\[EX\](.*?)\[\/EX\]/g;
-  let matches: any[],
-    output: CreatedExample[] = [];
-  while ((matches = regex.exec(input) as any)) {
-    output.push({ title: matches[1] });
-  }
-  return output;
-}
-
-export function removeExamples(input: string): string {
-  return input.split("[EX]")[0];
-}
-
-export function generateExamples(title: string, examples: Example[]): string {
-  title += examples.map((e) => " [EX]" + e.title + "[/EX] ").join("");
-  return title;
-}
-
-/*
-export function parseExamples(question:Question): string[] {
-  const regex = /\[EX\](.*?)\[\/EX\]/g;
-  let matches: any[],
-    output: string[] = [];
-  while ((matches = regex.exec(question.input) as any)) {
-    output.push(matches[1]);
-  }
-  return output;
-}
-*/

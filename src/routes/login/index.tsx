@@ -50,7 +50,6 @@ export default function LoginPage() {
 
   const signIn = async (): Promise<void> => {
     try {
-      console.log(email, password);
       await auth.signInWithEmailAndPassword(email, password);
     } catch (error) {
       throw new Error("Invalid Credentials");
@@ -63,9 +62,7 @@ export default function LoginPage() {
       //pre-validation
       validDateForm();
       //sign in
-      console.log("Ok prima");
       await signIn();
-      console.log("ok dopo");
       history.push("/categories");
     } catch (error) {
       const { message } = error as Error;

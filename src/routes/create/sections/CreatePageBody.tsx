@@ -1,11 +1,11 @@
 import React from "react";
-import { CreatedQuestion, Topic } from "@/interfaces/dash_topics";
 import QuestionField from "@/components/question/CreateQuestionField";
-import CustomButton from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
 import QuestionsReview from "@/components/question/QuestionsReview";
 import QuestionsQuickAddDialog from "@/components/question/QuestionsQuickAddDialog";
 import { createStyles, makeStyles } from "@material-ui/core";
 import { useAppStyles } from "@/styles/common";
+import { DashLabel, QuestionCreated } from "@toppick/common";
 
 const MIN_QUESTIONS = 10;
 
@@ -33,8 +33,8 @@ export default function CreatePageBody({
   onRevertFromReview,
   setQuestions,
 }: {
-  selectedTopic: Topic;
-  defaultTopic: Topic;
+  selectedTopic: DashLabel;
+  defaultTopic: DashLabel;
   loading: boolean;
   setReview: (val: boolean) => void;
   resetTopic: () => void;
@@ -43,10 +43,10 @@ export default function CreatePageBody({
   onQuestionDelete: (index: number) => void;
   onQuestionCreate: (index: number) => void;
   onRevertFromReview: () => void;
-  questions: CreatedQuestion[];
-  setQuestions: (questions: CreatedQuestion[]) => void;
-  onQuestionChange: (index: number, question: CreatedQuestion) => void;
-  onSubmit: (questions: CreatedQuestion[]) => void;
+  questions: QuestionCreated[];
+  setQuestions: (questions: QuestionCreated[]) => void;
+  onQuestionChange: (index: number, question: QuestionCreated) => void;
+  onSubmit: (questions: QuestionCreated[]) => void;
 }) {
   const classes = useStyles();
   const appClasses = useAppStyles();
@@ -77,7 +77,7 @@ export default function CreatePageBody({
       <QuestionsQuickAddDialog
         minQuestions={MIN_QUESTIONS}
         loading={loading}
-        onConfirm={(questions: CreatedQuestion[]) => {
+        onConfirm={(questions: QuestionCreated[]) => {
           setQuestions(questions);
         }}
         topic={selectedTopic}
@@ -109,7 +109,7 @@ export default function CreatePageBody({
       )}
       {isReviewButtonVisible() && (
         <div className={appClasses.buttonContainer}>
-          <CustomButton onClick={onSubmitToReview} title="Submit For Review" />
+          <Button onClick={onSubmitToReview} title="Submit For Review" />
         </div>
       )}
     </>

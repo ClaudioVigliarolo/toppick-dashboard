@@ -3,36 +3,32 @@ import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import ArticlePreview from "./sections/ExtResourcePreview";
 import ArticleOverview from "./sections/ExtResourceOverview";
 import ExamplesPreview from "./sections/Examples";
-import {
-  Example,
-  QuestionExtResource,
-  CreatedQuestion,
-  CreatedExample,
-} from "@/interfaces/dash_topics";
 import { AuthContext } from "@/context/AuthContext";
-import { getHash } from "@/utils/utils";
+import {
+  QuestionCreated,
+  QuestionExampleCreated,
+  QuestionResourceCreated,
+} from "@toppick/common";
 interface QuestionDialogProps {
   open: boolean;
-  onConfirm: (q: CreatedQuestion) => void;
+  onConfirm: (q: QuestionCreated) => void;
   onRefuse: () => void;
-  question: CreatedQuestion;
+  question: QuestionCreated;
   headerText: string;
 }
 
 export default function QuestionDialog(props: QuestionDialogProps) {
   const [title, setTitle] = React.useState<string>("");
-  const [extResources, setExtResources] = React.useState<QuestionExtResource[]>(
+  const [resources, setResources] = React.useState<QuestionResourceCreated[]>(
     []
   );
   const [currentPreviewUrl, setCurrentPreviewUrl] = React.useState<string>("");
-  const [examples, setExamples] = React.useState<CreatedExample[]>([]);
+  const [examples, setExamples] = React.useState<QuestionExampleCreated[]>([]);
   const { userId } = React.useContext(AuthContext);
 
   React.useEffect(() => {
     setTitle(props.question.title);
-    setExtResources(
-      props.question.ext_resources ? props.question.ext_resources : []
-    );
+    setResources(props.question.resources ? props.question.resources : []);
     setExamples(props.question.examples ? props.question.examples : []);
     setCurrentPreviewUrl("");
   }, [props.question]);
@@ -40,11 +36,11 @@ export default function QuestionDialog(props: QuestionDialogProps) {
   const isSubmitEnabled = (): boolean => title !== "";
 
   const onConfirm = async () => {
-    const newQuestion: CreatedQuestion = {
+    const newQuestion: QuestionCreated = {
       ...props.question,
       title,
       examples: examples.filter((e) => e.title !== ""),
-      ext_resources: extResources.filter((e) => e.url !== ""),
+      resources: resources.filter((e) => e.url !== ""),
     };
     props.onConfirm(newQuestion);
   };
@@ -55,10 +51,19 @@ export default function QuestionDialog(props: QuestionDialogProps) {
     setExamples(newExample);
   };
   const onChangeExtResource = (e: React.ChangeEvent<any>, i: number) => {
-    const newResource = [...extResources];
+    const newResource = [...resources];
     newResource[i].url = e.target.value;
-    newResource[i].id = getHash(newResource[i].url);
-    setExtResources(newResource);
+    setResources(newResource);
+  };
+
+  const onAddExample = () => {
+    setExamples((examples) => [
+      ...examples,
+      {
+        user_id: userId,
+        title: "",
+      },
+    ]);
   };
 
   const tabs: TabData[] = [
@@ -72,16 +77,16 @@ export default function QuestionDialog(props: QuestionDialogProps) {
             onPreview={(url) => setCurrentPreviewUrl(url)}
             onChange={onChangeExtResource}
             onDelete={(delIndex) =>
-              setExtResources(extResources.filter((item, i) => i !== delIndex))
+              setResources(resources.filter((item, i) => i !== delIndex))
             }
             onAdd={() =>
-              setExtResources((extResources) => [
-                ...extResources,
+              setResources((resources) => [
+                ...resources,
                 { url: "", user_id: userId, id: 0 },
               ])
             }
             title={title}
-            extResources={extResources}
+            resources={resources}
           />
           <ArticlePreview
             open={currentPreviewUrl !== ""}
@@ -97,12 +102,7 @@ export default function QuestionDialog(props: QuestionDialogProps) {
         <>
           <ExamplesPreview
             examples={examples}
-            onAdd={() =>
-              setExamples((examples) => [
-                ...examples,
-                { title: "", user_id: userId, id: 0 },
-              ])
-            }
+            onAdd={onAddExample}
             onChange={onExamplesChange}
             onDelete={(delIndex) =>
               setExamples(examples.filter((item, i) => i !== delIndex))
