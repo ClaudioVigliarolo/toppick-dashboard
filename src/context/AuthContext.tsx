@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      //authenticate user
       try {
+        //authenticate user
         auth.onAuthStateChanged(async (user) => {
           if (!user) {
             setUser(DEFAULT_USER_APP_STATE);
