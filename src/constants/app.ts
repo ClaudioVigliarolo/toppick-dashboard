@@ -1,4 +1,4 @@
-import { Lang, RadioButton } from "../interfaces/app";
+import { Lang } from "../interfaces/app";
 
 const date = new Date();
 
