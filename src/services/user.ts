@@ -1,8 +1,8 @@
+import { UserDetail } from "@toppick/common";
 import axios from "axios";
 import { HOSTNAME } from "../config/config";
-import { UserDashboard } from "@/interfaces/user";
 
-export const getUsers = async (token: string): Promise<UserDashboard[]> => {
+export const getUsers = async (token: string): Promise<UserDetail[]> => {
   const response = await axios.get(`${HOSTNAME}/api/users/all`, {
     headers: {
       Authorization: "Bearer " + token,
@@ -24,7 +24,7 @@ export const deleteUser = async (id: string, token: string): Promise<void> => {
 };
 
 export const updateUser = async (
-  user: UserDashboard,
+  user: UserDetail,
   token: string
 ): Promise<void> => {
   await axios.patch(

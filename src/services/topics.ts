@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import { HOSTNAME } from "../config/config";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 import {
   CategoryDetail,
   CategoryFeatured,
@@ -265,10 +265,10 @@ export const deleteQuestion = async (
   });
 };
 
-export const getQuestionsByTopic = async (
+export const getQuestions = async (
   topic_id: number
 ): Promise<QuestionDetail[]> => {
-  const response = await axios.get(`${HOSTNAME}/api/content/questions`, {
+  const response = await axios.get(`${HOSTNAME}/api/content/questions/old`, {
     params: {
       topic_id,
       order_by_n: true,

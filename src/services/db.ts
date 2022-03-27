@@ -1,6 +1,6 @@
 import axios from "axios";
 import { HOSTNAME } from "../config/config";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 
 export const getMaintenanceStatus = async (
   lang: Lang,

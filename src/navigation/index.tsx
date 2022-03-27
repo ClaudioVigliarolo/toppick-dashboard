@@ -5,7 +5,7 @@ import { StatusContext } from "@/context/StatusContext";
 import { routes } from "./routes";
 import CustomRoute from "../components/ui/CustomRoute";
 import Menu from "../components/ui/Menu";
-import { UserRole } from "@/interfaces/user";
+import { UserRole } from "@toppick/common";
 
 export const getCondition = (
   userRole: UserRole,

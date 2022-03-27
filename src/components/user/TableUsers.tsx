@@ -8,12 +8,12 @@ import {
 } from "../ui/TableStyles";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { UserDashboard } from "@/interfaces/user";
+import { UserDetail } from "@toppick/common";
 
 interface TableUsersProps {
-  users: UserDashboard[];
-  onUpdate: (user: UserDashboard) => void;
-  onDelete: (user: UserDashboard) => void;
+  users: UserDetail[];
+  onUpdate: (user: UserDetail) => void;
+  onDelete: (user: UserDetail) => void;
   searchText: string;
 }
 
@@ -25,8 +25,8 @@ export default function TableUsers({
 }: TableUsersProps) {
   const classes = useStyles();
 
-  const renderRows = (users: UserDashboard[]) => {
-    return users.map((user: UserDashboard, index: number) => {
+  const renderRows = (users: UserDetail[]) => {
+    return users.map((user: UserDetail, index: number) => {
       if (user.username.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>

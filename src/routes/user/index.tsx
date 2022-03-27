@@ -6,21 +6,27 @@ import UserDialog from "@/components/user/UserDialog";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
 import { onUserDelete, onUserUpdate } from "@/utils/users";
-import { UserDashboard, UserRole } from "@/interfaces/user";
 import { StatusContext } from "@/context/StatusContext";
 import { getUsers } from "@/services/user";
+import { UserDetail, UserRole } from "@toppick/common";
 
-const NO_USER: UserDashboard = {
+const NO_USER: UserDetail = {
   username: "",
   email: "",
   role: UserRole.DEFAULT,
+  country: "",
+  firstname: "",
+  image: "",
+  language: "",
+  lastname: "",
+  profession: "",
   uid: "",
 };
 
 export default function UsersPage() {
   const { authToken } = React.useContext(AuthContext);
-  const [users, setUsers] = React.useState<UserDashboard[]>([]);
-  const [currentUser, setCurrentUser] = React.useState<UserDashboard>(NO_USER);
+  const [users, setUsers] = React.useState<UserDetail[]>([]);
+  const [currentUser, setCurrentUser] = React.useState<UserDetail>(NO_USER);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
@@ -46,7 +52,7 @@ export default function UsersPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
-  const onUpdateSubmit = (user: UserDashboard) => {
+  const onUpdateSubmit = (user: UserDetail) => {
     onUserUpdate(
       {
         ...user,
@@ -60,12 +66,12 @@ export default function UsersPage() {
     );
   };
 
-  const onUpdate = (user: UserDashboard) => {
+  const onUpdate = (user: UserDetail) => {
     setCurrentUser(user);
     setEditDialog(true);
   };
 
-  const onDelete = (user: UserDashboard) => {
+  const onDelete = (user: UserDetail) => {
     setCurrentUser(user);
     setDeleteDialog(true);
   };

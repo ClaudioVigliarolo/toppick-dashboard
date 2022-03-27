@@ -1,4 +1,4 @@
-import { Value } from "@/interfaces/app";
+import { Value } from "@/interfaces/ui";
 
 export const getFormattedDate = (input: Date): string => {
   const inputDate = new Date(input);

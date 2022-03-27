@@ -4,7 +4,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import { Button, makeStyles } from "@material-ui/core";
 import { AuthContext } from "@/context/AuthContext";
 import { useAppStyles } from "@/styles/common";
-import { UserApproved } from "@/interfaces/user";
+import { UserApproved } from "@toppick/common";
 
 const useStyles = makeStyles((theme) => ({
   container: {

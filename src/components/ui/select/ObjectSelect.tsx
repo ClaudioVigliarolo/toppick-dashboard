@@ -1,6 +1,6 @@
 import React from "react";
 import { InputLabel, MenuItem, Select } from "@material-ui/core";
-import { Value } from "@/interfaces/app";
+import { Value } from "@/interfaces/ui";
 
 interface CustomSelectProps {
   value: Value;

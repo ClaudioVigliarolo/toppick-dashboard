@@ -1,5 +1,5 @@
 import React from "react";
-import { MaterialUiColor } from "@/interfaces/app";
+import { MaterialUiColor } from "@/interfaces/ui";
 import DBChartBar from "@/components/stats/DBChartBar";
 import Button from "@/components/ui/buttons/TabButton";
 import { CONSTANTS } from "@/constants/app";

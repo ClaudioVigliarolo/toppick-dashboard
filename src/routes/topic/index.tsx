@@ -8,12 +8,7 @@ import { useAppStyles } from "@/styles/common";
 import { AuthContext } from "@/context/AuthContext";
 import { StatusContext } from "@/context/StatusContext";
 import { getAllTopics } from "@/services/topics";
-import {
-  DashLabel,
-  TopicCreated,
-  TopicFeatured,
-  TopicDetail,
-} from "@toppick/common";
+import { TopicCreated, TopicFeatured } from "@toppick/common";
 import { onTopicCreate, onTopicDelete, onTopicUpdate } from "@/utils/topics";
 
 export default function ViewPage() {

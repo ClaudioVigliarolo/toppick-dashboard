@@ -6,7 +6,7 @@ import CreatePageBody from "./sections/CreatePageBody";
 import { onQuestionsAdd, onTopicCreate } from "@/utils/topics";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
-import { getQuestionsByTopic, getTopicsLabels } from "@/services/topics";
+import { getQuestions, getTopicsLabels } from "@/services/topics";
 import {
   DashLabel,
   QuestionCreated,
@@ -73,7 +73,7 @@ export default function CreatePage() {
     }
     setLoading(true);
     try {
-      const retrievedQuestions = await getQuestionsByTopic(topics[index].id);
+      const retrievedQuestions = await getQuestions(topics[index].id);
       if (retrievedQuestions) {
         const newQuestions: QuestionCreated[] = [...retrievedQuestions].map(
           (q) => ({

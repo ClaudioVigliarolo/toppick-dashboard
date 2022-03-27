@@ -1,6 +1,6 @@
 /* utils for inserting, modifing, removing topics  */
 import { getLinesFromText } from "../utils/utils";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 import {
   createTopic,
   updateTopic,

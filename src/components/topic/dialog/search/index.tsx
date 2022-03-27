@@ -3,6 +3,8 @@ import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Info from "./sections/Info";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
+import Search from "./sections/Image";
+
 import {
   TopicFeatured,
   TopicDetail,
@@ -16,6 +18,7 @@ import {
   getTopicsLabels,
 } from "@/services/topics";
 import { CONSTANTS } from "@/constants/app";
+import { validateCounter } from "@/utils/validators";
 
 const NO_TOPIC: TopicDetail = {
   id: -1,
@@ -33,6 +36,7 @@ const NO_TOPIC: TopicDetail = {
   timestamp: new Date(),
   videoCounter: 0,
   active: false,
+  topic_search_keywords: [],
 };
 
 interface TopicDialogProps {
@@ -46,7 +50,7 @@ interface TopicDialogProps {
   descriptionPlaceholder?: string;
 }
 
-export default function TopicDialog(props: TopicDialogProps) {
+export default function SearchDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<TopicDetail>(NO_TOPIC);
   const [topics, setTopics] = React.useState<DashLabel[]>([]);
   const [categories, setCategories] = React.useState<DashLabel[]>([]);
@@ -173,12 +177,40 @@ export default function TopicDialog(props: TopicDialogProps) {
     setTopic(newTopic);
   };
 
+  const onSearchKeywordRemove = (i: number) => {
+    const newTopic = { ...topic };
+    newTopic.topic_search_keywords!.splice(i, 1);
+    setTopic(newTopic);
+  };
+
   const onTopicTagAdd = (tag: string) => {
     const newTags = topic.topic_tags.filter((t) => t.title !== tag);
     newTags.push({
       title: tag,
     });
     setTopic({ ...topic, topic_tags: newTags });
+  };
+
+  const onSearchKeywordAdd = (tag: string) => {
+    const newKeyword = topic.topic_search_keywords!.filter(
+      (t) => t.title !== tag
+    );
+    newKeyword.push({
+      title: tag,
+      counter: 10,
+    });
+    setTopic({ ...topic, topic_search_keywords: newKeyword });
+  };
+
+  const onSearchKeywordCounterChange = (
+    e: React.ChangeEvent<any>,
+    index: number
+  ) => {
+    const updatedKeyword = topic.topic_search_keywords![index];
+    if (validateCounter(e.currentTarget.value)) {
+      updatedKeyword.counter = parseInt(e.currentTarget.value);
+      setTopic({ ...topic });
+    }
   };
 
   const isSubmitEnabled = (): boolean =>
@@ -232,6 +264,18 @@ export default function TopicDialog(props: TopicDialogProps) {
           tags={topic.topic_tags}
           onTagAdd={onTopicTagAdd}
           onTagRemove={onTopicTagRemove}
+        />
+      ),
+    },
+
+    {
+      label: "Search",
+      children: (
+        <Search
+          tags={topic.topic_search_keywords!}
+          onTagAdd={onSearchKeywordAdd}
+          onChangeCounter={onSearchKeywordCounterChange}
+          onTagRemove={onSearchKeywordRemove}
         />
       ),
     },

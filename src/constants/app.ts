@@ -1,4 +1,4 @@
-import { Lang } from "../interfaces/app";
+import { Lang } from "../interfaces/ui";
 
 const date = new Date();
 

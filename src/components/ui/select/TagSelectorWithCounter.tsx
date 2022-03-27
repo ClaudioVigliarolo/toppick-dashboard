@@ -1,5 +1,5 @@
 import React from "react";
-import TagItem from "./TagItem";
+import TagItem from "./TagItemWithCounter";
 import { TextField, makeStyles } from "@material-ui/core";
 import { SearchKeyword } from "@toppick/common";
 
@@ -7,6 +7,7 @@ interface TagSelectorProps {
   tags: SearchKeyword[];
   onRemove: (index: number) => void;
   onAdd: (tag: string) => void;
+  onChangeCounter: (e: React.ChangeEvent<any>, index: number) => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -25,10 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TagSelector({
+export default function TagSelectorWithCounter({
   tags,
   onRemove,
   onAdd,
+  onChangeCounter,
 }: TagSelectorProps) {
   const [title, setTitle] = React.useState("");
   const classes = useStyles();
@@ -42,7 +44,13 @@ export default function TagSelector({
     <div className={classes.container}>
       <div className={classes.tagsContainer}>
         {tags.map((tag, i) => (
-          <TagItem onRemove={() => onRemove(i)} tag={tag.title} key={i} />
+          <TagItem
+            onRemove={() => onRemove(i)}
+            counter={tag.counter}
+            onChangeCounter={(e) => onChangeCounter(e, i)}
+            tag={tag.title}
+            key={i}
+          />
         ))}
       </div>
       <div className={classes.textField}>
@@ -51,7 +59,7 @@ export default function TagSelector({
           margin="dense"
           onKeyDown={handleKeyDown}
           label="Tag"
-          placeholder="Type new tag..."
+          placeholder="Type new Keyword..."
           id="standard-helperText"
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}

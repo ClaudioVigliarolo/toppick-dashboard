@@ -4,7 +4,7 @@ import TopicsPage from "../routes/topic";
 import LoginPage from "../routes/login";
 import CreatePage from "../routes/create";
 import StatisticsPage from "../routes/stats";
-import { Route } from "@/interfaces/app";
+import { Route } from "@/interfaces/ui";
 
 export const routes: Route[] = [
   {

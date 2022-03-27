@@ -2,7 +2,7 @@ import React from "react";
 import { NO_IMAGE_URL } from "@/constants/app";
 import Switch from "@/components/ui/select/Switch";
 import { makeStyles, TextField } from "@material-ui/core";
-import { MaterialUiColor } from "@/interfaces/app";
+import { MaterialUiColor } from "@/interfaces/ui";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 20,
   },
   switchContainer: {
     position: "absolute",

@@ -1,6 +1,7 @@
 import React from "react";
 import Chip from "@/components/ui/select/ObjectChip";
 import { DashLabel } from "@toppick/common";
+import { makeStyles } from "@material-ui/core";
 
 interface RelatedProps {
   categories: DashLabel[];
@@ -10,6 +11,17 @@ interface RelatedProps {
   handleCategoriesChange: (i: number) => void;
   handleTopicsChange: (i: number) => void;
 }
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 50,
+  },
+}));
+
 export default function Related({
   categories,
   topics,
@@ -18,8 +30,10 @@ export default function Related({
   handleCategoriesChange,
   handleTopicsChange,
 }: RelatedProps) {
+  const classes = useStyles();
+
   return (
-    <>
+    <div className={classes.container}>
       <Chip
         width={300}
         selectedValues={selectedCategories}
@@ -34,6 +48,6 @@ export default function Related({
         header="Related Topics"
         handleChange={handleTopicsChange}
       />
-    </>
+    </div>
   );
 }

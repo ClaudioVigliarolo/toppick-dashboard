@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

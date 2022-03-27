@@ -1,7 +1,7 @@
 import axios from "axios";
 import { HOSTNAME } from "../config/config";
 import { StatsContent, UserStats } from "@/interfaces/stats";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 
 export const getContentStats = async (
   from: Date,

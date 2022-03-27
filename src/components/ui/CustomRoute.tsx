@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 
 interface CustomRouteProps {
   path: string;

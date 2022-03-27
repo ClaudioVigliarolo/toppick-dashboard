@@ -1,22 +1,27 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
 import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
-import { Lang } from "@/interfaces/app";
-import { UserDashboard, UserRole } from "@/interfaces/user";
 import Select from "../ui/select/SimpleSelect";
+import { UserDetail, UserRole } from "@toppick/common";
 
 interface UserDialogProps {
   open: boolean;
-  onConfirm: (user: UserDashboard) => void;
+  onConfirm: (user: UserDetail) => void;
   onRefuse: () => void;
-  user: UserDashboard;
+  user: UserDetail;
   headerText: string;
   loading: boolean;
 }
 
-const NO_USER: UserDashboard = {
-  uid: "",
+const NO_USER: UserDetail = {
   username: "",
+  country: "",
+  firstname: "",
+  image: "",
+  language: "",
+  lastname: "",
+  profession: "",
+  uid: "",
   email: "",
   role: UserRole.DEFAULT,
 };
@@ -36,7 +41,7 @@ const useStyles = makeStyles(() => ({
 
 export default function UserDialog(props: UserDialogProps) {
   const classes = useStyles();
-  const [user, setUser] = React.useState<UserDashboard>(NO_USER);
+  const [user, setUser] = React.useState<UserDetail>(NO_USER);
 
   React.useEffect(() => {
     setUser(props.user);

@@ -2,7 +2,7 @@ import React from "react";
 import CardNumber from "../ui/CardNumber";
 import { useChartStyles } from "../ui/ChartStyles";
 import { StatsContent } from "@/interfaces/stats";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 import { getContentStats } from "@/services/stats";
 
 interface DBChartBarProps {

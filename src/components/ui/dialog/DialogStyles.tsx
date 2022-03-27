@@ -36,7 +36,6 @@ const useStyles = makeStyles(() =>
       display: "flex",
       flexDirection: "column",
       width: "100%",
-      marginTop: 20,
     },
     closeButton: {
       color: COLORS.darkerOrange,

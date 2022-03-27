@@ -15,7 +15,7 @@ import {
   Chip,
 } from "@material-ui/core";
 import { COLORS } from "@/constants/colors";
-import { Value } from "@/interfaces/app";
+import { Value } from "@/interfaces/ui";
 import { isSelected } from "@/utils/utils";
 
 interface CustomChipProps {

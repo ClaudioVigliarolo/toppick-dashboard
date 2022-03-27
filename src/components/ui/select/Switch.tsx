@@ -1,6 +1,6 @@
 import React from "react";
 import Switch from "@material-ui/core/Switch";
-import { MaterialUiColor } from "@/interfaces/app";
+import { MaterialUiColor } from "@/interfaces/ui";
 import { createStyles, makeStyles } from "@material-ui/core";
 
 interface CustomSwitchProps {

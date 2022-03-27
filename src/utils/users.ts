@@ -1,11 +1,11 @@
 /* utils for inserting, modifing, removing users  */
-import { UserDashboard } from "@/interfaces/user";
 import { deleteUser, updateUser } from "@/services/user";
+import { UserDetail } from "@toppick/common";
 
 export const onUserDelete = async (
-  deletedUser: UserDashboard,
-  users: UserDashboard[],
-  setUsers: (users: UserDashboard[]) => void,
+  deletedUser: UserDetail,
+  users: UserDetail[],
+  setUsers: (users: UserDetail[]) => void,
   token: string,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
@@ -15,7 +15,7 @@ export const onUserDelete = async (
   try {
     await deleteUser(deletedUser.uid, token);
     const newUsers = users.filter(
-      (user: UserDashboard) => user.uid !== deletedUser.uid
+      (user: UserDetail) => user.uid !== deletedUser.uid
     );
     setUsers([...newUsers]);
     onSuccess();
@@ -26,9 +26,9 @@ export const onUserDelete = async (
 };
 
 export const onUserUpdate = async (
-  updatedUser: UserDashboard,
-  users: UserDashboard[],
-  setUsers: (users: UserDashboard[]) => void,
+  updatedUser: UserDetail,
+  users: UserDetail[],
+  setUsers: (users: UserDetail[]) => void,
   token: string,
   setLoading: (val: boolean) => void,
   onSuccess: () => void,
@@ -41,7 +41,7 @@ export const onUserUpdate = async (
     const newUsers = users;
 
     const userIndex = users.findIndex(
-      (user: UserDashboard) => user.uid == updatedUser.uid
+      (user: UserDetail) => user.uid == updatedUser.uid
     );
 
     if (userIndex !== -1) {

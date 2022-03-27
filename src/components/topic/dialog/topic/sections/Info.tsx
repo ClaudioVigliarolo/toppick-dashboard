@@ -12,9 +12,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     position: "relative",
     alignItems: "center",
+    marginTop: 20,
   },
   TagSelectorContainer: {
-    marginTop: 20,
+    marginTop: 50,
+    maxWidth: "80%",
   },
   selectContainer: {
     marginTop: 20,

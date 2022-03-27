@@ -1,8 +1,17 @@
 import React from "react";
-import { Lang } from "@/interfaces/app";
+import { Lang } from "@/interfaces/ui";
 import { StatusContext } from "./StatusContext";
-import { UserAppState, UserRole } from "@/interfaces/user";
 import { auth } from "@/services/firebase";
+import { UserRole } from "@toppick/common";
+
+interface UserAppState {
+  displayName: string;
+  photoURL: string;
+  token: string;
+  uid: string;
+  isAuthenticated: boolean;
+  role: UserRole;
+}
 
 export const DEFAULT_USER_APP_STATE: UserAppState = {
   displayName: "",
