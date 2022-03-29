@@ -102,7 +102,7 @@ export default function TopicDialog(props: TopicDialogProps) {
       topics: selectedTopics.map((topic) => ({
         dest_id: topic.id,
       })),
-      topic_search_keywords: topic.topic_search_keywords!,
+      topic_search_keywords: [],
     };
 
     props.onConfirm(newTopic);
@@ -186,7 +186,6 @@ export default function TopicDialog(props: TopicDialogProps) {
     topic.image !== "" &&
     topic.topic_tags.length > 0 &&
     selectedTopics.length > 0 &&
-    topic.topic_search_keywords!.length > 0 &&
     selectedCategories.length > 0;
 
   const tabs: TabData[] = [

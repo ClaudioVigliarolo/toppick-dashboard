@@ -1,5 +1,5 @@
 /* utils for inserting, modifing, removing users  */
-import { deleteUser, updateUser } from "@/services/user";
+import { deleteUser, updateUserRole } from "@/services/user";
 import { UserDetail } from "@toppick/common";
 
 export const onUserDelete = async (
@@ -36,7 +36,7 @@ export const onUserUpdate = async (
 ): Promise<void> => {
   setLoading(true);
   try {
-    await updateUser(updatedUser, token);
+    await updateUserRole(updatedUser, token);
 
     const newUsers = users;
 

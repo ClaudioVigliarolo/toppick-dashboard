@@ -23,12 +23,12 @@ export const deleteUser = async (id: string, token: string): Promise<void> => {
   });
 };
 
-export const updateUser = async (
+export const updateUserRole = async (
   user: UserDetail,
   token: string
 ): Promise<void> => {
   await axios.patch(
-    `${HOSTNAME}/api/users/${user.uid}`,
+    `${HOSTNAME}/api/users/${user.uid}/role`,
     { role: user.role },
     {
       headers: {
