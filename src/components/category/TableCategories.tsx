@@ -54,7 +54,7 @@ export default function TableCategories({
   };
   return (
     <CustomTable
-      columns={["60%", "50%"]}
+      columns={["95%", "5%"]}
       columnNames={["category", ""]}
       body={renderRows(categories)}
     />

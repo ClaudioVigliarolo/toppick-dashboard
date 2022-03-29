@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import TagSelector from "@/components/ui/select/TagSelector";
 import { SearchKeyword, TopicLevel, TopicTag } from "@toppick/common";
 import TagItem from "@/components/ui/select/TagItem";
 import TagSelectorWithCounter from "@/components/ui/select/TagSelectorWithCounter";
@@ -13,14 +12,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     marginTop: 10,
   },
-  selectedTagsContainer: {
+  selectedKeywordsContainer: {
     maxWidth: "90%",
   },
   headerText: {
     color: "black",
     textAlign: "center",
   },
-  defaultTagsContainer: {
+  defaultKeywordsContainer: {
     display: "flex",
     flexWrap: "wrap",
     maxWidth: "90%",
@@ -43,40 +42,40 @@ const DEFAULT_SEARCH_TAGS = [
   "History",
   "Tricks",
 ];
-interface InfoProps {
-  onTagRemove: (i: number) => void;
-  onTagAdd: (title: string) => void;
+interface SearchProps {
+  onKeywordRemove: (i: number) => void;
+  onKeywordAdd: (title: string) => void;
   onChangeCounter: (e: React.ChangeEvent<any>, index: number) => void;
-  tags: SearchKeyword[];
+  keywords: SearchKeyword[];
 }
 
-export default function Info({
-  onTagRemove,
-  tags,
-  onTagAdd,
+export default function Search({
+  onKeywordRemove,
+  keywords,
+  onKeywordAdd,
   onChangeCounter,
-}: InfoProps) {
+}: SearchProps) {
   const classes = useStyles();
   return (
     <>
       <div className={classes.container}>
         <h4 className={classes.headerText}>Default Search Keywords</h4>
-        <div className={classes.defaultTagsContainer}>
+        <div className={classes.defaultKeywordsContainer}>
           {DEFAULT_SEARCH_TAGS.map((keyword, i) => (
             <TagItem
               deletable={false}
               tag={keyword}
               key={i}
-              onSelect={() => onTagAdd(keyword)}
+              onSelect={() => onKeywordAdd(keyword)}
             />
           ))}
         </div>
         <h4 className={classes.headerText}>Selected Search Tags</h4>
-        <div className={classes.selectedTagsContainer}>
+        <div className={classes.selectedKeywordsContainer}>
           <TagSelectorWithCounter
-            tags={tags}
-            onRemove={onTagRemove}
-            onAdd={onTagAdd}
+            tags={keywords}
+            onRemove={onKeywordRemove}
+            onAdd={onKeywordAdd}
             onChangeCounter={onChangeCounter}
           />
         </div>

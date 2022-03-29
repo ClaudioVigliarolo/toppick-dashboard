@@ -8,22 +8,35 @@ import {
 } from "../ui/TableStyles";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import SearchIcon from "@material-ui/icons/Search";
 import { getFormattedDate } from "@/utils/utils";
 import { TopicFeatured } from "@toppick/common";
+import { makeStyles } from "@material-ui/core";
+import { COLORS } from "@/constants/colors";
 interface TableTopicsProps {
   topics: TopicFeatured[];
   searchText: string;
-  onUpdate: (topic: TopicFeatured) => void;
-  onDelete: (topic: TopicFeatured) => void;
+  onUpdateTopic: (topic: TopicFeatured) => void;
+  onUpdateSearch: (topic: TopicFeatured) => void;
+  onDeleteTopic: (topic: TopicFeatured) => void;
 }
+
+const useLocalStyles = makeStyles((theme) => ({
+  searchIcon: {
+    cursor: "pointer",
+    color: COLORS.blue,
+  },
+}));
 
 export default function TableTopics({
   searchText,
   topics,
-  onDelete,
-  onUpdate,
+  onDeleteTopic,
+  onUpdateTopic,
+  onUpdateSearch,
 }: TableTopicsProps) {
   const classes = useStyles();
+  const localClasses = useLocalStyles();
 
   const renderRows = (topics: TopicFeatured[]) => {
     return topics.map((topic: TopicFeatured, index: number) => {
@@ -35,22 +48,28 @@ export default function TableTopics({
               {getFormattedDate(topic.timestamp)}
             </StyledTableCell>
             <StyledEditCell>
-              <div className={classes.iconsContainer} style={{ width: 100 }}>
+              <div className={classes.iconsContainer} style={{}}>
                 <div
                   className={classes.circle}
                   style={{
                     backgroundColor: topic.active ? "lime" : "orangered",
                   }}
                 />
+                <SearchIcon
+                  className={localClasses.searchIcon}
+                  onClick={() => {
+                    onUpdateSearch(topic);
+                  }}
+                />
                 <EditIcon
                   className={classes.editIcon}
                   onClick={() => {
-                    onUpdate(topic);
+                    onUpdateTopic(topic);
                   }}
                 />
                 <DeleteIcon
                   onClick={() => {
-                    onDelete(topic);
+                    onDeleteTopic(topic);
                   }}
                   className={classes.deleteIcon}
                 />
@@ -64,7 +83,7 @@ export default function TableTopics({
 
   return (
     <CustomTable
-      columns={["30%", "40%", "30%"]}
+      columns={["40%", "40%", "10%"]}
       columnNames={["title", "last update", ""]}
       body={renderRows(topics)}
     />

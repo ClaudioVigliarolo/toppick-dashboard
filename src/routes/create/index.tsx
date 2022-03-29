@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppStyles } from "@/styles/common";
-import TopicDialog from "@/components/topic/dialog/topic";
+import TopicDialog from "@/components/topic/dialog";
 import CreatePageHeader from "./sections/CreatePageHeader";
 import CreatePageBody from "./sections/CreatePageBody";
 import { onQuestionsAdd, onTopicCreate } from "@/utils/topics";

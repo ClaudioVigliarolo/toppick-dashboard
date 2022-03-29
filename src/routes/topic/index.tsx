@@ -2,7 +2,7 @@ import React from "react";
 import TableTopics from "@/components/topic/TableTopics";
 import Button from "@/components/ui/buttons/Button";
 import SearchBar from "@/components/ui/SearchBar";
-import TopicDialog from "@/components/topic/dialog/topic";
+import TopicDialog from "@/components/topic/dialog";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
 import { AuthContext } from "@/context/AuthContext";
@@ -10,6 +10,7 @@ import { StatusContext } from "@/context/StatusContext";
 import { getAllTopics } from "@/services/topics";
 import { TopicCreated, TopicFeatured } from "@toppick/common";
 import { onTopicCreate, onTopicDelete, onTopicUpdate } from "@/utils/topics";
+import SearchDialog from "@/components/search/dialog";
 
 export default function ViewPage() {
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
@@ -18,6 +19,7 @@ export default function ViewPage() {
   );
   const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
+  const [searchDialog, setSearchDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
   const { setLoading, onSuccess, onError, loading } =
@@ -41,9 +43,13 @@ export default function ViewPage() {
     })();
   }, [currentLanguage]);
 
-  const onUpdate = (topic: TopicFeatured) => {
+  const onUpdateTopic = (topic: TopicFeatured) => {
     setCurrentTopic(topic);
     setEditDialog(true);
+  };
+  const onUpdateSearch = (topic: TopicFeatured) => {
+    setCurrentTopic(topic);
+    setSearchDialog(true);
   };
 
   const onDeleteShow = (topic: TopicFeatured) => {
@@ -111,8 +117,9 @@ export default function ViewPage() {
       </div>
       <TableTopics
         searchText={searchText}
-        onDelete={onDeleteShow}
-        onUpdate={onUpdate}
+        onDeleteTopic={onDeleteShow}
+        onUpdateTopic={onUpdateTopic}
+        onUpdateSearch={onUpdateSearch}
         topics={topics}
       />
 
@@ -140,6 +147,17 @@ export default function ViewPage() {
         }}
       />
 
+      <SearchDialog
+        open={searchDialog}
+        loading={loading}
+        headerText="Edit Search"
+        id={currentTopic ? currentTopic.id : null}
+        onClose={() => {
+          setCurrentTopic(null);
+          setSearchDialog(false);
+        }}
+      />
+
       <DeleteDialog
         open={deleteDialog}
         onConfirm={onDeleteSubmit}
@@ -149,7 +167,7 @@ export default function ViewPage() {
           setCurrentTopic(null);
           setDeleteDialog(false);
         }}
-      ></DeleteDialog>
+      />
     </>
   );
 }

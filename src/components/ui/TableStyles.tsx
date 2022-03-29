@@ -139,7 +139,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       right: 30,
       color: "orange",
       top: "30%",
-      width: 80,
+      width: "100%",
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
