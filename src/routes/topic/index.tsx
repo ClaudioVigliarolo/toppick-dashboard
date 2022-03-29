@@ -162,7 +162,7 @@ export default function ViewPage() {
         open={deleteDialog}
         onConfirm={onDeleteSubmit}
         title="Proceed to Delete the question?"
-        description="The question record will be removed from the main database. You cannot undo this operation"
+        description="The question  record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setCurrentTopic(null);
           setDeleteDialog(false);
