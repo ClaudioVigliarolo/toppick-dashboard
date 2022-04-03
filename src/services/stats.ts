@@ -1,6 +1,5 @@
 import axios from "axios";
 import { HOSTNAME } from "../config/config";
-import { StatsContent, UserStats } from "@/interfaces/stats";
 import { Lang } from "@/interfaces/ui";
 
 export const getContentStats = async (
@@ -8,33 +7,12 @@ export const getContentStats = async (
   until: Date,
   lang: Lang,
   token: string
-): Promise<StatsContent> => {
+): Promise<any> => {
   const response = await axios.get(`${HOSTNAME}/api/stats/content`, {
     headers: {
       Authorization: "Bearer " + token,
     },
     params: {
-      from,
-      until,
-      lang,
-    },
-  });
-  return response.data;
-};
-
-export const getUserStats = async (
-  id: number,
-  from: Date,
-  until: Date,
-  lang: Lang,
-  token: string
-): Promise<UserStats | null> => {
-  const response = await axios.get(`${HOSTNAME}/api/stats/api/users/get`, {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    params: {
-      id,
       from,
       until,
       lang,

@@ -270,14 +270,14 @@ export const getSearchKeywords = async (
   token: string,
   topic_id: number
 ): Promise<SearchKeyword[]> => {
-  const response = await axios.get(
-    `${HOSTNAME}/api/search/keywords/${topic_id}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
+  const response = await axios.get(`${HOSTNAME}/api/search/keywords`, {
+    params: {
+      topic_id,
+    },
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
   return response.data;
 };
 
@@ -287,11 +287,14 @@ export const updateSearchKeywords = async (
   keywords: SearchKeyword[]
 ): Promise<SearchKeyword[]> => {
   const response = await axios.put(
-    `${HOSTNAME}/api/search/keywords/${topic_id}`,
+    `${HOSTNAME}/api/search/keywords`,
     {
       keywords,
     },
     {
+      params: {
+        topic_id,
+      },
       headers: {
         Authorization: "Bearer " + token,
       },
