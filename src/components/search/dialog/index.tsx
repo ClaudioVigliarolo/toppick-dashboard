@@ -1,14 +1,13 @@
 import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Search from "./sections/Search";
-import { TopicCreated, SearchKeyword, SearchType } from "@toppick/common";
+import { SearchKeyword, SearchType } from "@toppick/common";
 import { getSearchKeywords, updateSearchKeywords } from "@/services/search";
 import { AuthContext } from "@/context/AuthContext";
 import { validateCounter } from "@/utils/validators";
 
 interface SearchDialogProps {
   open: boolean;
-  loading: boolean;
   id: number | null;
   onClose: () => void;
   headerText: string;
@@ -17,6 +16,7 @@ interface SearchDialogProps {
 }
 
 export default function SearchDialog(props: SearchDialogProps) {
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [keywords, setKeywords] = React.useState<SearchKeyword[]>([]);
   const { authToken } = React.useContext(AuthContext);
 
@@ -34,12 +34,14 @@ export default function SearchDialog(props: SearchDialogProps) {
   }, [props.id]);
 
   const onConfirm = async () => {
+    setLoading(true);
     try {
       await updateSearchKeywords(authToken, props.id!, keywords);
       props.onClose();
     } catch (error) {
       console.log(error);
     }
+    setLoading(false);
   };
 
   const onKeywordCounterChange = (
@@ -142,7 +144,7 @@ export default function SearchDialog(props: SearchDialogProps) {
         headerText={props.headerText}
         minWidth={500}
         minHeight={560}
-        loading={props.loading}
+        loading={loading}
         tabData={tabs}
         confirmButtonDisabled={!isSubmitEnabled()}
         onConfirm={onConfirm}

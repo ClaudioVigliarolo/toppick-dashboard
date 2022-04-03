@@ -149,7 +149,6 @@ export default function ViewPage() {
 
       <SearchDialog
         open={searchDialog}
-        loading={loading}
         headerText="Edit Search"
         id={currentTopic ? currentTopic.id : null}
         onClose={() => {
