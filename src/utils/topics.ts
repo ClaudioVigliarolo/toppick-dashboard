@@ -1,26 +1,21 @@
 /* utils for inserting, modifing, removing topics  */
 import { getLinesFromText } from "../utils/utils";
 import { Lang } from "@/interfaces/ui";
+import { createTopic, updateTopic, deleteTopic } from "@/services/topic";
 import {
-  createTopic,
-  updateTopic,
-  deleteTopic,
-  addQuestions,
-  createCategory,
-  deleteCategory,
-  deleteQuestion,
-  updateCategory,
-} from "@/services/topics";
-import {
-  CategoryDetail,
   CategoryFeatured,
   DashLabel,
-  TopicDetail,
   TopicCreated,
   TopicFeatured,
   CategoryCreated,
   QuestionCreated,
 } from "@toppick/common";
+import {
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "@/services/category";
+import { addQuestions } from "@/services/question";
 
 export const onCategoryCreate = async (
   category: CategoryCreated,

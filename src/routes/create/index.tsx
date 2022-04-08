@@ -6,7 +6,6 @@ import CreatePageBody from "./sections/CreatePageBody";
 import { onQuestionsAdd, onTopicCreate } from "@/utils/topics";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
-import { getQuestions, getTopicsLabels } from "@/services/topics";
 import {
   DashLabel,
   QuestionCreated,
@@ -15,6 +14,8 @@ import {
   TopicFeatured,
   TopicLevel,
 } from "@toppick/common";
+import { getTopicLabels } from "@/services/topic";
+import { getQuestions } from "@/services/question";
 
 const NO_TOPIC: TopicFeatured = {
   active: false,
@@ -54,7 +55,10 @@ export default function CreatePage() {
       onReset();
       setLoading(true);
       try {
-        const allTopics = await getTopicsLabels("all");
+        const allTopics = await getTopicLabels({
+          type: "topic",
+          take_all: true,
+        });
         setTopics(allTopics);
       } catch (error) {
         onError();

@@ -10,12 +10,9 @@ import {
   TopicLevel,
   TopicCreated,
 } from "@toppick/common";
-import {
-  getCategoriesLabels,
-  getTopicDetails,
-  getTopicsLabels,
-} from "@/services/topics";
+import { getTopicDetails, getTopicLabels } from "@/services/topic";
 import { CONSTANTS } from "@/constants/app";
+import { getCategoryLabels } from "@/services/category";
 
 const NO_TOPIC: TopicDetail = {
   id: -1,
@@ -62,8 +59,13 @@ export default function TopicDialog(props: TopicDialogProps) {
           const topicDetail = await getTopicDetails(props.topic.title);
           setTopic(topicDetail);
           //get preselected
-          const selectedTopics = await getTopicsLabels(props.topic.id, "topic");
-          const selectedCategories = await getCategoriesLabels(props.topic.id);
+          const selectedTopics = await getTopicLabels({
+            type: "topic",
+            id: props.topic.id,
+          });
+          const selectedCategories = await getCategoryLabels({
+            id: props.topic.id,
+          });
           setSelectedTopics(selectedTopics);
           setSelectedCategories(selectedCategories);
         }
@@ -76,8 +78,13 @@ export default function TopicDialog(props: TopicDialogProps) {
   React.useEffect(() => {
     (async () => {
       try {
-        const allTopics = await getTopicsLabels("all");
-        const allCategories = await getCategoriesLabels("all");
+        const allTopics = await getTopicLabels({
+          type: "topic",
+          take_all: true,
+        });
+        const allCategories = await getCategoryLabels({
+          take_all: true,
+        });
         setTopics(allTopics);
         setCategories(allCategories);
       } catch (error) {

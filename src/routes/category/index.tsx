@@ -12,7 +12,7 @@ import {
 } from "@/utils/topics";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
-import { getFeaturedCategories } from "@/services/topics";
+import { getFeaturedCategories } from "@/services/category";
 import { CategoryFeatured, CategoryCreated } from "@toppick/common";
 
 export default function CategoryPage() {

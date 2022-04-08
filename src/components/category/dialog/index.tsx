@@ -9,7 +9,8 @@ import {
   DashLabel,
   CategoryCreated,
 } from "@toppick/common";
-import { getTopicsLabels, getCategoryDetails } from "@/services/topics";
+import { getTopicLabels } from "@/services/topic";
+import { getCategoryDetails } from "@/services/category";
 
 interface CategoryDialogProps {
   open: boolean;
@@ -39,10 +40,10 @@ export default function CategoryDialog(props: CategoryDialogProps) {
         if (props.category) {
           const categoryDetail = await getCategoryDetails(props.category.title);
           setCategory(categoryDetail);
-          const selectedTopics = await getTopicsLabels(
-            props.category.id,
-            "category"
-          );
+          const selectedTopics = await getTopicLabels({
+            type: "category",
+            id: props.category.id,
+          });
           setSelectedTopics(selectedTopics);
         }
       } catch (error) {
@@ -54,7 +55,10 @@ export default function CategoryDialog(props: CategoryDialogProps) {
   React.useEffect(() => {
     (async () => {
       try {
-        const allTopics = await getTopicsLabels("all");
+        const allTopics = await getTopicLabels({
+          type: "topics",
+          take_all: true,
+        });
         setTopics(allTopics);
       } catch (error) {
         console.log(error);
