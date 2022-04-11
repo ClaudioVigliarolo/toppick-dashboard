@@ -3,11 +3,11 @@ import axios, { AxiosResponse } from "axios";
 import { HOSTNAME } from "../config/config";
 import { SearchKeyword } from "@toppick/common";
 
-export const getSearchKeywords = async (
+export const getSearchInfo = async (
   token: string,
   topic_id: number
-): Promise<SearchKeyword[]> => {
-  const response = await axios.get(`${HOSTNAME}/api/search/keywords`, {
+): Promise<{ hasNews: boolean; keywords: SearchKeyword[] }> => {
+  const response = await axios.get(`${HOSTNAME}/api/search/info`, {
     params: {
       topic_id,
     },
@@ -21,12 +21,14 @@ export const getSearchKeywords = async (
 export const updateSearchKeywords = async (
   token: string,
   topic_id: number,
-  keywords: SearchKeyword[]
+  keywords: SearchKeyword[],
+  has_news: boolean
 ): Promise<SearchKeyword[]> => {
   const response = await axios.put(
-    `${HOSTNAME}/api/search/keywords`,
+    `${HOSTNAME}/api/search/info`,
     {
       keywords,
+      has_news,
     },
     {
       params: {

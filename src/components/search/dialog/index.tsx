@@ -2,7 +2,7 @@ import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Search from "./sections/Search";
 import { SearchKeyword, SearchType } from "@toppick/common";
-import { getSearchKeywords, updateSearchKeywords } from "@/services/search";
+import { getSearchInfo, updateSearchKeywords } from "@/services/search";
 import { AuthContext } from "@/context/AuthContext";
 import { validateCounter } from "@/utils/validators";
 
@@ -17,6 +17,7 @@ interface SearchDialogProps {
 
 export default function SearchDialog(props: SearchDialogProps) {
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [hasNews, setHasNews] = React.useState<boolean>(false);
   const [keywords, setKeywords] = React.useState<SearchKeyword[]>([]);
   const { authToken } = React.useContext(AuthContext);
 
@@ -24,7 +25,11 @@ export default function SearchDialog(props: SearchDialogProps) {
     (async () => {
       try {
         if (props.id) {
-          const keywords = await getSearchKeywords(authToken, props.id);
+          const { hasNews, keywords } = await getSearchInfo(
+            authToken,
+            props.id
+          );
+          setHasNews(hasNews);
           setKeywords(keywords);
         }
       } catch (error) {
@@ -36,12 +41,16 @@ export default function SearchDialog(props: SearchDialogProps) {
   const onConfirm = async () => {
     setLoading(true);
     try {
-      await updateSearchKeywords(authToken, props.id!, keywords);
+      await updateSearchKeywords(authToken, props.id!, keywords, hasNews);
       props.onClose();
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
+  };
+
+  const toggleHasNews = () => {
+    setHasNews((value) => !value);
   };
 
   const onKeywordCounterChange = (
@@ -106,6 +115,8 @@ export default function SearchDialog(props: SearchDialogProps) {
           onChangeCounter={(e, i) =>
             onKeywordCounterChange(e, i, SearchType.ARTICLE)
           }
+          toggleHasNews={toggleHasNews}
+          hasNews={hasNews}
           onKeywordRemove={(i) => onKeywordRemove(i, SearchType.ARTICLE)}
         />
       ),
@@ -119,6 +130,8 @@ export default function SearchDialog(props: SearchDialogProps) {
           onChangeCounter={(e, i) =>
             onKeywordCounterChange(e, i, SearchType.VIDEO)
           }
+          toggleHasNews={toggleHasNews}
+          hasNews={hasNews}
           onKeywordRemove={(i) => onKeywordRemove(i, SearchType.VIDEO)}
         />
       ),
@@ -132,6 +145,8 @@ export default function SearchDialog(props: SearchDialogProps) {
           onChangeCounter={(e, i) =>
             onKeywordCounterChange(e, i, SearchType.IMAGE)
           }
+          toggleHasNews={toggleHasNews}
+          hasNews={hasNews}
           onKeywordRemove={(i) => onKeywordRemove(i, SearchType.IMAGE)}
         />
       ),

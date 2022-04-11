@@ -1,19 +1,27 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { SearchKeyword, TopicLevel, TopicTag } from "@toppick/common";
+import { SearchKeyword } from "@toppick/common";
+import Switch from "@/components/ui/select/Switch";
 import TagItem from "@/components/ui/select/TagItem";
 import TagSelectorWithCounter from "@/components/ui/select/TagSelectorWithCounter";
-
+import { MaterialUiColor } from "@/interfaces/ui";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexDirection: "column",
-    position: "relative",
     alignItems: "center",
     marginTop: 10,
   },
   selectedKeywordsContainer: {
     maxWidth: "90%",
+  },
+  switchContainer: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    cursor: "pointer",
+    color: "orange",
+    fontSize: 30,
   },
   headerText: {
     color: "black",
@@ -47,6 +55,8 @@ interface SearchProps {
   onKeywordAdd: (title: string) => void;
   onChangeCounter: (e: React.ChangeEvent<any>, index: number) => void;
   keywords: SearchKeyword[];
+  toggleHasNews: () => void;
+  hasNews: boolean;
 }
 
 export default function Search({
@@ -54,11 +64,22 @@ export default function Search({
   keywords,
   onKeywordAdd,
   onChangeCounter,
+  toggleHasNews,
+  hasNews,
 }: SearchProps) {
   const classes = useStyles();
   return (
     <>
       <div className={classes.container}>
+        <div className={classes.switchContainer}>
+          <Switch
+            text="news"
+            switchColor={MaterialUiColor.Primary}
+            handleChange={toggleHasNews}
+            value={hasNews}
+            textColor="black"
+          />
+        </div>
         <h4 className={classes.headerText}>Default Search Keywords</h4>
         <div className={classes.defaultKeywordsContainer}>
           {DEFAULT_SEARCH_TAGS.map((keyword, i) => (
