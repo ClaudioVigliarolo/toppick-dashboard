@@ -34,9 +34,12 @@ export const getAllTopics = async (): Promise<TopicFeatured[]> => {
 };
 
 export const getTopicDetails = async (title: string): Promise<TopicDetail> => {
-  const response = await axios.get(
-    `${HOSTNAME}/api/content/topics/${title}/details`
-  );
+  const response = await axios.get(`${HOSTNAME}/api/content/topics/details`, {
+    params: {
+      title,
+    },
+  });
+  console.log("ddddd", title);
   return response.data;
 };
 

@@ -41,8 +41,10 @@ export const getCategoryDetails = async (
   title: string
 ): Promise<CategoryDetail> => {
   const response = await axios.get(
-    `${HOSTNAME}/api/content/categories/${title}/details`,
-    {}
+    `${HOSTNAME}/api/content/categories/details`,
+    {
+      params: { title },
+    }
   );
   return response.data;
 };
