@@ -1,4 +1,1 @@
-export const HOSTNAME =
-  process.env.NODE_ENV === "production"
-    ? "https://toppick-dev-api.herokuapp.com"
-    : "http://localhost:4001";
+export const HOSTNAME = process.env.REACT_APP_API_HOSTNAME;
