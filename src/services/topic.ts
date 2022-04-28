@@ -102,22 +102,10 @@ export const updateTopic = async (
   return res.data;
 };
 
-export const deleteTopic = async (
-  id: number,
-  lang: Lang,
-  token: string
-): Promise<void> => {
-  const response = await axios.delete(
-    `${HOSTNAME}/api/content/topics-dashboard`,
-    {
-      data: {
-        id,
-        lang,
-      },
-
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
+export const deleteTopic = async (id: number, token: string): Promise<void> => {
+  await axios.delete(`${HOSTNAME}/api/content/topics/${id}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
 };

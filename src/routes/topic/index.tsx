@@ -76,7 +76,6 @@ export default function TopicPage() {
     onTopicDelete(
       currentTopic!.id,
       topics,
-      currentLanguage,
       authToken,
       setTopics,
       setLoading,

@@ -175,7 +175,6 @@ export const onTopicUpdate = async (
 export const onTopicDelete = async (
   id: number,
   topics: TopicFeatured[],
-  currentLanguage: Lang,
   token: string,
   setTopics: (topics: TopicFeatured[]) => void,
   setLoading: (val: boolean) => void,
@@ -184,7 +183,7 @@ export const onTopicDelete = async (
 ): Promise<void> => {
   setLoading(true);
   try {
-    await deleteTopic(id, currentLanguage, token);
+    await deleteTopic(id, token);
     const newTopics = topics.filter((topic) => topic.id !== id);
     setTopics([...newTopics]);
     setLoading(false);
