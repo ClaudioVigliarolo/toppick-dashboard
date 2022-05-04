@@ -2,8 +2,9 @@ import React from "react";
 import { CONSTANTS } from "@/constants/app";
 import Select from "@/components/ui/select/SimpleSelect";
 import { makeStyles } from "@material-ui/core";
+import Chip from "@/components/ui/select/ObjectChip";
 import TagSelector from "@/components/ui/select/TagSelector";
-import { TopicLevel, TopicTag } from "@toppick/common";
+import { DashLabel, TopicLevel, TopicTag } from "@toppick/common";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -26,7 +27,10 @@ const useStyles = makeStyles((theme) => ({
 interface InfoProps {
   handleSourceChange: (event: React.ChangeEvent<any>) => void;
   handleLevelChange: (event: React.ChangeEvent<any>) => void;
+  handleInterestsChange: (index: number) => void;
   source: string;
+  interests: DashLabel[];
+  selectedInterests: DashLabel[];
   level: TopicLevel;
   onTagRemove: (i: number) => void;
   onTagAdd: (title: string) => void;
@@ -38,9 +42,12 @@ export default function Info({
   handleSourceChange,
   source,
   handleLevelChange,
+  selectedInterests,
+  handleInterestsChange,
   level,
   onTagRemove,
   tags,
+  interests,
   onTagAdd,
 }: InfoProps) {
   const classes = useStyles();
@@ -55,7 +62,7 @@ export default function Info({
             }
             values={CONSTANTS.TOPIC_SOURCES}
             color="black"
-            width={300}
+            width={350}
             header="Source"
             defaultValue={CONSTANTS.TOPIC_SOURCES[0]}
           />
@@ -66,9 +73,18 @@ export default function Info({
             value={level}
             values={TOPIC_LEVELS}
             color="black"
-            width={300}
+            width={350}
             header="Level"
             defaultValue={level}
+          />
+        </div>
+        <div className={classes.selectContainer}>
+          <Chip
+            width={350}
+            selectedValues={selectedInterests}
+            values={interests}
+            header="Topic Interests"
+            handleChange={handleInterestsChange}
           />
         </div>
         <div className={classes.TagSelectorContainer}>

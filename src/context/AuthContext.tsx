@@ -30,11 +30,14 @@ export const AuthContext = React.createContext({
   isAuthenticated: DEFAULT_USER_APP_STATE.isAuthenticated,
   authToken: DEFAULT_USER_APP_STATE.token,
   userRole: DEFAULT_USER_APP_STATE.role,
+  isProduction: true,
+  setIsProduction: (value: boolean) => {},
 });
 
 export const AuthProvider = ({ children }: { children: any }) => {
   const [user, setUser] = React.useState<UserAppState>(DEFAULT_USER_APP_STATE);
   const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(Lang.EN);
+  const [isProduction, setIsProduction] = React.useState<boolean>(true);
   const { setLoading } = React.useContext(StatusContext);
 
   React.useEffect(() => {
@@ -65,16 +68,22 @@ export const AuthProvider = ({ children }: { children: any }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onSetIsProduction = (value: boolean) => {
+    setIsProduction(value);
+  };
+
   return (
     <AuthContext.Provider
       value={{
-        currentLanguage,
         username: user.displayName,
         userId: user.uid,
         userImage: user.photoURL,
         isAuthenticated: user.isAuthenticated,
         authToken: user.token,
         userRole: user.role,
+        currentLanguage,
+        setIsProduction: onSetIsProduction,
+        isProduction,
       }}
     >
       {children}

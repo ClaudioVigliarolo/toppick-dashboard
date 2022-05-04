@@ -6,6 +6,7 @@ import {
   TopicFeatured,
   DashLabel,
   TopicCreated,
+  TopicInterest,
 } from "@toppick/common";
 
 export const getTopicsList = async (
@@ -19,6 +20,14 @@ export const getTopicsList = async (
       skip,
     },
   });
+  return response.data;
+};
+
+export const getTopicsInterests = async (): Promise<TopicInterest[]> => {
+  const response = await axios.get(
+    `${HOSTNAME}/api/content/topics/interests`,
+    {}
+  );
   return response.data;
 };
 
@@ -37,6 +46,7 @@ export const getTopicDetails = async (title: string): Promise<TopicDetail> => {
   const response = await axios.get(`${HOSTNAME}/api/content/topics/details`, {
     params: {
       title,
+      include_interests: true,
     },
   });
   console.log("ddddd", title);

@@ -8,13 +8,14 @@ import {
 } from "@material-ui/core";
 
 interface CustomSelectProps {
-  value: string;
+  value: string | string[];
   handleChange: (event: React.ChangeEvent<any>) => void;
   defaultValue: string;
   values: string[];
   color?: string;
   header?: string;
   width?: number;
+  multiple?: boolean;
 }
 
 const useStyles = makeStyles(() =>
@@ -34,6 +35,7 @@ export default function CustomSelect({
   color = "#fff",
   header,
   width = 200,
+  multiple,
 }: CustomSelectProps) {
   const classes = useStyles();
   return (
@@ -43,6 +45,7 @@ export default function CustomSelect({
         className={classes.select}
         onChange={handleChange}
         style={{ width, color }}
+        multiple={multiple}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={value}

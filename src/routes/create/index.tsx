@@ -13,6 +13,7 @@ import {
   TopicCreated,
   TopicFeatured,
   TopicLevel,
+  ValidationStatus,
 } from "@toppick/common";
 import { getTopicLabels } from "@/services/topic";
 import { getQuestions } from "@/services/question";
@@ -94,6 +95,7 @@ export default function CreatePage() {
               user_id: res.users!.uid,
               url: res.url,
             })),
+            users: [],
             new: false,
             user_id: q.user_id,
           })

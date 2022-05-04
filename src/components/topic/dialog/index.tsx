@@ -9,8 +9,13 @@ import {
   DashLabel,
   TopicLevel,
   TopicCreated,
+  TopicInterest,
 } from "@toppick/common";
-import { getTopicDetails, getTopicLabels } from "@/services/topic";
+import {
+  getTopicDetails,
+  getTopicLabels,
+  getTopicsInterests,
+} from "@/services/topic";
 import { CONSTANTS } from "@/constants/app";
 import { getCategoryLabels } from "@/services/category";
 
@@ -30,6 +35,7 @@ const NO_TOPIC: TopicDetail = {
   timestamp: new Date(),
   videoCounter: 0,
   active: false,
+  topic_interests: [],
 };
 
 interface TopicDialogProps {
@@ -46,6 +52,7 @@ interface TopicDialogProps {
 export default function TopicDialog(props: TopicDialogProps) {
   const [topic, setTopic] = React.useState<TopicDetail>(NO_TOPIC);
   const [topics, setTopics] = React.useState<DashLabel[]>([]);
+  const [interests, setInterests] = React.useState<TopicInterest[]>([]);
   const [categories, setCategories] = React.useState<DashLabel[]>([]);
   const [selectedTopics, setSelectedTopics] = React.useState<DashLabel[]>([]);
   const [selectedCategories, setSelectedCategories] = React.useState<
@@ -85,8 +92,11 @@ export default function TopicDialog(props: TopicDialogProps) {
         const allCategories = await getCategoryLabels({
           take_all: true,
         });
+        const allInterests = await getTopicsInterests();
+        console.log("iiiiii", allInterests);
         setTopics(allTopics);
         setCategories(allCategories);
+        setInterests(allInterests);
       } catch (error) {
         console.log(error);
       }
@@ -108,6 +118,9 @@ export default function TopicDialog(props: TopicDialogProps) {
       })),
       topics: selectedTopics.map((topic) => ({
         dest_id: topic.id,
+      })),
+      topic_interests: topic.topic_interests.map((interest) => ({
+        interest_id: interest.interest_id,
       })),
     };
 
@@ -132,6 +145,26 @@ export default function TopicDialog(props: TopicDialogProps) {
       newSelectedCategories.splice(selectedIndex, 1);
     }
     setSelectedCategories(newSelectedCategories);
+  };
+
+  const handleInterestsChange = (index: number) => {
+    const newTopic = { ...topic };
+    const selectedIndex = newTopic.topic_interests.findIndex(
+      (selected) => interests[index].title === selected.interests.title
+    );
+    if (selectedIndex < 0) {
+      //selected
+      newTopic.topic_interests.push({
+        interests: {
+          title: interests[index].title as any,
+        },
+        interest_id: interests[index].id,
+      });
+    } else {
+      //select
+      newTopic.topic_interests.splice(selectedIndex, 1);
+    }
+    setTopic(newTopic);
   };
 
   const handleTopicsChange = (index: number) => {
@@ -232,9 +265,15 @@ export default function TopicDialog(props: TopicDialogProps) {
         <Info
           handleLevelChange={handleLevelChange}
           handleSourceChange={handleSourceChange}
+          handleInterestsChange={handleInterestsChange}
           level={topic.level}
           source={topic.source}
           tags={topic.topic_tags}
+          interests={interests}
+          selectedInterests={topic.topic_interests.map((interest, index) => ({
+            id: index,
+            title: interest.interests.title,
+          }))}
           onTagAdd={onTopicTagAdd}
           onTagRemove={onTopicTagRemove}
         />

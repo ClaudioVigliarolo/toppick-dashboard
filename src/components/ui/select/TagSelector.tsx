@@ -1,10 +1,10 @@
 import React from "react";
 import TagItem from "./TagItem";
 import { TextField, makeStyles } from "@material-ui/core";
-import { SearchKeyword } from "@toppick/common";
+import { TopicTag } from "@toppick/common";
 
 interface TagSelectorProps {
-  tags: SearchKeyword[];
+  tags: TopicTag[];
   onRemove: (index: number) => void;
   onAdd: (tag: string) => void;
 }
