@@ -38,7 +38,7 @@ const DEFAULT_SEARCH_TAGS = [
   "Facts",
   "Curiosities",
   "Interesting",
-  "Myths ",
+  "Myths",
   "Psychology",
   "Tips",
   "Quotes",
