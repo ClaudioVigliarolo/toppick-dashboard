@@ -19,6 +19,8 @@ const NO_USER: UserDetail = {
   firstname: "",
   image: "",
   language: "",
+  user_interests: [],
+  user_languages: [],
   lastname: "",
   profession: "",
   uid: "",

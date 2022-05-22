@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { Lang } from "@/interfaces/ui";
 
 interface CustomRouteProps {
@@ -8,27 +8,13 @@ interface CustomRouteProps {
   Component: any;
   token: string;
   currentLanguage: Lang;
-  error: boolean;
-  success: boolean;
 }
 
-const CustomRoute = ({
-  path,
-  Component,
-  condition,
-  error,
-  success,
-}: CustomRouteProps) => {
+const CustomRoute = ({ path, Component, condition }: CustomRouteProps) => {
   return condition ? (
     <Route
       path={path}
-      render={(routeProps) => (
-        <Component
-          navigationProps={routeProps}
-          error={error}
-          success={success}
-        />
-      )}
+      render={(routeProps) => <Component navigationProps={routeProps} />}
     />
   ) : //se loading && ! autenticated => display spinner
   //se loading && authenticated => currrent

@@ -7,11 +7,11 @@ export const onUserDelete = async (
   users: UserDetail[],
   setUsers: (users: UserDetail[]) => void,
   token: string,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ): Promise<void> => {
-  setLoading(true);
+  onLoading(true);
   try {
     await deleteUser(deletedUser.uid, token);
     const newUsers = users.filter(
@@ -22,7 +22,7 @@ export const onUserDelete = async (
   } catch (error) {
     onError();
   }
-  setLoading(false);
+  onLoading(false);
 };
 
 export const onUserUpdate = async (
@@ -30,11 +30,11 @@ export const onUserUpdate = async (
   users: UserDetail[],
   setUsers: (users: UserDetail[]) => void,
   token: string,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ): Promise<void> => {
-  setLoading(true);
+  onLoading(true);
   try {
     await updateUserRole(updatedUser, token);
 
@@ -53,5 +53,5 @@ export const onUserUpdate = async (
   } catch (error) {
     onError();
   }
-  setLoading(false);
+  onLoading(false);
 };

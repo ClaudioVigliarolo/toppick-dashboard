@@ -21,9 +21,9 @@ const NO_QUESTION: QuestionCreated = {
   title: "",
   examples: [],
   id: -1,
-  n: 0,
   new: true,
   resources: [],
+  user_id: "",
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -78,8 +78,8 @@ export default function QuestionsReview({
         }}
       >
         <ListItemIcon>
-          {questions[index].resources.length > 0 ||
-          questions[index].examples.length > 0 ? (
+          {questions[index]!.resources!.length > 0 ||
+          questions[index]!.examples!.length > 0 ? (
             <BookmarkAddedIcon
               onClick={() => {
                 setCurrentQuestion(questions[index]);

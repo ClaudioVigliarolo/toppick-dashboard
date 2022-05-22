@@ -8,6 +8,7 @@ import {
   QuestionCreated,
   QuestionExampleCreated,
   QuestionResourceCreated,
+  ValidationStatus,
 } from "@toppick/common";
 interface QuestionDialogProps {
   open: boolean;
@@ -82,7 +83,12 @@ export default function QuestionDialog(props: QuestionDialogProps) {
             onAdd={() =>
               setResources((resources) => [
                 ...resources,
-                { url: "", user_id: userId, id: 0 },
+                {
+                  url: "",
+                  user_id: userId,
+                  id: 0,
+                  status: ValidationStatus.Confirmed,
+                },
               ])
             }
             title={title}

@@ -22,7 +22,7 @@ export default function TopicPage() {
   const [searchDialog, setSearchDialog] = React.useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const { setLoading, onSuccess, onError, loading } =
+  const { onLoading, onSuccess, onError, loading } =
     React.useContext(StatusContext);
   const { authToken, currentLanguage } = React.useContext(AuthContext);
 
@@ -30,7 +30,7 @@ export default function TopicPage() {
 
   React.useEffect(() => {
     (async () => {
-      setLoading(true);
+      onLoading(true);
       try {
         const retrievedTopics = await getAllTopics();
         if (retrievedTopics) {
@@ -39,7 +39,7 @@ export default function TopicPage() {
       } catch (error) {
         onError();
       }
-      setLoading(false);
+      onLoading(false);
     })();
   }, [currentLanguage]);
 
@@ -64,7 +64,7 @@ export default function TopicPage() {
       currentLanguage,
       authToken,
       setTopics,
-      setLoading,
+      onLoading,
       onSuccess,
       onError
     );
@@ -78,7 +78,7 @@ export default function TopicPage() {
       topics,
       authToken,
       setTopics,
-      setLoading,
+      onLoading,
       onSuccess,
       onError
     );
@@ -92,7 +92,7 @@ export default function TopicPage() {
       currentLanguage,
       authToken,
       setTopics,
-      setLoading,
+      onLoading,
       onSuccess,
       onError
     );

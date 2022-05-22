@@ -19,6 +19,8 @@ const NO_USER: UserDetail = {
   image: "",
   language: "",
   lastname: "",
+  user_interests: [],
+  user_languages: [],
   profession: "",
   uid: "",
 };
@@ -30,14 +32,14 @@ export default function UsersPage() {
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const { setLoading, onSuccess, onError, loading } =
+  const { onLoading, onSuccess, onError, loading } =
     React.useContext(StatusContext);
 
   const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
-      setLoading(true);
+      onLoading(true);
       try {
         const retrievedUsers = await getUsers(authToken);
         if (retrievedUsers) {
@@ -47,7 +49,7 @@ export default function UsersPage() {
       } catch (error) {
         onError();
       }
-      setLoading(false);
+      onLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
@@ -60,7 +62,7 @@ export default function UsersPage() {
       users,
       setUsers,
       authToken,
-      setLoading,
+      onLoading,
       onSuccess,
       onError
     );
@@ -113,7 +115,7 @@ export default function UsersPage() {
             users,
             setUsers,
             authToken,
-            setLoading,
+            onLoading,
             onSuccess,
             onError
           );

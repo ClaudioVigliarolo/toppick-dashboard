@@ -100,7 +100,7 @@ export default function LoginPage() {
           />
         </div>
       </div>
-      <CustomAlert visible={error.length > 0} text={error} type="error" />
+      <CustomAlert visible={error.length > 0} text={error} severity="error" />
     </form>
   );
 }

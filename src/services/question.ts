@@ -1,15 +1,15 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { HOSTNAME } from "../config/config";
 import { Lang } from "@/interfaces/ui";
 import { QuestionCreated, QuestionDetail } from "@toppick/common";
 
-export const addQuestions = async (
+export const createQuestions = async (
   questions: QuestionCreated[],
   topicId: number,
   lang: Lang,
   token: string
 ): Promise<AxiosResponse> => {
-  const res = await axios.put(
+  return await axios.put(
     `${HOSTNAME}/api/content/questions/batch`,
     {
       questions,
@@ -22,7 +22,6 @@ export const addQuestions = async (
       },
     }
   );
-  return res.data;
 };
 
 //todo

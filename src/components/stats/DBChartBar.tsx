@@ -1,7 +1,6 @@
 import React from "react";
 import CardNumber from "../ui/CardNumber";
 import { useChartStyles } from "../ui/ChartStyles";
-import { StatsContent } from "@/interfaces/stats";
 import { Lang } from "@/interfaces/ui";
 import { getContentStats } from "@/services/stats";
 
@@ -18,7 +17,7 @@ export default function DBChartBar({
   from,
   until,
 }: DBChartBarProps) {
-  const [contentStats, setContentStats] = React.useState<StatsContent>({
+  const [contentStats, setContentStats] = React.useState<any>({
     categories: 0,
     questions: 0,
     topics: 0,

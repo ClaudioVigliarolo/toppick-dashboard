@@ -65,8 +65,6 @@ export const Navigation = () => {
             Component={route.component}
             token={authToken}
             currentLanguage={currentLanguage}
-            error={error}
-            success={success}
           />
         ))}
       </Switch>

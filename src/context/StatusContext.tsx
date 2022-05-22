@@ -4,38 +4,39 @@ import CustomAlert from "../components/ui/Alert";
 
 export const StatusContext = React.createContext({
   loading: true,
-  setLoading: (newVal: boolean) => {},
-  onSuccess: () => {},
-  onError: () => {},
-  error: false,
-  success: false,
+  onLoading: (val: boolean) => {},
+  onSuccess: (val?: string) => {},
+  onError: (val?: string) => {},
+  error: "",
+  success: "",
 });
 
-const messageSuccess = "Successfully executed";
-const messageError = "We encountered an error";
+const DEFAULT_SUCCESS_MSG = "Successfully executed";
+const DEFAULT_ERROR_MSG = "We encountered an error";
 
 export const StatusProvider = ({ children }: { children: any }) => {
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [success, setSuccess] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<string>("");
+  const [error, setError] = React.useState<string>("");
 
-  const onSetSuccess = () => {
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), CONSTANTS.ALERT_TIME);
+  const onSetSuccess = (msg?: string) => {
+    setSuccess(msg || DEFAULT_SUCCESS_MSG);
+    setTimeout(() => setSuccess(""), CONSTANTS.ALERT_SUCCESS_TIME);
   };
 
-  const onSetError = () => {
-    setError(true);
-    setTimeout(() => setError(false), CONSTANTS.ALERT_TIME);
+  const onSetError = (msg?: string) => {
+    setError(msg || DEFAULT_ERROR_MSG);
+    setTimeout(() => setError(""), CONSTANTS.ALERT_ERROR_TIME);
   };
 
   const onSetLoading = (newVal: boolean) => {
     setLoading(newVal);
   };
+
   return (
     <StatusContext.Provider
       value={{
-        setLoading: onSetLoading,
+        onLoading: onSetLoading,
         loading,
         onSuccess: onSetSuccess,
         onError: onSetError,
@@ -43,8 +44,8 @@ export const StatusProvider = ({ children }: { children: any }) => {
         success,
       }}
     >
-      <CustomAlert visible={success} text={messageSuccess} type="success" />
-      <CustomAlert visible={error} text={messageError} type="error" />
+      <CustomAlert visible={!!success} text={success} severity="success" />
+      <CustomAlert visible={!!error} text={error} severity="error" />
       {children}
     </StatusContext.Provider>
   );

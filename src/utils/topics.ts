@@ -1,4 +1,5 @@
 /* utils for inserting, modifing, removing topics  */
+import { AxiosError } from "axios";
 import { getLinesFromText } from "../utils/utils";
 import { Lang } from "@/interfaces/ui";
 import { createTopic, updateTopic, deleteTopic } from "@/services/topic";
@@ -15,7 +16,7 @@ import {
   updateCategory,
   deleteCategory,
 } from "@/services/category";
-import { addQuestions } from "@/services/question";
+import { createQuestions } from "@/services/question";
 
 export const onCategoryCreate = async (
   category: CategoryCreated,
@@ -23,11 +24,11 @@ export const onCategoryCreate = async (
   currentLanguage: Lang,
   token: string,
   setCategories: (categories: CategoryFeatured[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ): Promise<void> => {
-  setLoading(true);
+  onLoading(true);
   try {
     const newCategory = await createCategory(category, currentLanguage, token);
     const newCategories = [...categories];
@@ -44,7 +45,7 @@ export const onCategoryCreate = async (
   } catch (error) {
     onError();
   }
-  setLoading(false);
+  onLoading(false);
 };
 
 export const onCategoryUpdate = async (
@@ -53,11 +54,11 @@ export const onCategoryUpdate = async (
   currentLanguage: Lang,
   token: string,
   setCategories: (categories: CategoryFeatured[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ) => {
-  setLoading(true);
+  onLoading(true);
   try {
     const newCategory = await updateCategory(category, currentLanguage, token);
     const newCategories = [...categories];
@@ -76,7 +77,7 @@ export const onCategoryUpdate = async (
   } catch (error) {
     onError();
   }
-  setLoading(false);
+  onLoading(false);
 };
 
 export const onCategoryDelete = async (
@@ -85,11 +86,11 @@ export const onCategoryDelete = async (
   currentLanguage: Lang,
   token: string,
   setCategories: (categories: CategoryFeatured[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ) => {
-  setLoading(true);
+  onLoading(true);
   try {
     await deleteCategory(id, currentLanguage, token);
     const newCategories = categories.filter((categ) => categ.id !== id);
@@ -98,7 +99,7 @@ export const onCategoryDelete = async (
   } catch (error) {
     onError();
   }
-  setLoading(false);
+  onLoading(false);
 };
 
 export const onTopicCreate = async (
@@ -107,11 +108,11 @@ export const onTopicCreate = async (
   currentLanguage: Lang,
   token: string,
   setTopics: (topics: TopicFeatured[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ): Promise<void> => {
-  setLoading(true);
+  onLoading(true);
   try {
     const { id, active, description, image, level, timestamp, title } =
       await createTopic(topic, currentLanguage, token);
@@ -130,7 +131,7 @@ export const onTopicCreate = async (
     //push new updated arrays
     setTopics([...topics]);
 
-    setLoading(false);
+    onLoading(false);
     onSuccess();
   } catch (error) {
     onError();
@@ -143,11 +144,11 @@ export const onTopicUpdate = async (
   currentLanguage: Lang,
   token: string,
   setTopics: (topics: TopicFeatured[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ): Promise<void> => {
-  setLoading(true);
+  onLoading(true);
   try {
     const { id, active, description, image, level, timestamp, title } =
       await updateTopic(updatedTopic, currentLanguage, token);
@@ -169,7 +170,7 @@ export const onTopicUpdate = async (
     onError();
   }
 
-  setLoading(false);
+  onLoading(false);
 };
 
 export const onTopicDelete = async (
@@ -177,16 +178,16 @@ export const onTopicDelete = async (
   topics: TopicFeatured[],
   token: string,
   setTopics: (topics: TopicFeatured[]) => void,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ): Promise<void> => {
-  setLoading(true);
+  onLoading(true);
   try {
     await deleteTopic(id, token);
     const newTopics = topics.filter((topic) => topic.id !== id);
     setTopics([...newTopics]);
-    setLoading(false);
+    onLoading(false);
     onSuccess();
   } catch (error) {
     onError();
@@ -198,22 +199,23 @@ export const onQuestionsAdd = async (
   topicId: number,
   currentLanguage: Lang,
   token: string,
-  setLoading: (val: boolean) => void,
-  onSuccess: () => void,
-  onError: () => void
+  onLoading: (val: boolean) => void,
+  onSuccess: (val?: string) => void,
+  onError: (val?: string) => void
 ) => {
-  setLoading(true);
+  onLoading(true);
   if (topicId < 0 || questions.length < 0) {
-    setLoading(false);
+    onLoading(false);
     return onError();
   }
   try {
-    await addQuestions(questions, topicId, currentLanguage, token);
+    await createQuestions(questions, topicId, currentLanguage, token);
     onSuccess();
   } catch (error) {
-    onError();
+    const err = error as AxiosError;
+    onError(err.response?.data);
   }
-  setLoading(false);
+  onLoading(false);
 };
 
 export const generateQuestions = (

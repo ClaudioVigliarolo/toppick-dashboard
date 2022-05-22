@@ -23,23 +23,23 @@ export default function CategoryPage() {
   const [addDialog, setAddDialog] = React.useState<boolean>(false);
   const [currentCategory, setCurrentCategory] =
     React.useState<CategoryFeatured | null>(null);
-  const { setLoading, onSuccess, onError, loading } =
+  const { onLoading, onSuccess, onError, loading } =
     React.useContext(StatusContext);
   const { authToken, currentLanguage } = React.useContext(AuthContext);
   const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
-      setLoading(true);
+      onLoading(true);
       try {
         const retrievedCategories = await getFeaturedCategories();
         if (retrievedCategories) {
           setCategories(retrievedCategories);
         }
       } catch (error) {
-        onError();
+        onError(error);
       }
-      setLoading(false);
+      onLoading(false);
     })();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,7 +63,7 @@ export default function CategoryPage() {
       currentLanguage,
       authToken,
       setCategories,
-      setLoading,
+      onLoading,
       () => {
         setAddDialog(false);
         setCurrentCategory(null);
@@ -80,7 +80,7 @@ export default function CategoryPage() {
       currentLanguage,
       authToken,
       setCategories,
-      setLoading,
+      onLoading,
       () => {
         setAddDialog(false);
         setCurrentCategory(null);
@@ -99,7 +99,7 @@ export default function CategoryPage() {
       currentLanguage,
       authToken,
       setCategories,
-      setLoading,
+      onLoading,
       onSuccess,
       onError
     );

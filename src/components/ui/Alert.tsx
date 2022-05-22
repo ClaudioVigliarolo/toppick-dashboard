@@ -7,17 +7,19 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: "center",
     position: "fixed",
     bottom: 50,
-    left: "50%",
+    left: "55%",
+    transform: "translate(-50%, -50%)",
+    minWidth: 300,
   },
 }));
 
 export default function CustomAlert({
   visible,
-  type,
+  severity,
   text,
 }: {
   visible: boolean;
-  type: Color;
+  severity: Color;
   text: string;
 }) {
   const classes = useStyles();
@@ -25,9 +27,7 @@ export default function CustomAlert({
     <>
       {visible && (
         <div className={classes.container}>
-          <Alert severity={type} variant="filled">
-            {text}
-          </Alert>
+          <Alert severity={severity}>{text.substring(0, 100)}</Alert>
         </div>
       )}
     </>

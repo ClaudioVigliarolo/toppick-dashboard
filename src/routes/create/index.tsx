@@ -45,7 +45,7 @@ export default function CreatePage() {
   const [isUpdate, setIsUpdate] = React.useState<boolean>(false);
   const [isReview, setReview] = React.useState<boolean>(false);
   const [topics, setTopics] = React.useState<DashLabel[]>([]);
-  const { setLoading, onSuccess, onError, loading } =
+  const { onLoading, onSuccess, onError, loading } =
     React.useContext(StatusContext);
   const { authToken, currentLanguage, userId } = React.useContext(AuthContext);
 
@@ -54,7 +54,7 @@ export default function CreatePage() {
   React.useEffect(() => {
     (async () => {
       onReset();
-      setLoading(true);
+      onLoading(true);
       try {
         const allTopics = await getTopicLabels({
           type: "topic",
@@ -64,7 +64,7 @@ export default function CreatePage() {
       } catch (error) {
         onError();
       }
-      setLoading(false);
+      onLoading(false);
     })();
   }, [currentLanguage]);
 
@@ -76,7 +76,7 @@ export default function CreatePage() {
     if (topics[index] === NO_TOPIC) {
       return;
     }
-    setLoading(true);
+    onLoading(true);
     try {
       const retrievedQuestions = await getQuestions(topics[index].id);
       if (retrievedQuestions) {
@@ -110,7 +110,7 @@ export default function CreatePage() {
     } catch (error) {
       onError();
     }
-    setLoading(false);
+    onLoading(false);
   };
 
   const onSubmitToReview = () => {
@@ -167,7 +167,7 @@ export default function CreatePage() {
       selectedTopic.id,
       currentLanguage,
       authToken,
-      setLoading,
+      onLoading,
       onSubmitCallback,
       onError
     );
@@ -180,7 +180,7 @@ export default function CreatePage() {
       currentLanguage,
       authToken,
       setTopics,
-      setLoading,
+      onLoading,
       async () => {
         setSelectedTopic({
           id: topics[0].id,

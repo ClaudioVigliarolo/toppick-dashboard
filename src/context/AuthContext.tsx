@@ -38,11 +38,11 @@ export const AuthProvider = ({ children }: { children: any }) => {
   const [user, setUser] = React.useState<UserAppState>(DEFAULT_USER_APP_STATE);
   const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(Lang.EN);
   const [isProduction, setIsProduction] = React.useState<boolean>(true);
-  const { setLoading } = React.useContext(StatusContext);
+  const { onLoading } = React.useContext(StatusContext);
 
   React.useEffect(() => {
     (async () => {
-      setLoading(true);
+      onLoading(true);
       try {
         //authenticate user
         auth.onAuthStateChanged(async (user) => {
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
               role: claims.role,
             });
           }
-          setLoading(false);
+          onLoading(false);
         });
       } catch {
         console.error("Failed To Connect to Firebase");
