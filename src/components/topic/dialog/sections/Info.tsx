@@ -1,7 +1,7 @@
 import React from "react";
 import { CONSTANTS } from "@/constants/app";
 import Select from "@/components/ui/select/SimpleSelect";
-import { makeStyles } from "@material-ui/core";
+import { Checkbox, FormControlLabel, makeStyles } from "@material-ui/core";
 import Chip from "@/components/ui/select/ObjectChip";
 import TagSelector from "@/components/ui/select/TagSelector";
 import { DashLabel, TopicLevel, TopicTag } from "@toppick/common";
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
   TagSelectorContainer: {
-    marginTop: 50,
+    marginTop: 20,
     maxWidth: "80%",
   },
   selectContainer: {
@@ -35,6 +35,8 @@ interface InfoProps {
   onTagRemove: (i: number) => void;
   onTagAdd: (title: string) => void;
   tags: TopicTag[];
+  isFeatured: boolean;
+  toggleIsFeatured: () => void;
 }
 const TOPIC_LEVELS = Object.values(TopicLevel);
 
@@ -49,6 +51,8 @@ export default function Info({
   tags,
   interests,
   onTagAdd,
+  isFeatured,
+  toggleIsFeatured,
 }: InfoProps) {
   const classes = useStyles();
   return (
@@ -85,6 +89,20 @@ export default function Info({
             values={interests}
             header="Topic Interests"
             handleChange={handleInterestsChange}
+          />
+        </div>
+
+        <div className={classes.TagSelectorContainer}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isFeatured}
+                onChange={toggleIsFeatured}
+                name="featured"
+                color="primary"
+              />
+            }
+            label="Topic Featured"
           />
         </div>
         <div className={classes.TagSelectorContainer}>
