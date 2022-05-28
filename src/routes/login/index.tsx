@@ -44,7 +44,7 @@ export default function LoginPage() {
 
   const validDateForm = () => {
     if (!email || !password) {
-      throw new Error("Fill all fields");
+      throw new Error("Fill all  fields");
     }
   };
 
