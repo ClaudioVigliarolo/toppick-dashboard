@@ -63,7 +63,10 @@ export default function UsersPage() {
       setUsers,
       authToken,
       onLoading,
-      onSuccess,
+      () => {
+        setEditDialog(false);
+        onSuccess();
+      },
       onError
     );
   };

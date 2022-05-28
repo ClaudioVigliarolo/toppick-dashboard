@@ -37,6 +37,7 @@ export const getAllTopics = async (): Promise<TopicFeatured[]> => {
       include_inactive: true,
       take_all: true,
       sort_by_timestamp: true,
+      include_info: true,
     },
   });
   return response.data;

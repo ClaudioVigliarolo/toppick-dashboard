@@ -36,6 +36,7 @@ const NO_TOPIC: TopicDetail = {
   videoCounter: 0,
   active: false,
   topic_interests: [],
+  featured: false,
 };
 
 interface TopicDialogProps {
@@ -109,6 +110,7 @@ export default function TopicDialog(props: TopicDialogProps) {
       image: topic.image,
       title: topic.title,
       active: topic.active!,
+      featured: topic.featured!,
       level: topic.level,
       source: topic.source,
       topic_tags: topic.topic_tags,
@@ -180,6 +182,10 @@ export default function TopicDialog(props: TopicDialogProps) {
       newSelectedTopics.splice(selectedIndex, 1);
     }
     setSelectedTopics(newSelectedTopics);
+  };
+
+  const toggleIsFeatured = () => {
+    setTopic({ ...topic, featured: !topic.featured });
   };
 
   const handleSourceChange = (e: React.ChangeEvent<any>) => {
@@ -276,6 +282,8 @@ export default function TopicDialog(props: TopicDialogProps) {
           }))}
           onTagAdd={onTopicTagAdd}
           onTagRemove={onTopicTagRemove}
+          isFeatured={topic.featured!}
+          toggleIsFeatured={toggleIsFeatured}
         />
       ),
     },
