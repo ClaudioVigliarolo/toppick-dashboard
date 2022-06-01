@@ -37,7 +37,7 @@ export default function CategoryPage() {
           setCategories(retrievedCategories);
         }
       } catch (error) {
-        onError(error);
+        onError();
       }
       onLoading(false);
     })();
