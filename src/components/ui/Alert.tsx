@@ -27,7 +27,7 @@ export default function CustomAlert({
     <>
       {visible && (
         <div className={classes.container}>
-          <Alert severity={severity}>{text.substring(0, 100)}</Alert>
+          <Alert severity={severity}>{text && text.substring(0, 100)}</Alert>
         </div>
       )}
     </>
