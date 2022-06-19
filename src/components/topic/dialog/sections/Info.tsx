@@ -1,7 +1,7 @@
 import React from "react";
 import { CONSTANTS } from "@/constants/app";
 import Select from "@/components/ui/select/SimpleSelect";
-import { makeStyles } from "@material-ui/core";
+import { Checkbox, FormControlLabel, makeStyles } from "@material-ui/core";
 import Chip from "@/components/ui/select/ObjectChip";
 import TagSelector from "@/components/ui/select/TagSelector";
 import {
