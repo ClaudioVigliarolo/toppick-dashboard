@@ -44,12 +44,22 @@ const useStyles = makeStyles(() =>
     confirmButton: {
       color: COLORS.blue,
     },
+    errorContainer: {
+      display: "flex",
+      width: "100%",
+      justifyContent: "center",
+    },
+    errorText: {
+      color: COLORS.red,
+      textAlign: "center",
+    },
   })
 );
 
 export interface TabData {
   children: React.ReactNode;
   label: string;
+  isHidden?: boolean;
 }
 interface TabPanelProps extends TabData {
   index: number;
@@ -58,8 +68,8 @@ interface TabPanelProps extends TabData {
 
 interface AppDialogProps {
   open: boolean;
-  onConfirm: () => void;
-  loading: boolean;
+  onConfirm?: () => void;
+  loading?: boolean;
   confirmButtonText?: string;
   onRefuse: () => void;
   refuseButtonText?: string;
@@ -69,6 +79,7 @@ interface AppDialogProps {
   minHeight?: number;
   confirmButtonDisabled?: boolean;
   showTabs?: boolean;
+  error?: string;
 }
 
 function TabPanel({ children, index, value }: TabPanelProps) {
@@ -104,8 +115,9 @@ export const AppDialog = ({
   tabData = [],
   minWidth = 400,
   minHeight = 400,
-  loading,
+  loading = false,
   showTabs = true,
+  error,
   confirmButtonDisabled = false,
 }: AppDialogProps) => {
   const [value, setValue] = React.useState(0);
@@ -141,9 +153,11 @@ export const AppDialog = ({
               color="primary"
               centered
             >
-              {tabData.map((t, i) => (
-                <Tab key={i} label={t.label} />
-              ))}
+              {tabData
+                .filter((tab) => !tab.isHidden)
+                .map((t, i) => (
+                  <Tab key={i} label={t.label} />
+                ))}
             </Tabs>
           )}
 
@@ -152,7 +166,11 @@ export const AppDialog = ({
               {t.children}
             </TabPanel>
           ))}
+          <div className={classes.errorContainer}>
+            <h4 className={classes.errorText}>{error}</h4>
+          </div>
         </DialogContent>
+
         <DialogActions>
           {loading ? (
             <div className={classes.dialogActionContainer}>
@@ -163,15 +181,19 @@ export const AppDialog = ({
               <Button onClick={onRefuse} className={classes.closeButton}>
                 {refuseButtonText}
               </Button>
-              <Button
-                onClick={onConfirm}
-                style={{
-                  color: confirmButtonDisabled ? COLORS.lightGrey : COLORS.blue,
-                }}
-                disabled={confirmButtonDisabled}
-              >
-                {confirmButtonText}
-              </Button>
+              {onConfirm && (
+                <Button
+                  onClick={onConfirm}
+                  style={{
+                    color: confirmButtonDisabled
+                      ? COLORS.lightGrey
+                      : COLORS.blue,
+                  }}
+                  disabled={confirmButtonDisabled}
+                >
+                  {confirmButtonText}
+                </Button>
+              )}
             </>
           )}
         </DialogActions>

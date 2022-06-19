@@ -1,5 +1,6 @@
 import React from "react";
 import DeleteIcon from "@material-ui/icons/Clear";
+import EditIcon from "@material-ui/icons/Edit";
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -8,6 +9,13 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 5,
     width: 10,
     height: 10,
+    marginTop: 5,
+  },
+  editIcon: {
+    color: "white",
+    marginLeft: 5,
+    width: 12,
+    height: 12,
     marginTop: 5,
   },
   container: {
@@ -32,11 +40,13 @@ interface TagItemProps {
   onRemove?: () => void;
   onSelect?: () => void;
   deletable?: boolean;
+  editable?: boolean;
 }
 export default function TagItem({
   onRemove = () => {},
   tag,
-  deletable = true,
+  deletable,
+  editable,
   onSelect = () => {},
 }: TagItemProps) {
   const classes = useStyles();
@@ -47,6 +57,9 @@ export default function TagItem({
       <div>
         {deletable && (
           <DeleteIcon onClick={onRemove} className={classes.deleteIcon} />
+        )}
+        {editable && (
+          <EditIcon onClick={onRemove} className={classes.editIcon} />
         )}
       </div>
     </div>

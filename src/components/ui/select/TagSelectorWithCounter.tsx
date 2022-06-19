@@ -46,25 +46,12 @@ export default function TagSelectorWithCounter({
         {tags.map((tag, i) => (
           <TagItem
             onRemove={() => onRemove(i)}
-            counter={tag.counter}
+            counter={0}
             onChangeCounter={(e) => onChangeCounter(e, i)}
             tag={tag.title}
             key={i}
           />
         ))}
-      </div>
-      <div className={classes.textField}>
-        <TextField
-          InputLabelProps={{ shrink: true }}
-          margin="dense"
-          onKeyDown={handleKeyDown}
-          label="Tag"
-          placeholder="Type new Keyword..."
-          id="standard-helperText"
-          value={title}
-          onChange={(e) => setTitle(e.currentTarget.value)}
-          fullWidth
-        />
       </div>
     </div>
   );

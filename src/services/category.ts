@@ -90,7 +90,6 @@ export const updateCategory = async (
   lang: Lang,
   token: string
 ): Promise<CategoryDetail> => {
-  console.log("TO UPPP", category.topics);
   const response = await axios.patch(
     `${HOSTNAME}/api/content/categories/${category.id}`,
     {

@@ -50,7 +50,6 @@ export const getTopicDetails = async (title: string): Promise<TopicDetail> => {
       include_interests: true,
     },
   });
-  console.log("ddddd", title);
   return response.data;
 };
 
