@@ -19,7 +19,7 @@ export const DEFAULT_USER_APP_STATE: UserAppState = {
   photoURL: "",
   token: "",
   uid: "",
-  role: UserRole.DEFAULT,
+  role: UserRole.Default,
 };
 
 export const AuthContext = React.createContext({

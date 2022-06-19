@@ -16,9 +16,9 @@ export const getCondition = (
     case "/login":
       return !isAuthenticated;
     case "/users":
-      return isAuthenticated && userRole == UserRole.ADMIN;
+      return isAuthenticated && userRole == UserRole.Admin;
     case "/stats":
-      return isAuthenticated && userRole == UserRole.ADMIN;
+      return isAuthenticated && userRole == UserRole.Admin;
 
     case "/categories":
       return isAuthenticated;

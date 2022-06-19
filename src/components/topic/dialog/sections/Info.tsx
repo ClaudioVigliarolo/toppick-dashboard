@@ -4,7 +4,12 @@ import Select from "@/components/ui/select/SimpleSelect";
 import { Checkbox, FormControlLabel, makeStyles } from "@material-ui/core";
 import Chip from "@/components/ui/select/ObjectChip";
 import TagSelector from "@/components/ui/select/TagSelector";
-import { DashLabel, TopicLevel, TopicTag } from "@toppick/common";
+import {
+  BooleanValues,
+  DashLabel,
+  TopicLevel,
+  TopicTag,
+} from "@toppick/common";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -16,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
   TagSelectorContainer: {
-    marginTop: 20,
+    marginTop: 10,
     maxWidth: "80%",
   },
   selectContainer: {
@@ -27,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 interface InfoProps {
   handleSourceChange: (event: React.ChangeEvent<any>) => void;
   handleLevelChange: (event: React.ChangeEvent<any>) => void;
+  handleFeaturedChange: (event: React.ChangeEvent<any>) => void;
   handleInterestsChange: (index: number) => void;
   source: string;
   interests: DashLabel[];
@@ -35,8 +41,7 @@ interface InfoProps {
   onTagRemove: (i: number) => void;
   onTagAdd: (title: string) => void;
   tags: TopicTag[];
-  isFeatured: boolean;
-  toggleIsFeatured: () => void;
+  featured: string;
 }
 const TOPIC_LEVELS = Object.values(TopicLevel);
 
@@ -51,8 +56,8 @@ export default function Info({
   tags,
   interests,
   onTagAdd,
-  isFeatured,
-  toggleIsFeatured,
+  featured,
+  handleFeaturedChange,
 }: InfoProps) {
   const classes = useStyles();
   return (
@@ -82,6 +87,18 @@ export default function Info({
             defaultValue={level}
           />
         </div>
+
+        <div className={classes.selectContainer}>
+          <Select
+            handleChange={handleFeaturedChange}
+            value={featured}
+            values={Object.values(BooleanValues)}
+            color="black"
+            width={350}
+            header="Featured"
+            defaultValue={featured}
+          />
+        </div>
         <div className={classes.selectContainer}>
           <Chip
             width={350}
@@ -92,19 +109,6 @@ export default function Info({
           />
         </div>
 
-        <div className={classes.TagSelectorContainer}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isFeatured}
-                onChange={toggleIsFeatured}
-                name="featured"
-                color="primary"
-              />
-            }
-            label="Topic Featured"
-          />
-        </div>
         <div className={classes.TagSelectorContainer}>
           <TagSelector tags={tags} onRemove={onTagRemove} onAdd={onTagAdd} />
         </div>

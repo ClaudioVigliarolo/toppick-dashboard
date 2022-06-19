@@ -25,7 +25,7 @@ const NO_USER: UserDetail = {
   profession: "",
   uid: "",
   email: "",
-  role: UserRole.DEFAULT,
+  role: UserRole.Default,
 };
 
 const useStyles = makeStyles(() => ({

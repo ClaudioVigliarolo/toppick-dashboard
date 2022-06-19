@@ -25,7 +25,7 @@ const NO_TOPIC: TopicFeatured = {
   title: "select a topic to update",
   description: "",
   image: "",
-  level: TopicLevel.EASY,
+  level: TopicLevel.Easy,
 };
 
 const NEW_QUESTION: QuestionCreated = {

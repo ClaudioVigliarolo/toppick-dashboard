@@ -13,7 +13,7 @@ import { UserDetail, UserRole } from "@toppick/common";
 const NO_USER: UserDetail = {
   username: "",
   email: "",
-  role: UserRole.DEFAULT,
+  role: UserRole.Default,
   country: "",
   firstname: "",
   image: "",

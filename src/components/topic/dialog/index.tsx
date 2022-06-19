@@ -25,18 +25,18 @@ const NO_TOPIC: TopicDetail = {
   title: "",
   description: "",
   image: "",
-  articleCounter: 0,
-  imageCounter: 0,
-  level: TopicLevel.MEDIUM,
+  level: TopicLevel.Medium,
   questionCounter: 0,
   related_topics_related_topics_source_idTotopics: [],
   topic_categories: [],
   topic_tags: [],
   timestamp: new Date(),
-  videoCounter: 0,
   active: false,
   topic_interests: [],
   featured: false,
+  keywordsArticle: [],
+  keywordsImage: [],
+  keywordsVideo: [],
 };
 
 interface TopicDialogProps {
@@ -94,7 +94,6 @@ export default function TopicDialog(props: TopicDialogProps) {
           take_all: true,
         });
         const allInterests = await getTopicsInterests();
-        console.log("iiiiii", allInterests);
         setTopics(allTopics);
         setCategories(allCategories);
         setInterests(allInterests);
@@ -184,8 +183,8 @@ export default function TopicDialog(props: TopicDialogProps) {
     setSelectedTopics(newSelectedTopics);
   };
 
-  const toggleIsFeatured = () => {
-    setTopic({ ...topic, featured: !topic.featured });
+  const handleFeaturedChange = (e: React.ChangeEvent<any>) => {
+    setTopic({ ...topic, featured: e.target.value === "true" });
   };
 
   const handleSourceChange = (e: React.ChangeEvent<any>) => {
@@ -282,8 +281,8 @@ export default function TopicDialog(props: TopicDialogProps) {
           }))}
           onTagAdd={onTopicTagAdd}
           onTagRemove={onTopicTagRemove}
-          isFeatured={topic.featured!}
-          toggleIsFeatured={toggleIsFeatured}
+          featured={topic.featured ? "true" : "false"}
+          handleFeaturedChange={handleFeaturedChange}
         />
       ),
     },
