@@ -14,6 +14,8 @@ import {
   getSearchKeywords,
   updateSearchKeyword,
   updateSearchResultsArticle,
+  updateSearchResultsImage,
+  updateSearchResultsVideo,
 } from "@/services/search";
 import { AuthContext } from "@/context/AuthContext";
 import { AxiosError } from "axios";
@@ -85,6 +87,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
           searchType,
           true
         );
+        console.log("kkkkkk", keywords, searchType);
         setCurrentKeywords(keywords);
       } catch (error) {
         console.log(error);
@@ -139,6 +142,21 @@ export default function Search({ searchType, topicId }: SearchProps) {
       switch (keyword.search_type) {
         case SearchType.Article:
           await updateSearchResultsArticle(
+            authToken,
+            currentKeyword!.id,
+            updatedResults
+          );
+          break;
+        case SearchType.Video:
+          await updateSearchResultsVideo(
+            authToken,
+            currentKeyword!.id,
+            updatedResults
+          );
+          break;
+
+        case SearchType.Image:
+          await updateSearchResultsImage(
             authToken,
             currentKeyword!.id,
             updatedResults

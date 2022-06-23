@@ -10,7 +10,11 @@ import {
 } from "@toppick/common";
 import Overview from "./sections/Overview";
 import Results from "./sections/Results";
-import { getSearchResultsArticle } from "@/services/search";
+import {
+  getSearchResultsArticle,
+  getSearchResultsImage,
+  getSearchResultsVideo,
+} from "@/services/search";
 import { AuthContext } from "@/context/AuthContext";
 
 interface SearchDialogProps {
@@ -77,6 +81,17 @@ export default function SearchDialog({
             case SearchType.Article:
               setResults(
                 await getSearchResultsArticle(authToken, keyword.id, 100, 0)
+              );
+              break;
+            case SearchType.Video:
+              setResults(
+                await getSearchResultsVideo(authToken, keyword.id, 100, 0)
+              );
+              break;
+
+            case SearchType.Image:
+              setResults(
+                await getSearchResultsImage(authToken, keyword.id, 100, 0)
               );
               break;
 
