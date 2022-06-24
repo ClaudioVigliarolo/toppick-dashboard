@@ -12,6 +12,7 @@ import {
   createSearchKeyword,
   deleteSearchKeyword,
   getSearchKeywords,
+  sortSearchKeywords,
   updateSearchKeyword,
   updateSearchResultsArticle,
   updateSearchResultsImage,
@@ -19,6 +20,7 @@ import {
 } from "@/services/search";
 import { AuthContext } from "@/context/AuthContext";
 import { AxiosError } from "axios";
+import KeywordsDragDrop from "@/components/ui/select/KeywordsDragDrop";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -179,6 +181,17 @@ export default function Search({ searchType, topicId }: SearchProps) {
     setLoading(false);
   };
 
+  const onSortKeywords = async (keywords: SearchKeyword[]) => {
+    let index = keywords.length;
+    const sortedKeywords: { id: number; index: number }[] = keywords.map(
+      (k) => ({
+        id: k.id,
+        index: index--,
+      })
+    );
+    await sortSearchKeywords(authToken, sortedKeywords);
+  };
+
   return (
     <>
       <div className={classes.container}>
@@ -195,7 +208,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
             Create new Keyword
           </Button>
         </div>
-        <div className={classes.selectedKeywordsContainer}>
+        {/* <div className={classes.selectedKeywordsContainer}>
           {currentKeywords.map((keyword, i) => (
             <TagItem
               editable={true}
@@ -207,7 +220,15 @@ export default function Search({ searchType, topicId }: SearchProps) {
               key={i}
             />
           ))}
-        </div>
+        </div> */}
+        <KeywordsDragDrop
+          keywords={currentKeywords}
+          onDragEnd={onSortKeywords}
+          onSelect={(keyword) => {
+            setCurrentKeyword(keyword);
+            setIskeywordUpdateModal(true);
+          }}
+        />
         <KeywordDialogue
           onClose={() => setIskeywordCreateModal(false)}
           open={isKeywordCreateDialogue}

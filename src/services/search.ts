@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import { HOSTNAME } from "../config/config";
 import {
@@ -8,21 +8,6 @@ import {
   SearchResultCreated,
   SearchResultVideo,
 } from "@toppick/common";
-
-export const getSearchInfo = async (
-  token: string,
-  topic_id: number
-): Promise<{ hasNews: boolean; keywords: SearchKeyword[] }> => {
-  const response = await axios.get(`${HOSTNAME}/api/search/info`, {
-    params: {
-      topic_id,
-    },
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
-  return response.data;
-};
 
 export const getSearchKeywords = async (
   token: string,
@@ -207,4 +192,21 @@ export const updateSearchResultsImage = async (
     }
   );
   return response.data;
+};
+
+export const sortSearchKeywords = async (
+  token: string,
+  keywords: { id: number; index: number }[]
+): Promise<AxiosResponse> => {
+  return await axios.patch(
+    `${HOSTNAME}/api/search/keywords/sort`,
+    {
+      keywords,
+    },
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
 };
