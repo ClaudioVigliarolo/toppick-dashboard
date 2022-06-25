@@ -4,9 +4,11 @@ import { makeStyles, TextField } from "@material-ui/core";
 
 interface OverviewProps {
   title: string;
+  slug: string;
   image: string;
   description: string;
   setTitle: (event: React.ChangeEvent<any>) => void;
+  setSlug: (event: React.ChangeEvent<any>) => void;
   setImage: (event: React.ChangeEvent<any>) => void;
   setDescription: (event: React.ChangeEvent<any>) => void;
 }
@@ -30,10 +32,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Overview({
   title,
+  slug,
   image,
   setImage,
   description,
   setTitle,
+  setSlug,
   setDescription,
 }: OverviewProps) {
   const classes = useStyles();
@@ -48,6 +52,17 @@ export default function Overview({
         id="standard-helperText"
         value={title}
         onChange={setTitle}
+        className={classes.textField}
+      />
+
+      <TextField
+        placeholder="Slug"
+        InputLabelProps={{ shrink: true }}
+        margin="dense"
+        label="Slug"
+        id="standard-helperText"
+        value={slug}
+        onChange={setSlug}
         className={classes.textField}
       />
 

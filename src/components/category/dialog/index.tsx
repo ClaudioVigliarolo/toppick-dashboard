@@ -24,6 +24,7 @@ interface CategoryDialogProps {
 const NO_CATEGORY: CategoryDetail = {
   id: -1,
   title: "",
+  slug: "",
   description: "",
   image: "",
   topicCounter: 0,
@@ -38,7 +39,7 @@ export default function CategoryDialog(props: CategoryDialogProps) {
     (async () => {
       try {
         if (props.category) {
-          const categoryDetail = await getCategoryDetails(props.category.title);
+          const categoryDetail = await getCategoryDetails(props.category.slug);
           setCategory(categoryDetail);
           const selectedTopics = await getTopicLabels({
             type: "category",
@@ -71,6 +72,7 @@ export default function CategoryDialog(props: CategoryDialogProps) {
       id: category.id,
       description: category.description,
       image: category.image,
+      slug: category.slug,
       title: category.title,
       topics: selectedTopics.map((topic) => ({
         lang: Lang.EN,
@@ -90,6 +92,10 @@ export default function CategoryDialog(props: CategoryDialogProps) {
 
   const setTitle = (e: React.ChangeEvent<any>) => {
     setCategory({ ...category, title: e.currentTarget.value });
+  };
+
+  const setSlug = (e: React.ChangeEvent<any>) => {
+    setCategory({ ...category, slug: e.currentTarget.value });
   };
 
   const setImage = (e: React.ChangeEvent<any>) => {
@@ -124,9 +130,11 @@ export default function CategoryDialog(props: CategoryDialogProps) {
           description={category.description}
           image={category.image}
           title={category.title}
+          slug={category.slug}
           setDescription={setDescription}
           setImage={setImage}
           setTitle={setTitle}
+          setSlug={setSlug}
         />
       ),
     },

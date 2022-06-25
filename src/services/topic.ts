@@ -43,10 +43,10 @@ export const getAllTopics = async (): Promise<TopicFeatured[]> => {
   return response.data;
 };
 
-export const getTopicDetails = async (title: string): Promise<TopicDetail> => {
+export const getTopicDetails = async (slug: string): Promise<TopicDetail> => {
   const response = await axios.get(`${HOSTNAME}/api/content/topics/details`, {
     params: {
-      title,
+      slug,
       include_interests: true,
     },
   });
