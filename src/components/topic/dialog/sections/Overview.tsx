@@ -33,11 +33,13 @@ const useStyles = makeStyles((theme) => ({
 interface OverviewProps {
   active: boolean;
   title: string;
+  slug: string;
   titlePlaceholder?: string;
   descriptionPlaceholder?: string;
   image?: string;
   description?: string;
   setTitle: (event: React.ChangeEvent<any>) => void;
+  setSlug: (event: React.ChangeEvent<any>) => void;
   setImage: (event: React.ChangeEvent<any>) => void;
   setDescription: (event: React.ChangeEvent<any>) => void;
   toggleActive: () => void;
@@ -45,6 +47,7 @@ interface OverviewProps {
 export default function Overview({
   active,
   title,
+  slug,
   titlePlaceholder,
   descriptionPlaceholder,
   image = "",
@@ -52,6 +55,7 @@ export default function Overview({
   description = "",
   toggleActive,
   setTitle,
+  setSlug,
   setDescription,
 }: OverviewProps) {
   const classes = useStyles();
@@ -75,6 +79,17 @@ export default function Overview({
         id="standard-helperText"
         value={title}
         onChange={setTitle}
+        className={classes.textField}
+      />
+
+      <TextField
+        placeholder={titlePlaceholder}
+        InputLabelProps={{ shrink: true }}
+        margin="dense"
+        label="Slug"
+        id="standard-helperText"
+        value={slug}
+        onChange={setSlug}
         className={classes.textField}
       />
 

@@ -21,11 +21,10 @@ import { getQuestions } from "@/services/question";
 const NO_TOPIC: TopicFeatured = {
   active: false,
   id: -1,
+  slug: "",
   timestamp: new Date(),
   title: "select a topic to update",
   description: "",
-  image: "",
-  level: TopicLevel.Easy,
 };
 
 const NEW_QUESTION: QuestionCreated = {

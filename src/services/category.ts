@@ -38,12 +38,12 @@ export const getCategoryLabels = async ({
 };
 
 export const getCategoryDetails = async (
-  title: string
+  slug: string
 ): Promise<CategoryDetail> => {
   const response = await axios.get(
     `${HOSTNAME}/api/content/categories/details`,
     {
-      params: { title },
+      params: { slug },
     }
   );
   return response.data;

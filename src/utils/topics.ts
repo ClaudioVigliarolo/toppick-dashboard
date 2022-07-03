@@ -34,6 +34,7 @@ export const onCategoryCreate = async (
     const newCategories = [...categories];
     newCategories.unshift({
       id: newCategory.id,
+      slug: newCategory.slug,
       image: newCategory.image,
       title: newCategory.title,
       _count: {
@@ -68,6 +69,7 @@ export const onCategoryUpdate = async (
     newCategories[updatedIndex] = {
       _count: { topic_categories: category.topics.length },
       image: newCategory.image,
+      slug: newCategory.slug,
       title: newCategory.title,
       id: newCategory.id,
     };
@@ -114,7 +116,7 @@ export const onTopicCreate = async (
 ): Promise<void> => {
   onLoading(true);
   try {
-    const { id, active, description, image, level, timestamp, title } =
+    const { id, active, description, image, level, timestamp, title, slug } =
       await createTopic(topic, currentLanguage, token);
 
     //update topic array
@@ -122,10 +124,9 @@ export const onTopicCreate = async (
       active: active!,
       description,
       id,
-      image,
-      level,
       timestamp,
       title,
+      slug,
     });
 
     //push new updated arrays
@@ -150,7 +151,7 @@ export const onTopicUpdate = async (
 ): Promise<void> => {
   onLoading(true);
   try {
-    const { id, active, description, image, level, timestamp, title } =
+    const { id, active, description, image, level, timestamp, title, slug } =
       await updateTopic(updatedTopic, currentLanguage, token);
 
     const index = topics.findIndex((topic) => topic.id == updatedTopic.id);
@@ -159,10 +160,9 @@ export const onTopicUpdate = async (
       id,
       active: active!,
       description,
-      image,
-      level,
       timestamp,
       title,
+      slug,
     };
     setTopics([...topics]);
     onSuccess();

@@ -24,6 +24,7 @@ const NO_TOPIC: TopicDetail = {
   source: CONSTANTS.TOPIC_SOURCES[0],
   title: "",
   description: "",
+  slug: "",
   image: "",
   level: TopicLevel.Medium,
   questionCounter: 0,
@@ -64,7 +65,7 @@ export default function TopicDialog(props: TopicDialogProps) {
     (async () => {
       try {
         if (props.topic) {
-          const topicDetail = await getTopicDetails(props.topic.title);
+          const topicDetail = await getTopicDetails(props.topic.slug);
           setTopic(topicDetail);
           //get preselected
           const selectedTopics = await getTopicLabels({
@@ -108,6 +109,7 @@ export default function TopicDialog(props: TopicDialogProps) {
       description: topic.description,
       image: topic.image,
       title: topic.title,
+      slug: topic.slug,
       active: topic.active!,
       featured: topic.featured!,
       level: topic.level,
@@ -203,6 +205,10 @@ export default function TopicDialog(props: TopicDialogProps) {
     setTopic({ ...topic, title: e.currentTarget.value });
   };
 
+  const setSlug = (e: React.ChangeEvent<any>) => {
+    setTopic({ ...topic, slug: e.currentTarget.value });
+  };
+
   const setImage = (e: React.ChangeEvent<any>) => {
     setTopic({ ...topic, image: e.currentTarget.value });
   };
@@ -243,7 +249,9 @@ export default function TopicDialog(props: TopicDialogProps) {
           setDescription={setDescription}
           setImage={setImage}
           setTitle={setTitle}
+          setSlug={setSlug}
           title={topic.title}
+          slug={topic.slug}
           titlePlaceholder={props.titlePlaceholder}
           descriptionPlaceholder={props.descriptionPlaceholder}
           toggleActive={toggleActive}
