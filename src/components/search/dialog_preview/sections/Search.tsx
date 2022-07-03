@@ -89,7 +89,6 @@ export default function Search({ searchType, topicId }: SearchProps) {
           searchType,
           true
         );
-        console.log("kkkkkk", keywords, searchType);
         setCurrentKeywords(keywords);
       } catch (error) {
         console.log(error);

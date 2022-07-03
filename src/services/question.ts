@@ -47,7 +47,6 @@ export const getQuestions = async (
   const response = await axios.get(`${HOSTNAME}/api/content/questions/old`, {
     params: {
       topic_id,
-      order_by_n: true,
       limit: 1000,
       skip: 0,
     },
