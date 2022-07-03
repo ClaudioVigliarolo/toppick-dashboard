@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 import { HOSTNAME } from "../config/config";
 import {
