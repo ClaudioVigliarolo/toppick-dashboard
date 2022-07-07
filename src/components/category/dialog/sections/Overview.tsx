@@ -73,7 +73,7 @@ export default function Overview({
         label="Description"
         id="outlined-multiline-flexible"
         multiline
-        rows={5}
+        minRows={5}
         value={description}
         onChange={setDescription}
         className={classes.textField}

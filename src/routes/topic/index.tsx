@@ -10,7 +10,7 @@ import { StatusContext } from "@/context/StatusContext";
 import { getAllTopics } from "@/services/topic";
 import { TopicCreated, TopicFeatured } from "@toppick/common";
 import { onTopicCreate, onTopicDelete, onTopicUpdate } from "@/utils/topics";
-import SearchDialog from "@/components/search/dialog_preview";
+import SearchDialog from "@/components/search/keyword_dialog_preview";
 
 export default function TopicPage() {
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);

@@ -11,6 +11,7 @@ import {
 import Overview from "./sections/Overview";
 import Results from "./sections/Results";
 import {
+  deleteSearchResultArticle,
   getSearchResultsArticle,
   getSearchResultsImage,
   getSearchResultsVideo,
@@ -20,10 +21,7 @@ import { AuthContext } from "@/context/AuthContext";
 interface SearchDialogProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (
-    keyword: SearchKeywordCreated,
-    results: SearchResultCreated[]
-  ) => void;
+  onConfirm: (keyword: SearchKeywordCreated) => void;
   keyword?: SearchKeyword;
   topicId: number;
   loading: boolean;
@@ -61,52 +59,32 @@ export default function SearchDialog({
       ...DEFAULT_STATE,
     });
 
-  const [results, setResults] = React.useState<SearchResultCreated[]>([]);
-  const { authToken } = React.useContext(AuthContext);
-
   React.useEffect(() => {
-    (async () => {
-      try {
-        if (keyword) {
-          setCurrentKeyword({
-            keyword_type: keyword.keyword_type,
-            query: keyword.query,
-            search_type: keyword.search_type!,
-            title: keyword.title,
-            topic_id: topicId,
-            active: keyword.active,
-          });
-
-          switch (searchType) {
-            case SearchType.Article:
-              setResults(
-                await getSearchResultsArticle(authToken, keyword.id, 100, 0)
-              );
-              break;
-            case SearchType.Video:
-              setResults(
-                await getSearchResultsVideo(authToken, keyword.id, 100, 0)
-              );
-              break;
-
-            case SearchType.Image:
-              setResults(
-                await getSearchResultsImage(authToken, keyword.id, 100, 0)
-              );
-              break;
-
-            default:
-              break;
-          }
-        }
-      } catch (error) {
-        console.log(error);
+    try {
+      if (keyword) {
+        setCurrentKeyword({
+          keyword_type: keyword.keyword_type,
+          query: keyword.query,
+          search_type: keyword.search_type!,
+          title: keyword.title,
+          topic_id: topicId,
+          active: keyword.active,
+        });
+      } else {
+        setCurrentKeyword({
+          keyword_type: SearchKeywordType.Automatic,
+          search_type: searchType,
+          topic_id: topicId,
+          ...DEFAULT_STATE,
+        });
       }
-    })();
+    } catch (error) {
+      console.log(error);
+    }
   }, [keyword, open]);
 
   const onSubmit = async () => {
-    onConfirm(currentKeyword, results);
+    onConfirm(currentKeyword);
   };
 
   const handleKeywordTypeChange = (e: React.ChangeEvent<any>) => {
@@ -126,19 +104,8 @@ export default function SearchDialog({
   };
 
   const onAddResult = () => {
-    setResults((results) => [...results, { link: "" }]);
-  };
-
-  const onDeleteResult = (index: number) => {
-    const newResults = [...results];
-    newResults.splice(index, 1);
-    setResults(newResults);
-  };
-
-  const onChangeResultLink = (e: React.ChangeEvent<any>, index: number) => {
-    const newResults = [...results];
-    newResults[index].link = e.currentTarget.value;
-    setResults(newResults);
+    //show dialogue
+    //setResults((results) => [...results, { link: "", id: 0 }]);
   };
 
   const isSubmitEnabled = (): boolean =>
@@ -166,10 +133,8 @@ export default function SearchDialog({
       isHidden: !isShowResults,
       children: (
         <Results
-          results={results}
-          onAdd={onAddResult}
-          onChangeLink={onChangeResultLink}
-          onDelete={onDeleteResult}
+          keywordId={keyword ? keyword.id : -1}
+          searchType={searchType}
         />
       ),
     },

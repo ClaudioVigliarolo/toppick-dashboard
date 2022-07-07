@@ -4,19 +4,14 @@ import {
   SearchKeyword,
   SearchKeywordCreated,
   SearchType,
-  SearchResultCreated,
 } from "@toppick/common";
-import TagItem from "@/components/ui/select/TagItem";
-import KeywordDialogue from "../../dialog_detail/index";
+import KeywordDialogue from "../../keyword_dialog_detail/index";
 import {
   createSearchKeyword,
   deleteSearchKeyword,
   getSearchKeywords,
   sortSearchKeywords,
   updateSearchKeyword,
-  updateSearchResultsArticle,
-  updateSearchResultsImage,
-  updateSearchResultsVideo,
 } from "@/services/search";
 import { AuthContext } from "@/context/AuthContext";
 import { AxiosError } from "axios";
@@ -127,10 +122,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
     setLoading(false);
   };
 
-  const onUpdateKeyword = async (
-    updatedKeyword: SearchKeywordCreated,
-    updatedResults: SearchResultCreated[]
-  ) => {
+  const onUpdateKeyword = async (updatedKeyword: SearchKeywordCreated) => {
     setError("");
     setLoading(true);
     try {
@@ -139,35 +131,6 @@ export default function Search({ searchType, topicId }: SearchProps) {
         currentKeyword!.id,
         updatedKeyword
       );
-
-      switch (keyword.search_type) {
-        case SearchType.Article:
-          await updateSearchResultsArticle(
-            authToken,
-            currentKeyword!.id,
-            updatedResults
-          );
-          break;
-        case SearchType.Video:
-          await updateSearchResultsVideo(
-            authToken,
-            currentKeyword!.id,
-            updatedResults
-          );
-          break;
-
-        case SearchType.Image:
-          await updateSearchResultsImage(
-            authToken,
-            currentKeyword!.id,
-            updatedResults
-          );
-          break;
-
-        default:
-          break;
-      }
-
       const newKeywords = [...currentKeywords];
       const index = newKeywords.findIndex((k) => k.id == keyword.id);
       newKeywords[index] = keyword;

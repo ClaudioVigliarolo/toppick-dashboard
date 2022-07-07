@@ -1,11 +1,10 @@
-import axios, { AxiosResponse } from "axios";
-
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { HOSTNAME } from "../config/config";
 import {
   SearchKeyword,
   SearchKeywordCreated,
   SearchResultArticle,
-  SearchResultCreated,
+  SearchResultImage,
   SearchResultVideo,
 } from "@toppick/common";
 
@@ -137,63 +136,6 @@ export const getSearchResultsImage = async (
   return response.data;
 };
 
-export const updateSearchResultsArticle = async (
-  token: string,
-  keyword_id: number,
-  results: SearchResultCreated[]
-): Promise<SearchKeyword[]> => {
-  const response = await axios.put(
-    `${HOSTNAME}/api/search/results/articles/${keyword_id}`,
-    {
-      results,
-    },
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
-  return response.data;
-};
-
-export const updateSearchResultsVideo = async (
-  token: string,
-  keyword_id: number,
-  results: SearchResultCreated[]
-): Promise<SearchKeyword[]> => {
-  const response = await axios.put(
-    `${HOSTNAME}/api/search/results/videos/${keyword_id}`,
-    {
-      results,
-    },
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
-  return response.data;
-};
-
-export const updateSearchResultsImage = async (
-  token: string,
-  keyword_id: number,
-  results: SearchResultCreated[]
-): Promise<SearchKeyword[]> => {
-  const response = await axios.put(
-    `${HOSTNAME}/api/search/results/images/${keyword_id}`,
-    {
-      results,
-    },
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
-  return response.data;
-};
-
 export const sortSearchKeywords = async (
   token: string,
   keywords: { id: number; index: number }[]
@@ -209,4 +151,196 @@ export const sortSearchKeywords = async (
       },
     }
   );
+};
+
+export const deleteSearchResultArticle = async (
+  token: string,
+  id: number
+): Promise<AxiosResponse> => {
+  const response = await axios.delete(
+    `${HOSTNAME}/api/search/results/articles/${id}`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const deleteSearchResultVideo = async (
+  token: string,
+  id: number
+): Promise<AxiosResponse> => {
+  const response = await axios.delete(
+    `${HOSTNAME}/api/search/results/videos/${id}`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const deleteSearchResultImage = async (
+  token: string,
+  id: number
+): Promise<AxiosResponse> => {
+  const response = await axios.delete(
+    `${HOSTNAME}/api/search/results/images/${id}`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const createSearchResultArticle = async (
+  token: string,
+  link: string,
+  keyword_id: number
+): Promise<SearchResultArticle> => {
+  try {
+    const response = await axios.post(
+      `${HOSTNAME}/api/search/results/articles`,
+      {
+        link,
+        keyword_id,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw new Error(err.response?.data);
+  }
+};
+
+export const createSearchResultVideo = async (
+  token: string,
+  link: string,
+  keyword_id: number
+): Promise<SearchResultVideo> => {
+  try {
+    const response = await axios.post(
+      `${HOSTNAME}/api/search/results/videos`,
+      {
+        link,
+        keyword_id,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw new Error(err.response?.data);
+  }
+};
+
+export const createSearchResultImage = async (
+  token: string,
+  link: string,
+  keyword_id: number
+): Promise<SearchResultImage> => {
+  try {
+    const response = await axios.post(
+      `${HOSTNAME}/api/search/results/images`,
+      {
+        link,
+        keyword_id,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw new Error(err.response?.data);
+  }
+};
+
+export const updateSearchResultArticle = async (
+  token: string,
+  id: number,
+  link: string
+): Promise<SearchResultArticle> => {
+  try {
+    const response = await axios.put(
+      `${HOSTNAME}/api/search/results/articles/${id}`,
+      {
+        link,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw new Error(err.response?.data);
+  }
+};
+
+export const updateSearchResultVideo = async (
+  token: string,
+  id: number,
+  link: string
+): Promise<SearchResultVideo> => {
+  try {
+    const response = await axios.put(
+      `${HOSTNAME}/api/search/results/videos/${id}`,
+      {
+        link,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw new Error(err.response?.data);
+  }
+};
+
+export const updateSearchResultImage = async (
+  token: string,
+  id: number,
+  link: string
+): Promise<SearchResultImage> => {
+  try {
+    const response = await axios.put(
+      `${HOSTNAME}/api/search/results/images/${id}`,
+      {
+        link,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw new Error(err.response?.data);
+  }
 };

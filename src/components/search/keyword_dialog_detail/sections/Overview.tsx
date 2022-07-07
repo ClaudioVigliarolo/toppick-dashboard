@@ -49,18 +49,6 @@ interface OverViewProps {
 }
 
 export default function OverView({
-  //   handleSourceChange,
-  //   source,
-  //   handleLevelChange,
-  //   selectedInterests,
-  //   handleInterestsChange,
-  //   level,
-  //   onTagRemove,
-  //   tags,
-  //   interests,
-  //   onTagAdd,
-  //   isFeatured,
-  //   toggleIsFeatured,
   title,
   setTitle,
   handleKeywordTypeChange,
