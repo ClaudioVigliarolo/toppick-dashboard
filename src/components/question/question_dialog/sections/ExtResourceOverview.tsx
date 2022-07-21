@@ -2,7 +2,7 @@ import React from "react";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles, TextField, Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { QuestionResource } from "@toppick/common";
+import { QuestionResource } from "@toppick/common/build/interfaces";
 const useStyles = makeStyles((theme) => ({
   linkTextField: {
     marginTop: 10,

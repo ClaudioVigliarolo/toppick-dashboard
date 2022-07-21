@@ -33,7 +33,7 @@ export default function MessageDialog(props: MessageDialogProps) {
             placeholder="Type email message here..."
             multiline
             minRows={10}
-            rowsMax={10}
+            maxRows={10}
             InputLabelProps={{ shrink: true }}
             margin="dense"
             label="text"

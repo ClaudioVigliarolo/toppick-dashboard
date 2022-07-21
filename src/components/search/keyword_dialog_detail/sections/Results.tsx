@@ -7,7 +7,7 @@ import {
   SearchResultImage,
   SearchResultVideo,
   SearchType,
-} from "@toppick/common";
+} from "@toppick/common/build/interfaces";
 import {
   createSearchResultArticle,
   createSearchResultImage,
@@ -21,9 +21,10 @@ import {
   updateSearchResultArticle,
   updateSearchResultImage,
   updateSearchResultVideo,
-} from "@/services/search";
+} from "@toppick/common/build/api";
 import { AuthContext } from "@/context/AuthContext";
-import SearchResultDialogue from "../../result_dialog";
+import SearchResultDialog from "../../result_dialog";
+import { getErrorMessage } from "@toppick/common/build/utils";
 
 interface ResultsProps {
   keywordId: number;
@@ -63,9 +64,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Results({ searchType, keywordId }: ResultsProps) {
-  const [isShowCreateDialogue, setIsShowCreateDialogue] =
+  const [isShowCreateDialog, setIsShowCreateDialog] =
     React.useState<boolean>(false);
-  const [isShowEditDialogue, setIsShowEditDialogue] =
+  const [isShowEditDialog, setIsShowEditDialog] =
     React.useState<boolean>(false);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -121,10 +122,9 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
       ];
       setResults(newResults);
       setCurrentSearchResult(null);
-      setIsShowCreateDialogue(false);
+      setIsShowCreateDialog(false);
     } catch (error) {
-      const { message } = error as Error;
-      setError(message);
+      setError(getErrorMessage(error));
     }
     setIsLoading(false);
   };
@@ -145,10 +145,9 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
       };
       setResults([...results]);
       setCurrentSearchResult(null);
-      setIsShowEditDialogue(false);
+      setIsShowEditDialog(false);
     } catch (error) {
-      const { message } = error as Error;
-      setError(message);
+      setError(getErrorMessage(error));
     }
     setIsLoading(false);
   };
@@ -225,7 +224,7 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
             className={classes.editIcon}
             onClick={() => {
               setCurrentSearchResult(ex);
-              setIsShowEditDialogue(true);
+              setIsShowEditDialog(true);
             }}
           />
         </div>
@@ -235,34 +234,34 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
           color="primary"
           size="small"
           onClick={() => {
-            setIsShowCreateDialogue(true);
+            setIsShowCreateDialog(true);
           }}
           className={classes.addButton}
         >
           Add New Result
         </Button>
       </div>
-      <SearchResultDialogue
+      <SearchResultDialog
         headerText="Edit Search Result"
-        open={isShowEditDialogue}
+        open={isShowEditDialog}
         onSubmit={onUpdateSearchResult}
         link={currentSearchResult ? currentSearchResult.link : ""}
         loading={isLoading}
         error={error}
         onDelete={() => {
           onDeleteSearchResult(currentSearchResult!.id);
-          setIsShowEditDialogue(false);
+          setIsShowEditDialog(false);
         }}
-        onClose={() => setIsShowEditDialogue(false)}
+        onClose={() => setIsShowEditDialog(false)}
       />
-      <SearchResultDialogue
+      <SearchResultDialog
         headerText="Create Search Result"
-        open={isShowCreateDialogue}
+        open={isShowCreateDialog}
         onSubmit={onCreateSearchResult}
         link=""
         error={error}
         loading={isLoading}
-        onClose={() => setIsShowCreateDialogue(false)}
+        onClose={() => setIsShowCreateDialog(false)}
       />
     </div>
   );

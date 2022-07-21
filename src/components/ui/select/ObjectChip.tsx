@@ -16,7 +16,6 @@ import {
 } from "@material-ui/core";
 import { COLORS } from "@/constants/colors";
 import { Value } from "@/interfaces/ui";
-import { isSelected } from "@/utils/utils";
 
 interface CustomChipProps {
   handleChange: (index: number) => void;
@@ -25,6 +24,10 @@ interface CustomChipProps {
   width: number;
   selectedValues: Value[];
   header: string;
+}
+
+function isSelected(arr: Value[], val: Value) {
+  return arr.find((value) => value.title === val.title) ? true : false;
 }
 
 const useStyles = makeStyles((theme: Theme) =>

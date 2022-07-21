@@ -2,11 +2,8 @@ import React from "react";
 import { makeStyles, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Select from "@/components/ui/select/SimpleSelect";
-import {
-  BooleanValues,
-  SearchKeywordType,
-} from "@toppick/common/build/interfaces";
 import { COLORS } from "@/constants/colors";
+import { BooleanValues, QuestionType } from "@toppick/common/build/interfaces";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,29 +36,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface OverViewProps {
+interface QuestionProps {
   title: string;
-  query: string;
   active: string;
   setTitle: (event: React.ChangeEvent<any>) => void;
-  setQuery: (event: React.ChangeEvent<any>) => void;
-  keywordType: string;
-  handleKeywordTypeChange: (event: React.ChangeEvent<any>) => void;
   handleActiveChange: (event: React.ChangeEvent<any>) => void;
   onDelete?: () => void;
+  handleTypeChange: (event: React.ChangeEvent<any>) => void;
+  type: QuestionType;
 }
 
-export default function OverView({
+export default function Question({
   title,
   setTitle,
-  handleKeywordTypeChange,
-  setQuery,
-  keywordType,
-  query,
   onDelete,
   active,
+  type,
   handleActiveChange,
-}: OverViewProps) {
+  handleTypeChange,
+}: QuestionProps) {
   const classes = useStyles();
 
   return (
@@ -81,28 +74,15 @@ export default function OverView({
         onChange={setTitle}
         className={classes.fieldContainer}
       />
-
-      <TextField
-        placeholder="Query"
-        InputLabelProps={{ shrink: true }}
-        margin="dense"
-        label="Query"
-        id="outlined-multiline-flexible"
-        multiline
-        value={query}
-        onChange={setQuery}
-        className={classes.fieldContainer}
-      />
-
       <div className={classes.fieldContainer}>
         <Select
-          handleChange={handleKeywordTypeChange}
-          value={keywordType}
-          values={Object.values(SearchKeywordType)}
+          handleChange={handleTypeChange}
+          value={type}
+          values={Object.values(QuestionType)}
           color="black"
           width="100%"
-          header="Type"
-          defaultValue={keywordType}
+          header="Active"
+          defaultValue={active}
         />
       </div>
       <div className={classes.fieldContainer}>

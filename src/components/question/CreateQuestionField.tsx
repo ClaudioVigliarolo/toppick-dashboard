@@ -2,7 +2,7 @@ import React from "react";
 import { createStyles, makeStyles, TextField } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { QuestionCreated } from "@toppick/common";
+import { QuestionCreated } from "@toppick/common/build/interfaces";
 
 interface QuestionTextFieldProps {
   index: number;
@@ -76,7 +76,7 @@ export default function QuestionTextField({
         id="outlined-multiline-flexible"
         label={"Question " + (index + 1)}
         className={classes.textField}
-        rowsMax={4}
+        maxRows={4}
         multiline
         value={question.title}
         onChange={(e) =>

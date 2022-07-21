@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { makeStyles } from "@material-ui/core";
-import { SearchKeyword } from "@toppick/common/build/interfaces";
+import { COLORS } from "@/constants/colors";
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+} from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -17,56 +24,54 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
 
-  itemContainer: {
+  itemContainer: {},
+  editIcon: {
     cursor: "pointer",
-    background: "orange",
-    color: "white",
+    color: COLORS.primaryOrange,
+  },
+  listItem: {
+    backgroundColor: "white",
+    marginBottom: 25,
+    height: 100,
     borderRadius: 5,
-    padding: 10,
-    paddingTop: 12,
-    paddingBottom: 12,
-    fontSize: 15,
-    height: 30,
-    width: 150,
-    flexDirection: "row",
-    display: "flex",
-    alignItems: "center",
-    margin: 5,
   },
 }));
 
-interface KeywordsDragDropProps {
-  keywords: SearchKeyword[];
-  onSelect: (keyword: SearchKeyword) => void;
-  onDragEnd: (keywords: SearchKeyword[]) => void;
+interface DragAndDropProps {
+  items: { title: string; id: number }[];
+  onEdit: (index: number) => void;
+  onDragEnd: (items: { title: string; id: number }[]) => void;
+  itemStyles?: React.CSSProperties;
 }
 
-export default function KeywordsDragDrop({
-  keywords,
-  onSelect,
+export default function DragAndDrop({
+  items,
   onDragEnd,
-}: KeywordsDragDropProps) {
+  onEdit,
+  itemStyles,
+}: DragAndDropProps) {
   const classes = useStyles();
 
   // React state to track order of items
-  const [currentKeywords, setCurrentKeywords] =
-    useState<SearchKeyword[]>(keywords);
+  const [currentItems, setCurrentItems] = useState<
+    { title: string; id: number }[]
+  >([]);
 
   React.useEffect(() => {
-    setCurrentKeywords(keywords);
-  }, [keywords]);
+    setCurrentItems(items);
+  }, [items]);
 
   // Function to update list on drop
   const handleDrop = (droppedItem) => {
     // Ignore drop outside droppable container
     if (!droppedItem.destination) return;
-    var updatedList = [...currentKeywords];
+    var updatedList = [...currentItems];
     // Remove dragged item
     const [reorderedItem] = updatedList.splice(droppedItem.source.index, 1);
     // Add dropped item
     updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
     // Update State
-    setCurrentKeywords(updatedList);
+    setCurrentItems(updatedList);
     //
     onDragEnd(updatedList);
   };
@@ -81,7 +86,7 @@ export default function KeywordsDragDrop({
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {currentKeywords.map((item, index) => (
+              {currentItems.map((item, index) => (
                 <Draggable
                   key={item.id}
                   draggableId={item.id.toString()}
@@ -89,13 +94,23 @@ export default function KeywordsDragDrop({
                 >
                   {(provided) => (
                     <div
-                      onClick={() => onSelect(item)}
                       className={classes.itemContainer}
                       ref={provided.innerRef}
                       {...provided.dragHandleProps}
                       {...provided.draggableProps}
                     >
-                      {item.title}
+                      <ListItem className={classes.listItem} style={itemStyles}>
+                        <ListItemIcon>
+                          <EditIcon
+                            className={classes.editIcon}
+                            onClick={() => onEdit(index)}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          secondary={item.title}
+                          primary={index + 1}
+                        />
+                      </ListItem>
                     </div>
                   )}
                 </Draggable>

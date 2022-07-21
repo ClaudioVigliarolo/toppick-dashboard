@@ -1,11 +1,6 @@
 import React from "react";
 import { makeStyles, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Select from "@/components/ui/select/SimpleSelect";
-import {
-  BooleanValues,
-  SearchKeywordType,
-} from "@toppick/common/build/interfaces";
 import { COLORS } from "@/constants/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface OverViewProps {
-  link: string;
-  setLink: (event: React.ChangeEvent<any>) => void;
+  url: string;
+  setUrl: (event: React.ChangeEvent<any>) => void;
   onDelete?: () => void;
 }
 
-export default function OverView({ link, onDelete, setLink }: OverViewProps) {
+export default function Overview({ url, onDelete, setUrl }: OverViewProps) {
   const classes = useStyles();
 
   return (
@@ -51,13 +46,13 @@ export default function OverView({ link, onDelete, setLink }: OverViewProps) {
         </div>
       )}
       <TextField
-        placeholder="Link"
+        placeholder="Url"
         InputLabelProps={{ shrink: true }}
         margin="dense"
-        label="Link"
+        label="Url"
         id="standard-helperText"
-        value={link}
-        onChange={setLink}
+        value={url}
+        onChange={setUrl}
         className={classes.fieldContainer}
       />
     </div>

@@ -1,10 +1,11 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
-import { generateQuestions } from "@/utils/topics";
-import { countTextLines } from "@/utils/utils";
 import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
 import { AuthContext } from "@/context/AuthContext";
-import { DashLabel, QuestionCreated } from "@toppick/common";
+import {
+  QuestionCreated,
+  TopicFeatured,
+} from "@toppick/common/build/interfaces";
 
 interface QuestionsQuickAddDialogProps {
   open: boolean;
@@ -12,8 +13,43 @@ interface QuestionsQuickAddDialogProps {
   onConfirm: (questions: QuestionCreated[]) => void;
   onRefuse: () => void;
   minQuestions: number;
-  topic: DashLabel;
+  topic: TopicFeatured;
 }
+
+const getLinesFromText = (inputText: string): string[] => {
+  if (!inputText) return [];
+  let lines = inputText.match(/[^\r\n]+/g);
+  if (lines) {
+    lines = lines.filter((l) => l.replace(/\s/g, "").length > 0);
+  }
+  return lines ? lines : [];
+};
+
+const countTextLines = (inputText: string): number => {
+  if (!inputText) return 0;
+  let lines = inputText.match(/[^\r\n]+/g);
+  if (lines) {
+    lines = lines.filter((l) => l.replace(/\s/g, "").length > 0);
+  }
+  return lines ? lines.length : 0;
+};
+
+const generateQuestions = (
+  text: string,
+  topic: TopicFeatured,
+  userId: string
+): QuestionCreated[] => {
+  const questionsStr = getLinesFromText(text);
+  const questions: any[] = questionsStr.map((title, index) => ({
+    timestamp: new Date(),
+    title: title,
+    answers: [],
+    user_id: userId,
+    resources: [],
+  }));
+
+  return questions;
+};
 
 export default function QuestionsQuickAddDialog(
   props: QuestionsQuickAddDialogProps
@@ -40,8 +76,8 @@ export default function QuestionsQuickAddDialog(
           <TextField
             placeholder="Paste your questions here..."
             multiline
-            rows={10}
-            rowsMax={10}
+            minRows={10}
+            maxRows={10}
             InputLabelProps={{ shrink: true }}
             margin="dense"
             label="text"

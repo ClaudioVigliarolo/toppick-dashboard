@@ -20,12 +20,12 @@
   },
   "dependencies": {
     "@babel/preset-typescript": "7.12.1",
-    "@craco/craco": "6.4.3",
+    "@craco/craco": "6.4.5",
     "@dhaiwat10/react-link-preview": "1.9.1",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
-    "@toppick/common": "1.0.83",
+    "@toppick/common": "1.1.25",
     "axios": "0.21.1",
     "d3-scale-chromatic": "2.0.0",
     "firebase": "9.6.8",
@@ -43,7 +43,7 @@
     "react-router-dom": "^5.2.0",
     "react-user-avatar": "1.10.0",
     "react-window": "^1.8.6",
-    "typescript": "4.6.4",
+    "typescript": "4.7.4",
     "victory": "35.5.1"
   },
   "devDependencies": {

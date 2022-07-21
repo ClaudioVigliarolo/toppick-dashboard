@@ -2,7 +2,7 @@ import CategoriesPage from "../routes/category";
 import UsersPage from "../routes/user";
 import TopicsPage from "../routes/topic";
 import LoginPage from "../routes/login";
-import CreatePage from "../routes/create";
+import QuestionsPage from "../routes/questions";
 import StatisticsPage from "../routes/stats";
 import { Route } from "@/interfaces/ui";
 
@@ -31,19 +31,11 @@ export const routes: Route[] = [
     component: StatisticsPage,
   },
   {
-    key: "create",
-    path: "/create",
-    sidebarName: "create",
-    navbarName: "create",
-    component: CreatePage,
-  },
-
-  {
-    key: "categories",
-    path: "/categories",
-    sidebarName: "categories",
-    navbarName: "categories",
-    component: CategoriesPage,
+    key: "questions",
+    path: "/questions",
+    sidebarName: "questions",
+    navbarName: "questions",
+    component: QuestionsPage,
   },
   {
     key: "topics",
@@ -51,5 +43,12 @@ export const routes: Route[] = [
     sidebarName: "topics",
     navbarName: "topics",
     component: TopicsPage,
+  },
+  {
+    key: "categories",
+    path: "/categories",
+    sidebarName: "categories",
+    navbarName: "categories",
+    component: CategoriesPage,
   },
 ];

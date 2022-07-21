@@ -6,20 +6,17 @@ import Overview from "./sections/Overview";
 import {
   TopicFeatured,
   TopicDetail,
-  DashLabel,
   TopicLevel,
   TopicCreated,
   TopicInterest,
-} from "@toppick/common";
-import {
-  getTopicDetails,
-  getTopicLabels,
-  getTopicsInterests,
-} from "@/services/topic";
+  CategoryFeatured,
+} from "@toppick/common/build/interfaces";
+import { getTopicDetails, getTopicsInterests } from "@toppick/common/build/api";
 import { CONSTANTS } from "@/constants/app";
-import { getCategoryLabels } from "@/services/category";
+import { getCategories } from "@toppick/common/build/api";
+import { getTopics } from "@toppick/common/build/api";
 
-const NO_TOPIC: TopicDetail = {
+const DEFAULT_TOPIC: TopicDetail = {
   id: -1,
   source: CONSTANTS.TOPIC_SOURCES[0],
   title: "",
@@ -43,7 +40,8 @@ const NO_TOPIC: TopicDetail = {
 interface TopicDialogProps {
   open: boolean;
   loading: boolean;
-  onConfirm: (newTopic: TopicCreated) => void;
+  error: string;
+  onSubmit: (newTopic: TopicCreated) => void;
   topic: TopicFeatured | null;
   onRefuse: () => void;
   headerText: string;
@@ -51,51 +49,70 @@ interface TopicDialogProps {
   descriptionPlaceholder?: string;
 }
 
-export default function TopicDialog(props: TopicDialogProps) {
-  const [topic, setTopic] = React.useState<TopicDetail>(NO_TOPIC);
-  const [topics, setTopics] = React.useState<DashLabel[]>([]);
+export default function TopicDialog({
+  error,
+  headerText,
+  loading,
+  onSubmit,
+  onRefuse,
+  open,
+  topic,
+  descriptionPlaceholder,
+  titlePlaceholder,
+}: TopicDialogProps) {
+  const [currentTopic, setCurrentTopic] =
+    React.useState<TopicDetail>(DEFAULT_TOPIC);
+  const [topics, setCurrentTopics] = React.useState<TopicFeatured[]>([]);
   const [interests, setInterests] = React.useState<TopicInterest[]>([]);
-  const [categories, setCategories] = React.useState<DashLabel[]>([]);
-  const [selectedTopics, setSelectedTopics] = React.useState<DashLabel[]>([]);
+  const [categories, setCategories] = React.useState<CategoryFeatured[]>([]);
+  const [selectedTopics, setSelectedTopics] = React.useState<TopicFeatured[]>(
+    []
+  );
   const [selectedCategories, setSelectedCategories] = React.useState<
-    DashLabel[]
+    CategoryFeatured[]
   >([]);
 
   React.useEffect(() => {
     (async () => {
       try {
-        if (props.topic) {
-          const topicDetail = await getTopicDetails(props.topic.slug);
-          setTopic(topicDetail);
-          //get preselected
-          const selectedTopics = await getTopicLabels({
-            type: "topic",
-            id: props.topic.id,
+        if (topic) {
+          const topicDetail = await getTopicDetails({
+            id: topic.id,
+            include_interests: true,
           });
-          const selectedCategories = await getCategoryLabels({
-            id: props.topic.id,
+          setCurrentTopic(topicDetail);
+          //get preselected
+          const selectedTopics = await getTopics({
+            topic_id: topic.id,
+          });
+          const selectedCategories = await getCategories({
+            topic_id: topic.id,
           });
           setSelectedTopics(selectedTopics);
           setSelectedCategories(selectedCategories);
+        } else {
+          setCurrentTopic(DEFAULT_TOPIC);
+          setSelectedCategories([]);
+          setSelectedTopics([]);
         }
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [props.topic]);
+  }, [topic]);
 
   React.useEffect(() => {
     (async () => {
       try {
-        const allTopics = await getTopicLabels({
-          type: "topic",
-          take_all: true,
+        const allTopics = await getTopics({
+          sort_by_title: true,
         });
-        const allCategories = await getCategoryLabels({
-          take_all: true,
+        const allCategories = await getCategories({
+          sort_by_title: true,
         });
         const allInterests = await getTopicsInterests();
-        setTopics(allTopics);
+
+        setCurrentTopics(allTopics);
         setCategories(allCategories);
         setInterests(allInterests);
       } catch (error) {
@@ -106,33 +123,27 @@ export default function TopicDialog(props: TopicDialogProps) {
 
   const onConfirm = async () => {
     const newTopic: TopicCreated = {
-      description: topic.description,
-      image: topic.image,
-      title: topic.title,
-      slug: topic.slug,
-      active: topic.active!,
-      featured: topic.featured!,
-      level: topic.level,
-      source: topic.source,
-      topic_tags: topic.topic_tags,
-      id: topic.id,
+      description: currentTopic.description,
+      image: currentTopic.image,
+      title: currentTopic.title,
+      slug: currentTopic.slug,
+      active: currentTopic.active!,
+      featured: currentTopic.featured!,
+      level: currentTopic.level,
+      source: currentTopic.source,
+      topic_tags: currentTopic.topic_tags,
+      id: currentTopic.id,
       categories: selectedCategories.map((category) => ({
         category_id: category.id,
       })),
-      topics: selectedTopics.map((topic) => ({
-        dest_id: topic.id,
+      topics: selectedTopics.map((currentTopic) => ({
+        dest_id: currentTopic.id,
       })),
-      topic_interests: topic.topic_interests.map((interest) => ({
+      topic_interests: currentTopic.topic_interests!.map((interest) => ({
         interest_id: interest.interest_id,
       })),
     };
-
-    props.onConfirm(newTopic);
-
-    //reset state
-    setSelectedTopics([]);
-    setSelectedCategories([]);
-    setTopic(NO_TOPIC);
+    onSubmit(newTopic);
   };
 
   const handleCategoriesChange = (index: number) => {
@@ -151,13 +162,13 @@ export default function TopicDialog(props: TopicDialogProps) {
   };
 
   const handleInterestsChange = (index: number) => {
-    const newTopic = { ...topic };
-    const selectedIndex = newTopic.topic_interests.findIndex(
+    const newTopic = { ...currentTopic };
+    const selectedIndex = newTopic.topic_interests!.findIndex(
       (selected) => interests[index].title === selected.interests.title
     );
     if (selectedIndex < 0) {
       //selected
-      newTopic.topic_interests.push({
+      newTopic.topic_interests!.push({
         interests: {
           title: interests[index].title as any,
         },
@@ -165,9 +176,9 @@ export default function TopicDialog(props: TopicDialogProps) {
       });
     } else {
       //select
-      newTopic.topic_interests.splice(selectedIndex, 1);
+      newTopic.topic_interests!.splice(selectedIndex, 1);
     }
-    setTopic(newTopic);
+    setCurrentTopic(newTopic);
   };
 
   const handleTopicsChange = (index: number) => {
@@ -186,55 +197,55 @@ export default function TopicDialog(props: TopicDialogProps) {
   };
 
   const handleFeaturedChange = (e: React.ChangeEvent<any>) => {
-    setTopic({ ...topic, featured: e.target.value === "true" });
+    setCurrentTopic({ ...currentTopic, featured: e.target.value === "true" });
   };
 
   const handleSourceChange = (e: React.ChangeEvent<any>) => {
-    setTopic({ ...topic, source: e.target.value });
+    setCurrentTopic({ ...currentTopic, source: e.target.value });
   };
 
   const handleLevelChange = (e: React.ChangeEvent<any>) => {
-    setTopic({ ...topic, level: e.target.value });
+    setCurrentTopic({ ...currentTopic, level: e.target.value });
   };
 
   const setDescription = (e: React.ChangeEvent<any>) => {
-    setTopic({ ...topic, description: e.currentTarget.value });
+    setCurrentTopic({ ...currentTopic, description: e.currentTarget.value });
   };
 
   const setTitle = (e: React.ChangeEvent<any>) => {
-    setTopic({ ...topic, title: e.currentTarget.value });
+    setCurrentTopic({ ...currentTopic, title: e.currentTarget.value });
   };
 
   const setSlug = (e: React.ChangeEvent<any>) => {
-    setTopic({ ...topic, slug: e.currentTarget.value });
+    setCurrentTopic({ ...currentTopic, slug: e.currentTarget.value });
   };
 
   const setImage = (e: React.ChangeEvent<any>) => {
-    setTopic({ ...topic, image: e.currentTarget.value });
+    setCurrentTopic({ ...currentTopic, image: e.currentTarget.value });
   };
 
   const toggleActive = () => {
-    setTopic({ ...topic, active: !topic.active });
+    setCurrentTopic({ ...currentTopic, active: !currentTopic.active });
   };
 
   const onTopicTagRemove = (i: number) => {
-    const newTopic = { ...topic };
+    const newTopic = { ...currentTopic };
     newTopic.topic_tags.splice(i, 1);
-    setTopic(newTopic);
+    setCurrentTopic(newTopic);
   };
 
   const onTopicTagAdd = (tag: string) => {
-    const newTags = topic.topic_tags.filter((t) => t.title !== tag);
+    const newTags = currentTopic.topic_tags.filter((t) => t.title !== tag);
     newTags.push({
       title: tag,
     });
-    setTopic({ ...topic, topic_tags: newTags });
+    setCurrentTopic({ ...currentTopic, topic_tags: newTags });
   };
 
-  const isSubmitEnabled = (): boolean =>
-    topic.title != "" &&
-    topic.image !== "" &&
-    topic.topic_tags.length > 0 &&
+  const isShowSubmit = (): boolean =>
+    currentTopic.title != "" &&
+    currentTopic.image !== "" &&
+    currentTopic.topic_tags.length > 0 &&
     selectedTopics.length > 0 &&
     selectedCategories.length > 0;
 
@@ -243,17 +254,17 @@ export default function TopicDialog(props: TopicDialogProps) {
       label: "Overview",
       children: (
         <Overview
-          active={topic.active!}
-          description={topic.description}
-          image={topic.image}
+          active={currentTopic.active!}
+          description={currentTopic.description}
+          image={currentTopic.image}
           setDescription={setDescription}
           setImage={setImage}
           setTitle={setTitle}
           setSlug={setSlug}
-          title={topic.title}
-          slug={topic.slug}
-          titlePlaceholder={props.titlePlaceholder}
-          descriptionPlaceholder={props.descriptionPlaceholder}
+          title={currentTopic.title}
+          slug={currentTopic.slug}
+          titlePlaceholder={titlePlaceholder}
+          descriptionPlaceholder={descriptionPlaceholder}
           toggleActive={toggleActive}
         />
       ),
@@ -279,17 +290,19 @@ export default function TopicDialog(props: TopicDialogProps) {
           handleLevelChange={handleLevelChange}
           handleSourceChange={handleSourceChange}
           handleInterestsChange={handleInterestsChange}
-          level={topic.level}
-          source={topic.source}
-          tags={topic.topic_tags}
+          level={currentTopic.level}
+          source={currentTopic.source}
+          tags={currentTopic.topic_tags}
           interests={interests}
-          selectedInterests={topic.topic_interests.map((interest, index) => ({
-            id: index,
-            title: interest.interests.title,
-          }))}
+          selectedInterests={currentTopic.topic_interests!.map(
+            (interest, index) => ({
+              id: index,
+              title: interest.interests.title,
+            })
+          )}
           onTagAdd={onTopicTagAdd}
           onTagRemove={onTopicTagRemove}
-          featured={topic.featured ? "true" : "false"}
+          featured={currentTopic.featured ? "true" : "false"}
           handleFeaturedChange={handleFeaturedChange}
         />
       ),
@@ -298,15 +311,16 @@ export default function TopicDialog(props: TopicDialogProps) {
   return (
     <>
       <AppDialog
-        open={props.open}
-        headerText={props.headerText}
+        open={open}
+        headerText={headerText}
         minWidth={300}
         minHeight={560}
-        loading={props.loading}
+        loading={loading}
         tabData={tabs}
-        confirmButtonDisabled={!isSubmitEnabled()}
+        error={error}
+        confirmButtonDisabled={!isShowSubmit()}
         onConfirm={onConfirm}
-        onRefuse={props.onRefuse}
+        onRefuse={onRefuse}
       />
     </>
   );

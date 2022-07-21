@@ -2,7 +2,7 @@ import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
 import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
 import Select from "../ui/select/SimpleSelect";
-import { UserDetail, UserRole } from "@toppick/common";
+import { UserDetail, UserRole } from "@toppick/common/build/interfaces";
 
 interface UserDialogProps {
   open: boolean;
@@ -53,7 +53,7 @@ export default function UserDialog(props: UserDialogProps) {
     props.onConfirm(user);
   };
 
-  const isSubmitEnabled = (): boolean => true;
+  const isShowSubmit = (): boolean => true;
 
   const handleRoleChange = (e: React.ChangeEvent<any>) => {
     setUser({ ...user, role: e.target.value });
@@ -105,7 +105,7 @@ export default function UserDialog(props: UserDialogProps) {
         onRefuse={props.onRefuse}
         tabData={tabs}
         showTabs={false}
-        confirmButtonDisabled={!isSubmitEnabled()}
+        confirmButtonDisabled={!isShowSubmit()}
       />
     </>
   );

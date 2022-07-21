@@ -1,10 +1,10 @@
 import React from "react";
 import Chip from "@/components/ui/select/ObjectChip";
-import { DashLabel } from "@toppick/common";
+import { TopicFeatured } from "@toppick/common/build/interfaces";
 
 interface RelatedProps {
-  topics: DashLabel[];
-  selectedTopics: DashLabel[];
+  topics: TopicFeatured[];
+  selectedTopics: TopicFeatured[];
   handleCategoriesChange: (i: number) => void;
 }
 export default function Related({

@@ -5,18 +5,10 @@ import {
   SearchKeywordCreated,
   SearchKeywordType,
   SearchType,
-  validateTitle,
-  SearchResultCreated,
-} from "@toppick/common";
+} from "@toppick/common/build/interfaces";
 import Overview from "./sections/Overview";
 import Results from "./sections/Results";
-import {
-  deleteSearchResultArticle,
-  getSearchResultsArticle,
-  getSearchResultsImage,
-  getSearchResultsVideo,
-} from "@/services/search";
-import { AuthContext } from "@/context/AuthContext";
+import { validateTitle } from "@toppick/common/build/validators";
 
 interface SearchDialogProps {
   open: boolean;
@@ -62,6 +54,7 @@ export default function SearchDialog({
   React.useEffect(() => {
     try {
       if (keyword) {
+        console.log("aaaaaaa", keyword.active);
         setCurrentKeyword({
           keyword_type: keyword.keyword_type,
           query: keyword.query,
@@ -104,11 +97,11 @@ export default function SearchDialog({
   };
 
   const onAddResult = () => {
-    //show dialogue
+    //show Dialog
     //setResults((results) => [...results, { link: "", id: 0 }]);
   };
 
-  const isSubmitEnabled = (): boolean =>
+  const isShowSubmit = (): boolean =>
     validateTitle(currentKeyword.title) && validateTitle(currentKeyword.query);
 
   const tabs: TabData[] = [
@@ -149,7 +142,7 @@ export default function SearchDialog({
         minHeight={560}
         loading={loading}
         tabData={tabs}
-        confirmButtonDisabled={!isSubmitEnabled()}
+        confirmButtonDisabled={!isShowSubmit()}
         onConfirm={onSubmit}
         onRefuse={() => {
           onClose();

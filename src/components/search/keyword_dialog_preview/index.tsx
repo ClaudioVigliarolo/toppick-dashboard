@@ -1,6 +1,6 @@
 import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
-import { SearchType } from "@toppick/common";
+import { SearchType } from "@toppick/common/build/interfaces";
 import Search from "./sections/Search";
 
 interface SearchDialogProps {

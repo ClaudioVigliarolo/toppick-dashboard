@@ -1,7 +1,7 @@
 import React from "react";
 import TagItem from "./TagItemWithCounter";
 import { TextField, makeStyles } from "@material-ui/core";
-import { SearchKeyword } from "@toppick/common";
+import { SearchKeyword } from "@toppick/common/build/interfaces";
 
 interface TagSelectorProps {
   tags: SearchKeyword[];

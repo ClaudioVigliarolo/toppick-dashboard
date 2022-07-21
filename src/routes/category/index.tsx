@@ -3,107 +3,107 @@ import TableCategories from "@/components/category/TableCategories";
 import Button from "@/components/ui/buttons/Button";
 import CategoryDialog from "@/components/category/dialog";
 import SearchBar from "@/components/ui/SearchBar";
-import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
-import {
-  onCategoryCreate,
-  onCategoryDelete,
-  onCategoryUpdate,
-} from "@/utils/topics";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
-import { getFeaturedCategories } from "@/services/category";
-import { CategoryFeatured, CategoryCreated } from "@toppick/common";
+import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from "@toppick/common/build/api";
+import {
+  CategoryFeatured,
+  CategoryCreated,
+} from "@toppick/common/build/interfaces";
+import { getErrorMessage } from "@toppick/common/build/utils";
 
 export default function CategoryPage() {
   const [categories, setCategories] = React.useState<CategoryFeatured[]>([]);
-  const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
-  const [editDialog, setEditDialog] = React.useState<boolean>(false);
+  const [isShowDeleteDialog, setIsShowDeleteDialog] =
+    React.useState<boolean>(false);
+  const [isShowUpdateDialog, setIsShowUpdateDialog] =
+    React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const [addDialog, setAddDialog] = React.useState<boolean>(false);
+  const [isShowCreateDialog, setIsShowCreateDialog] =
+    React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>("");
   const [currentCategory, setCurrentCategory] =
     React.useState<CategoryFeatured | null>(null);
-  const { onLoading, onSuccess, onError, loading } =
+  const { setIsAppLoading, setAppSuccess, setAppError } =
     React.useContext(StatusContext);
   const { authToken, currentLanguage } = React.useContext(AuthContext);
   const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
-      onLoading(true);
+      setIsAppLoading(true);
       try {
-        const retrievedCategories = await getFeaturedCategories();
+        const retrievedCategories = await getCategories({});
         if (retrievedCategories) {
           setCategories(retrievedCategories);
         }
       } catch (error) {
-        onError();
+        setAppError();
       }
-      onLoading(false);
+      setIsAppLoading(false);
     })();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
-  const onUpdate = (categ: CategoryFeatured) => {
-    setCurrentCategory(categ);
-    setEditDialog(true);
+  const onCreateCategory = async (category: CategoryCreated) => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const newCategory = await createCategory(category, authToken);
+      const newCategories = [...categories];
+      newCategories.unshift(newCategory);
+      setCategories(newCategories);
+      setIsShowCreateDialog(false);
+      setAppSuccess();
+    } catch (error) {
+      setError(getErrorMessage(error));
+    }
+    setIsLoading(false);
   };
 
-  const onDelete = (categ: CategoryFeatured) => {
-    //get detail category here?
-    setCurrentCategory(categ);
-    setDeleteDialog(true);
+  const onUpdateCategory = async (category: CategoryCreated) => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const newCategory = await updateCategory(category, authToken);
+      const newCategories = [...categories];
+      const updatedIndex = newCategories.findIndex(
+        (cat) => cat.id === newCategory.id
+      );
+      newCategories[updatedIndex] = newCategory;
+      setCategories(newCategories);
+      setIsShowUpdateDialog(false);
+      setCurrentCategory(null);
+      setAppSuccess();
+    } catch (error) {
+      setError(getErrorMessage(error));
+    }
+    setIsLoading(false);
   };
 
-  const onCreateSubmit = async (newCategory: CategoryCreated) => {
-    await onCategoryCreate(
-      newCategory,
-      categories,
-      currentLanguage,
-      authToken,
-      setCategories,
-      onLoading,
-      () => {
-        setAddDialog(false);
-        setCurrentCategory(null);
-        onSuccess();
-      },
-      onError
-    );
-  };
-
-  const onUpdateSubmit = async (newCategory: CategoryCreated) => {
-    await onCategoryUpdate(
-      newCategory,
-      categories,
-      currentLanguage,
-      authToken,
-      setCategories,
-      onLoading,
-      () => {
-        setAddDialog(false);
-        setCurrentCategory(null);
-        onSuccess();
-      },
-      onError
-    );
-    setEditDialog(false);
-    setCurrentCategory(null);
-  };
-
-  const onDeleteSubmit = () => {
-    onCategoryDelete(
-      (currentCategory as CategoryFeatured).id,
-      categories,
-      currentLanguage,
-      authToken,
-      setCategories,
-      onLoading,
-      onSuccess,
-      onError
-    );
-    setDeleteDialog(false);
+  const onDeleteCategory = async () => {
+    setIsAppLoading(true);
+    try {
+      await deleteCategory(currentCategory!.id, authToken);
+      const newCategories = categories.filter(
+        (categ) => categ.id !== currentCategory!.id
+      );
+      setCategories([...newCategories]);
+      setIsShowDeleteDialog(false);
+      setAppSuccess();
+    } catch (error) {
+      setAppError(getErrorMessage(error));
+    }
+    setIsAppLoading(false);
   };
 
   return (
@@ -115,50 +115,60 @@ export default function CategoryPage() {
           searchText={searchText}
         />
         <Button
-          onClick={() => setAddDialog(true)}
-          title="CREATE NEW CATEGORY"
+          onClick={() => setIsShowCreateDialog(true)}
+          title="Create new Category"
         />
       </div>
       <TableCategories
         categories={categories}
         searchText={searchText}
-        onDelete={onDelete}
-        onUpdate={onUpdate}
+        onDelete={(categ) => {
+          setCurrentCategory(categ);
+          setIsShowDeleteDialog(true);
+        }}
+        onUpdate={(categ) => {
+          setCurrentCategory(categ);
+          setIsShowUpdateDialog(true);
+        }}
       />
 
       <CategoryDialog
         category={null}
-        loading={loading}
-        headerText="Add new Category"
-        open={addDialog}
-        onConfirm={onCreateSubmit}
-        onRefuse={() => {
-          setAddDialog(false);
+        loading={isLoading}
+        headerText="Create new Category"
+        open={isShowCreateDialog}
+        onSubmit={onCreateCategory}
+        onClose={() => {
+          setIsShowCreateDialog(false);
           setCurrentCategory(null);
+          setError("");
         }}
+        error={error}
       />
 
       <CategoryDialog
-        open={editDialog}
-        loading={loading}
-        onConfirm={onUpdateSubmit}
-        headerText="Editing Category"
-        onRefuse={() => {
-          setEditDialog(false);
+        open={isShowUpdateDialog}
+        loading={isLoading}
+        onSubmit={onUpdateCategory}
+        headerText="Edit Category"
+        onClose={() => {
+          setIsShowUpdateDialog(false);
           setCurrentCategory(null);
+          setError("");
         }}
         category={currentCategory}
+        error={error}
       />
 
       <DeleteDialog
-        open={deleteDialog}
-        onConfirm={onDeleteSubmit}
-        title="Proceed to Delete the question?"
-        description="The question record will be removed from the main database. You cannot undo this operation"
+        open={isShowDeleteDialog}
+        onConfirm={onDeleteCategory}
+        title="Proceed to Delete the category?"
+        description="The category record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
-          setDeleteDialog(false);
+          setIsShowDeleteDialog(false);
         }}
-      ></DeleteDialog>
+      />
     </>
   );
 }

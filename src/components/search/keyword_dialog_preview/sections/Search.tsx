@@ -4,18 +4,19 @@ import {
   SearchKeyword,
   SearchKeywordCreated,
   SearchType,
-} from "@toppick/common";
-import KeywordDialogue from "../../keyword_dialog_detail/index";
+} from "@toppick/common/build/interfaces";
+import KeywordDialog from "../../keyword_dialog_detail/index";
 import {
   createSearchKeyword,
   deleteSearchKeyword,
   getSearchKeywords,
   sortSearchKeywords,
   updateSearchKeyword,
-} from "@/services/search";
+} from "@toppick/common/build/api";
 import { AuthContext } from "@/context/AuthContext";
 import { AxiosError } from "axios";
 import KeywordsDragDrop from "@/components/ui/select/KeywordsDragDrop";
+import DragAndDrop from "@/components/ui/select/DragAndDrop";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -62,9 +63,9 @@ interface SearchProps {
 
 export default function Search({ searchType, topicId }: SearchProps) {
   const classes = useStyles();
-  const [isKeywordCreateDialogue, setIskeywordCreateModal] =
+  const [isKeywordCreateDialog, setIskeywordCreateModal] =
     React.useState<boolean>(false);
-  const [isKeywordUpdateDialogue, setIskeywordUpdateModal] =
+  const [isKeywordUpdateDialog, setIskeywordUpdateModal] =
     React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
@@ -84,6 +85,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
           searchType,
           true
         );
+        console.log("mykkk", keywords);
         setCurrentKeywords(keywords);
       } catch (error) {
         console.log(error);
@@ -98,6 +100,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
       const keyword = await createSearchKeyword(authToken, createdKeyword);
       setCurrentKeywords([...currentKeywords, keyword]);
       setIskeywordCreateModal(false);
+      setCurrentKeyword(null);
     } catch (error) {
       const err = error as AxiosError;
       setError(err.response?.data);
@@ -115,6 +118,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
       );
       setCurrentKeywords(newKeywords);
       setIskeywordUpdateModal(false);
+      setCurrentKeyword(null);
     } catch (error) {
       const err = error as AxiosError;
       setError(err.response?.data);
@@ -143,7 +147,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
     setLoading(false);
   };
 
-  const onSortKeywords = async (keywords: SearchKeyword[]) => {
+  const onSortKeywords = async (keywords: { title: string; id: number }[]) => {
     let index = keywords.length;
     const sortedKeywords: { id: number; index: number }[] = keywords.map(
       (k) => ({
@@ -170,30 +174,25 @@ export default function Search({ searchType, topicId }: SearchProps) {
             Create new Keyword
           </Button>
         </div>
-        {/* <div className={classes.selectedKeywordsContainer}>
-          {currentKeywords.map((keyword, i) => (
-            <TagItem
-              editable={true}
-              tag={keyword.title}
-              onSelect={() => {
-                setCurrentKeyword(keyword);
-                setIskeywordUpdateModal(true);
-              }}
-              key={i}
-            />
-          ))}
-        </div> */}
-        <KeywordsDragDrop
-          keywords={currentKeywords}
+        <DragAndDrop
+          items={currentKeywords}
           onDragEnd={onSortKeywords}
-          onSelect={(keyword) => {
-            setCurrentKeyword(keyword);
+          itemStyles={{
+            height: 50,
+            width: 200,
+            borderColor: "transparent",
+            borderBottomColor: "orange",
+            borderBottomWidth: 2,
+            borderStyle: "solid",
+          }}
+          onEdit={(i: number) => {
+            setCurrentKeyword(currentKeywords[i]);
             setIskeywordUpdateModal(true);
           }}
         />
-        <KeywordDialogue
+        <KeywordDialog
           onClose={() => setIskeywordCreateModal(false)}
-          open={isKeywordCreateDialogue}
+          open={isKeywordCreateDialog}
           topicId={topicId}
           error={error}
           loading={loading}
@@ -201,9 +200,9 @@ export default function Search({ searchType, topicId }: SearchProps) {
           searchType={searchType}
           onConfirm={onCreateKeyword}
         />
-        <KeywordDialogue
+        <KeywordDialog
           onClose={() => setIskeywordUpdateModal(false)}
-          open={isKeywordUpdateDialogue}
+          open={isKeywordUpdateDialog}
           topicId={topicId}
           headerText="Edit Keyword"
           loading={loading}

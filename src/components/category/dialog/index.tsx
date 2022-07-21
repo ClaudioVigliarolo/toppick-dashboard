@@ -3,25 +3,25 @@ import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import {
+  CategoryCreated,
   CategoryDetail,
   CategoryFeatured,
   Lang,
-  DashLabel,
-  CategoryCreated,
-} from "@toppick/common";
-import { getTopicLabels } from "@/services/topic";
-import { getCategoryDetails } from "@/services/category";
+  TopicFeatured,
+} from "@toppick/common/build/interfaces";
+import { getCategoryDetails, getTopics } from "@toppick/common/build/api";
 
 interface CategoryDialogProps {
   open: boolean;
   loading: boolean;
-  onConfirm: (category: CategoryCreated) => void;
-  onRefuse: () => void;
+  error: string;
+  onSubmit: (category: CategoryCreated) => void;
+  onClose: () => void;
   headerText: string;
   category: CategoryFeatured | null;
 }
 
-const NO_CATEGORY: CategoryDetail = {
+const DEFAULT_CATEGORY: CategoryDetail = {
   id: -1,
   title: "",
   slug: "",
@@ -30,35 +30,51 @@ const NO_CATEGORY: CategoryDetail = {
   topicCounter: 0,
 };
 
-export default function CategoryDialog(props: CategoryDialogProps) {
-  const [category, setCategory] = React.useState<CategoryDetail>(NO_CATEGORY);
-  const [topics, setTopics] = React.useState<DashLabel[]>([]);
-  const [selectedTopics, setSelectedTopics] = React.useState<DashLabel[]>([]);
+export default function CategoryDialog({
+  category,
+  headerText,
+  loading,
+  onSubmit,
+  onClose,
+  open,
+  error,
+}: CategoryDialogProps) {
+  const [currentCategory, setCurrentCategory] =
+    React.useState<CategoryDetail>(DEFAULT_CATEGORY);
+  const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
+  const [selectedTopics, setSelectedTopics] = React.useState<TopicFeatured[]>(
+    []
+  );
 
   React.useEffect(() => {
     (async () => {
       try {
-        if (props.category) {
-          const categoryDetail = await getCategoryDetails(props.category.slug);
-          setCategory(categoryDetail);
-          const selectedTopics = await getTopicLabels({
-            type: "category",
-            id: props.category.id,
+        if (category) {
+          const categoryDetail = await getCategoryDetails(category.slug);
+          setCurrentCategory(categoryDetail);
+          const topics = await getTopics({
+            category_id: category.id,
+            sort_by_title: true,
           });
-          setSelectedTopics(selectedTopics);
+
+          setSelectedTopics(topics);
+          {
+            console.log("sssss", selectedTopics);
+          }
+        } else {
+          setCurrentCategory(DEFAULT_CATEGORY);
         }
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [props.category]);
+  }, [category]);
 
   React.useEffect(() => {
     (async () => {
       try {
-        const allTopics = await getTopicLabels({
-          type: "topics",
-          take_all: true,
+        const allTopics = await getTopics({
+          sort_by_title: true,
         });
         setTopics(allTopics);
       } catch (error) {
@@ -69,42 +85,41 @@ export default function CategoryDialog(props: CategoryDialogProps) {
 
   const onConfirm = async () => {
     const newCategory: CategoryCreated = {
-      id: category.id,
-      description: category.description,
-      image: category.image,
-      slug: category.slug,
-      title: category.title,
+      id: currentCategory.id,
+      description: currentCategory.description,
+      image: currentCategory.image,
+      slug: currentCategory.slug,
+      title: currentCategory.title,
       topics: selectedTopics.map((topic) => ({
         lang: Lang.EN,
         topic_id: topic.id,
       })),
     };
-    props.onConfirm(newCategory);
-
-    //reset state
-    setSelectedTopics([]);
-    setCategory(NO_CATEGORY);
+    onSubmit(newCategory);
   };
 
   const setDescription = (e: React.ChangeEvent<any>) => {
-    setCategory({ ...category, description: e.currentTarget.value });
+    setCurrentCategory({
+      ...currentCategory,
+      description: e.currentTarget.value,
+    });
   };
 
   const setTitle = (e: React.ChangeEvent<any>) => {
-    setCategory({ ...category, title: e.currentTarget.value });
+    setCurrentCategory({ ...currentCategory, title: e.currentTarget.value });
   };
 
   const setSlug = (e: React.ChangeEvent<any>) => {
-    setCategory({ ...category, slug: e.currentTarget.value });
+    setCurrentCategory({ ...currentCategory, slug: e.currentTarget.value });
   };
 
   const setImage = (e: React.ChangeEvent<any>) => {
-    setCategory({ ...category, image: e.currentTarget.value });
+    setCurrentCategory({ ...currentCategory, image: e.currentTarget.value });
   };
 
-  const isSubmitEnabled = (): boolean =>
-    category.description != "" &&
-    category.image != "" &&
+  const isShowSubmit = (): boolean =>
+    currentCategory.description != "" &&
+    currentCategory.image != "" &&
     selectedTopics.length > 0;
 
   const handleCategoriesChange = (index: number) => {
@@ -127,10 +142,10 @@ export default function CategoryDialog(props: CategoryDialogProps) {
       label: "Overview",
       children: (
         <Overview
-          description={category.description}
-          image={category.image}
-          title={category.title}
-          slug={category.slug}
+          description={currentCategory.description}
+          image={currentCategory.image}
+          title={currentCategory.title}
+          slug={currentCategory.slug}
           setDescription={setDescription}
           setImage={setImage}
           setTitle={setTitle}
@@ -153,15 +168,16 @@ export default function CategoryDialog(props: CategoryDialogProps) {
   return (
     <>
       <AppDialog
-        open={props.open}
-        headerText={props.headerText}
+        open={open}
+        headerText={headerText}
         minWidth={600}
         minHeight={600}
         onConfirm={onConfirm}
-        onRefuse={props.onRefuse}
-        loading={props.loading}
+        onRefuse={onClose}
+        loading={loading}
         tabData={tabs}
-        confirmButtonDisabled={!isSubmitEnabled()}
+        error={error}
+        confirmButtonDisabled={!isShowSubmit()}
       />
     </>
   );

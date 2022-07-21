@@ -1,6 +1,6 @@
 /* utils for inserting, modifing, removing users  */
-import { deleteUser, updateUserRole } from "@/services/user";
-import { UserDetail } from "@toppick/common";
+import { deleteUser, updateUserRole } from "@toppick/common/build/api";
+import { UserDetail } from "@toppick/common/build/interfaces";
 
 export const onUserDelete = async (
   deletedUser: UserDetail,
