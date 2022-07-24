@@ -85,7 +85,6 @@ export default function Search({ searchType, topicId }: SearchProps) {
           searchType,
           true
         );
-        console.log("mykkk", keywords);
         setCurrentKeywords(keywords);
       } catch (error) {
         console.log(error);
@@ -147,12 +146,11 @@ export default function Search({ searchType, topicId }: SearchProps) {
     setLoading(false);
   };
 
-  const onSortKeywords = async (keywords: { title: string; id: number }[]) => {
-    let index = keywords.length;
+  const onSortKeywords = async (keywords: { id: number }[]) => {
     const sortedKeywords: { id: number; index: number }[] = keywords.map(
-      (k) => ({
+      (k, i) => ({
         id: k.id,
-        index: index--,
+        index: i,
       })
     );
     await sortSearchKeywords(authToken, sortedKeywords);

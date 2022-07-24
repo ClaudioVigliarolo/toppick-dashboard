@@ -70,7 +70,6 @@ export default function Answers({ questionId }: AnswersProps) {
   React.useEffect(() => {
     (async () => {
       try {
-        console.log("qqqanswerrr", questionId);
         setAnswers([]);
         if (questionId) {
           setAnswers(await getAnswers(authToken, questionId));

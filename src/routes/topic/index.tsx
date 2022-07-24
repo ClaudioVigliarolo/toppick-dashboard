@@ -104,9 +104,6 @@ export default function TopicPage() {
     setIsLoading(false);
   };
 
-  {
-    console.log("eeeeee", error);
-  }
   return (
     <>
       <div className={classes.headerSection}>

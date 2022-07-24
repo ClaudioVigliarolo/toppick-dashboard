@@ -59,7 +59,12 @@ export default function QuestionDialog({
       try {
         if (questionId) {
           setCurrentQuestion(
-            await getQuestionDetails(authToken, questionId, 0, 0)
+            await getQuestionDetails({
+              id: questionId,
+              token: authToken,
+              include_answers: false,
+              include_resources: false,
+            })
           );
         } else {
           setCurrentQuestion(DEFAULT_STATE);
@@ -68,7 +73,7 @@ export default function QuestionDialog({
         console.log(error);
       }
     })();
-  }, [questionId]);
+  }, [questionId, open]);
 
   const setTitle = (e: React.ChangeEvent<any>) => {
     setCurrentQuestion({ ...currentQuestion, title: e.currentTarget.value });
@@ -97,10 +102,10 @@ export default function QuestionDialog({
             setTitle={setTitle}
             title={currentQuestion.title}
             onDelete={onDelete}
-            active={currentQuestion.active.toString()}
+            active={currentQuestion.active!.toString()}
             handleActiveChange={handleActiveChange}
             handleTypeChange={handleTypeChange}
-            type={currentQuestion.type}
+            type={currentQuestion.type!}
           />
         </>
       ),
@@ -169,7 +174,7 @@ export default function QuestionDialog({
           onConfirm(currentQuestion);
         }}
         onRefuse={onClose}
-        loading={false}
+        loading={loading}
         error={error}
       />
     </>

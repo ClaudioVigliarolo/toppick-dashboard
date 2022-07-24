@@ -55,12 +55,10 @@ export default function CategoryDialog({
           const topics = await getTopics({
             category_id: category.id,
             sort_by_title: true,
+            include_inactive: true,
           });
 
           setSelectedTopics(topics);
-          {
-            console.log("sssss", selectedTopics);
-          }
         } else {
           setCurrentCategory(DEFAULT_CATEGORY);
         }
@@ -75,6 +73,7 @@ export default function CategoryDialog({
       try {
         const allTopics = await getTopics({
           sort_by_title: true,
+          include_inactive: true,
         });
         setTopics(allTopics);
       } catch (error) {

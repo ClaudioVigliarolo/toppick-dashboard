@@ -54,7 +54,6 @@ export default function SearchDialog({
   React.useEffect(() => {
     try {
       if (keyword) {
-        console.log("aaaaaaa", keyword.active);
         setCurrentKeyword({
           keyword_type: keyword.keyword_type,
           query: keyword.query,

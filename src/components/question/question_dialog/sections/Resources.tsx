@@ -70,7 +70,6 @@ export default function Resources({ questionId }: ResourcesProps) {
   React.useEffect(() => {
     (async () => {
       try {
-        console.log("qqqresourcerr", questionId);
         setResources([]);
         if (questionId) {
           setResources(await getResources(authToken, questionId));

@@ -1,4 +1,3 @@
-// Import deps
 import { ToppickLibraryParams } from "@toppick/common";
 import React from "react";
 import { render } from "react-dom";
@@ -11,6 +10,7 @@ const rootElement = document.getElementById("root");
 
 ToppickLibraryParams.init({
   hostname: process.env.REACT_APP_API_HOSTNAME!,
+  graphql_hostname: "",
 });
 
 render(

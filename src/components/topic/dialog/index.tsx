@@ -79,11 +79,15 @@ export default function TopicDialog({
           const topicDetail = await getTopicDetails({
             id: topic.id,
             include_interests: true,
+            include_categories: true,
+            include_tags: true,
           });
+
           setCurrentTopic(topicDetail);
           //get preselected
           const selectedTopics = await getTopics({
             topic_id: topic.id,
+            include_inactive: true,
           });
           const selectedCategories = await getCategories({
             topic_id: topic.id,
@@ -106,6 +110,7 @@ export default function TopicDialog({
       try {
         const allTopics = await getTopics({
           sort_by_title: true,
+          include_inactive: true,
         });
         const allCategories = await getCategories({
           sort_by_title: true,

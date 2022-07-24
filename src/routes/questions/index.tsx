@@ -57,6 +57,7 @@ export default function QuestionPage() {
       try {
         const allTopics = await getTopics({
           sort_by_title: true,
+          include_inactive: true,
         });
         setTopics(allTopics);
       } catch (error) {
@@ -84,16 +85,13 @@ export default function QuestionPage() {
       return;
     }
     setIsAppLoading(true);
-    console.log("starttt");
     try {
       const retrievedQuestions = await getQuestions(
         authToken,
         topics[index].id,
         true
       );
-      console.log("muqqqqq", retrievedQuestions);
       if (retrievedQuestions.length > 0) {
-        console.log("okkk", retrievedQuestions.length);
         setCurrentQuestions(retrievedQuestions);
       }
     } catch (error) {
@@ -126,24 +124,19 @@ export default function QuestionPage() {
     setIsLoading(false);
   };
 
-  const onQuestionUpdate = async (updatedQuestion: QuestionDetail) => {
+  const onQuestionUpdate = async (question: QuestionDetail) => {
     setIsLoading(true);
     setError("");
     try {
-      const question = await updateQuestion(authToken, updatedQuestion.id, {
-        title: updatedQuestion.title,
-        active: updatedQuestion.active,
-        status: updatedQuestion.status,
-        type: updatedQuestion.type,
+      const updatedQuestion = await updateQuestion(authToken, question.id, {
+        title: question.title,
+        active: question.active,
+        status: question.status,
+        type: question.type,
       });
       const questions = [...currentQuestions];
-      const index = questions.findIndex((k) => k.id == question.id);
-      questions[index] = {
-        id: question.id,
-        title: question.title,
-        user_id: question.user_id,
-        status: question.status,
-      };
+      const index = questions.findIndex((k) => k.id == updatedQuestion.id);
+      questions[index] = updatedQuestion;
       setCurrentQuestions(questions);
       setCurrentQuestion(null);
       setisShowQuestionUpdateDialog(false);
@@ -158,11 +151,10 @@ export default function QuestionPage() {
   ) => {
     setIsAppLoading(true);
 
-    let index = currentQuestions.length;
     const sortedKeywords: { id: number; index: number }[] = questions.map(
-      (k) => ({
+      (k, i) => ({
         id: k.id,
-        index: index--,
+        index: i,
       })
     );
     try {
@@ -251,7 +243,6 @@ export default function QuestionPage() {
         loading={isLoading}
         questionId={currentQuestion ? currentQuestion.id : undefined}
         onConfirm={onQuestionCreate}
-        onDelete={onDeleteQuestion}
       />
     </div>
   );
