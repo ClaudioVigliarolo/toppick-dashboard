@@ -1,8 +1,8 @@
 import React from "react";
 import { Lang } from "@/interfaces/ui";
 import { StatusContext } from "./StatusContext";
+import { UserRole } from "@toppick/common/build/interfaces";
 import { auth } from "@/services/firebase";
-import { UserRole } from "@toppick/common";
 
 interface UserAppState {
   displayName: string;
@@ -19,7 +19,7 @@ export const DEFAULT_USER_APP_STATE: UserAppState = {
   photoURL: "",
   token: "",
   uid: "",
-  role: UserRole.DEFAULT,
+  role: UserRole.Default,
 };
 
 export const AuthContext = React.createContext({
@@ -38,11 +38,11 @@ export const AuthProvider = ({ children }: { children: any }) => {
   const [user, setUser] = React.useState<UserAppState>(DEFAULT_USER_APP_STATE);
   const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(Lang.EN);
   const [isProduction, setIsProduction] = React.useState<boolean>(true);
-  const { onLoading } = React.useContext(StatusContext);
+  const { setIsAppLoading } = React.useContext(StatusContext);
 
   React.useEffect(() => {
     (async () => {
-      onLoading(true);
+      setIsAppLoading(true);
       try {
         //authenticate user
         auth.onAuthStateChanged(async (user) => {
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
               role: claims.role,
             });
           }
-          onLoading(false);
+          setIsAppLoading(false);
         });
       } catch {
         console.error("Failed To Connect to Firebase");

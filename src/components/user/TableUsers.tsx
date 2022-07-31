@@ -8,7 +8,7 @@ import {
 } from "../ui/TableStyles";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { UserDetail } from "@toppick/common";
+import { UserDetail } from "@toppick/common/build/interfaces";
 
 interface TableUsersProps {
   users: UserDetail[];

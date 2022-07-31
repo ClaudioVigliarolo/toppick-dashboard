@@ -1,13 +1,16 @@
 import React from "react";
 import Chip from "@/components/ui/select/ObjectChip";
-import { DashLabel } from "@toppick/common";
 import { makeStyles } from "@material-ui/core";
+import {
+  CategoryFeatured,
+  TopicFeatured,
+} from "@toppick/common/build/interfaces";
 
 interface RelatedProps {
-  categories: DashLabel[];
-  topics: DashLabel[];
-  selectedCategories: DashLabel[];
-  selectedTopics: DashLabel[];
+  categories: CategoryFeatured[];
+  topics: TopicFeatured[];
+  selectedCategories: CategoryFeatured[];
+  selectedTopics: TopicFeatured[];
   handleCategoriesChange: (i: number) => void;
   handleTopicsChange: (i: number) => void;
 }

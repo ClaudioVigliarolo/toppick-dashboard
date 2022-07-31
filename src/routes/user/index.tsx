@@ -7,13 +7,13 @@ import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
 import { onUserDelete, onUserUpdate } from "@/utils/users";
 import { StatusContext } from "@/context/StatusContext";
-import { getUsers } from "@/services/user";
-import { UserDetail, UserRole } from "@toppick/common";
+import { getUsers } from "@toppick/common/build/api";
+import { UserDetail, UserRole } from "@toppick/common/build/interfaces";
 
 const NO_USER: UserDetail = {
   username: "",
   email: "",
-  role: UserRole.DEFAULT,
+  role: UserRole.Default,
   country: "",
   firstname: "",
   image: "",
@@ -32,14 +32,14 @@ export default function UsersPage() {
   const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
   const [editDialog, setEditDialog] = React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const { onLoading, onSuccess, onError, loading } =
+  const { setIsAppLoading, setAppSuccess, setAppError } =
     React.useContext(StatusContext);
 
   const classes = useAppStyles();
 
   React.useEffect(() => {
     (async () => {
-      onLoading(true);
+      setIsAppLoading(true);
       try {
         const retrievedUsers = await getUsers(authToken);
         if (retrievedUsers) {
@@ -47,9 +47,9 @@ export default function UsersPage() {
           setUsers(retrievedUsers);
         }
       } catch (error) {
-        onError();
+        setAppError();
       }
-      onLoading(false);
+      setIsAppLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
@@ -62,12 +62,12 @@ export default function UsersPage() {
       users,
       setUsers,
       authToken,
-      onLoading,
+      setIsAppLoading,
       () => {
         setEditDialog(false);
-        onSuccess();
+        setAppSuccess();
       },
-      onError
+      setAppError
     );
   };
 
@@ -100,7 +100,7 @@ export default function UsersPage() {
 
       <UserDialog
         user={currentUser}
-        loading={loading}
+        loading={false}
         open={editDialog}
         onConfirm={onUpdateSubmit}
         headerText="Edit User"
@@ -118,9 +118,9 @@ export default function UsersPage() {
             users,
             setUsers,
             authToken,
-            onLoading,
-            onSuccess,
-            onError
+            setIsAppLoading,
+            setAppSuccess,
+            setAppError
           );
           setDeleteDialog(false);
         }}

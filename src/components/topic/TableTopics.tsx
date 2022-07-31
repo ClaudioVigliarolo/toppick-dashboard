@@ -9,8 +9,8 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
-import { getFormattedDate } from "@/utils/utils";
-import { TopicFeatured } from "@toppick/common";
+import { getFormattedDate } from "@/utils/time";
+import { TopicFeatured } from "@toppick/common/build/interfaces";
 import { makeStyles } from "@material-ui/core";
 import { COLORS } from "@/constants/colors";
 interface TableTopicsProps {

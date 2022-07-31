@@ -2,7 +2,7 @@ import React from "react";
 import CardNumber from "../ui/CardNumber";
 import { useChartStyles } from "../ui/ChartStyles";
 import { Lang } from "@/interfaces/ui";
-import { getContentStats } from "@/services/stats";
+import { getContentStats } from "@toppick/common/build/api";
 
 interface DBChartBarProps {
   currentLanguage: Lang;

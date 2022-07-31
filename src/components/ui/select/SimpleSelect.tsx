@@ -14,7 +14,7 @@ interface CustomSelectProps {
   values: string[];
   color?: string;
   header?: string;
-  width?: number;
+  width?: number | string;
   multiple?: boolean;
 }
 

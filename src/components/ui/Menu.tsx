@@ -25,10 +25,9 @@ import LanguageSelect from "./select/LanguageSelect";
 import HeaderSection from "./Header";
 import { getCondition } from "@/navigation";
 import { Lang } from "@/interfaces/ui";
-import { refreshPage } from "@/utils/utils";
 import { CONSTANTS } from "@/constants/app";
+import { UserRole } from "@toppick/common/build/interfaces";
 import { auth } from "@/services/firebase";
-import { UserRole } from "@toppick/common";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -188,7 +187,7 @@ export default function Menu({
               button
               onClick={async () => {
                 await auth.signOut();
-                refreshPage();
+                window.location.reload();
               }}
             >
               <ListItemIcon>

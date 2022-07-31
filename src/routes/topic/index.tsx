@@ -7,22 +7,32 @@ import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
 import { AuthContext } from "@/context/AuthContext";
 import { StatusContext } from "@/context/StatusContext";
-import { getAllTopics } from "@/services/topic";
-import { TopicCreated, TopicFeatured } from "@toppick/common";
-import { onTopicCreate, onTopicDelete, onTopicUpdate } from "@/utils/topics";
-import SearchDialog from "@/components/search/dialog";
+import {
+  createTopic,
+  deleteTopic,
+  updateTopic,
+} from "@toppick/common/build/api";
+import { TopicCreated, TopicFeatured } from "@toppick/common/build/interfaces";
+import SearchDialog from "@/components/search/keyword_dialog_preview";
+import { getErrorMessage } from "@toppick/common/build/utils";
+import { getTopics } from "@toppick/common/build/api";
 
 export default function TopicPage() {
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
   const [currentTopic, setCurrentTopic] = React.useState<TopicFeatured | null>(
     null
   );
-  const [topicAddDialog, setTopicCreateDialog] = React.useState<boolean>(false);
-  const [editDialog, setEditDialog] = React.useState<boolean>(false);
+  const [isShowCreateDialog, setIsShowCreateDialog] =
+    React.useState<boolean>(false);
+  const [isShowUpdateDialog, setIsShowUpdateDialog] =
+    React.useState<boolean>(false);
   const [searchDialog, setSearchDialog] = React.useState<boolean>(false);
-  const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
+  const [isShowDeleteDialog, setIsShowDeleteDialog] =
+    React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
-  const { onLoading, onSuccess, onError, loading } =
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>("");
+  const { setIsAppLoading, setAppSuccess, setAppError } =
     React.useContext(StatusContext);
   const { authToken, currentLanguage } = React.useContext(AuthContext);
 
@@ -30,75 +40,68 @@ export default function TopicPage() {
 
   React.useEffect(() => {
     (async () => {
-      onLoading(true);
+      setIsAppLoading(true);
       try {
-        const retrievedTopics = await getAllTopics();
+        const retrievedTopics = await getTopics({
+          sort_by_timestamp: true,
+          include_inactive: true,
+          include_info: true,
+        });
         if (retrievedTopics) {
           setTopics(retrievedTopics);
         }
       } catch (error) {
-        onError();
+        setAppError();
       }
-      onLoading(false);
+      setIsAppLoading(false);
     })();
   }, [currentLanguage]);
 
-  const onUpdateTopic = (topic: TopicFeatured) => {
-    setCurrentTopic(topic);
-    setEditDialog(true);
-  };
-  const onUpdateSearch = (topic: TopicFeatured) => {
-    setCurrentTopic(topic);
-    setSearchDialog(true);
-  };
-
-  const onDeleteShow = (topic: TopicFeatured) => {
-    setCurrentTopic(topic);
-    setDeleteDialog(true);
-  };
-
-  const onUpdateSubmit = async (newTopic: TopicCreated) => {
-    await onTopicUpdate(
-      newTopic,
-      topics,
-      currentLanguage,
-      authToken,
-      setTopics,
-      onLoading,
-      onSuccess,
-      onError
-    );
-    setCurrentTopic(null);
-    setEditDialog(false);
+  const onUpdateTopic = async (topic: TopicCreated) => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const newTopic = await updateTopic(topic, authToken);
+      const index = topics.findIndex((topic) => topic.id == newTopic.id);
+      topics[index] = newTopic;
+      setTopics([...topics]);
+      setIsShowUpdateDialog(false);
+      setCurrentTopic(null);
+      setAppSuccess();
+    } catch (error) {
+      setError(getErrorMessage(error));
+    }
+    setIsLoading(false);
   };
 
-  const onDeleteSubmit = () => {
-    onTopicDelete(
-      currentTopic!.id,
-      topics,
-      authToken,
-      setTopics,
-      onLoading,
-      onSuccess,
-      onError
-    );
-    setCurrentTopic(null);
-    setDeleteDialog(false);
+  const onDeleteSubmit = async () => {
+    setIsAppLoading(true);
+    try {
+      await deleteTopic(currentTopic!.id, authToken);
+      const newTopics = topics.filter((topic) => topic.id !== currentTopic!.id);
+      setTopics([...newTopics]);
+      setCurrentTopic(null);
+      setIsShowDeleteDialog(false);
+      setAppSuccess();
+    } catch (error) {
+      setAppError(getErrorMessage(error));
+    }
+    setIsAppLoading(false);
   };
-  const onCreateSubmit = async (newTopic: TopicCreated) => {
-    await onTopicCreate(
-      newTopic,
-      topics,
-      currentLanguage,
-      authToken,
-      setTopics,
-      onLoading,
-      onSuccess,
-      onError
-    );
-    setTopicCreateDialog(false);
-    setCurrentTopic(null);
-    setEditDialog(false);
+  const onCreateTopic = async (topic: TopicCreated) => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const newTopic = await createTopic(topic, authToken);
+      topics.unshift(newTopic);
+      setTopics([...topics]);
+      setIsShowCreateDialog(false);
+      setCurrentTopic(null);
+      setAppSuccess();
+    } catch (error) {
+      setError(getErrorMessage(error));
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -110,60 +113,75 @@ export default function TopicPage() {
           searchText={searchText}
         />
         <Button
-          onClick={() => setTopicCreateDialog(true)}
-          title="CREATE NEW TOPIC"
+          onClick={() => setIsShowCreateDialog(true)}
+          title="Create New Topic"
         />
       </div>
       <TableTopics
         searchText={searchText}
-        onDeleteTopic={onDeleteShow}
-        onUpdateTopic={onUpdateTopic}
-        onUpdateSearch={onUpdateSearch}
         topics={topics}
+        onDeleteTopic={(topic) => {
+          setCurrentTopic(topic);
+          setIsShowDeleteDialog(true);
+        }}
+        onUpdateTopic={(topic) => {
+          setCurrentTopic(topic);
+          setIsShowUpdateDialog(true);
+        }}
+        onUpdateSearch={(topic) => {
+          setCurrentTopic(topic);
+          setSearchDialog(true);
+        }}
       />
 
       <TopicDialog
-        open={editDialog}
-        loading={loading}
+        open={isShowUpdateDialog}
+        loading={isLoading}
         topic={currentTopic}
-        onConfirm={onUpdateSubmit}
+        error={error}
+        onSubmit={onUpdateTopic}
         onRefuse={() => {
           setCurrentTopic(null);
-          setEditDialog(false);
+          setIsShowUpdateDialog(false);
+          setError("");
         }}
         headerText="Edit Topic"
       />
 
       <TopicDialog
-        open={topicAddDialog}
-        loading={loading}
+        open={isShowCreateDialog}
+        loading={isLoading}
+        error={error}
         headerText="Create New Topic"
         topic={null}
-        onConfirm={onCreateSubmit}
+        onSubmit={onCreateTopic}
         onRefuse={() => {
           setCurrentTopic(null);
-          setTopicCreateDialog(false);
+          setIsShowCreateDialog(false);
+          setError("");
         }}
       />
 
-      <SearchDialog
-        open={searchDialog}
-        headerText="Edit Search"
-        id={currentTopic ? currentTopic.id : null}
-        onClose={() => {
-          setCurrentTopic(null);
-          setSearchDialog(false);
-        }}
-      />
+      {currentTopic && (
+        <SearchDialog
+          open={searchDialog}
+          headerText="Edit Search"
+          topicId={currentTopic.id}
+          onClose={() => {
+            setCurrentTopic(null);
+            setSearchDialog(false);
+          }}
+        />
+      )}
 
       <DeleteDialog
-        open={deleteDialog}
+        open={isShowDeleteDialog}
         onConfirm={onDeleteSubmit}
-        title="Proceed to Delete the question?"
-        description="The question  record will be removed from the main database. You cannot undo this operation"
+        title="Proceed to Delete the topic?"
+        description="The topic  record will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
           setCurrentTopic(null);
-          setDeleteDialog(false);
+          setIsShowDeleteDialog(false);
         }}
       />
     </>
