@@ -136,7 +136,7 @@ export default function TopicDialog({
       featured: currentTopic.featured!,
       level: currentTopic.level,
       source: currentTopic.source,
-      topic_tags: currentTopic.topic_tags,
+      topic_tags: currentTopic.topic_tags!,
       id: currentTopic.id,
       categories: selectedCategories.map((category) => ({
         category_id: category.id,
@@ -235,12 +235,12 @@ export default function TopicDialog({
 
   const onTopicTagRemove = (i: number) => {
     const newTopic = { ...currentTopic };
-    newTopic.topic_tags.splice(i, 1);
+    newTopic.topic_tags!.splice(i, 1);
     setCurrentTopic(newTopic);
   };
 
   const onTopicTagAdd = (tag: string) => {
-    const newTags = currentTopic.topic_tags.filter((t) => t.title !== tag);
+    const newTags = currentTopic.topic_tags!.filter((t) => t.title !== tag);
     newTags.push({
       title: tag,
     });
@@ -250,7 +250,7 @@ export default function TopicDialog({
   const isShowSubmit = (): boolean =>
     currentTopic.title != "" &&
     currentTopic.image !== "" &&
-    currentTopic.topic_tags.length > 0 &&
+    currentTopic.topic_tags!.length > 0 &&
     selectedTopics.length > 0 &&
     selectedCategories.length > 0;
 
@@ -297,7 +297,7 @@ export default function TopicDialog({
           handleInterestsChange={handleInterestsChange}
           level={currentTopic.level}
           source={currentTopic.source}
-          tags={currentTopic.topic_tags}
+          tags={currentTopic.topic_tags!}
           interests={interests}
           selectedInterests={currentTopic.topic_interests!.map(
             (interest, index) => ({
