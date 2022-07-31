@@ -13,13 +13,14 @@ import {
   createQuestion,
   deleteQuestion,
   getQuestions,
-  sortQuestions,
   updateQuestion,
 } from "@toppick/common/build/api";
 import QuestionDialog from "@/components/question/question_dialog";
 import DragAndDrop from "@/components/ui/select/DragAndDrop";
 import { getTopics } from "@toppick/common/build/api";
 import { getErrorMessage } from "@toppick/common/build/utils";
+import axios, { AxiosResponse } from "axios";
+import { LibraryParams } from "@toppick/common/build/config/config";
 const DEFAULT_TOPIC: TopicFeatured = {
   active: false,
   id: -1,
@@ -146,6 +147,25 @@ export default function QuestionPage() {
     setIsLoading(false);
   };
 
+  const sortQuestions = async (
+    token: string,
+    topic_id: number,
+    questions: { id: number; index: number }[]
+  ): Promise<AxiosResponse> => {
+    return await axios.patch(
+      `${LibraryParams.hostname}/api/content/questions/sort`,
+      {
+        questions,
+        topic_id,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+  };
+
   const onSortQuestions = async (
     questions: { title: string; id: number }[]
   ) => {
@@ -158,7 +178,7 @@ export default function QuestionPage() {
       })
     );
     try {
-      await sortQuestions(authToken, sortedKeywords);
+      await sortQuestions(authToken, currentTopic.id, sortedKeywords);
     } catch (error) {
       setAppError(error);
     }
