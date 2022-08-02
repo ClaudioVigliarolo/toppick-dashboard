@@ -8,7 +8,6 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface DragAndDropProps {
   items: { title: string; id: number }[];
-  onEdit: (index: number) => void;
+  onEdit: (id: number) => void;
   onDragEnd: (items: { title: string; id: number }[]) => void;
   itemStyles?: React.CSSProperties;
 }
@@ -103,7 +102,7 @@ export default function DragAndDrop({
                         <ListItemIcon>
                           <EditIcon
                             className={classes.editIcon}
-                            onClick={() => onEdit(index)}
+                            onClick={() => onEdit(item.id)}
                           />
                         </ListItemIcon>
                         <ListItemText

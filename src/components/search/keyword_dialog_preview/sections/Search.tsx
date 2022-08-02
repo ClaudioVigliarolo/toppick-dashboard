@@ -176,15 +176,17 @@ export default function Search({ searchType, topicId }: SearchProps) {
           items={currentKeywords}
           onDragEnd={onSortKeywords}
           itemStyles={{
-            height: 50,
+            minHeight: 50,
             width: 200,
             borderColor: "transparent",
             borderBottomColor: "orange",
             borderBottomWidth: 2,
             borderStyle: "solid",
           }}
-          onEdit={(i: number) => {
-            setCurrentKeyword(currentKeywords[i]);
+          onEdit={(id: number) => {
+            setCurrentKeyword(
+              currentKeywords.find((keyword) => keyword.id === id)!
+            );
             setIskeywordUpdateModal(true);
           }}
         />

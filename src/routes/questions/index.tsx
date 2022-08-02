@@ -127,6 +127,8 @@ export default function QuestionPage() {
 
   const onQuestionUpdate = async (question: QuestionDetail) => {
     setIsLoading(true);
+    setisShowQuestionUpdateDialog(false);
+
     setError("");
     try {
       const updatedQuestion = await updateQuestion(authToken, question.id, {
@@ -140,7 +142,6 @@ export default function QuestionPage() {
       questions[index] = updatedQuestion;
       setCurrentQuestions(questions);
       setCurrentQuestion(null);
-      setisShowQuestionUpdateDialog(false);
     } catch (error) {
       setError(getErrorMessage(error));
     }
@@ -233,8 +234,10 @@ export default function QuestionPage() {
         <DragAndDrop
           items={currentQuestions}
           onDragEnd={onSortQuestions}
-          onEdit={(i) => {
-            setCurrentQuestion(currentQuestions[i]);
+          onEdit={(id) => {
+            setCurrentQuestion(
+              currentQuestions.find((question) => question.id === id)!
+            );
             setisShowQuestionUpdateDialog(true);
           }}
         />
