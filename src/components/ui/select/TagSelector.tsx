@@ -42,7 +42,12 @@ export default function TagSelector({
     <div className={classes.container}>
       <div className={classes.tagsContainer}>
         {tags.map((tag, i) => (
-          <TagItem onRemove={() => onRemove(i)} tag={tag.title} key={i} />
+          <TagItem
+            onRemove={() => onRemove(i)}
+            tag={tag.title}
+            key={i}
+            deletable={true}
+          />
         ))}
       </div>
       <div className={classes.textField}>

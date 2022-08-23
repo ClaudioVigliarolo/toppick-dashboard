@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles, TextField, Button } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { QuestionResource } from "@toppick/common/build/interfaces";
 import {
   createResource,
@@ -10,6 +11,7 @@ import {
 } from "@toppick/common/build/api";
 import { AuthContext } from "@/context/AuthContext";
 import ResourceDialog from "@/components/question/resource_dialog";
+import ResourcePreviewDialog from "@/components/question/resource_preview_dialog";
 import { AxiosError } from "axios";
 import { getErrorMessage } from "@toppick/common/build/utils";
 interface ResourcesProps {
@@ -41,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
     color: "orange",
   },
 
+  previewIcon: {
+    cursor: "pointer",
+    color: "orange",
+    marginLeft: 10,
+  },
+
   addButtonContainer: {
     alignSelf: "center",
     width: "100%",
@@ -56,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Resources({ questionId }: ResourcesProps) {
   const [resources, setResources] = React.useState<QuestionResource[]>([]);
   const [isShowCreateDialog, setIsShowCreateDialog] =
+    React.useState<boolean>(false);
+  const [isShowPreviewDialog, setIsShowPreviewDialog] =
     React.useState<boolean>(false);
   const [isShowEditDialog, setIsShowEditDialog] =
     React.useState<boolean>(false);
@@ -178,6 +188,13 @@ export default function Resources({ questionId }: ResourcesProps) {
               setIsShowEditDialog(true);
             }}
           />
+          <VisibilityOutlinedIcon
+            className={classes.previewIcon}
+            onClick={() => {
+              setCurrentResource(resource);
+              setIsShowPreviewDialog(true);
+            }}
+          />
         </div>
       ))}
       <div className={classes.addButtonContainer}>
@@ -210,6 +227,14 @@ export default function Resources({ questionId }: ResourcesProps) {
         headerText="Edit Resource"
         onSubmit={onUpdateResource}
         onDelete={onDeleteResource}
+        resource={currentResource}
+      />
+
+      <ResourcePreviewDialog
+        onClose={() => setIsShowPreviewDialog(false)}
+        open={isShowPreviewDialog}
+        error={error}
+        headerText="Preview Resource"
         resource={currentResource}
       />
     </div>

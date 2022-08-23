@@ -12,7 +12,7 @@ const TOPIC_SOURCES = [
   "ESL Conversation Questions",
 ];
 
-export const NO_IMAGE_URL =
+export const DEFAULT_IMAGE_URL =
   "https://icon-library.com/images/add-photo-icon/add-photo-icon-19.jpg";
 
 export const CONSTANTS = {
@@ -20,7 +20,7 @@ export const CONSTANTS = {
   ALERT_ERROR_TIME: 8000,
   DRAWER_WIDTH: 220,
   SMALL_SCREEN: 800,
-  NO_USER_TYPE: "creator",
+  DEFAULT_USER_TYPE: "creator",
   ROOT_LANG: Lang.EN,
   DEF_FROM_DATE,
   DEF_UNTIL_DATE,

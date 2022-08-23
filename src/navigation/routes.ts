@@ -2,7 +2,7 @@ import CategoriesPage from "../routes/category";
 import UsersPage from "../routes/user";
 import TopicsPage from "../routes/topic";
 import LoginPage from "../routes/login";
-import QuestionsPage from "../routes/questions";
+import QuestionsPage from "../routes/question";
 import StatisticsPage from "../routes/stats";
 import { Route } from "@/interfaces/ui";
 

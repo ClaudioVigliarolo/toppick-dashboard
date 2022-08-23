@@ -2,7 +2,7 @@ import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Overview from "./sections/Overview";
 
-interface SearchResultDialogProps {
+interface ResultDialogProps {
   open: boolean;
   link: string;
   onClose: () => void;
@@ -13,7 +13,7 @@ interface SearchResultDialogProps {
   error: string;
 }
 
-export default function SearchResultDialog(props: SearchResultDialogProps) {
+export default function ResultDialog(props: ResultDialogProps) {
   const [currentLink, setCurrentLink] = React.useState<string>("");
 
   React.useEffect(() => {

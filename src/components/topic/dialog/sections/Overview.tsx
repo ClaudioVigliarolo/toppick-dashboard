@@ -1,5 +1,5 @@
 import React from "react";
-import { NO_IMAGE_URL } from "@/constants/app";
+import { DEFAULT_IMAGE_URL } from "@/constants/app";
 import Switch from "@/components/ui/select/Switch";
 import { makeStyles, TextField } from "@material-ui/core";
 import { MaterialUiColor } from "@/interfaces/ui";
@@ -107,7 +107,7 @@ export default function Overview({
       />
 
       <img
-        src={image ? image : NO_IMAGE_URL}
+        src={image ? image : DEFAULT_IMAGE_URL}
         alt={title}
         className={classes.image}
       />

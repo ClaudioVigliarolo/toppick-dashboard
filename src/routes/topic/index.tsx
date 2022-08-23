@@ -79,7 +79,7 @@ export default function TopicPage() {
     try {
       await deleteTopic(currentTopic!.id, authToken);
       const newTopics = topics.filter((topic) => topic.id !== currentTopic!.id);
-      setTopics([...newTopics]);
+      setTopics(newTopics);
       setCurrentTopic(null);
       setIsShowDeleteDialog(false);
       setAppSuccess();

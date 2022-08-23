@@ -21,6 +21,9 @@ import { getTopics } from "@toppick/common/build/api";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import axios, { AxiosResponse } from "axios";
 import { LibraryParams } from "@toppick/common/build/config/config";
+import NoQuestionAdded from "@/components/question/NoQuestionAdded";
+import { QuestionAnswerSharp } from "@material-ui/icons";
+
 const DEFAULT_TOPIC: TopicFeatured = {
   active: false,
   id: -1,
@@ -38,9 +41,11 @@ export default function QuestionPage() {
   >([]);
   const [currentQuestion, setCurrentQuestion] =
     React.useState<QuestionFeatured | null>(null);
-  const [isShowQuestionUpdateDialog, setisShowQuestionUpdateDialog] =
+  const [isShowQuestionUpdateDialog, setIsShowQuestionUpdateDialog] =
     React.useState<boolean>(false);
-  const [isShowQuestionCreateDialog, setisShowQuestionCreateDialog] =
+  const [isShowQuestionCreateDialog, setIsShowQuestionCreateDialog] =
+    React.useState<boolean>(false);
+  const [isQuestionsLoaded, setIsQuestionsLoaded] =
     React.useState<boolean>(false);
 
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
@@ -87,14 +92,10 @@ export default function QuestionPage() {
     }
     setIsAppLoading(true);
     try {
-      const retrievedQuestions = await getQuestions(
-        authToken,
-        topics[index].id,
-        true
+      setCurrentQuestions(
+        await getQuestions(authToken, topics[index].id, true)
       );
-      if (retrievedQuestions.length > 0) {
-        setCurrentQuestions(retrievedQuestions);
-      }
+      setIsQuestionsLoaded(true);
     } catch (error) {
       console.log(error);
       setAppError();
@@ -106,6 +107,7 @@ export default function QuestionPage() {
     window.scrollTo(0, 0);
     setCurrentTopic(DEFAULT_TOPIC);
     setCurrentQuestions([]);
+    setIsQuestionsLoaded(false);
   };
 
   const onDeleteQuestion = async () => {
@@ -118,7 +120,7 @@ export default function QuestionPage() {
       );
       setCurrentQuestions(questions);
       setCurrentQuestion(null);
-      setisShowQuestionUpdateDialog(false);
+      setIsShowQuestionUpdateDialog(false);
     } catch (error) {
       setError(getErrorMessage(error));
     }
@@ -127,8 +129,6 @@ export default function QuestionPage() {
 
   const onQuestionUpdate = async (question: QuestionDetail) => {
     setIsLoading(true);
-    setisShowQuestionUpdateDialog(false);
-
     setError("");
     try {
       const updatedQuestion = await updateQuestion(authToken, question.id, {
@@ -136,11 +136,13 @@ export default function QuestionPage() {
         active: question.active,
         status: question.status,
         type: question.type,
+        picker_active: question.picker_active,
       });
       const questions = [...currentQuestions];
       const index = questions.findIndex((k) => k.id == updatedQuestion.id);
       questions[index] = updatedQuestion;
       setCurrentQuestions(questions);
+      setIsShowQuestionUpdateDialog(false);
       setCurrentQuestion(null);
     } catch (error) {
       setError(getErrorMessage(error));
@@ -196,10 +198,11 @@ export default function QuestionPage() {
         status: createdQuestion.status,
         type: createdQuestion.type,
         topic_id: currentTopic.id,
+        picker_active: createdQuestion.picker_active,
       });
       setCurrentQuestions([...currentQuestions, question]);
+      setIsShowQuestionCreateDialog(false);
       setCurrentQuestion(null);
-      setisShowQuestionCreateDialog(false);
     } catch (error) {
       setError(getErrorMessage(error));
     }
@@ -225,7 +228,7 @@ export default function QuestionPage() {
         />
         {currentTopic !== DEFAULT_TOPIC && (
           <Button
-            onClick={() => setisShowQuestionCreateDialog(true)}
+            onClick={() => setIsShowQuestionCreateDialog(true)}
             title="Create Question"
           />
         )}
@@ -234,11 +237,15 @@ export default function QuestionPage() {
         <DragAndDrop
           items={currentQuestions}
           onDragEnd={onSortQuestions}
+          itemStyles={{
+            minHeight: 100,
+            minWidth: 600,
+          }}
           onEdit={(id) => {
             setCurrentQuestion(
               currentQuestions.find((question) => question.id === id)!
             );
-            setisShowQuestionUpdateDialog(true);
+            setIsShowQuestionUpdateDialog(true);
           }}
         />
       </div>
@@ -247,7 +254,7 @@ export default function QuestionPage() {
         headerText="Edit Question"
         onClose={() => {
           setCurrentQuestion(null);
-          setisShowQuestionUpdateDialog(false);
+          setIsShowQuestionUpdateDialog(false);
         }}
         error={error}
         loading={isLoading}
@@ -260,13 +267,16 @@ export default function QuestionPage() {
         headerText="Create Question"
         onClose={() => {
           setCurrentQuestion(null);
-          setisShowQuestionCreateDialog(false);
+          setIsShowQuestionCreateDialog(false);
         }}
         error={error}
         loading={isLoading}
         questionId={currentQuestion ? currentQuestion.id : undefined}
         onConfirm={onQuestionCreate}
       />
+      {isQuestionsLoaded && currentQuestions.length === 0 && (
+        <NoQuestionAdded />
+      )}
     </div>
   );
 }

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     backgroundColor: "white",
     marginBottom: 25,
-    height: 100,
+
     borderRadius: 5,
   },
 }));

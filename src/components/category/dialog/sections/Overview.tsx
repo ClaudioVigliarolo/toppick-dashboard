@@ -1,5 +1,5 @@
 import React from "react";
-import { NO_IMAGE_URL } from "@/constants/app";
+import { DEFAULT_IMAGE_URL } from "@/constants/app";
 import { makeStyles, TextField } from "@material-ui/core";
 
 interface OverviewProps {
@@ -80,7 +80,7 @@ export default function Overview({
       />
 
       <img
-        src={image ? image : NO_IMAGE_URL}
+        src={image ? image : DEFAULT_IMAGE_URL}
         alt="img"
         className={classes.image}
       />

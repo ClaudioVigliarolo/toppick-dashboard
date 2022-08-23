@@ -23,7 +23,7 @@ option 2: 0 answers and resources. caricate nella propria schermata (passo solo 
 
 */
 
-const DEFAULT_STATE: QuestionDetail = {
+const DEFAULT_QUESTION: QuestionDetail = {
   answers: [],
   id: -1,
   resources: [],
@@ -33,7 +33,9 @@ const DEFAULT_STATE: QuestionDetail = {
     image: "",
     uid: "",
     username: "",
+    email: "",
   },
+  picker_active: false,
   active: true,
   type: QuestionType.Default,
   answers_count: 0,
@@ -51,7 +53,7 @@ export default function QuestionDialog({
   onDelete,
 }: QuestionDialogProps) {
   const [currentQuestion, setCurrentQuestion] =
-    React.useState<QuestionDetail>(DEFAULT_STATE);
+    React.useState<QuestionDetail>(DEFAULT_QUESTION);
   const { authToken, userId } = React.useContext(AuthContext);
 
   React.useEffect(() => {
@@ -67,7 +69,7 @@ export default function QuestionDialog({
             })
           );
         } else {
-          setCurrentQuestion(DEFAULT_STATE);
+          setCurrentQuestion(DEFAULT_QUESTION);
         }
       } catch (error) {
         console.log(error);
@@ -83,6 +85,13 @@ export default function QuestionDialog({
     setCurrentQuestion({
       ...currentQuestion,
       active: e.target.value === "true",
+    });
+  };
+
+  const handlePickerActiveChange = (e: React.ChangeEvent<any>) => {
+    setCurrentQuestion({
+      ...currentQuestion,
+      picker_active: e.target.value === "true",
     });
   };
 
@@ -106,44 +115,12 @@ export default function QuestionDialog({
             handleActiveChange={handleActiveChange}
             handleTypeChange={handleTypeChange}
             type={currentQuestion.type!}
+            pickerActive={currentQuestion.picker_active.toString()}
+            handlePickerActiveChange={handlePickerActiveChange}
           />
         </>
       ),
     },
-    // {
-    //   label: "Article",
-    //   children: (
-    //     <>
-    //       <ArticleOverview
-    //         open={!currentPreviewUrl}
-    //         setTitle={(e) => setTitle(e.target.value)}
-    //         onPreview={(url) => setCurrentPreviewUrl(url)}
-    //         onChange={onChangeExtResource}
-    //         onDelete={(delIndex) =>
-    //           setResources(resources.filter((item, i) => i !== delIndex))
-    //         }
-    //         onAdd={() =>
-    //           setResources((resources) => [
-    //             ...resources,
-    //             {
-    //               url: "",
-    //               user_id: userId,
-    //               id: 0,
-    //               status: ValidationStatus.Confirmed,
-    //             },
-    //           ])
-    //         }
-    //         title={title}
-    //         resources={resources}
-    //       />
-    //       <ArticlePreview
-    //         open={currentPreviewUrl !== ""}
-    //         closePreview={() => setCurrentPreviewUrl("")}
-    //         url={currentPreviewUrl}
-    //       />
-    //     </>
-    //   ),
-    // },
     {
       label: "Answers",
       children: (

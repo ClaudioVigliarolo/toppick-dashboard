@@ -6,14 +6,11 @@ import {
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
 
-interface ResourceDialogProps {
+interface ResourcePreviewDialogProps {
   open: boolean;
   resource: QuestionResource | null;
   onClose: () => void;
-  onDelete?: () => void;
-  onSubmit: (resource: QuestionResource) => void;
   headerText: string;
-  loading: boolean;
   error: string;
 }
 
@@ -27,16 +24,13 @@ const DEFAULT_RESOURCE: QuestionResource = {
   thumbnail: "",
 };
 
-export default function ResourceDialog({
+export default function ResourcePreviewDialog({
   error,
   headerText,
-  loading,
   onClose,
-  onSubmit,
   open,
   resource,
-  onDelete,
-}: ResourceDialogProps) {
+}: ResourcePreviewDialogProps) {
   const [currentResource, setCurrentResource] =
     React.useState<QuestionResource>(DEFAULT_RESOURCE);
 
@@ -48,18 +42,14 @@ export default function ResourceDialog({
     }
   }, [resource, open]);
 
-  const setUrl = (e: React.ChangeEvent<any>) => {
-    setCurrentResource({ ...currentResource, url: e.currentTarget.value });
-  };
-
   const tabs: TabData[] = [
     {
       label: "Overview",
       children: (
         <Overview
-          url={currentResource.url}
-          setUrl={setUrl}
-          onDelete={onDelete}
+          description={currentResource.snippet!}
+          image={currentResource.thumbnail!}
+          title={currentResource.title!}
         />
       ),
     },
@@ -69,15 +59,11 @@ export default function ResourceDialog({
       <AppDialog
         open={open}
         headerText={headerText}
-        minWidth={400}
-        minHeight={100}
+        minWidth={600}
+        minHeight={400}
         tabData={tabs}
         showTabs={false}
-        loading={loading}
         onRefuse={onClose}
-        onConfirm={() => {
-          onSubmit(currentResource);
-        }}
         error={error}
       />
     </>

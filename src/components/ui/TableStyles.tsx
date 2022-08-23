@@ -151,7 +151,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: "orange",
       top: "30%",
       cursor: "pointer",
-      width: 110,
+      width: 80,
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",

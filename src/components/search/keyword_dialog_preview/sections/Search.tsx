@@ -15,7 +15,6 @@ import {
 } from "@toppick/common/build/api";
 import { AuthContext } from "@/context/AuthContext";
 import { AxiosError } from "axios";
-import KeywordsDragDrop from "@/components/ui/select/KeywordsDragDrop";
 import DragAndDrop from "@/components/ui/select/DragAndDrop";
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -172,12 +171,13 @@ export default function Search({ searchType, topicId }: SearchProps) {
             Create new Keyword
           </Button>
         </div>
+
         <DragAndDrop
           items={currentKeywords}
           onDragEnd={onSortKeywords}
           itemStyles={{
-            minHeight: 50,
-            width: 200,
+            minHeight: 30,
+            minWidth: 200,
             borderColor: "transparent",
             borderBottomColor: "orange",
             borderBottomWidth: 2,

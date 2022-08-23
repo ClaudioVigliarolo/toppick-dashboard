@@ -117,9 +117,7 @@ export default function CategoryDialog({
   };
 
   const isShowSubmit = (): boolean =>
-    currentCategory.description != "" &&
-    currentCategory.image != "" &&
-    selectedTopics.length > 0;
+    currentCategory.description != "" && currentCategory.image != "";
 
   const handleCategoriesChange = (index: number) => {
     const newSelectedTopics = [...selectedTopics];

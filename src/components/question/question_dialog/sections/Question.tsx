@@ -41,9 +41,11 @@ interface QuestionProps {
   active: string;
   setTitle: (event: React.ChangeEvent<any>) => void;
   handleActiveChange: (event: React.ChangeEvent<any>) => void;
+  handlePickerActiveChange: (event: React.ChangeEvent<any>) => void;
   onDelete?: () => void;
   handleTypeChange: (event: React.ChangeEvent<any>) => void;
   type: QuestionType;
+  pickerActive: string;
 }
 
 export default function Question({
@@ -54,6 +56,8 @@ export default function Question({
   type,
   handleActiveChange,
   handleTypeChange,
+  pickerActive,
+  handlePickerActiveChange,
 }: QuestionProps) {
   const classes = useStyles();
 
@@ -81,8 +85,8 @@ export default function Question({
           values={Object.values(QuestionType)}
           color="black"
           width="100%"
-          header="Active"
-          defaultValue={active}
+          header="Type"
+          defaultValue={type}
         />
       </div>
       <div className={classes.fieldContainer}>
@@ -94,6 +98,17 @@ export default function Question({
           width="100%"
           header="Active"
           defaultValue={active}
+        />
+      </div>
+      <div className={classes.fieldContainer}>
+        <Select
+          handleChange={handlePickerActiveChange}
+          value={pickerActive}
+          values={Object.values(BooleanValues)}
+          color="black"
+          width="100%"
+          header="Picker Active"
+          defaultValue={pickerActive}
         />
       </div>
     </div>

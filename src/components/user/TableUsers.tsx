@@ -8,12 +8,12 @@ import {
 } from "../ui/TableStyles";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { UserDetail } from "@toppick/common/build/interfaces";
+import { UserDetail, UserFeatured } from "@toppick/common/build/interfaces";
 
 interface TableUsersProps {
-  users: UserDetail[];
-  onUpdate: (user: UserDetail) => void;
-  onDelete: (user: UserDetail) => void;
+  users: UserFeatured[];
+  onUpdate: (user: UserFeatured) => void;
+  onDelete: (user: UserFeatured) => void;
   searchText: string;
 }
 
@@ -25,15 +25,14 @@ export default function TableUsers({
 }: TableUsersProps) {
   const classes = useStyles();
 
-  const renderRows = (users: UserDetail[]) => {
-    return users.map((user: UserDetail, index: number) => {
+  const renderRows = (users: UserFeatured[]) => {
+    return users.map((user: UserFeatured, index: number) => {
       if (user.username.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
             <StyledTableCell> {user.username}</StyledTableCell>
-            <StyledTableCell> {user.email}</StyledTableCell>
             <StyledEditCell>
-              {user.role}
+              {user.email}
               <div className={classes.userIconsContainer}>
                 <EditIcon
                   className={classes.editIcon}
@@ -57,8 +56,8 @@ export default function TableUsers({
 
   return (
     <CustomTable
-      columns={["40%", "40%", "20%"]}
-      columnNames={["username", "email", "role"]}
+      columns={["50%", "30%"]}
+      columnNames={["username", "email"]}
       body={renderRows(users)}
     />
   );

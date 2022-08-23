@@ -6,7 +6,7 @@ import {
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
 
-interface SearchResultDialogProps {
+interface AnswerDialogProps {
   open: boolean;
   answer: QuestionAnswer | null;
   onClose: () => void;
@@ -33,7 +33,7 @@ export default function AnswerDetailDialog({
   onSubmit,
   open,
   onDelete,
-}: SearchResultDialogProps) {
+}: AnswerDialogProps) {
   const [currentAnswer, setCurrentAnswer] =
     React.useState<QuestionAnswer>(DEFAULT_ANSWER);
 
