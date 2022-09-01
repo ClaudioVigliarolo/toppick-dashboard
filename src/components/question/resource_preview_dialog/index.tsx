@@ -1,20 +1,17 @@
 import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Overview from "./sections/Overview";
-import {
-  QuestionResource,
-  ValidationStatus,
-} from "@toppick/common/build/interfaces";
+import { Resource, ValidationStatus } from "@toppick/common/build/interfaces";
 
 interface ResourcePreviewDialogProps {
   open: boolean;
-  resource: QuestionResource | null;
+  resource: Resource | null;
   onClose: () => void;
   headerText: string;
   error: string;
 }
 
-const DEFAULT_RESOURCE: QuestionResource = {
+const DEFAULT_RESOURCE: Resource = {
   id: -1,
   url: "",
   user_id: "",
@@ -32,7 +29,7 @@ export default function ResourcePreviewDialog({
   resource,
 }: ResourcePreviewDialogProps) {
   const [currentResource, setCurrentResource] =
-    React.useState<QuestionResource>(DEFAULT_RESOURCE);
+    React.useState<Resource>(DEFAULT_RESOURCE);
 
   React.useEffect(() => {
     if (resource) {

@@ -61,7 +61,7 @@ export default function TopicPage() {
     setIsLoading(true);
     setError("");
     try {
-      const newTopic = await updateTopic(topic, authToken);
+      const newTopic = await updateTopic(authToken, currentTopic!.id, topic);
       const index = topics.findIndex((topic) => topic.id == newTopic.id);
       topics[index] = newTopic;
       setTopics([...topics]);
@@ -77,7 +77,7 @@ export default function TopicPage() {
   const onDeleteSubmit = async () => {
     setIsAppLoading(true);
     try {
-      await deleteTopic(currentTopic!.id, authToken);
+      await deleteTopic(authToken, currentTopic!.id);
       const newTopics = topics.filter((topic) => topic.id !== currentTopic!.id);
       setTopics(newTopics);
       setCurrentTopic(null);
@@ -92,7 +92,7 @@ export default function TopicPage() {
     setIsLoading(true);
     setError("");
     try {
-      const newTopic = await createTopic(topic, authToken);
+      const newTopic = await createTopic(authToken, topic);
       topics.unshift(newTopic);
       setTopics([...topics]);
       setIsShowCreateDialog(false);

@@ -5,7 +5,7 @@ import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import {
   TopicFeatured,
-  TopicDetail,
+  Topic,
   TopicLevel,
   TopicCreated,
   TopicInterest,
@@ -15,8 +15,9 @@ import { getTopicDetails, getTopicsInterests } from "@toppick/common/build/api";
 import { CONSTANTS } from "@/constants/app";
 import { getCategories } from "@toppick/common/build/api";
 import { getTopics } from "@toppick/common/build/api";
+import { AuthContext } from "@/context/AuthContext";
 
-const DEFAULT_TOPIC: TopicDetail = {
+const DEFAULT_TOPIC: Topic = {
   id: -1,
   source: CONSTANTS.TOPIC_SOURCES[0],
   title: "",
@@ -26,7 +27,7 @@ const DEFAULT_TOPIC: TopicDetail = {
   level: TopicLevel.Medium,
   questionCounter: 0,
   topics_related_topicsTotopics_related_source_id: [],
-  topic_categories: [],
+  topics_categories: [],
   topic_tags: [],
   timestamp: new Date(),
   active: false,
@@ -60,14 +61,15 @@ export default function TopicDialog({
   descriptionPlaceholder,
   titlePlaceholder,
 }: TopicDialogProps) {
-  const [currentTopic, setCurrentTopic] =
-    React.useState<TopicDetail>(DEFAULT_TOPIC);
+  const [currentTopic, setCurrentTopic] = React.useState<Topic>(DEFAULT_TOPIC);
   const [topics, setCurrentTopics] = React.useState<TopicFeatured[]>([]);
   const [interests, setInterests] = React.useState<TopicInterest[]>([]);
   const [categories, setCategories] = React.useState<CategoryFeatured[]>([]);
   const [selectedTopics, setSelectedTopics] = React.useState<TopicFeatured[]>(
     []
   );
+  const { authToken } = React.useContext(AuthContext);
+
   const [selectedCategories, setSelectedCategories] = React.useState<
     CategoryFeatured[]
   >([]);
@@ -76,7 +78,7 @@ export default function TopicDialog({
     (async () => {
       try {
         if (topic) {
-          const topicDetail = await getTopicDetails({
+          const topicDetail = await getTopicDetails(authToken, {
             id: topic.id,
             include_interests: true,
             include_categories: true,
@@ -137,7 +139,6 @@ export default function TopicDialog({
       level: currentTopic.level,
       source: currentTopic.source,
       topic_tags: currentTopic.topic_tags!,
-      id: currentTopic.id,
       categories: selectedCategories.map((category) => ({
         category_id: category.id,
       })),

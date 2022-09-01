@@ -78,12 +78,11 @@ export default function Search({ searchType, topicId }: SearchProps) {
   React.useEffect(() => {
     (async () => {
       try {
-        const keywords = await getSearchKeywords(
-          authToken,
-          topicId,
-          searchType,
-          true
-        );
+        const keywords = await getSearchKeywords(authToken, {
+          include_inactive: true,
+          search_type: searchType,
+          topic_id: topicId,
+        });
         setCurrentKeywords(keywords);
       } catch (error) {
         console.log(error);

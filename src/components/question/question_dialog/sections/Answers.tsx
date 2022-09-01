@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, TextField, Button } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { QuestionAnswer } from "@toppick/common/build/interfaces";
+import { Answer, AnswerCreated } from "@toppick/common/build/interfaces";
 import {
   createAnswer,
   deleteAnswer,
@@ -13,7 +13,7 @@ import AnswerDialog from "@/components/question/answer_dialog";
 import { AxiosError } from "axios";
 import { getErrorMessage } from "@toppick/common/build/utils";
 interface AnswersProps {
-  questionId?: number;
+  questionId: number;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -54,13 +54,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Answers({ questionId }: AnswersProps) {
-  const [answers, setAnswers] = React.useState<QuestionAnswer[]>([]);
+  const [answers, setAnswers] = React.useState<Answer[]>([]);
   const [isShowCreateDialog, setIsShowCreateDialog] =
     React.useState<boolean>(false);
   const [isShowEditDialog, setIsShowEditDialog] =
     React.useState<boolean>(false);
-  const [currentAnswer, setCurrentAnswer] =
-    React.useState<QuestionAnswer | null>(null);
+  const [currentAnswer, setCurrentAnswer] = React.useState<Answer | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
@@ -72,7 +71,7 @@ export default function Answers({ questionId }: AnswersProps) {
       try {
         setAnswers([]);
         if (questionId) {
-          setAnswers(await getAnswers(authToken, questionId));
+          setAnswers(await getAnswers(authToken, { question_id: questionId }));
         }
       } catch (error) {
         console.log(error);
@@ -80,25 +79,13 @@ export default function Answers({ questionId }: AnswersProps) {
     })();
   }, [questionId]);
 
-  const onCreateAnswer = async (answer: QuestionAnswer) => {
+  const onCreateAnswer = async (createdAnswer: AnswerCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const createdAnswer = await createAnswer(
-        authToken,
-        questionId!,
-        answer.title
-      );
-      const newAnswers = [
-        ...answers,
-        {
-          id: createdAnswer.id,
-          title: createdAnswer.title,
-          user_id: createdAnswer.user_id,
-          status: createdAnswer.status,
-        } as QuestionAnswer,
-      ];
-      setAnswers(newAnswers);
+      const answer = await createAnswer(authToken, createdAnswer);
+
+      setAnswers([...answers, answer]);
       setCurrentAnswer(null);
       setIsShowCreateDialog(false);
     } catch (error) {
@@ -106,22 +93,17 @@ export default function Answers({ questionId }: AnswersProps) {
     }
     setIsLoading(false);
   };
-  const onUpdateAnswer = async (answer: QuestionAnswer) => {
+  const onUpdateAnswer = async (updatedAnswer: AnswerCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const updatedAnswer = await updateAnswer(
+      const answer = await updateAnswer(
         authToken,
         currentAnswer!.id,
-        answer.title
+        updatedAnswer
       );
       const index = answers.findIndex((res) => res.id === currentAnswer!.id);
-      answers[index] = {
-        id: updatedAnswer.id,
-        title: updatedAnswer.title,
-        user_id: updatedAnswer.user_id,
-        status: updatedAnswer.status,
-      };
+      answers[index] = answer;
       setAnswers([...answers]);
       setCurrentAnswer(null);
       setIsShowEditDialog(false);
@@ -189,8 +171,8 @@ export default function Answers({ questionId }: AnswersProps) {
         error={error}
         headerText="Create Answer"
         onSubmit={onCreateAnswer}
-        onDelete={onDeleteAnswer}
         answer={null}
+        questionId={questionId}
       />
       <AnswerDialog
         onClose={() => setIsShowEditDialog(false)}
@@ -201,6 +183,7 @@ export default function Answers({ questionId }: AnswersProps) {
         onSubmit={onUpdateAnswer}
         onDelete={onDeleteAnswer}
         answer={currentAnswer}
+        questionId={questionId}
       />
     </div>
   );

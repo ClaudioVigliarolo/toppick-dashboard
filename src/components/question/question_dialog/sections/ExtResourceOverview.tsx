@@ -2,7 +2,7 @@ import React from "react";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles, TextField, Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { QuestionResource } from "@toppick/common/build/interfaces";
+import { Resource } from "@toppick/common/build/interfaces";
 const useStyles = makeStyles((theme) => ({
   linkTextField: {
     marginTop: 10,
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 interface ExtResourceOverviewProps {
   open: boolean;
   title: string;
-  resources: QuestionResource[];
+  resources: Resource[];
   setTitle: (event: React.ChangeEvent<any>) => void;
   onChange: (event: React.ChangeEvent<any>, index: number) => void;
   onPreview: (url: string) => void;
