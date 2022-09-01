@@ -2,13 +2,13 @@ import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
 import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
 import Select from "../ui/select/SimpleSelect";
-import { User, UserRole } from "@toppick/common/build/interfaces";
+import { UserDetail, UserRole } from "@toppick/common/build/interfaces";
 import { AuthContext } from "@/context/AuthContext";
 import { getUserDetails } from "@toppick/common/build/api";
 
 interface UserDialogProps {
   open: boolean;
-  onConfirm: (user: User) => void;
+  onConfirm: (user: UserDetail) => void;
   onRefuse: () => void;
   userId: string | null;
   headerText: string;
@@ -16,7 +16,7 @@ interface UserDialogProps {
   error: string;
 }
 
-const DEFAULT_USER: User = {
+const DEFAULT_USER: UserDetail = {
   username: "",
   country: "",
   firstname: "",
@@ -56,13 +56,15 @@ export default function UserDialog({
   const classes = useStyles();
   const { authToken } = React.useContext(AuthContext);
 
-  const [currentUser, setCurrentUser] = React.useState<User>(DEFAULT_USER);
+  const [currentUser, setCurrentUser] =
+    React.useState<UserDetail>(DEFAULT_USER);
 
   React.useEffect(() => {
     (async () => {
       if (userId) {
         setCurrentUser(
-          await getUserDetails(authToken, {
+          await getUserDetails({
+            token: authToken,
             user_id: userId,
             include_role: true,
           })

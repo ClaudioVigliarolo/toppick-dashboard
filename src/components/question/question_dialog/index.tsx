@@ -2,27 +2,28 @@ import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Answers from "./sections/Answers";
 import { AuthContext } from "@/context/AuthContext";
-import Overview from "./sections/Overview";
-import { getQuestionDetails, getQuestions } from "@toppick/common/build/api";
+import Question from "./sections/Question";
+import { getQuestionDetails } from "@toppick/common/build/api";
 import Resources from "./sections/Resources";
-import {
-  Question,
-  QuestionCreated,
-  QuestionType,
-} from "@toppick/common/build/interfaces";
+import { QuestionDetail, QuestionType } from "@toppick/common/build/interfaces";
 interface QuestionDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (question: QuestionCreated) => void;
+  onConfirm: (question: QuestionDetail) => void;
   questionId?: number;
-  topicId: number;
   loading: boolean;
   headerText: string;
   onDelete?: () => void;
   error: string;
 }
 
-const DEFAULT_QUESTION: Question = {
+/*
+option 1: load all examples and resources subito
+option 2: 0 answers and resources. caricate nella propria schermata (passo solo counter!)
+
+*/
+
+const DEFAULT_QUESTION: QuestionDetail = {
   answers: [],
   id: -1,
   resources: [],
@@ -43,17 +44,16 @@ const DEFAULT_QUESTION: Question = {
 
 export default function QuestionDialog({
   questionId,
-  topicId,
   open,
   onClose,
   headerText,
   error,
   loading,
-  onSubmit,
+  onConfirm,
   onDelete,
 }: QuestionDialogProps) {
   const [currentQuestion, setCurrentQuestion] =
-    React.useState<Question>(DEFAULT_QUESTION);
+    React.useState<QuestionDetail>(DEFAULT_QUESTION);
   const { authToken, userId } = React.useContext(AuthContext);
 
   React.useEffect(() => {
@@ -61,8 +61,11 @@ export default function QuestionDialog({
       try {
         if (questionId) {
           setCurrentQuestion(
-            await getQuestionDetails(authToken, {
+            await getQuestionDetails({
               id: questionId,
+              token: authToken,
+              include_answers: false,
+              include_resources: false,
             })
           );
         } else {
@@ -99,23 +102,12 @@ export default function QuestionDialog({
     });
   };
 
-  const onConfirm = () => {
-    const newQuestion: QuestionCreated = {
-      title: currentQuestion.title,
-      topic_id: topicId,
-      active: currentQuestion.active,
-      picker_active: currentQuestion.picker_active,
-      type: currentQuestion.type,
-    };
-    onSubmit(newQuestion);
-  };
-
   const tabs: TabData[] = [
     {
       label: "Question",
       children: (
         <>
-          <Overview
+          <Question
             setTitle={setTitle}
             title={currentQuestion.title}
             onDelete={onDelete}
@@ -131,19 +123,17 @@ export default function QuestionDialog({
     },
     {
       label: "Answers",
-      isHidden: !questionId,
       children: (
         <>
-          <Answers questionId={questionId!} />
+          <Answers questionId={questionId} />
         </>
       ),
     },
     {
       label: "Resources",
-      isHidden: !questionId,
       children: (
         <>
-          <Resources questionId={questionId!} />
+          <Resources questionId={questionId} />
         </>
       ),
     },
@@ -157,7 +147,9 @@ export default function QuestionDialog({
         minWidth={600}
         tabData={tabs}
         minHeight={450}
-        onConfirm={onConfirm}
+        onConfirm={() => {
+          onConfirm(currentQuestion);
+        }}
         onRefuse={onClose}
         loading={loading}
         error={error}

@@ -2,24 +2,22 @@ import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Overview from "./sections/Overview";
 import {
-  Answer,
-  AnswerCreated,
+  QuestionAnswer,
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
 
 interface AnswerDialogProps {
   open: boolean;
-  answer: Answer | null;
-  questionId: number;
+  answer: QuestionAnswer | null;
   onClose: () => void;
   onDelete?: () => void;
-  onSubmit: (answer: AnswerCreated) => void;
+  onSubmit: (answer: QuestionAnswer) => void;
   headerText: string;
   loading: boolean;
   error: string;
 }
 
-const DEFAULT_ANSWER: Answer = {
+const DEFAULT_ANSWER: QuestionAnswer = {
   id: -1,
   user_id: "",
   title: "",
@@ -28,7 +26,6 @@ const DEFAULT_ANSWER: Answer = {
 
 export default function AnswerDetailDialog({
   answer,
-  questionId,
   error,
   headerText,
   loading,
@@ -38,7 +35,7 @@ export default function AnswerDetailDialog({
   onDelete,
 }: AnswerDialogProps) {
   const [currentAnswer, setCurrentAnswer] =
-    React.useState<Answer>(DEFAULT_ANSWER);
+    React.useState<QuestionAnswer>(DEFAULT_ANSWER);
 
   React.useEffect(() => {
     if (answer) {
@@ -50,14 +47,6 @@ export default function AnswerDetailDialog({
 
   const setTitle = (e: React.ChangeEvent<any>) => {
     setCurrentAnswer({ ...currentAnswer, title: e.currentTarget.value });
-  };
-
-  const onConfirm = () => {
-    const newAnswer: AnswerCreated = {
-      question_id: questionId,
-      title: currentAnswer.title,
-    };
-    onSubmit(newAnswer);
   };
 
   const tabs: TabData[] = [
@@ -83,7 +72,7 @@ export default function AnswerDetailDialog({
         showTabs={false}
         loading={loading}
         onRefuse={onClose}
-        onConfirm={onConfirm}
+        onConfirm={() => onSubmit(currentAnswer)}
         error={error}
       />
     </>

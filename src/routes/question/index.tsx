@@ -5,8 +5,7 @@ import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
 import Button from "@/components/ui/buttons/Button";
 import {
-  Question,
-  QuestionCreated,
+  QuestionDetail,
   QuestionFeatured,
   TopicFeatured,
 } from "@toppick/common/build/interfaces";
@@ -23,6 +22,7 @@ import { getErrorMessage } from "@toppick/common/build/utils";
 import axios, { AxiosResponse } from "axios";
 import { LibraryParams } from "@toppick/common/build/config/config";
 import NoQuestionAdded from "@/components/question/NoQuestionAdded";
+import { QuestionAnswerSharp } from "@material-ui/icons";
 
 const DEFAULT_TOPIC: TopicFeatured = {
   active: false,
@@ -31,7 +31,6 @@ const DEFAULT_TOPIC: TopicFeatured = {
   timestamp: new Date(),
   title: "select a topic",
   description: "",
-  image: "",
 };
 
 export default function QuestionPage() {
@@ -94,10 +93,7 @@ export default function QuestionPage() {
     setIsAppLoading(true);
     try {
       setCurrentQuestions(
-        await getQuestions(authToken, {
-          topic_id: topics[index].id,
-          include_inactive: true,
-        })
+        await getQuestions(authToken, topics[index].id, true)
       );
       setIsQuestionsLoaded(true);
     } catch (error) {
@@ -131,18 +127,20 @@ export default function QuestionPage() {
     setIsLoading(false);
   };
 
-  const onQuestionUpdate = async (updatedQuestion: QuestionCreated) => {
+  const onQuestionUpdate = async (question: QuestionDetail) => {
     setIsLoading(true);
     setError("");
     try {
-      const question = await updateQuestion(
-        authToken,
-        currentQuestion!.id,
-        updatedQuestion
-      );
+      const updatedQuestion = await updateQuestion(authToken, question.id, {
+        title: question.title,
+        active: question.active,
+        status: question.status,
+        type: question.type,
+        picker_active: question.picker_active,
+      });
       const questions = [...currentQuestions];
-      const index = questions.findIndex((k) => k.id == question.id);
-      questions[index] = question;
+      const index = questions.findIndex((k) => k.id == updatedQuestion.id);
+      questions[index] = updatedQuestion;
       setCurrentQuestions(questions);
       setIsShowQuestionUpdateDialog(false);
       setCurrentQuestion(null);
@@ -190,11 +188,18 @@ export default function QuestionPage() {
     setIsAppLoading(false);
   };
 
-  const onQuestionCreate = async (createdQuestion: QuestionCreated) => {
+  const onQuestionCreate = async (createdQuestion: QuestionDetail) => {
     setIsLoading(true);
     setError("");
     try {
-      const question = await createQuestion(authToken, createdQuestion);
+      const question = await createQuestion(authToken, {
+        title: createdQuestion.title,
+        active: createdQuestion.active,
+        status: createdQuestion.status,
+        type: createdQuestion.type,
+        topic_id: currentTopic.id,
+        picker_active: createdQuestion.picker_active,
+      });
       setCurrentQuestions([...currentQuestions, question]);
       setIsShowQuestionCreateDialog(false);
       setCurrentQuestion(null);
@@ -253,14 +258,12 @@ export default function QuestionPage() {
         }}
         error={error}
         loading={isLoading}
-        topicId={currentTopic.id!}
         questionId={currentQuestion ? currentQuestion.id : undefined}
-        onSubmit={onQuestionUpdate}
+        onConfirm={onQuestionUpdate}
         onDelete={onDeleteQuestion}
       />
       <QuestionDialog
         open={isShowQuestionCreateDialog}
-        topicId={currentTopic.id!}
         headerText="Create Question"
         onClose={() => {
           setCurrentQuestion(null);
@@ -269,7 +272,7 @@ export default function QuestionPage() {
         error={error}
         loading={isLoading}
         questionId={currentQuestion ? currentQuestion.id : undefined}
-        onSubmit={onQuestionCreate}
+        onConfirm={onQuestionCreate}
       />
       {isQuestionsLoaded && currentQuestions.length === 0 && (
         <NoQuestionAdded />

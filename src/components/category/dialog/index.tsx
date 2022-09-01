@@ -4,7 +4,7 @@ import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import {
   CategoryCreated,
-  Category,
+  CategoryDetail,
   CategoryFeatured,
   Lang,
   TopicFeatured,
@@ -21,7 +21,7 @@ interface CategoryDialogProps {
   category: CategoryFeatured | null;
 }
 
-const DEFAULT_CATEGORY: Category = {
+const DEFAULT_CATEGORY: CategoryDetail = {
   id: -1,
   title: "",
   slug: "",
@@ -40,7 +40,7 @@ export default function CategoryDialog({
   error,
 }: CategoryDialogProps) {
   const [currentCategory, setCurrentCategory] =
-    React.useState<Category>(DEFAULT_CATEGORY);
+    React.useState<CategoryDetail>(DEFAULT_CATEGORY);
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
   const [selectedTopics, setSelectedTopics] = React.useState<TopicFeatured[]>(
     []
@@ -50,9 +50,7 @@ export default function CategoryDialog({
     (async () => {
       try {
         if (category) {
-          const categoryDetail = await getCategoryDetails({
-            slug: category.slug,
-          });
+          const categoryDetail = await getCategoryDetails(category.slug);
           setCurrentCategory(categoryDetail);
           const topics = await getTopics({
             category_id: category.id,
@@ -86,6 +84,7 @@ export default function CategoryDialog({
 
   const onConfirm = async () => {
     const newCategory: CategoryCreated = {
+      id: currentCategory.id,
       description: currentCategory.description,
       image: currentCategory.image,
       slug: currentCategory.slug,

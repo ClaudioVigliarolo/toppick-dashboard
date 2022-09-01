@@ -54,11 +54,11 @@ export default function CategoryPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
-  const onCreateCategory = async (createdCategory: CategoryCreated) => {
+  const onCreateCategory = async (category: CategoryCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const newCategory = await createCategory(authToken, createdCategory);
+      const newCategory = await createCategory(category, authToken);
       const newCategories = [...categories];
       newCategories.unshift(newCategory);
       setCategories(newCategories);
@@ -70,20 +70,16 @@ export default function CategoryPage() {
     setIsLoading(false);
   };
 
-  const onUpdateCategory = async (updatedCategory: CategoryCreated) => {
+  const onUpdateCategory = async (category: CategoryCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const category = await updateCategory(
-        authToken,
-        currentCategory!.id,
-        updatedCategory
-      );
+      const newCategory = await updateCategory(category, authToken);
       const newCategories = [...categories];
       const updatedIndex = newCategories.findIndex(
-        (cat) => cat.id === category.id
+        (cat) => cat.id === newCategory.id
       );
-      newCategories[updatedIndex] = category;
+      newCategories[updatedIndex] = newCategory;
       setCategories(newCategories);
       setIsShowUpdateDialog(false);
       setCurrentCategory(null);
@@ -97,7 +93,7 @@ export default function CategoryPage() {
   const onDeleteCategory = async () => {
     setIsAppLoading(true);
     try {
-      await deleteCategory(authToken, currentCategory!.id);
+      await deleteCategory(currentCategory!.id, authToken);
       const newCategories = categories.filter(
         (categ) => categ.id !== currentCategory!.id
       );

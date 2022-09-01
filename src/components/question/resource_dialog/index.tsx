@@ -2,24 +2,22 @@ import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Overview from "./sections/Overview";
 import {
-  Resource,
-  ResourceCreated,
+  QuestionResource,
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
 
 interface ResourceDialogProps {
   open: boolean;
-  resource: Resource | null;
-  questionId: number;
+  resource: QuestionResource | null;
   onClose: () => void;
   onDelete?: () => void;
-  onSubmit: (resource: ResourceCreated) => void;
+  onSubmit: (resource: QuestionResource) => void;
   headerText: string;
   loading: boolean;
   error: string;
 }
 
-const DEFAULT_RESOURCE: Resource = {
+const DEFAULT_RESOURCE: QuestionResource = {
   id: -1,
   url: "",
   user_id: "",
@@ -37,11 +35,10 @@ export default function ResourceDialog({
   onSubmit,
   open,
   resource,
-  questionId,
   onDelete,
 }: ResourceDialogProps) {
   const [currentResource, setCurrentResource] =
-    React.useState<Resource>(DEFAULT_RESOURCE);
+    React.useState<QuestionResource>(DEFAULT_RESOURCE);
 
   React.useEffect(() => {
     if (resource) {
@@ -53,14 +50,6 @@ export default function ResourceDialog({
 
   const setUrl = (e: React.ChangeEvent<any>) => {
     setCurrentResource({ ...currentResource, url: e.currentTarget.value });
-  };
-
-  const onConfirm = () => {
-    const newResource: ResourceCreated = {
-      question_id: questionId,
-      url: currentResource.url,
-    };
-    onSubmit(newResource);
   };
 
   const tabs: TabData[] = [
@@ -87,7 +76,7 @@ export default function ResourceDialog({
         loading={loading}
         onRefuse={onClose}
         onConfirm={() => {
-          onConfirm();
+          onSubmit(currentResource);
         }}
         error={error}
       />
