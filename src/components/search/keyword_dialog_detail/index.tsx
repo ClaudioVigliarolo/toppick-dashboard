@@ -95,11 +95,6 @@ export default function SearchDialog({
     setCurrentKeyword({ ...currentKeyword, title: e.currentTarget.value });
   };
 
-  const onAddResult = () => {
-    //show Dialog
-    //setResults((results) => [...results, { link: "", id: 0 }]);
-  };
-
   const isShowSubmit = (): boolean =>
     validateTitle(currentKeyword.title) && validateTitle(currentKeyword.query);
 

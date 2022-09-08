@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles, TextField, Button } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import { QuestionResource } from "@toppick/common/build/interfaces";
+import { Resource, ResourceCreated } from "@toppick/common/build/interfaces";
 import {
   createResource,
   deleteResource,
@@ -15,7 +15,7 @@ import ResourcePreviewDialog from "@/components/question/resource_preview_dialog
 import { AxiosError } from "axios";
 import { getErrorMessage } from "@toppick/common/build/utils";
 interface ResourcesProps {
-  questionId?: number;
+  questionId: number;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -62,15 +62,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Resources({ questionId }: ResourcesProps) {
-  const [resources, setResources] = React.useState<QuestionResource[]>([]);
+  const [resources, setResources] = React.useState<Resource[]>([]);
   const [isShowCreateDialog, setIsShowCreateDialog] =
     React.useState<boolean>(false);
   const [isShowPreviewDialog, setIsShowPreviewDialog] =
     React.useState<boolean>(false);
   const [isShowEditDialog, setIsShowEditDialog] =
     React.useState<boolean>(false);
-  const [currentResource, setCurrentResource] =
-    React.useState<QuestionResource | null>(null);
+  const [currentResource, setCurrentResource] = React.useState<Resource | null>(
+    null
+  );
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
@@ -82,7 +83,11 @@ export default function Resources({ questionId }: ResourcesProps) {
       try {
         setResources([]);
         if (questionId) {
-          setResources(await getResources(authToken, questionId));
+          setResources(
+            await getResources(authToken, {
+              question_id: questionId,
+            })
+          );
         }
       } catch (error) {
         console.log(error);
@@ -90,28 +95,12 @@ export default function Resources({ questionId }: ResourcesProps) {
     })();
   }, [questionId]);
 
-  const onCreateResource = async (resource: QuestionResource) => {
+  const onCreateResource = async (createdResource: ResourceCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const createdResource = await createResource(
-        authToken,
-        questionId!,
-        resource.url
-      );
-      const newResources = [
-        ...resources,
-        {
-          id: createdResource.id,
-          title: createdResource.title,
-          user_id: createdResource.user_id,
-          status: createdResource.status,
-          url: createdResource.url,
-          snippet: createdResource.snippet,
-          thumbnail: createdResource.thumbnail,
-        } as QuestionResource,
-      ];
-      setResources(newResources);
+      const resource = await createResource(authToken, createdResource);
+      setResources([...resources, resource]);
       setCurrentResource(null);
       setIsShowCreateDialog(false);
     } catch (error) {
@@ -119,27 +108,19 @@ export default function Resources({ questionId }: ResourcesProps) {
     }
     setIsLoading(false);
   };
-  const onUpdateResource = async (resource: QuestionResource) => {
+  const onUpdateResource = async (updatedResource: ResourceCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const updatedResource = await updateResource(
+      const resource = await updateResource(
         authToken,
         currentResource!.id,
-        resource.url
+        updatedResource
       );
       const index = resources.findIndex(
         (res) => res.id === currentResource!.id
       );
-      resources[index] = {
-        id: updatedResource.id,
-        title: updatedResource.title,
-        user_id: updatedResource.user_id,
-        status: updatedResource.status,
-        url: updatedResource.url,
-        snippet: updatedResource.snippet,
-        thumbnail: updatedResource.thumbnail,
-      };
+      resources[index] = resource;
       setResources([...resources]);
       setCurrentResource(null);
       setIsShowEditDialog(false);
@@ -216,8 +197,8 @@ export default function Resources({ questionId }: ResourcesProps) {
         error={error}
         headerText="Create Resource"
         onSubmit={onCreateResource}
-        onDelete={onDeleteResource}
         resource={null}
+        questionId={questionId}
       />
       <ResourceDialog
         onClose={() => setIsShowEditDialog(false)}
@@ -227,6 +208,23 @@ export default function Resources({ questionId }: ResourcesProps) {
         headerText="Edit Resource"
         onSubmit={onUpdateResource}
         onDelete={onDeleteResource}
+        resource={currentResource}
+        questionId={questionId}
+      />
+
+      <ResourcePreviewDialog
+        onClose={() => setIsShowPreviewDialog(false)}
+        open={isShowPreviewDialog}
+        error={error}
+        headerText="Preview Resource"
+        resource={currentResource}
+      />
+
+      <ResourcePreviewDialog
+        onClose={() => setIsShowPreviewDialog(false)}
+        open={isShowPreviewDialog}
+        error={error}
+        headerText="Preview Resource"
         resource={currentResource}
       />
 

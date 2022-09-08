@@ -2,7 +2,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-// firebase init
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -14,12 +13,9 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-// utils
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// collection references
 const usersCollection = db.collection("Users");
 
-// export utils/refs
 export { db, auth, usersCollection };

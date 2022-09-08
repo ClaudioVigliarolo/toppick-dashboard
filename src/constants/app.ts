@@ -2,7 +2,6 @@ import { Lang } from "../interfaces/ui";
 
 const date = new Date();
 
-//until today, from
 const DEF_UNTIL_DATE = new Date();
 const DEF_FROM_DATE = new Date(date.getFullYear() - 1000, date.getMonth(), 1);
 

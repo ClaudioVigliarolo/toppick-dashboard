@@ -40,7 +40,6 @@ export const useAppStyles = makeStyles((theme: Theme) =>
       background: COLORS.menuContainer,
       color: "#fff",
     },
-    // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     headerSection: {
       display: "flex",

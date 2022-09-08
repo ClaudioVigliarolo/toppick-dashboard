@@ -16,9 +16,6 @@ const CustomRoute = ({ path, Component, condition }: CustomRouteProps) => {
       path={path}
       render={(routeProps) => <Component navigationProps={routeProps} />}
     />
-  ) : //se loading && ! autenticated => display spinner
-  //se loading && authenticated => currrent
-  // se ! authenticated => login
-  null;
+  ) : null;
 };
 export default CustomRoute;

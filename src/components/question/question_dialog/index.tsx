@@ -2,28 +2,27 @@ import React from "react";
 import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
 import Answers from "./sections/Answers";
 import { AuthContext } from "@/context/AuthContext";
-import Question from "./sections/Question";
-import { getQuestionDetails } from "@toppick/common/build/api";
+import Overview from "./sections/Overview";
+import { getQuestionDetails, getQuestions } from "@toppick/common/build/api";
 import Resources from "./sections/Resources";
-import { QuestionDetail, QuestionType } from "@toppick/common/build/interfaces";
+import {
+  Question,
+  QuestionCreated,
+  QuestionType,
+} from "@toppick/common/build/interfaces";
 interface QuestionDialogProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (question: QuestionDetail) => void;
+  onSubmit: (question: QuestionCreated) => void;
   questionId?: number;
+  topicId: number;
   loading: boolean;
   headerText: string;
   onDelete?: () => void;
   error: string;
 }
 
-/*
-option 1: load all examples and resources subito
-option 2: 0 answers and resources. caricate nella propria schermata (passo solo counter!)
-
-*/
-
-const DEFAULT_QUESTION: QuestionDetail = {
+const DEFAULT_QUESTION: Question = {
   answers: [],
   id: -1,
   resources: [],
@@ -38,22 +37,23 @@ const DEFAULT_QUESTION: QuestionDetail = {
   picker_active: false,
   active: true,
   type: QuestionType.Default,
-  answers_count: 0,
-  resources_count: 0,
+  answer_count: 0,
+  resource_count: 0,
 };
 
 export default function QuestionDialog({
   questionId,
+  topicId,
   open,
   onClose,
   headerText,
   error,
   loading,
-  onConfirm,
+  onSubmit,
   onDelete,
 }: QuestionDialogProps) {
   const [currentQuestion, setCurrentQuestion] =
-    React.useState<QuestionDetail>(DEFAULT_QUESTION);
+    React.useState<Question>(DEFAULT_QUESTION);
   const { authToken, userId } = React.useContext(AuthContext);
 
   React.useEffect(() => {
@@ -61,11 +61,8 @@ export default function QuestionDialog({
       try {
         if (questionId) {
           setCurrentQuestion(
-            await getQuestionDetails({
+            await getQuestionDetails(authToken, {
               id: questionId,
-              token: authToken,
-              include_answers: false,
-              include_resources: false,
             })
           );
         } else {
@@ -102,12 +99,23 @@ export default function QuestionDialog({
     });
   };
 
+  const onConfirm = () => {
+    const newQuestion: QuestionCreated = {
+      title: currentQuestion.title,
+      topic_id: topicId,
+      active: currentQuestion.active,
+      picker_active: currentQuestion.picker_active,
+      type: currentQuestion.type,
+    };
+    onSubmit(newQuestion);
+  };
+
   const tabs: TabData[] = [
     {
       label: "Question",
       children: (
         <>
-          <Question
+          <Overview
             setTitle={setTitle}
             title={currentQuestion.title}
             onDelete={onDelete}
@@ -123,17 +131,19 @@ export default function QuestionDialog({
     },
     {
       label: "Answers",
+      isHidden: !questionId,
       children: (
         <>
-          <Answers questionId={questionId} />
+          <Answers questionId={questionId!} />
         </>
       ),
     },
     {
       label: "Resources",
+      isHidden: !questionId,
       children: (
         <>
-          <Resources questionId={questionId} />
+          <Resources questionId={questionId!} />
         </>
       ),
     },
@@ -147,9 +157,7 @@ export default function QuestionDialog({
         minWidth={600}
         tabData={tabs}
         minHeight={450}
-        onConfirm={() => {
-          onConfirm(currentQuestion);
-        }}
+        onConfirm={onConfirm}
         onRefuse={onClose}
         loading={loading}
         error={error}

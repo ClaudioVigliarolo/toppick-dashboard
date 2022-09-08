@@ -10,6 +10,7 @@ import {
   TopicInterest,
   TopicLevel,
   TopicTag,
+  TopicType,
 } from "@toppick/common/build/interfaces";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,6 +44,8 @@ interface InfoProps {
   onTagAdd: (title: string) => void;
   tags: TopicTag[];
   featured: string;
+  handleTypeChange: (event: React.ChangeEvent<any>) => void;
+  type: TopicType;
 }
 const TOPIC_LEVELS = Object.values(TopicLevel);
 
@@ -59,6 +62,8 @@ export default function Info({
   onTagAdd,
   featured,
   handleFeaturedChange,
+  handleTypeChange,
+  type,
 }: InfoProps) {
   const classes = useStyles();
   return (
@@ -86,6 +91,18 @@ export default function Info({
             width={350}
             header="Level"
             defaultValue={level}
+          />
+        </div>
+
+        <div className={classes.selectContainer}>
+          <Select
+            handleChange={handleTypeChange}
+            value={type}
+            values={Object.values(TopicType)}
+            color="black"
+            width={350}
+            header="Type"
+            defaultValue={type}
           />
         </div>
 

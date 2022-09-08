@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
 import CustomAlert from "@/components/ui/Alert";
 
 export default function LoginPage() {
-  //renamed  setEmail to setEmailState for context function ovverriding problem
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
@@ -59,9 +58,7 @@ export default function LoginPage() {
   const onSubmit = async (): Promise<void> => {
     setLoading(true);
     try {
-      //pre-validation
       validDateForm();
-      //sign in
       await signIn();
       history.push("/categories");
     } catch (error) {

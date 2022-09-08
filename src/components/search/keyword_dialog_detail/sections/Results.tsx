@@ -85,18 +85,24 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
         switch (searchType) {
           case SearchType.Article:
             setResults(
-              await getSearchResultsArticle(authToken, keywordId, 100, 0)
+              await getSearchResultsArticle(authToken, {
+                keyword_id: keywordId,
+              })
             );
             break;
           case SearchType.Video:
             setResults(
-              await getSearchResultsVideo(authToken, keywordId, 100, 0)
+              await getSearchResultsVideo(authToken, {
+                keyword_id: keywordId,
+              })
             );
             break;
 
           case SearchType.Image:
             setResults(
-              await getSearchResultsImage(authToken, keywordId, 100, 0)
+              await getSearchResultsImage(authToken, {
+                keyword_id: keywordId,
+              })
             );
             break;
 

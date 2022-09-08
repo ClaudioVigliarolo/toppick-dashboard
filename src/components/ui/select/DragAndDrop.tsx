@@ -51,7 +51,6 @@ export default function DragAndDrop({
 }: DragAndDropProps) {
   const classes = useStyles();
 
-  // React state to track order of items
   const [currentItems, setCurrentItems] = useState<
     { title: string; id: number }[]
   >([]);
@@ -60,19 +59,12 @@ export default function DragAndDrop({
     setCurrentItems(items);
   }, [items]);
 
-  // Function to update list on drop
   const handleDrop = (droppedItem) => {
-    // Ignore drop outside droppable container
     if (!droppedItem.destination) return;
     var updatedList = [...currentItems];
-    // Remove dragged item
     const [reorderedItem] = updatedList.splice(droppedItem.source.index, 1);
-    // Add dropped item
     updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
-    // Update State
     setCurrentItems(updatedList);
-    //
-    onDragEnd(updatedList);
   };
 
   return (

@@ -11,7 +11,7 @@ import {
   getUsers,
   updateUserRole,
 } from "@toppick/common/build/api";
-import { UserDetail, UserFeatured } from "@toppick/common/build/interfaces";
+import { User, UserFeatured } from "@toppick/common/build/interfaces";
 import { getErrorMessage } from "@toppick/common/build/utils";
 
 export default function UsersPage() {
@@ -45,7 +45,7 @@ export default function UsersPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
-  const onUpdateUser = async (updatedUser: UserDetail) => {
+  const onUpdateUser = async (updatedUser: User) => {
     setIsLoading(true);
     setError("");
     try {
