@@ -14,14 +14,14 @@ import {
   Input,
   Chip,
 } from "@material-ui/core";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/styles/colors";
 import { Value } from "@/interfaces/ui";
 
 interface CustomChipProps {
   handleChange: (index: number) => void;
   values: Value[];
   error?: boolean;
-  width: number;
+  width: number | string;
   selectedValues: Value[];
   header: string;
 }
@@ -52,6 +52,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 
 export default function CustomChip({
   selectedValues,
@@ -62,9 +64,6 @@ export default function CustomChip({
   error = false,
 }: CustomChipProps) {
   const classes = useStyles();
-
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
 
   const MenuProps = {
     PaperProps: {
@@ -78,15 +77,13 @@ export default function CustomChip({
   return (
     <>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-mutiple-chip-label">{header}</InputLabel>
+        <InputLabel>{header}</InputLabel>
         <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
           error={error}
           multiple
           style={{ width }}
           value={selectedValues}
-          input={<Input id="select-multiple-chip" />}
+          input={<Input />}
           renderValue={(selected: any) => (
             <div className={classes.chips}>
               {selected.map((val: Value, index: number) => (

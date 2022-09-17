@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles, TextField } from "@material-ui/core";
-import Button from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/button/Button";
 import { auth } from "@/services/firebase";
 
 const useStyles = makeStyles((theme) => ({
@@ -73,7 +73,6 @@ export default function LoginPage() {
       <div className={classes.container}>
         <TextField
           onChange={(e) => setEmail(e.currentTarget.value)}
-          id="standard-basic"
           label="Email"
           type="email"
           className={classes.textField}
@@ -82,7 +81,6 @@ export default function LoginPage() {
 
         <TextField
           onChange={(e) => setPassword(e.currentTarget.value)}
-          id="standard-basic"
           label="Password"
           type="password"
           value={password}

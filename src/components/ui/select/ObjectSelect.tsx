@@ -22,7 +22,7 @@ export default function CustomSelect({
 }: CustomSelectProps) {
   return (
     <>
-      <InputLabel id="demo-mutiple-chip-label">{header}</InputLabel>
+      <InputLabel>{header}</InputLabel>
       <Select
         style={{
           textTransform: "capitalize",
@@ -30,8 +30,6 @@ export default function CustomSelect({
           fontSize: 20,
           color: color,
         }}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
         value={value.title}
       >
         {defaultValue && (

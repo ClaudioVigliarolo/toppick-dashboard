@@ -1,6 +1,6 @@
 import React from "react";
 import TableCategories from "@/components/category/TableCategories";
-import Button from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/button/Button";
 import CategoryDialog from "@/components/category/dialog";
 import SearchBar from "@/components/ui/SearchBar";
 import { useAppStyles } from "@/styles/common";

@@ -1,6 +1,6 @@
 import React from "react";
 import TableTopics from "@/components/topic/TableTopics";
-import Button from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/button/Button";
 import SearchBar from "@/components/ui/SearchBar";
 import TopicDialog from "@/components/topic/dialog";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
@@ -13,7 +13,7 @@ import {
   updateTopic,
 } from "@toppick/common/build/api";
 import { TopicCreated, TopicFeatured } from "@toppick/common/build/interfaces";
-import SearchDialog from "@/components/search/keyword_dialog_preview";
+import SearchDialog from "@/components/search/dialog_keyword_preview";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import { getTopics } from "@toppick/common/build/api";
 

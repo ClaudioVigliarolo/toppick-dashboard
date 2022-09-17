@@ -1,6 +1,6 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
-import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "../ui/dialog/Dialog";
 
 interface MessageDialogProps {
   open: boolean;
@@ -35,9 +35,7 @@ export default function MessageDialog(props: MessageDialogProps) {
             minRows={10}
             maxRows={10}
             InputLabelProps={{ shrink: true }}
-            margin="dense"
             label="text"
-            id="standard-helperText"
             value={message}
             onChange={(e) => setMessage(e.currentTarget.value)}
             fullWidth

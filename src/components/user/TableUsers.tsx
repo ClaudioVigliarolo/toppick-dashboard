@@ -1,14 +1,16 @@
 import React from "react";
 import {
-  CustomTable,
+  AppTable,
   StyledEditCell,
   StyledTableCell,
   StyledTableRow,
-  useStyles,
-} from "../ui/TableStyles";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { User, UserFeatured } from "@toppick/common/build/interfaces";
+  useAppTableStyles,
+} from "../ui/Table";
+import { UserFeatured } from "@toppick/common/build/interfaces";
+import { makeStyles } from "@material-ui/core";
+import { useAppStyles } from "@/styles/common";
+import EditIcon from "../ui/icon/EditIcon";
+import DeleteIcon from "../ui/icon/DeleteIcon";
 
 interface TableUsersProps {
   users: UserFeatured[];
@@ -17,13 +19,27 @@ interface TableUsersProps {
   searchText: string;
 }
 
+const useStyles = makeStyles(() => ({
+  iconsContainer: {
+    position: "absolute",
+    right: 30,
+    color: "orange",
+    top: "30%",
+    cursor: "pointer",
+    width: 80,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+}));
+
 export default function TableUsers({
   onDelete,
   onUpdate,
   searchText,
   users,
 }: TableUsersProps) {
-  const classes = useStyles();
+  const classes = { ...useAppTableStyles(), ...useStyles() };
 
   const renderRows = (users: UserFeatured[]) => {
     return users.map((user: UserFeatured, index: number) => {
@@ -33,9 +49,8 @@ export default function TableUsers({
             <StyledTableCell> {user.username}</StyledTableCell>
             <StyledEditCell>
               {user.email}
-              <div className={classes.userIconsContainer}>
+              <div className={classes.iconsContainer}>
                 <EditIcon
-                  className={classes.editIcon}
                   onClick={() => {
                     onUpdate(user);
                   }}
@@ -44,7 +59,6 @@ export default function TableUsers({
                   onClick={() => {
                     onDelete(user);
                   }}
-                  className={classes.deleteIcon}
                 />
               </div>
             </StyledEditCell>
@@ -55,8 +69,8 @@ export default function TableUsers({
   };
 
   return (
-    <CustomTable
-      columns={["50%", "30%"]}
+    <AppTable
+      columns={["50%", "50%"]}
       columnNames={["username", "email"]}
       body={renderRows(users)}
     />

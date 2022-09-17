@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/styles/colors";
 import {
   ListItem,
   ListItemIcon,
   ListItemText,
   makeStyles,
 } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "../icon/EditIcon";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -70,7 +70,7 @@ export default function DragAndDrop({
   return (
     <div className={classes.container}>
       <DragDropContext onDragEnd={handleDrop}>
-        <Droppable droppableId="list-container">
+        <Droppable>
           {(provided) => (
             <div
               className={classes.listContainer}
@@ -92,10 +92,7 @@ export default function DragAndDrop({
                     >
                       <ListItem className={classes.listItem} style={itemStyles}>
                         <ListItemIcon>
-                          <EditIcon
-                            className={classes.editIcon}
-                            onClick={() => onEdit(item.id)}
-                          />
+                          <EditIcon onClick={() => onEdit(item.id)} />
                         </ListItemIcon>
                         <ListItemText
                           secondary={item.title}

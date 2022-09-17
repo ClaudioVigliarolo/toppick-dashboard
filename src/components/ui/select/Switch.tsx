@@ -4,7 +4,7 @@ import { MaterialUiColor } from "@/interfaces/ui";
 import { createStyles, makeStyles } from "@material-ui/core";
 
 interface CustomSwitchProps {
-  text: string;
+  text?: string;
   value: boolean;
   handleChange: (val: any) => void;
   textColor?: string;

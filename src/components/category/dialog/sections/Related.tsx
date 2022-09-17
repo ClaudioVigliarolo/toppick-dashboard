@@ -15,7 +15,7 @@ export default function Related({
   return (
     <>
       <Chip
-        width={300}
+        width={350}
         selectedValues={selectedTopics}
         values={topics.sort((a, b) => a.title.localeCompare(b.title))}
         header={"Related Topics"}

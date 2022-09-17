@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
 import Info from "./sections/Info";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
@@ -11,16 +11,16 @@ import {
   TopicInterest,
   CategoryFeatured,
   TopicType,
+  TopicSource,
 } from "@toppick/common/build/interfaces";
 import { getTopicDetails, getTopicsInterests } from "@toppick/common/build/api";
-import { CONSTANTS } from "@/constants/app";
 import { getCategories } from "@toppick/common/build/api";
 import { getTopics } from "@toppick/common/build/api";
 import { AuthContext } from "@/context/AuthContext";
 
 const DEFAULT_TOPIC: Topic = {
   id: -1,
-  source: CONSTANTS.TOPIC_SOURCES[0],
+  source: Object.values(TopicSource)[0],
   title: "",
   description: "",
   slug: "",
@@ -244,6 +244,9 @@ export default function TopicDialog({
   };
 
   const onTopicTagAdd = (tag: string) => {
+    if (!tag) {
+      return;
+    }
     const newTags = currentTopic.topic_tags!.filter((t) => t.title !== tag);
     newTags.push({
       title: tag,

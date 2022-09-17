@@ -1,10 +1,10 @@
 import React from "react";
 import Chip from "@/components/ui/select/ObjectChip";
-import { makeStyles } from "@material-ui/core";
 import {
   CategoryFeatured,
   TopicFeatured,
 } from "@toppick/common/build/interfaces";
+import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface RelatedProps {
   categories: CategoryFeatured[];
@@ -15,16 +15,6 @@ interface RelatedProps {
   handleTopicsChange: (i: number) => void;
 }
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 50,
-  },
-}));
-
 export default function Related({
   categories,
   topics,
@@ -33,19 +23,19 @@ export default function Related({
   handleCategoriesChange,
   handleTopicsChange,
 }: RelatedProps) {
-  const classes = useStyles();
+  const classes = useAppDialogStyles();
 
   return (
-    <div className={classes.container}>
+    <div className={classes.tabContainer}>
       <Chip
-        width={300}
+        width={350}
         selectedValues={selectedCategories}
         values={categories.sort((a, b) => a.title.localeCompare(b.title))}
         header="Related Categories"
         handleChange={handleCategoriesChange}
       />
       <Chip
-        width={300}
+        width={350}
         selectedValues={selectedTopics}
         values={topics.sort((a, b) => a.title.localeCompare(b.title))}
         header="Related Topics"

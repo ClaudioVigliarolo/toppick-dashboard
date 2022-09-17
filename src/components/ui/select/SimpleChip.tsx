@@ -67,17 +67,14 @@ export default function CustomChip({
   return (
     <>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-mutiple-chip-label">{header}</InputLabel>
+        <InputLabel>{header}</InputLabel>
         <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
           error={error}
           multiple
           style={{ width: width }}
           value={selectedValues}
           onChange={handleChange}
-          placeholder="cazzo amaro"
-          input={<Input id="select-multiple-chip" />}
+          input={<Input />}
           renderValue={(selected: any) => (
             <div className={classes.chips}>
               {selected.map((val: any) => (

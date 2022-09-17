@@ -3,7 +3,7 @@ import { useAppStyles } from "@/styles/common";
 import Select from "@/components/ui/select/ObjectSelect";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
-import Button from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/button/Button";
 import {
   Question,
   QuestionCreated,
@@ -16,7 +16,7 @@ import {
   getQuestions,
   updateQuestion,
 } from "@toppick/common/build/api";
-import QuestionDialog from "@/components/question/question_dialog";
+import QuestionDialog from "@/components/question/dialog";
 import DragAndDrop from "@/components/ui/select/DragAndDrop";
 import { getTopics } from "@toppick/common/build/api";
 import { getErrorMessage } from "@toppick/common/build/utils";

@@ -14,12 +14,19 @@ interface CustomSelectProps {
   values: string[];
   color?: string;
   header?: string;
-  width?: number | string;
   multiple?: boolean;
+  className?: string;
+  renderValue: ((value: unknown) => React.ReactNode) | undefined;
 }
 
 const useStyles = makeStyles(() =>
   createStyles({
+    selectContainer: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      width: "100%",
+    },
     select: {
       textTransform: "capitalize",
       fontSize: 20,
@@ -34,29 +41,31 @@ export default function CustomSelect({
   values,
   color = "#fff",
   header,
-  width = 200,
+  className,
   multiple,
+  renderValue,
 }: CustomSelectProps) {
   const classes = useStyles();
   return (
-    <>
-      <InputLabel id="demo-mutiple-chip-label">{header}</InputLabel>
-      <Select
-        className={classes.select}
-        onChange={handleChange}
-        style={{ width, color }}
-        multiple={multiple}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={value}
-        defaultValue={defaultValue}
-      >
-        {values.map((val: string, index: number) => (
-          <MenuItem key={index} value={val}>
-            {val}
-          </MenuItem>
-        ))}
-      </Select>
-    </>
+    <div className={className}>
+      <div className={classes.selectContainer}>
+        <InputLabel>{header}</InputLabel>
+        <Select
+          className={classes.select}
+          onChange={handleChange}
+          style={{ color }}
+          multiple={multiple}
+          value={value}
+          defaultValue={defaultValue}
+          renderValue={renderValue}
+        >
+          {values.map((val: string, index: number) => (
+            <MenuItem key={index} value={val}>
+              {val}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+    </div>
   );
 }

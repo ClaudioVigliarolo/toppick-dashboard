@@ -1,7 +1,5 @@
 import React from "react";
-
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
-import { COLORS } from "@/constants/colors";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
@@ -15,34 +13,19 @@ interface SearchBarProps {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    table: {
-      width: "85%",
-      alignSelf: "center",
-      backgroundColor: "white",
-    },
-    root: {
+    container: {
       padding: "2px 4px",
       display: "flex",
       alignItems: "center",
       width: 300,
       backgroundColor: "white",
     },
-
-    deleteIcon: {
-      cursor: "pointer",
-      color: COLORS.darkerOrange,
-    },
-
     input: {
       marginLeft: theme.spacing(1),
       flex: 1,
     },
     iconButton: {
       padding: 10,
-    },
-    divider: {
-      height: 28,
-      margin: 4,
     },
   })
 );
@@ -51,7 +34,7 @@ export default function SearchBar(props: SearchBarProps) {
   const classes = useStyles();
 
   return (
-    <Paper component="form" className={classes.root}>
+    <Paper component="form" className={classes.container}>
       <div>
         <IconButton className={classes.iconButton} aria-label="search">
           <SearchIcon />

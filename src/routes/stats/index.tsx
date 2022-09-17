@@ -1,8 +1,7 @@
 import React from "react";
 import { MaterialUiColor } from "@/interfaces/ui";
-import DBChartBar from "@/components/stats/DBChartBar";
-import Button from "@/components/ui/buttons/TabButton";
-import { CONSTANTS } from "@/constants/app";
+import ChartTab from "@/components/stats/ChartTab";
+import Button from "@/components/ui/button/TabButton";
 import Switch from "@/components/ui/select/Switch";
 import {
   getTodayEnd,
@@ -14,7 +13,7 @@ import {
   getYesterdayStart,
 } from "@/utils/time";
 import { makeStyles } from "@material-ui/core";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/styles/colors";
 import { AuthContext } from "@/context/AuthContext";
 import {
   getMaintenanceStatus,
@@ -110,11 +109,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 25,
   },
 }));
+const date = new Date();
+const DEF_UNTIL_DATE = new Date();
+const DEF_FROM_DATE = new Date(date.getFullYear() - 1000, date.getMonth(), 1);
 
 export default function StatsPage() {
   const [dateIndex, setDateIndex] = React.useState<number>(-1);
-  const [until, setUntilDate] = React.useState<Date>(CONSTANTS.DEF_UNTIL_DATE);
-  const [from, setFromDate] = React.useState<Date>(CONSTANTS.DEF_FROM_DATE);
+  const [until, setUntilDate] = React.useState<Date>(DEF_UNTIL_DATE);
+  const [from, setFromDate] = React.useState<Date>(DEF_FROM_DATE);
   const [maintanance, setMaintenance] = React.useState<boolean>(false);
   const { authToken, currentLanguage } = React.useContext(AuthContext);
 
@@ -160,8 +162,8 @@ export default function StatsPage() {
               onClick={() => {
                 if (dateIndex === i) {
                   setDateIndex(-1);
-                  setFromDate(CONSTANTS.DEF_FROM_DATE);
-                  setUntilDate(CONSTANTS.DEF_UNTIL_DATE);
+                  setFromDate(DEF_FROM_DATE);
+                  setUntilDate(DEF_UNTIL_DATE);
                 } else {
                   setDateIndex(i);
                   setFromDate(u.from);
@@ -171,7 +173,7 @@ export default function StatsPage() {
             />
           ))}
         </div>
-        <DBChartBar
+        <ChartTab
           currentLanguage={currentLanguage}
           token={authToken}
           until={until}

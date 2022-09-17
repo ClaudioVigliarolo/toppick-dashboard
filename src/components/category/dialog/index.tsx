@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import {

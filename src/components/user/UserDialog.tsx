@@ -1,6 +1,6 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
-import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
+import { AppDialog, TabData } from "../ui/dialog/Dialog";
 import Select from "../ui/select/SimpleSelect";
 import { User, UserRole } from "@toppick/common/build/interfaces";
 import { AuthContext } from "@/context/AuthContext";
@@ -97,7 +97,6 @@ export default function UserDialog({
         <div className={classes.container}>
           <TextField
             onChange={setUsername}
-            id="standard-basic"
             label="Username"
             className={classes.textField}
             value={currentUser.username}
@@ -117,7 +116,7 @@ export default function UserDialog({
             value={currentUser.role!}
             values={Object.values(UserRole)}
             color="black"
-            width={300}
+            className=""
             defaultValue={currentUser.role!}
           />
         </div>

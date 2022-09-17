@@ -1,5 +1,5 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/styles/colors";
 import { CONSTANTS } from "@/constants/app";
 
 export const useAppStyles = makeStyles((theme: Theme) =>
@@ -146,6 +146,17 @@ export const useAppStyles = makeStyles((theme: Theme) =>
       margin: 80,
       textAlign: "center",
       color: COLORS.white,
+      fontSize: 25,
+    },
+
+    deleteIcon: {
+      cursor: "pointer",
+      color: COLORS.darkerOrange,
+      fontSize: 25,
+    },
+    editIcon: {
+      cursor: "pointer",
+      color: COLORS.lighterOrange,
       fontSize: 25,
     },
   })

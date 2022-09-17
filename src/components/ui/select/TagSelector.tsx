@@ -53,11 +53,9 @@ export default function TagSelector({
       <div className={classes.textField}>
         <TextField
           InputLabelProps={{ shrink: true }}
-          margin="dense"
           onKeyDown={handleKeyDown}
           label="Tag"
           placeholder="Type new tag..."
-          id="standard-helperText"
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}
           fullWidth
