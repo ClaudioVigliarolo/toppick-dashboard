@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Overview from "./sections/Overview";
 
 interface ResultDialogProps {
@@ -40,7 +40,7 @@ export default function ResultDialog(props: ResultDialogProps) {
   ];
   return (
     <>
-      <AppDialog
+      <Dialog
         open={props.open}
         headerText={props.headerText}
         minWidth={400}

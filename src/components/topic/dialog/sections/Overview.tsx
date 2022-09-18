@@ -3,7 +3,7 @@ import { DEFAULT_IMAGE_URL } from "@/constants/app";
 import Switch from "@/components/ui/select/Switch";
 import { makeStyles, TextField } from "@material-ui/core";
 import { MaterialUiColor } from "@/interfaces/ui";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 // const useStyles = makeStyles((theme) => ({
 //   container: {
@@ -59,7 +59,7 @@ export default function Overview({
   setSlug,
   setDescription,
 }: OverviewProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   return (
     <div className={classes.tabContainer}>

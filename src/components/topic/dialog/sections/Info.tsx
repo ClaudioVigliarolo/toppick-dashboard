@@ -1,8 +1,7 @@
 import React from "react";
-import { CONSTANTS } from "@/constants/app";
-import Select from "@/components/ui/select/SimpleSelect";
-import Chip from "@/components/ui/select/ObjectChip";
-import TagSelector from "@/components/ui/select/TagSelector";
+import Select from "@/components/ui/select/Select";
+import Chip from "@/components/ui/select/Chip";
+import TagSelector from "@/components/topic/TopicTagSelector";
 import {
   BooleanValues,
   TopicInterest,
@@ -11,7 +10,7 @@ import {
   TopicTag,
   TopicType,
 } from "@toppick/common/build/interfaces";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface InfoProps {
   handleSourceChange: (event: React.ChangeEvent<any>) => void;
@@ -46,7 +45,7 @@ export default function Info({
   handleTypeChange,
   type,
 }: InfoProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
   return (
     <>
       <div className={classes.tabContainer}>
@@ -55,18 +54,16 @@ export default function Info({
           value={source}
           values={Object.values(TopicSource)}
           color="black"
-          className={classes.fieldContainer}
+          containerClassName={classes.fieldContainer}
           header="Source"
-          defaultValue={source}
         />
         <Select
           handleChange={handleLevelChange}
           value={level}
           values={Object.values(TopicLevel)}
           color="black"
-          className={classes.fieldContainer}
+          containerClassName={classes.fieldContainer}
           header="Level"
-          defaultValue={level}
         />
 
         <Select
@@ -74,9 +71,8 @@ export default function Info({
           value={type}
           values={Object.values(TopicType)}
           color="black"
-          className={classes.fieldContainer}
+          containerClassName={classes.fieldContainer}
           header="Type"
-          defaultValue={type}
         />
 
         <Select
@@ -84,26 +80,19 @@ export default function Info({
           value={featured}
           values={Object.values(BooleanValues)}
           color="black"
-          className={classes.fieldContainer}
+          containerClassName={classes.fieldContainer}
           header="Featured"
-          defaultValue={featured}
         />
       </div>
-      <div className={classes.selectContainer}>
-        <Chip
-          width="90%"
-          selectedValues={selectedInterests}
-          values={interests}
-          header="Topic Interests"
-          handleChange={handleInterestsChange}
-        />
-
-        <div
-          className={classes.fieldContainer}
-          style={{ maxWidth: "80%", marginTop: 5 }}
-        >
-          <TagSelector tags={tags} onRemove={onTagRemove} onAdd={onTagAdd} />
-        </div>
+      <Chip
+        selectedValues={selectedInterests.map((v) => v.title)}
+        values={interests.map((v) => v.title)}
+        header="Topic Interests"
+        handleChange={handleInterestsChange}
+        containerClassName={classes.fieldContainer}
+      />
+      <div className={classes.fieldContainer}>
+        <TagSelector tags={tags} onRemove={onTagRemove} onAdd={onTagAdd} />
       </div>
     </>
   );

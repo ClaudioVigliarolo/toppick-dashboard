@@ -4,19 +4,20 @@ import {
   InputLabel,
   makeStyles,
   MenuItem,
-  Select,
+  Select as MaterialSelect,
 } from "@material-ui/core";
 
-interface CustomSelectProps {
-  value: string | string[];
+interface SelectProps {
+  value: string;
   handleChange: (event: React.ChangeEvent<any>) => void;
-  defaultValue: string;
+  defaultValue?: string;
   values: string[];
   color?: string;
   header?: string;
   multiple?: boolean;
-  className?: string;
-  renderValue: ((value: unknown) => React.ReactNode) | undefined;
+  containerClassName?: string;
+  containerStyles?: React.CSSProperties;
+  renderValue?: ((value: unknown) => React.ReactNode) | undefined;
 }
 
 const useStyles = makeStyles(() =>
@@ -34,37 +35,38 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function CustomSelect({
+export default function Select({
   value,
   defaultValue,
   handleChange,
   values,
   color = "#fff",
   header,
-  className,
+  containerClassName,
   multiple,
-  renderValue,
-}: CustomSelectProps) {
+  containerStyles,
+}: SelectProps) {
   const classes = useStyles();
   return (
-    <div className={className}>
+    <div className={containerClassName} style={containerStyles}>
       <div className={classes.selectContainer}>
         <InputLabel>{header}</InputLabel>
-        <Select
+        <MaterialSelect
           className={classes.select}
           onChange={handleChange}
           style={{ color }}
           multiple={multiple}
           value={value}
-          defaultValue={defaultValue}
-          renderValue={renderValue}
         >
-          {values.map((val: string, index: number) => (
-            <MenuItem key={index} value={val}>
-              {val}
+          {defaultValue && (
+            <MenuItem value={defaultValue}>{defaultValue}</MenuItem>
+          )}
+          {values.map((value: string, index: number) => (
+            <MenuItem key={index} value={value}>
+              {value}
             </MenuItem>
           ))}
-        </Select>
+        </MaterialSelect>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { DEFAULT_IMAGE_URL } from "@/constants/app";
 import { TextField } from "@material-ui/core";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface OverviewProps {
   title: string;
@@ -24,7 +24,7 @@ export default function Overview({
   setSlug,
   setDescription,
 }: OverviewProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   return (
     <div className={classes.tabContainer}>

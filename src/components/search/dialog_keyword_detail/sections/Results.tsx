@@ -23,9 +23,9 @@ import {
 import { AuthContext } from "@/context/AuthContext";
 import SearchResultDialog from "../../dialog_result";
 import { getErrorMessage } from "@toppick/common/build/utils";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
-import DialogEditField from "@/components/ui/dialog/DialogEditField";
-import DialogAddButton from "@/components/ui/dialog/DialogAddButton";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
+import DialogEditField from "@/components/ui/button/DialogEditField";
+import DialogAddButton from "@/components/ui/button/DialogAddButton";
 
 interface ResultsProps {
   keywordId: number;
@@ -43,7 +43,7 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
     React.useState<SearchResultCreated | null>(null);
   const [results, setResults] = React.useState<SearchResultCreated[]>([]);
   const { authToken } = React.useContext(AuthContext);
-  const classes = { ...useAppDialogStyles() };
+  const classes = { ...useDialogStyles() };
 
   React.useEffect(() => {
     (async () => {
@@ -223,7 +223,4 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
       />
     </div>
   );
-}
-function useDialogStyles() {
-  throw new Error("Function not implemented.");
 }

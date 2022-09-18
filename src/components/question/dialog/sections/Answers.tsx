@@ -10,9 +10,9 @@ import { AuthContext } from "@/context/AuthContext";
 import AnswerDialog from "@/components/answer/dialog";
 import { AxiosError } from "axios";
 import { getErrorMessage } from "@toppick/common/build/utils";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
-import DialogEditField from "@/components/ui/dialog/DialogEditField";
-import DialogAddButton from "@/components/ui/dialog/DialogAddButton";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
+import DialogEditField from "@/components/ui/button/DialogEditField";
+import DialogAddButton from "@/components/ui/button/DialogAddButton";
 interface AnswersProps {
   questionId: number;
 }
@@ -29,7 +29,7 @@ export default function Answers({ questionId }: AnswersProps) {
 
   const { authToken } = React.useContext(AuthContext);
   const classes = {
-    ...useAppDialogStyles(),
+    ...useDialogStyles(),
   };
 
   React.useEffect(() => {

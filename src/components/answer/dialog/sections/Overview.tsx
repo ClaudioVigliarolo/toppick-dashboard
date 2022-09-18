@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 import { useAppStyles } from "@/styles/common";
 import DeleteIcon from "@/components/ui/icon/DeleteIcon";
 
@@ -11,7 +11,7 @@ interface OverViewProps {
 }
 
 export default function OverView({ title, onDelete, setTitle }: OverViewProps) {
-  const classes = { ...useAppDialogStyles() };
+  const classes = { ...useDialogStyles() };
 
   return (
     <div className={classes.tabContainer}>

@@ -169,7 +169,11 @@ export default function Menu({
           <Typography variant="h6" noWrap className={classes.appTitle}>
             {appTitle}
           </Typography>
-          {isAuthenticated && <div className={classes.appLanguage}>EN</div>}
+          {isAuthenticated && (
+            <div className={classes.appLanguage}>
+              {currentLanguage.toUpperCase()}
+            </div>
+          )}
         </Toolbar>
         {loading && <StyledLinearProgress />}
       </AppBar>

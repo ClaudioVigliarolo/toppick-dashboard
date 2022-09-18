@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
+import MaterialDialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -10,7 +10,7 @@ import { TransitionProps } from "@material-ui/core/transitions";
 import { COLORS } from "@/styles/colors";
 import { createStyles, makeStyles, Tab, Tabs } from "@material-ui/core";
 
-export const useAppDialogStyles = makeStyles(() =>
+export const useDialogStyles = makeStyles(() =>
   createStyles({
     container: {
       position: "relative",
@@ -65,7 +65,6 @@ export const useAppDialogStyles = makeStyles(() =>
       display: "flex",
       justifyContent: "center",
       margin: 5,
-      backgroundColor: "red",
     },
     imageContainer: {
       marginTop: 20,
@@ -99,7 +98,7 @@ interface TabPanelProps extends TabData {
   value: number;
 }
 
-interface AppDialogProps {
+interface DialogProps {
   open: boolean;
   onConfirm?: () => void;
   loading?: boolean;
@@ -116,7 +115,7 @@ interface AppDialogProps {
 }
 
 function TabPanel({ children, index, value }: TabPanelProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
   return (
     <div
       role="tabpanel"
@@ -137,7 +136,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const AppDialog = ({
+export const Dialog = ({
   open,
   onConfirm,
   confirmButtonText = "Confirm",
@@ -151,9 +150,9 @@ export const AppDialog = ({
   showTabs = true,
   error,
   confirmButtonDisabled = false,
-}: AppDialogProps) => {
+}: DialogProps) => {
   const [value, setValue] = React.useState(0);
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -161,7 +160,7 @@ export const AppDialog = ({
 
   return (
     <div className={classes.container}>
-      <Dialog
+      <MaterialDialog
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -229,7 +228,7 @@ export const AppDialog = ({
             </>
           )}
         </DialogActions>
-      </Dialog>
+      </MaterialDialog>
     </div>
   );
 };

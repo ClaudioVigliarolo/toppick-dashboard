@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import { Alert, Color } from "@material-ui/lab";
+import { Alert as MaterialAlert, Color } from "@material-ui/lab";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomAlert({
+export default function Alert({
   visible,
   severity,
   text,
@@ -27,7 +27,9 @@ export default function CustomAlert({
     <>
       {visible && (
         <div className={classes.container}>
-          <Alert severity={severity}>{text && text.substring(0, 100)}</Alert>
+          <MaterialAlert severity={severity}>
+            {text && text.substring(0, 100)}
+          </MaterialAlert>
         </div>
       )}
     </>

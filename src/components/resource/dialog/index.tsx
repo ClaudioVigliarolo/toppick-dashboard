@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Overview from "./sections/Overview";
 import {
   Resource,
@@ -77,7 +77,7 @@ export default function ResourceDialog({
   ];
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={400}

@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
 import DeleteIcon from "@/components/ui/icon/DeleteIcon";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface OverViewProps {
   url: string;
@@ -10,7 +10,7 @@ interface OverViewProps {
 }
 
 export default function Overview({ url, onDelete, setUrl }: OverViewProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   return (
     <div className={classes.tabContainer}>

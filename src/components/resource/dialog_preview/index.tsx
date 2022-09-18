@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Overview from "./sections/Overview";
 import { Resource, ValidationStatus } from "@toppick/common/build/interfaces";
 
@@ -53,7 +53,7 @@ export default function ResourcePreviewDialog({
   ];
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={600}

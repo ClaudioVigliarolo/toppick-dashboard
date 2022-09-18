@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import {
   SearchKeyword,
   SearchKeywordCreated,
@@ -129,7 +129,7 @@ export default function SearchDialog({
 
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={600}

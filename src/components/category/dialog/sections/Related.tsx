@@ -1,25 +1,27 @@
 import React from "react";
-import Chip from "@/components/ui/select/ObjectChip";
+import Chip from "@/components/ui/select/Chip";
 import { TopicFeatured } from "@toppick/common/build/interfaces";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface RelatedProps {
   topics: TopicFeatured[];
   selectedTopics: TopicFeatured[];
-  handleCategoriesChange: (i: number) => void;
+  handleTopicsChange: (index: number) => void;
 }
 export default function Related({
   topics,
-  handleCategoriesChange,
+  handleTopicsChange,
   selectedTopics,
 }: RelatedProps) {
+  const classes = useDialogStyles();
   return (
     <>
       <Chip
-        width={350}
-        selectedValues={selectedTopics}
-        values={topics.sort((a, b) => a.title.localeCompare(b.title))}
+        selectedValues={selectedTopics.map((v) => v.title)}
+        values={topics.map((v) => v.title)}
         header={"Related Topics"}
-        handleChange={handleCategoriesChange}
+        handleChange={handleTopicsChange}
+        containerClassName={classes.fieldContainer}
       />
     </>
   );

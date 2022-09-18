@@ -1,11 +1,11 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
-import Select from "@/components/ui/select/SimpleSelect";
+import Select from "@/components/ui/select/Select";
 import {
   BooleanValues,
   SearchKeywordType,
 } from "@toppick/common/build/interfaces";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 import { useAppStyles } from "@/styles/common";
 import DeleteIcon from "@/components/ui/icon/DeleteIcon";
 
@@ -32,7 +32,7 @@ export default function OverView({
   active,
   handleActiveChange,
 }: OverViewProps) {
-  const classes = { ...useAppDialogStyles() };
+  const classes = { ...useDialogStyles() };
 
   return (
     <div className={classes.tabContainer}>
@@ -60,28 +60,22 @@ export default function OverView({
         onChange={setQuery}
         className={classes.fieldContainer}
       />
-      <div className={classes.selectContainer}>
-        <Select
-          handleChange={handleKeywordTypeChange}
-          value={keywordType}
-          values={Object.values(SearchKeywordType)}
-          color="black"
-          className={classes.fieldContainer}
-          header="Type"
-          defaultValue={keywordType}
-        />
-      </div>
-      <div className={classes.selectContainer}>
-        <Select
-          handleChange={handleActiveChange}
-          value={active}
-          values={Object.values(BooleanValues)}
-          color="black"
-          className={classes.fieldContainer}
-          header="Active"
-          defaultValue={active}
-        />
-      </div>
+      <Select
+        handleChange={handleKeywordTypeChange}
+        value={keywordType}
+        values={Object.values(SearchKeywordType)}
+        color="black"
+        containerClassName={classes.fieldContainer}
+        header="Type"
+      />
+      <Select
+        handleChange={handleActiveChange}
+        value={active}
+        values={Object.values(BooleanValues)}
+        color="black"
+        containerClassName={classes.fieldContainer}
+        header="Active"
+      />
     </div>
   );
 }

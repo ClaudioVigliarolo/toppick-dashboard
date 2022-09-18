@@ -1,8 +1,8 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
-import Select from "@/components/ui/select/SimpleSelect";
+import Select from "@/components/ui/select/Select";
 import { BooleanValues, QuestionType } from "@toppick/common/build/interfaces";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 import DeleteIcon from "@/components/ui/icon/DeleteIcon";
 
 interface QuestionProps {
@@ -28,7 +28,7 @@ export default function Question({
   pickerActive,
   handlePickerActiveChange,
 }: QuestionProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   return (
     <div className={classes.tabContainer}>
@@ -45,39 +45,30 @@ export default function Question({
         onChange={setTitle}
         className={classes.fieldContainer}
       />
-      <div className={classes.selectContainer}>
-        <Select
-          handleChange={handleTypeChange}
-          value={type}
-          values={Object.values(QuestionType)}
-          color="black"
-          className={classes.fieldContainer}
-          header="Type"
-          defaultValue={type}
-        />
-      </div>
-      <div className={classes.selectContainer}>
-        <Select
-          handleChange={handleActiveChange}
-          value={active}
-          values={Object.values(BooleanValues)}
-          color="black"
-          className={classes.fieldContainer}
-          header="Active"
-          defaultValue={active}
-        />
-      </div>
-      <div className={classes.selectContainer}>
-        <Select
-          handleChange={handlePickerActiveChange}
-          value={pickerActive}
-          values={Object.values(BooleanValues)}
-          color="black"
-          className={classes.fieldContainer}
-          header="Picker Active"
-          defaultValue={pickerActive}
-        />
-      </div>
+      <Select
+        handleChange={handleTypeChange}
+        value={type}
+        values={Object.values(QuestionType)}
+        color="black"
+        containerClassName={classes.fieldContainer}
+        header="Type"
+      />
+      <Select
+        handleChange={handleActiveChange}
+        value={active}
+        values={Object.values(BooleanValues)}
+        color="black"
+        containerClassName={classes.fieldContainer}
+        header="Active"
+      />
+      <Select
+        handleChange={handlePickerActiveChange}
+        value={pickerActive}
+        values={Object.values(BooleanValues)}
+        color="black"
+        containerClassName={classes.fieldContainer}
+        header="Picker Active"
+      />
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Answers from "./sections/Answers";
 import { AuthContext } from "@/context/AuthContext";
 import Overview from "./sections/Overview";
-import { getQuestionDetails, getQuestions } from "@toppick/common/build/api";
+import { getQuestionDetails } from "@toppick/common/build/api";
 import Resources from "./sections/Resources";
 import {
   Question,
@@ -151,7 +151,7 @@ export default function QuestionDialog({
 
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={600}

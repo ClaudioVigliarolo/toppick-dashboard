@@ -1,5 +1,5 @@
 import React from "react";
-import CardNumber from "../ui/CardNumber";
+import CardNumber from "./StatsCard";
 import { Lang } from "@/interfaces/ui";
 import { getContentStats } from "@toppick/common/build/api";
 import { makeStyles } from "@material-ui/core";

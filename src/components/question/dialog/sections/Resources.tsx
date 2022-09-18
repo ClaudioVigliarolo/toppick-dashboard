@@ -11,9 +11,9 @@ import ResourceDialog from "@/components/resource/dialog";
 import ResourcePreviewDialog from "@/components/resource/dialog_preview";
 import { AxiosError } from "axios";
 import { getErrorMessage } from "@toppick/common/build/utils";
-import DialogAddButton from "@/components/ui/dialog/DialogAddButton";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
-import DialogEditField from "@/components/ui/dialog/DialogEditField";
+import DialogAddButton from "@/components/ui/button/DialogAddButton";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
+import DialogEditField from "@/components/ui/button/DialogEditField";
 interface ResourcesProps {
   questionId: number;
 }
@@ -33,7 +33,7 @@ export default function Resources({ questionId }: ResourcesProps) {
   const [error, setError] = React.useState<string>("");
 
   const { authToken } = React.useContext(AuthContext);
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   React.useEffect(() => {
     (async () => {

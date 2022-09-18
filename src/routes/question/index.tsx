@@ -1,11 +1,10 @@
 import React from "react";
 import { useAppStyles } from "@/styles/common";
-import Select from "@/components/ui/select/ObjectSelect";
+import Select from "@/components/ui/select/Select";
 import { StatusContext } from "@/context/StatusContext";
 import { AuthContext } from "@/context/AuthContext";
 import Button from "@/components/ui/button/Button";
 import {
-  Question,
   QuestionCreated,
   QuestionFeatured,
   TopicFeatured,
@@ -17,12 +16,12 @@ import {
   updateQuestion,
 } from "@toppick/common/build/api";
 import QuestionDialog from "@/components/question/dialog";
-import DragAndDrop from "@/components/ui/select/DragAndDrop";
 import { getTopics } from "@toppick/common/build/api";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import axios, { AxiosResponse } from "axios";
 import { LibraryParams } from "@toppick/common/build/config/config";
 import NoQuestionAdded from "@/components/question/NoQuestionAdded";
+import DragAndDrop from "@/components/ui/DragAndDrop";
 
 const DEFAULT_TOPIC: TopicFeatured = {
   active: false,
@@ -82,20 +81,21 @@ export default function QuestionPage() {
     }
   };
 
-  const handleTopicChange = async (index: number) => {
-    if (index < 0) {
+  const handleTopicChange = async (e: React.ChangeEvent<any>) => {
+    const selectedTopic = topics.find((t) => t.title === e.target.value);
+    if (!selectedTopic) {
       return onReset();
     }
-    setCurrentTopic(topics[index]);
+    setCurrentTopic(selectedTopic);
 
-    if (topics[index] === DEFAULT_TOPIC) {
+    if (selectedTopic === DEFAULT_TOPIC) {
       return;
     }
     setIsAppLoading(true);
     try {
       setCurrentQuestions(
         await getQuestions(authToken, {
-          topic_id: topics[index].id,
+          topic_id: selectedTopic.id,
           include_inactive: true,
         })
       );
@@ -216,10 +216,10 @@ export default function QuestionPage() {
       >
         <Select
           handleChange={handleTopicChange}
-          value={currentTopic}
-          values={topics}
-          defaultValue={DEFAULT_TOPIC}
-          width={400}
+          value={currentTopic.title}
+          values={topics.map((v) => v.title)}
+          defaultValue={DEFAULT_TOPIC.title}
+          containerStyles={{ width: 400 }}
         />
         {currentTopic !== DEFAULT_TOPIC && (
           <Button

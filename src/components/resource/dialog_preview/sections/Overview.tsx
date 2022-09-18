@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface OverViewProps {
   title: string;
@@ -9,7 +9,7 @@ interface OverViewProps {
 }
 
 export default function Overview({ image, title, description }: OverViewProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   return (
     <div className={classes.tabContainer}>

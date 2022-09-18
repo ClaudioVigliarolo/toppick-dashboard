@@ -1,7 +1,7 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
-import { AppDialog, TabData } from "../ui/dialog/Dialog";
-import Select from "../ui/select/SimpleSelect";
+import { Dialog, TabData } from "../ui/dialog/Dialog";
+import Select from "../ui/select/Select";
 import { User, UserRole } from "@toppick/common/build/interfaces";
 import { AuthContext } from "@/context/AuthContext";
 import { getUserDetails } from "@toppick/common/build/api";
@@ -116,8 +116,7 @@ export default function UserDialog({
             value={currentUser.role!}
             values={Object.values(UserRole)}
             color="black"
-            className=""
-            defaultValue={currentUser.role!}
+            containerClassName={classes.textField}
           />
         </div>
       ),
@@ -125,7 +124,7 @@ export default function UserDialog({
   ];
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         loading={loading}
         headerText={headerText}

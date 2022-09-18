@@ -1,18 +1,18 @@
 import React from "react";
-import Chip from "@/components/ui/select/ObjectChip";
+import Chip from "@/components/ui/select/Chip";
 import {
   CategoryFeatured,
   TopicFeatured,
 } from "@toppick/common/build/interfaces";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface RelatedProps {
   categories: CategoryFeatured[];
   topics: TopicFeatured[];
   selectedCategories: CategoryFeatured[];
   selectedTopics: TopicFeatured[];
-  handleCategoriesChange: (i: number) => void;
-  handleTopicsChange: (i: number) => void;
+  handleCategoriesChange: (index: number) => void;
+  handleTopicsChange: (index: number) => void;
 }
 
 export default function Related({
@@ -23,22 +23,22 @@ export default function Related({
   handleCategoriesChange,
   handleTopicsChange,
 }: RelatedProps) {
-  const classes = useAppDialogStyles();
+  const classes = useDialogStyles();
 
   return (
     <div className={classes.tabContainer}>
       <Chip
-        width={350}
-        selectedValues={selectedCategories}
-        values={categories.sort((a, b) => a.title.localeCompare(b.title))}
+        selectedValues={selectedCategories.map((v) => v.title)}
+        values={categories.map((v) => v.title)}
         header="Related Categories"
+        containerClassName={classes.fieldContainer}
         handleChange={handleCategoriesChange}
       />
       <Chip
-        width={350}
-        selectedValues={selectedTopics}
-        values={topics.sort((a, b) => a.title.localeCompare(b.title))}
+        selectedValues={selectedTopics.map((v) => v.title)}
+        values={topics.map((v) => v.title)}
         header="Related Topics"
+        containerClassName={classes.fieldContainer}
         handleChange={handleTopicsChange}
       />
     </div>

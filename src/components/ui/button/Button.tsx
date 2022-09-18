@@ -1,4 +1,4 @@
-import { Button as MaterialUIButton, makeStyles } from "@material-ui/core";
+import { Button as MaterialButton, makeStyles } from "@material-ui/core";
 import { COLORS } from "@/styles/colors";
 
 import React from "react";
@@ -27,7 +27,7 @@ export default function Button({
   const classes = useStyles();
   return (
     <div>
-      <MaterialUIButton
+      <MaterialButton
         variant="contained"
         disabled={disabled}
         className={classes.button}
@@ -38,7 +38,7 @@ export default function Button({
         onClick={onClick}
       >
         {title}
-      </MaterialUIButton>
+      </MaterialButton>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import { SearchType } from "@toppick/common/build/interfaces";
 import Search from "./sections/Search";
 
@@ -35,7 +35,7 @@ export default function SearchDialog(props: SearchDialogProps) {
   ];
   return (
     <>
-      <AppDialog
+      <Dialog
         open={props.open}
         headerText={props.headerText}
         minWidth={500}

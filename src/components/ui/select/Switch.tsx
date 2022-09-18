@@ -1,9 +1,9 @@
 import React from "react";
-import Switch from "@material-ui/core/Switch";
+import MaterialSwitch from "@material-ui/core/Switch";
 import { MaterialUiColor } from "@/interfaces/ui";
 import { createStyles, makeStyles } from "@material-ui/core";
 
-interface CustomSwitchProps {
+interface SwitchProps {
   text?: string;
   value: boolean;
   handleChange: (val: any) => void;
@@ -21,19 +21,19 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function CustomSwitch({
+export default function Switch({
   text,
   value,
   handleChange,
   textColor = "#fff",
   switchColor = MaterialUiColor.Default,
-}: CustomSwitchProps) {
+}: SwitchProps) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
       <span style={{ fontSize: 20, color: textColor }}>{text}</span>
       <span>
-        <Switch
+        <MaterialSwitch
           checked={value}
           onChange={handleChange}
           name="switch"

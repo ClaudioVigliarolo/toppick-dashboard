@@ -5,7 +5,7 @@ import {
   createStyles,
   makeStyles,
 } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
+import MaterialTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -59,7 +59,7 @@ export const StyledTableCell = withStyles((theme: Theme) =>
   })
 )(TableCell);
 
-export const useAppTableStyles = makeStyles((theme: Theme) =>
+export const useTableStyles = makeStyles((theme: Theme) =>
   createStyles({
     tableContainer: {
       display: "flex",
@@ -119,12 +119,12 @@ export const useAppTableStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const AppTable = (props: CommonStylesProps) => {
-  const classes = useAppTableStyles();
+export const Table = (props: CommonStylesProps) => {
+  const classes = useTableStyles();
   return (
     <>
       <TableContainer component={Paper} className={classes.tableContainer}>
-        <Table className={classes.table} aria-label="customized table">
+        <MaterialTable className={classes.table} aria-label="customized table">
           <colgroup>
             {props.columns.map((width: string, index: number) => (
               <col key={index} style={{ width }} />
@@ -141,7 +141,7 @@ export const AppTable = (props: CommonStylesProps) => {
             </TableRow>
           </TableHead>
           <TableBody>{props.body}</TableBody>
-        </Table>
+        </MaterialTable>
       </TableContainer>
     </>
   );

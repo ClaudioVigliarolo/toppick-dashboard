@@ -1,10 +1,10 @@
 import React from "react";
 import {
-  AppTable,
+  Table,
   StyledEditCell,
   StyledTableCell,
   StyledTableRow,
-  useAppTableStyles,
+  useTableStyles,
 } from "../ui/Table";
 import { UserFeatured } from "@toppick/common/build/interfaces";
 import { makeStyles } from "@material-ui/core";
@@ -39,7 +39,7 @@ export default function TableUsers({
   searchText,
   users,
 }: TableUsersProps) {
-  const classes = { ...useAppTableStyles(), ...useStyles() };
+  const classes = { ...useTableStyles(), ...useStyles() };
 
   const renderRows = (users: UserFeatured[]) => {
     return users.map((user: UserFeatured, index: number) => {
@@ -69,7 +69,7 @@ export default function TableUsers({
   };
 
   return (
-    <AppTable
+    <Table
       columns={["50%", "50%"]}
       columnNames={["username", "email"]}
       body={renderRows(users)}

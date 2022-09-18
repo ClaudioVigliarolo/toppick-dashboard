@@ -1,12 +1,18 @@
 import React from "react";
-import TagItem from "./TagItem";
 import { TextField, makeStyles } from "@material-ui/core";
 import { TopicTag } from "@toppick/common/build/interfaces";
+import DeleteIcon from "@/components/ui/icon/DeleteIcon";
 
 interface TagSelectorProps {
   tags: TopicTag[];
   onRemove: (index: number) => void;
   onAdd: (tag: string) => void;
+}
+
+interface TagItemProps {
+  tag: string;
+  onRemove?: () => void;
+  deletable?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -24,6 +30,19 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
 }));
+
+function TagItem({ onRemove = () => {}, tag, deletable }: TagItemProps) {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.container}>
+      <div>{tag}</div>
+      <div style={{ marginLeft: 5, marginTop: 2 }}>
+        {deletable && <DeleteIcon onClick={onRemove} size={15} />}
+      </div>
+    </div>
+  );
+}
 
 export default function TagSelector({
   tags,

@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, TextField } from "@material-ui/core";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 import EditIcon from "@/components/ui/icon/EditIcon";
 import PreviewIcon from "../icon/PreviewIcon";
 

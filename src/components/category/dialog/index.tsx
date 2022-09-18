@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import {
@@ -120,7 +120,7 @@ export default function CategoryDialog({
   const isShowSubmit = (): boolean =>
     currentCategory.description != "" && currentCategory.image != "";
 
-  const handleCategoriesChange = (index: number) => {
+  const handleTopicsChange = (index: number) => {
     const newSelectedTopics = [...selectedTopics];
     const selectedIndex = selectedTopics.findIndex(
       (selected) => topics[index].id === selected.id
@@ -154,7 +154,7 @@ export default function CategoryDialog({
       children: (
         <Related
           selectedTopics={selectedTopics}
-          handleCategoriesChange={handleCategoriesChange}
+          handleTopicsChange={handleTopicsChange}
           topics={topics}
         />
       ),
@@ -163,7 +163,7 @@ export default function CategoryDialog({
 
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={600}

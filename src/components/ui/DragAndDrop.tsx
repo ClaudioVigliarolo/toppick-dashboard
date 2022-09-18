@@ -7,7 +7,7 @@ import {
   ListItemText,
   makeStyles,
 } from "@material-ui/core";
-import EditIcon from "../icon/EditIcon";
+import EditIcon from "./icon/EditIcon";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -22,8 +22,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "18px",
     flexDirection: "column",
   },
-
-  itemContainer: {},
   editIcon: {
     cursor: "pointer",
     color: COLORS.primaryOrange,
@@ -65,12 +63,13 @@ export default function DragAndDrop({
     const [reorderedItem] = updatedList.splice(droppedItem.source.index, 1);
     updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
     setCurrentItems(updatedList);
+    onDragEnd(updatedList);
   };
 
   return (
     <div className={classes.container}>
       <DragDropContext onDragEnd={handleDrop}>
-        <Droppable>
+        <Droppable droppableId="list-container">
           {(provided) => (
             <div
               className={classes.listContainer}
@@ -85,7 +84,6 @@ export default function DragAndDrop({
                 >
                   {(provided) => (
                     <div
-                      className={classes.itemContainer}
                       ref={provided.innerRef}
                       {...provided.dragHandleProps}
                       {...provided.draggableProps}

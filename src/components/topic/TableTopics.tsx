@@ -1,10 +1,10 @@
 import React from "react";
 import {
-  AppTable,
+  Table,
   StyledEditCell,
   StyledTableRow,
   StyledTableCell,
-  useAppTableStyles,
+  useTableStyles,
 } from "../ui/Table";
 import SearchIcon from "@material-ui/icons/Search";
 import { getFormattedDate } from "@/utils/time";
@@ -55,7 +55,7 @@ export default function TableTopics({
   onUpdateTopic,
   onUpdateSearch,
 }: TableTopicsProps) {
-  const classes = { ...useAppTableStyles(), ...useStyles() };
+  const classes = { ...useTableStyles(), ...useStyles() };
 
   const renderRows = (topics: TopicFeatured[]) => {
     return topics.map((topic: TopicFeatured, index: number) => {
@@ -99,7 +99,7 @@ export default function TableTopics({
   };
 
   return (
-    <AppTable
+    <Table
       columns={["40%", "40%", "20%"]}
       columnNames={["title", "last update", ""]}
       body={renderRows(topics)}

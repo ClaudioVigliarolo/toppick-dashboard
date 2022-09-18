@@ -1,9 +1,9 @@
 import React from "react";
 import {
-  AppTable,
+  Table,
   StyledEditCell,
   StyledTableRow,
-  useAppTableStyles,
+  useTableStyles,
   StyledTableCell,
 } from "../ui/Table";
 import { CategoryFeatured } from "@toppick/common/build/interfaces";
@@ -39,7 +39,7 @@ export default function TableCategories({
   onDelete,
   onUpdate,
 }: TableCategoriesProps) {
-  const classes = { ...useAppTableStyles(), ...useStyles() };
+  const classes = { ...useTableStyles(), ...useStyles() };
 
   const renderRows = (categories: CategoryFeatured[]) => {
     return categories.map((category: CategoryFeatured, index: number) => {
@@ -67,7 +67,7 @@ export default function TableCategories({
     });
   };
   return (
-    <AppTable
+    <Table
       columns={["95%", "5%"]}
       columnNames={["category", ""]}
       body={renderRows(categories)}

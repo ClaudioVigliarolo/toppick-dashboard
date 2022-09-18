@@ -1,5 +1,5 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/Dialog";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Info from "./sections/Info";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
@@ -324,7 +324,7 @@ export default function TopicDialog({
   ];
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={300}

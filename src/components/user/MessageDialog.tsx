@@ -1,6 +1,6 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
-import { AppDialog, TabData } from "../ui/dialog/Dialog";
+import { Dialog, TabData } from "../ui/dialog/Dialog";
 
 interface MessageDialogProps {
   open: boolean;
@@ -47,7 +47,7 @@ export default function MessageDialog(props: MessageDialogProps) {
 
   return (
     <>
-      <AppDialog
+      <Dialog
         loading={props.loading}
         open={props.open}
         headerText={"Write to:   " + props.headerText}
@@ -60,7 +60,7 @@ export default function MessageDialog(props: MessageDialogProps) {
         tabData={tabs}
         showTabs={false}
         confirmButtonDisabled={false}
-      ></AppDialog>
+      />
     </>
   );
 }

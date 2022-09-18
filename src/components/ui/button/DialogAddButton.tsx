@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, Button } from "@material-ui/core";
-import { useAppDialogStyles } from "@/components/ui/dialog/Dialog";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -25,7 +25,7 @@ export default function DialogAddButton({
   title,
 }: DialogAddButtonProps) {
   const classes = {
-    ...useAppDialogStyles(),
+    ...useDialogStyles(),
     ...useStyles(),
   };
 
