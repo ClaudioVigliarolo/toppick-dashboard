@@ -1,21 +1,37 @@
 import React from "react";
 import {
-  CustomTable,
+  Table,
   StyledEditCell,
   StyledTableCell,
   StyledTableRow,
-  useStyles,
-} from "../ui/TableStyles";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { UserDetail } from "@toppick/common/build/interfaces";
+  useTableStyles,
+} from "../ui/Table";
+import { UserFeatured } from "@toppick/common/build/interfaces";
+import { makeStyles } from "@material-ui/core";
+import { useAppStyles } from "@/styles/common";
+import EditIcon from "../ui/icon/EditIcon";
+import DeleteIcon from "../ui/icon/DeleteIcon";
 
 interface TableUsersProps {
-  users: UserDetail[];
-  onUpdate: (user: UserDetail) => void;
-  onDelete: (user: UserDetail) => void;
+  users: UserFeatured[];
+  onUpdate: (user: UserFeatured) => void;
+  onDelete: (user: UserFeatured) => void;
   searchText: string;
 }
+
+const useStyles = makeStyles(() => ({
+  iconsContainer: {
+    position: "absolute",
+    right: 30,
+    color: "orange",
+    top: "30%",
+    cursor: "pointer",
+    width: 80,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+}));
 
 export default function TableUsers({
   onDelete,
@@ -23,20 +39,18 @@ export default function TableUsers({
   searchText,
   users,
 }: TableUsersProps) {
-  const classes = useStyles();
+  const classes = { ...useTableStyles(), ...useStyles() };
 
-  const renderRows = (users: UserDetail[]) => {
-    return users.map((user: UserDetail, index: number) => {
+  const renderRows = (users: UserFeatured[]) => {
+    return users.map((user: UserFeatured, index: number) => {
       if (user.username.toLowerCase().includes(searchText.toLowerCase())) {
         return (
           <StyledTableRow key={index}>
             <StyledTableCell> {user.username}</StyledTableCell>
-            <StyledTableCell> {user.email}</StyledTableCell>
             <StyledEditCell>
-              {user.role}
-              <div className={classes.userIconsContainer}>
+              {user.email}
+              <div className={classes.iconsContainer}>
                 <EditIcon
-                  className={classes.editIcon}
                   onClick={() => {
                     onUpdate(user);
                   }}
@@ -45,7 +59,6 @@ export default function TableUsers({
                   onClick={() => {
                     onDelete(user);
                   }}
-                  className={classes.deleteIcon}
                 />
               </div>
             </StyledEditCell>
@@ -56,9 +69,9 @@ export default function TableUsers({
   };
 
   return (
-    <CustomTable
-      columns={["40%", "40%", "20%"]}
-      columnNames={["username", "email", "role"]}
+    <Table
+      columns={["50%", "50%"]}
+      columnNames={["username", "email"]}
       body={renderRows(users)}
     />
   );

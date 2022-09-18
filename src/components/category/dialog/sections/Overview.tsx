@@ -1,6 +1,7 @@
 import React from "react";
-import { NO_IMAGE_URL } from "@/constants/app";
-import { makeStyles, TextField } from "@material-ui/core";
+import { DEFAULT_IMAGE_URL } from "@/constants/app";
+import { TextField } from "@material-ui/core";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface OverviewProps {
   title: string;
@@ -13,23 +14,6 @@ interface OverviewProps {
   setDescription: (event: React.ChangeEvent<any>) => void;
 }
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  textField: {
-    width: "90%",
-  },
-  image: {
-    height: 200,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-}));
-
 export default function Overview({
   title,
   slug,
@@ -40,59 +24,55 @@ export default function Overview({
   setSlug,
   setDescription,
 }: OverviewProps) {
-  const classes = useStyles();
+  const classes = useDialogStyles();
 
   return (
-    <div className={classes.container}>
+    <div className={classes.tabContainer}>
       <TextField
         placeholder="Title"
         InputLabelProps={{ shrink: true }}
-        margin="dense"
         label="Title"
-        id="standard-helperText"
+        margin="dense"
         value={title}
         onChange={setTitle}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
 
       <TextField
         placeholder="Slug"
         InputLabelProps={{ shrink: true }}
-        margin="dense"
         label="Slug"
-        id="standard-helperText"
+        margin="dense"
         value={slug}
         onChange={setSlug}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
 
       <TextField
         placeholder="Type or paste description here..."
         InputLabelProps={{ shrink: true }}
-        margin="dense"
         label="Description"
-        id="outlined-multiline-flexible"
+        margin="dense"
         multiline
         minRows={5}
         value={description}
         onChange={setDescription}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
 
       <img
-        src={image ? image : NO_IMAGE_URL}
+        src={image ? image : DEFAULT_IMAGE_URL}
         alt="img"
-        className={classes.image}
+        className={classes.imageContainer}
       />
       <TextField
         placeholder="Paste the Image Url here"
         InputLabelProps={{ shrink: true }}
-        margin="dense"
         label="Link"
-        id="standard-helperText"
+        margin="dense"
         value={image}
         onChange={setImage}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
     </div>
   );

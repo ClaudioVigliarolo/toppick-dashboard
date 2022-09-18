@@ -7,7 +7,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/styles/colors";
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,11 +57,9 @@ export default function ConfirmDialog({
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-slide-description">
-          {description}
-        </DialogContentText>
+        <DialogContentText>{description}</DialogContentText>
         <div className={classes.contentContainer}>{children}</div>
       </DialogContent>
       <DialogActions>

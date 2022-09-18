@@ -1,34 +1,35 @@
 import React from "react";
-import { NO_IMAGE_URL } from "@/constants/app";
+import { DEFAULT_IMAGE_URL } from "@/constants/app";
 import Switch from "@/components/ui/select/Switch";
 import { makeStyles, TextField } from "@material-ui/core";
 import { MaterialUiColor } from "@/interfaces/ui";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  switchContainer: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-    cursor: "pointer",
-    color: "orange",
-    fontSize: 30,
-  },
-  textField: {
-    marginTop: 20,
-    width: "90%",
-  },
-  image: {
-    height: 200,
-    marginTop: 20,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   container: {
+//     display: "flex",
+//     flexDirection: "column",
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//     marginTop: 20,
+//   },
+//   switchContainer: {
+//     position: "absolute",
+//     top: 20,
+//     right: 20,
+//     cursor: "pointer",
+//     color: "orange",
+//     fontSize: 30,
+//   },
+//   textField: {
+//     marginTop: 20,
+//     width: "90%",
+//   },
+//   image: {
+//     height: 200,
+//     marginTop: 20,
+//   },
+// }));
 
 interface OverviewProps {
   active: boolean;
@@ -58,11 +59,11 @@ export default function Overview({
   setSlug,
   setDescription,
 }: OverviewProps) {
-  const classes = useStyles();
+  const classes = useDialogStyles();
 
   return (
-    <div className={classes.container}>
-      <div className={classes.switchContainer}>
+    <div className={classes.tabContainer}>
+      <div className={classes.topRightIcon}>
         <Switch
           text=""
           switchColor={MaterialUiColor.Primary}
@@ -74,12 +75,11 @@ export default function Overview({
       <TextField
         placeholder={titlePlaceholder}
         InputLabelProps={{ shrink: true }}
-        margin="dense"
         label="Title"
-        id="standard-helperText"
+        margin="dense"
         value={title}
         onChange={setTitle}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
 
       <TextField
@@ -87,10 +87,9 @@ export default function Overview({
         InputLabelProps={{ shrink: true }}
         margin="dense"
         label="Slug"
-        id="standard-helperText"
         value={slug}
         onChange={setSlug}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
 
       <TextField
@@ -98,28 +97,26 @@ export default function Overview({
         InputLabelProps={{ shrink: true }}
         margin="dense"
         label="Description"
-        id="outlined-multiline-flexible"
         multiline
         minRows={3}
         value={description}
         onChange={setDescription}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
 
       <img
-        src={image ? image : NO_IMAGE_URL}
+        src={image ? image : DEFAULT_IMAGE_URL}
         alt={title}
-        className={classes.image}
+        style={{ height: 200, marginTop: 20 }}
       />
       <TextField
         placeholder="Paste the Image Url here"
         InputLabelProps={{ shrink: true }}
         margin="dense"
         label="Link"
-        id="standard-helperText"
         value={image}
         onChange={setImage}
-        className={classes.textField}
+        className={classes.fieldContainer}
       />
     </div>
   );

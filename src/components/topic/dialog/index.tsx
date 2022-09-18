@@ -1,32 +1,34 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Info from "./sections/Info";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import {
   TopicFeatured,
-  TopicDetail,
+  Topic,
   TopicLevel,
   TopicCreated,
   TopicInterest,
   CategoryFeatured,
+  TopicType,
+  TopicSource,
 } from "@toppick/common/build/interfaces";
 import { getTopicDetails, getTopicsInterests } from "@toppick/common/build/api";
-import { CONSTANTS } from "@/constants/app";
 import { getCategories } from "@toppick/common/build/api";
 import { getTopics } from "@toppick/common/build/api";
+import { AuthContext } from "@/context/AuthContext";
 
-const DEFAULT_TOPIC: TopicDetail = {
+const DEFAULT_TOPIC: Topic = {
   id: -1,
-  source: CONSTANTS.TOPIC_SOURCES[0],
+  source: Object.values(TopicSource)[0],
   title: "",
   description: "",
   slug: "",
   image: "",
   level: TopicLevel.Medium,
-  questionCounter: 0,
-  related_topics_related_topics_source_idTotopics: [],
-  topic_categories: [],
+  questionCount: 0,
+  topics_related_topicsTotopics_related_source_id: [],
+  topics_categories: [],
   topic_tags: [],
   timestamp: new Date(),
   active: false,
@@ -35,6 +37,7 @@ const DEFAULT_TOPIC: TopicDetail = {
   keywordsArticle: [],
   keywordsImage: [],
   keywordsVideo: [],
+  type: TopicType.Default,
 };
 
 interface TopicDialogProps {
@@ -60,14 +63,15 @@ export default function TopicDialog({
   descriptionPlaceholder,
   titlePlaceholder,
 }: TopicDialogProps) {
-  const [currentTopic, setCurrentTopic] =
-    React.useState<TopicDetail>(DEFAULT_TOPIC);
+  const [currentTopic, setCurrentTopic] = React.useState<Topic>(DEFAULT_TOPIC);
   const [topics, setCurrentTopics] = React.useState<TopicFeatured[]>([]);
   const [interests, setInterests] = React.useState<TopicInterest[]>([]);
   const [categories, setCategories] = React.useState<CategoryFeatured[]>([]);
   const [selectedTopics, setSelectedTopics] = React.useState<TopicFeatured[]>(
     []
   );
+  const { authToken } = React.useContext(AuthContext);
+
   const [selectedCategories, setSelectedCategories] = React.useState<
     CategoryFeatured[]
   >([]);
@@ -76,7 +80,7 @@ export default function TopicDialog({
     (async () => {
       try {
         if (topic) {
-          const topicDetail = await getTopicDetails({
+          const topicDetail = await getTopicDetails(authToken, {
             id: topic.id,
             include_interests: true,
             include_categories: true,
@@ -84,7 +88,6 @@ export default function TopicDialog({
           });
 
           setCurrentTopic(topicDetail);
-          //get preselected
           const selectedTopics = await getTopics({
             topic_id: topic.id,
             include_inactive: true,
@@ -136,8 +139,8 @@ export default function TopicDialog({
       featured: currentTopic.featured!,
       level: currentTopic.level,
       source: currentTopic.source,
-      topic_tags: currentTopic.topic_tags,
-      id: currentTopic.id,
+      type: currentTopic.type,
+      topic_tags: currentTopic.topic_tags!,
       categories: selectedCategories.map((category) => ({
         category_id: category.id,
       })),
@@ -157,10 +160,8 @@ export default function TopicDialog({
       (selected) => categories[index].id === selected.id
     );
     if (selectedIndex < 0) {
-      //selected
       newSelectedCategories.push(categories[index]);
     } else {
-      //select
       newSelectedCategories.splice(selectedIndex, 1);
     }
     setSelectedCategories(newSelectedCategories);
@@ -172,7 +173,6 @@ export default function TopicDialog({
       (selected) => interests[index].title === selected.interests.title
     );
     if (selectedIndex < 0) {
-      //selected
       newTopic.topic_interests!.push({
         interests: {
           title: interests[index].title as any,
@@ -180,7 +180,6 @@ export default function TopicDialog({
         interest_id: interests[index].id,
       });
     } else {
-      //select
       newTopic.topic_interests!.splice(selectedIndex, 1);
     }
     setCurrentTopic(newTopic);
@@ -192,13 +191,18 @@ export default function TopicDialog({
       (selected) => topics[index].id === selected.id
     );
     if (selectedIndex < 0) {
-      //selected
       newSelectedTopics.push(topics[index]);
     } else {
-      //select
       newSelectedTopics.splice(selectedIndex, 1);
     }
     setSelectedTopics(newSelectedTopics);
+  };
+
+  const handleTypeChange = (e: React.ChangeEvent<any>) => {
+    setCurrentTopic({
+      ...currentTopic,
+      type: e.target.value,
+    });
   };
 
   const handleFeaturedChange = (e: React.ChangeEvent<any>) => {
@@ -235,12 +239,15 @@ export default function TopicDialog({
 
   const onTopicTagRemove = (i: number) => {
     const newTopic = { ...currentTopic };
-    newTopic.topic_tags.splice(i, 1);
+    newTopic.topic_tags!.splice(i, 1);
     setCurrentTopic(newTopic);
   };
 
   const onTopicTagAdd = (tag: string) => {
-    const newTags = currentTopic.topic_tags.filter((t) => t.title !== tag);
+    if (!tag) {
+      return;
+    }
+    const newTags = currentTopic.topic_tags!.filter((t) => t.title !== tag);
     newTags.push({
       title: tag,
     });
@@ -250,7 +257,7 @@ export default function TopicDialog({
   const isShowSubmit = (): boolean =>
     currentTopic.title != "" &&
     currentTopic.image !== "" &&
-    currentTopic.topic_tags.length > 0 &&
+    currentTopic.topic_tags!.length > 0 &&
     selectedTopics.length > 0 &&
     selectedCategories.length > 0;
 
@@ -297,7 +304,7 @@ export default function TopicDialog({
           handleInterestsChange={handleInterestsChange}
           level={currentTopic.level}
           source={currentTopic.source}
-          tags={currentTopic.topic_tags}
+          tags={currentTopic.topic_tags!}
           interests={interests}
           selectedInterests={currentTopic.topic_interests!.map(
             (interest, index) => ({
@@ -305,6 +312,8 @@ export default function TopicDialog({
               title: interest.interests.title,
             })
           )}
+          handleTypeChange={handleTypeChange}
+          type={currentTopic.type!}
           onTagAdd={onTopicTagAdd}
           onTagRemove={onTopicTagRemove}
           featured={currentTopic.featured ? "true" : "false"}
@@ -315,7 +324,7 @@ export default function TopicDialog({
   ];
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={300}

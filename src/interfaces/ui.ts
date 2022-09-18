@@ -7,7 +7,7 @@ export enum Lang {
   ES = "es",
 }
 
-export interface Value {
+export interface SelectValue {
   title: string;
 }
 

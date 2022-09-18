@@ -1,29 +1,19 @@
 import React from "react";
-import Chip from "@/components/ui/select/ObjectChip";
-import { makeStyles } from "@material-ui/core";
+import Chip from "@/components/ui/select/Chip";
 import {
   CategoryFeatured,
   TopicFeatured,
 } from "@toppick/common/build/interfaces";
+import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 
 interface RelatedProps {
   categories: CategoryFeatured[];
   topics: TopicFeatured[];
   selectedCategories: CategoryFeatured[];
   selectedTopics: TopicFeatured[];
-  handleCategoriesChange: (i: number) => void;
-  handleTopicsChange: (i: number) => void;
+  handleCategoriesChange: (index: number) => void;
+  handleTopicsChange: (index: number) => void;
 }
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 50,
-  },
-}));
 
 export default function Related({
   categories,
@@ -33,22 +23,22 @@ export default function Related({
   handleCategoriesChange,
   handleTopicsChange,
 }: RelatedProps) {
-  const classes = useStyles();
+  const classes = useDialogStyles();
 
   return (
-    <div className={classes.container}>
+    <div className={classes.tabContainer}>
       <Chip
-        width={300}
-        selectedValues={selectedCategories}
-        values={categories.sort((a, b) => a.title.localeCompare(b.title))}
+        selectedValues={selectedCategories.map((v) => v.title)}
+        values={categories.map((v) => v.title)}
         header="Related Categories"
+        containerClassName={classes.fieldContainer}
         handleChange={handleCategoriesChange}
       />
       <Chip
-        width={300}
-        selectedValues={selectedTopics}
-        values={topics.sort((a, b) => a.title.localeCompare(b.title))}
+        selectedValues={selectedTopics.map((v) => v.title)}
+        values={topics.map((v) => v.title)}
         header="Related Topics"
+        containerClassName={classes.fieldContainer}
         handleChange={handleTopicsChange}
       />
     </div>

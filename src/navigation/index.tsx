@@ -45,7 +45,6 @@ export const Navigation = () => {
       loading={isAppLoading}
       userRole={userRole}
       isAuthenticated={isAuthenticated}
-      token={authToken}
       username={username}
       currentLanguage={currentLanguage}
     >

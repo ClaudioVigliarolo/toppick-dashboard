@@ -5,32 +5,27 @@ import SearchBar from "@/components/ui/SearchBar";
 import UserDialog from "@/components/user/UserDialog";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
-import { onUserDelete, onUserUpdate } from "@/utils/users";
 import { StatusContext } from "@/context/StatusContext";
-import { getUsers } from "@toppick/common/build/api";
-import { UserDetail, UserRole } from "@toppick/common/build/interfaces";
-
-const NO_USER: UserDetail = {
-  username: "",
-  email: "",
-  role: UserRole.Default,
-  country: "",
-  firstname: "",
-  image: "",
-  language: "",
-  lastname: "",
-  user_interests: [],
-  user_languages: [],
-  profession: "",
-  uid: "",
-};
+import {
+  deleteUser,
+  getUsers,
+  updateUserRole,
+} from "@toppick/common/build/api";
+import { User, UserFeatured } from "@toppick/common/build/interfaces";
+import { getErrorMessage } from "@toppick/common/build/utils";
 
 export default function UsersPage() {
   const { authToken } = React.useContext(AuthContext);
-  const [users, setUsers] = React.useState<UserDetail[]>([]);
-  const [currentUser, setCurrentUser] = React.useState<UserDetail>(NO_USER);
-  const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
-  const [editDialog, setEditDialog] = React.useState<boolean>(false);
+  const [users, setUsers] = React.useState<UserFeatured[]>([]);
+  const [currentUser, setCurrentUser] = React.useState<UserFeatured | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>("");
+  const [isShowDeleteDialog, setIsShowDeleteDialog] =
+    React.useState<boolean>(false);
+  const [isShowUpdateDialog, setIsShowUpdateDialog] =
+    React.useState<boolean>(false);
   const [searchText, setSearchText] = React.useState<string>("");
   const { setIsAppLoading, setAppSuccess, setAppError } =
     React.useContext(StatusContext);
@@ -41,11 +36,7 @@ export default function UsersPage() {
     (async () => {
       setIsAppLoading(true);
       try {
-        const retrievedUsers = await getUsers(authToken);
-        if (retrievedUsers) {
-          //filter the root user from the list
-          setUsers(retrievedUsers);
-        }
+        setUsers(await getUsers(authToken));
       } catch (error) {
         setAppError();
       }
@@ -54,31 +45,43 @@ export default function UsersPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
-  const onUpdateSubmit = (user: UserDetail) => {
-    onUserUpdate(
-      {
-        ...user,
-      },
-      users,
-      setUsers,
-      authToken,
-      setIsAppLoading,
-      () => {
-        setEditDialog(false);
-        setAppSuccess();
-      },
-      setAppError
-    );
+  const onUpdateUser = async (updatedUser: User) => {
+    setIsLoading(true);
+    setError("");
+    try {
+      await updateUserRole(updatedUser, authToken);
+      setIsShowUpdateDialog(false);
+      setCurrentUser(null);
+      setAppSuccess();
+    } catch (error) {
+      setError(getErrorMessage(error));
+    }
+    setIsLoading(false);
   };
 
-  const onUpdate = (user: UserDetail) => {
+  const onUpdate = (user: UserFeatured) => {
     setCurrentUser(user);
-    setEditDialog(true);
+    setIsShowUpdateDialog(true);
   };
 
-  const onDelete = (user: UserDetail) => {
+  const onDelete = (user: UserFeatured) => {
     setCurrentUser(user);
-    setDeleteDialog(true);
+    setIsShowDeleteDialog(true);
+  };
+
+  const onDeleteSubmit = async () => {
+    setIsAppLoading(true);
+    try {
+      await deleteUser(currentUser!.uid, authToken);
+      const newUsers = users.filter((user) => user.uid !== currentUser!.uid);
+      setUsers(newUsers);
+      setCurrentUser(null);
+      setIsShowDeleteDialog(false);
+      setAppSuccess();
+    } catch (error) {
+      setAppError(getErrorMessage(error));
+    }
+    setIsAppLoading(false);
   };
 
   return (
@@ -99,35 +102,25 @@ export default function UsersPage() {
       />
 
       <UserDialog
-        user={currentUser}
-        loading={false}
-        open={editDialog}
-        onConfirm={onUpdateSubmit}
+        userId={currentUser ? currentUser.uid : null}
+        loading={isLoading}
+        open={isShowUpdateDialog}
+        error={error}
+        onConfirm={onUpdateUser}
         headerText="Edit User"
         onRefuse={() => {
-          setEditDialog(false);
-          setCurrentUser(NO_USER);
+          setIsShowUpdateDialog(false);
+          setCurrentUser(null);
         }}
       />
 
       <DeleteDialog
-        open={deleteDialog}
-        onConfirm={() => {
-          onUserDelete(
-            currentUser,
-            users,
-            setUsers,
-            authToken,
-            setIsAppLoading,
-            setAppSuccess,
-            setAppError
-          );
-          setDeleteDialog(false);
-        }}
+        open={isShowDeleteDialog}
+        onConfirm={onDeleteSubmit}
         title="Proceed to Delete this User?"
         description="The user data will be removed from the main database. You cannot undo this operation"
         onRefuse={() => {
-          setDeleteDialog(false);
+          setIsShowDeleteDialog(false);
         }}
       />
     </>

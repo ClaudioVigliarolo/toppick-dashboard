@@ -1,8 +1,8 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route as ReactRoute } from "react-router-dom";
 import { Lang } from "@/interfaces/ui";
 
-interface CustomRouteProps {
+interface RouteProps {
   path: string;
   condition: boolean;
   Component: any;
@@ -10,15 +10,12 @@ interface CustomRouteProps {
   currentLanguage: Lang;
 }
 
-const CustomRoute = ({ path, Component, condition }: CustomRouteProps) => {
+const Route = ({ path, Component, condition }: RouteProps) => {
   return condition ? (
-    <Route
+    <ReactRoute
       path={path}
       render={(routeProps) => <Component navigationProps={routeProps} />}
     />
-  ) : //se loading && ! autenticated => display spinner
-  //se loading && authenticated => currrent
-  // se ! authenticated => login
-  null;
+  ) : null;
 };
-export default CustomRoute;
+export default Route;

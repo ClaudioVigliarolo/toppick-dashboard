@@ -1,6 +1,6 @@
 import React from "react";
 import TableCategories from "@/components/category/TableCategories";
-import Button from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/button/Button";
 import CategoryDialog from "@/components/category/dialog";
 import SearchBar from "@/components/ui/SearchBar";
 import { useAppStyles } from "@/styles/common";
@@ -54,11 +54,11 @@ export default function CategoryPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage]);
 
-  const onCreateCategory = async (category: CategoryCreated) => {
+  const onCreateCategory = async (createdCategory: CategoryCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const newCategory = await createCategory(category, authToken);
+      const newCategory = await createCategory(authToken, createdCategory);
       const newCategories = [...categories];
       newCategories.unshift(newCategory);
       setCategories(newCategories);
@@ -70,16 +70,20 @@ export default function CategoryPage() {
     setIsLoading(false);
   };
 
-  const onUpdateCategory = async (category: CategoryCreated) => {
+  const onUpdateCategory = async (updatedCategory: CategoryCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const newCategory = await updateCategory(category, authToken);
+      const category = await updateCategory(
+        authToken,
+        currentCategory!.id,
+        updatedCategory
+      );
       const newCategories = [...categories];
       const updatedIndex = newCategories.findIndex(
-        (cat) => cat.id === newCategory.id
+        (cat) => cat.id === category.id
       );
-      newCategories[updatedIndex] = newCategory;
+      newCategories[updatedIndex] = category;
       setCategories(newCategories);
       setIsShowUpdateDialog(false);
       setCurrentCategory(null);
@@ -93,7 +97,7 @@ export default function CategoryPage() {
   const onDeleteCategory = async () => {
     setIsAppLoading(true);
     try {
-      await deleteCategory(currentCategory!.id, authToken);
+      await deleteCategory(authToken, currentCategory!.id);
       const newCategories = categories.filter(
         (categ) => categ.id !== currentCategory!.id
       );

@@ -1,18 +1,19 @@
 import React from "react";
 import {
-  CustomTable,
+  Table,
   StyledEditCell,
   StyledTableRow,
-  useStyles,
   StyledTableCell,
-} from "../ui/TableStyles";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+  useTableStyles,
+} from "../ui/Table";
 import SearchIcon from "@material-ui/icons/Search";
 import { getFormattedDate } from "@/utils/time";
 import { TopicFeatured } from "@toppick/common/build/interfaces";
 import { makeStyles } from "@material-ui/core";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/styles/colors";
+import { useAppStyles } from "@/styles/common";
+import DeleteIcon from "../ui/icon/DeleteIcon";
+import EditIcon from "../ui/icon/EditIcon";
 interface TableTopicsProps {
   topics: TopicFeatured[];
   searchText: string;
@@ -21,10 +22,29 @@ interface TableTopicsProps {
   onDeleteTopic: (topic: TopicFeatured) => void;
 }
 
-const useLocalStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
+  iconsContainer: {
+    position: "absolute",
+    right: 30,
+    color: "orange",
+    top: "30%",
+    cursor: "pointer",
+    width: 150,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   searchIcon: {
     cursor: "pointer",
     color: COLORS.blue,
+  },
+  circle: {
+    display: "flex",
+    width: 10,
+    height: 10,
+    borderRadius: "50%",
+    textAlign: "center",
+    alignSelf: "center",
   },
 }));
 
@@ -35,8 +55,7 @@ export default function TableTopics({
   onUpdateTopic,
   onUpdateSearch,
 }: TableTopicsProps) {
-  const classes = useStyles();
-  const localClasses = useLocalStyles();
+  const classes = { ...useTableStyles(), ...useStyles() };
 
   const renderRows = (topics: TopicFeatured[]) => {
     return topics.map((topic: TopicFeatured, index: number) => {
@@ -48,7 +67,7 @@ export default function TableTopics({
               {getFormattedDate(topic.timestamp)}
             </StyledTableCell>
             <StyledEditCell>
-              <div className={classes.iconsContainer} style={{}}>
+              <div className={classes.iconsContainer}>
                 <div
                   className={classes.circle}
                   style={{
@@ -56,13 +75,12 @@ export default function TableTopics({
                   }}
                 />
                 <SearchIcon
-                  className={localClasses.searchIcon}
+                  className={classes.searchIcon}
                   onClick={() => {
                     onUpdateSearch(topic);
                   }}
                 />
                 <EditIcon
-                  className={classes.editIcon}
                   onClick={() => {
                     onUpdateTopic(topic);
                   }}
@@ -71,7 +89,6 @@ export default function TableTopics({
                   onClick={() => {
                     onDeleteTopic(topic);
                   }}
-                  className={classes.deleteIcon}
                 />
               </div>
             </StyledEditCell>
@@ -82,8 +99,8 @@ export default function TableTopics({
   };
 
   return (
-    <CustomTable
-      columns={["40%", "40%", "10%"]}
+    <Table
+      columns={["40%", "40%", "20%"]}
       columnNames={["title", "last update", ""]}
       body={renderRows(topics)}
     />

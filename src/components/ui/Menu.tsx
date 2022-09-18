@@ -7,22 +7,20 @@ import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/styles/colors";
 import { routes } from "@/navigation/routes";
+import LogoutIcon from "@material-ui/icons/ExitToApp";
 import {
   createStyles,
   LinearProgress,
+  ListItemIcon,
   makeStyles,
   MenuItem,
   Theme,
   withStyles,
 } from "@material-ui/core";
-import LanguageSelect from "./select/LanguageSelect";
-import HeaderSection from "./Header";
 import { getCondition } from "@/navigation";
 import { Lang } from "@/interfaces/ui";
 import { CONSTANTS } from "@/constants/app";
@@ -31,16 +29,23 @@ import { auth } from "@/services/firebase";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    exitToApp: {
-      color: COLORS.menuIcon,
-    },
-    menu: {
+    container: {
       display: "flex",
     },
-    languageSelectContainer: {
+    appLanguage: {
       position: "absolute",
+      top: 15,
       right: 20,
-      top: 0,
+      fontSize: 20,
+      cursor: "default",
+      fontWeight: "bold",
+      color: COLORS.primaryOrange,
+    },
+    appTitle: {
+      textTransform: "capitalize",
+    },
+    logoutIcon: {
+      color: COLORS.menuIcon,
     },
     appBar: {
       width: `calc(100% - ${CONSTANTS.DRAWER_WIDTH}px)`,
@@ -72,6 +77,18 @@ const useStyles = makeStyles((theme: Theme) =>
         width: "200%",
       },
     },
+    headerContainer: {
+      textAlign: "left",
+      color: "white",
+      fontSize: 45,
+      backgroundColor: COLORS.primaryBackground,
+      fontWeight: "bold",
+      paddingLeft: 60,
+      textTransform: "capitalize",
+      paddingTop: 10,
+      marginBottom: 50,
+      alignSelf: "flex-start",
+    },
 
     drawerPaper: {
       width: CONSTANTS.DRAWER_WIDTH,
@@ -92,24 +109,25 @@ const StyledLinearProgress = withStyles({
   },
 })(LinearProgress);
 
+interface MenuProps {
+  children: React.ReactNode;
+  userRole: UserRole;
+  isAuthenticated: boolean;
+  currentLanguage: Lang;
+  loading: boolean;
+  username: string;
+}
+
 export default function Menu({
   children,
   userRole,
   isAuthenticated,
-  token,
-  username,
   currentLanguage,
   loading,
-}: {
-  children: React.ReactNode;
-  userRole: UserRole;
-  isAuthenticated: boolean;
-  token: string;
-  username: string;
-  currentLanguage: Lang;
-  loading: boolean;
-}) {
+  username,
+}: MenuProps) {
   const [path, setPath] = React.useState("");
+  const [appTitle, setAppTitle] = React.useState("");
   const classes = useStyles();
   const location = useLocation();
 
@@ -117,13 +135,22 @@ export default function Menu({
     setPath(location.pathname);
   }, [location, setPath]);
 
+  React.useEffect(() => {
+    if (username) {
+      setAppTitle("Welcome back, " + username);
+    }
+    setTimeout(() => {
+      setAppTitle("TopPick");
+    }, 5000);
+  }, [username]);
+
   const activetRoute = (route: string) => {
     return route === path;
   };
 
   const getRouteName = (path: string) => {
     if (loading) {
-      return "Please wait...";
+      return "Loading...";
     }
     if (getCondition(userRole, path, isAuthenticated)) {
       const route = routes.find((route) => route.path == path);
@@ -135,16 +162,16 @@ export default function Menu({
   };
 
   return (
-    <div className={classes.menu}>
+    <div className={classes.container}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6" noWrap>
-            TOP Pick
+          <Typography variant="h6" noWrap className={classes.appTitle}>
+            {appTitle}
           </Typography>
           {isAuthenticated && (
-            <div className={classes.languageSelectContainer}>
-              <LanguageSelect currentLanguage={currentLanguage} />
+            <div className={classes.appLanguage}>
+              {currentLanguage.toUpperCase()}
             </div>
           )}
         </Toolbar>
@@ -191,16 +218,15 @@ export default function Menu({
               }}
             >
               <ListItemIcon>
-                <ExitToAppIcon className={classes.exitToApp} />
+                <LogoutIcon className={classes.logoutIcon} />
               </ListItemIcon>
-              (
-              <ListItemText primary="logout" className={classes.drawerItem} />)
+              <ListItemText primary="logout" className={classes.drawerItem} />
             </ListItem>
           )}
         </List>
       </Drawer>
       <div className={classes.childrenContainer}>
-        <HeaderSection title={getRouteName(path)} />
+        <div className={classes.headerContainer}>{getRouteName(path)}</div>
         {children}
       </div>
     </div>

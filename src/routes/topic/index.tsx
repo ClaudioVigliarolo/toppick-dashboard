@@ -1,6 +1,6 @@
 import React from "react";
 import TableTopics from "@/components/topic/TableTopics";
-import Button from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/button/Button";
 import SearchBar from "@/components/ui/SearchBar";
 import TopicDialog from "@/components/topic/dialog";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
@@ -13,7 +13,7 @@ import {
   updateTopic,
 } from "@toppick/common/build/api";
 import { TopicCreated, TopicFeatured } from "@toppick/common/build/interfaces";
-import SearchDialog from "@/components/search/keyword_dialog_preview";
+import SearchDialog from "@/components/search/dialog_keyword_preview";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import { getTopics } from "@toppick/common/build/api";
 
@@ -61,7 +61,7 @@ export default function TopicPage() {
     setIsLoading(true);
     setError("");
     try {
-      const newTopic = await updateTopic(topic, authToken);
+      const newTopic = await updateTopic(authToken, currentTopic!.id, topic);
       const index = topics.findIndex((topic) => topic.id == newTopic.id);
       topics[index] = newTopic;
       setTopics([...topics]);
@@ -77,9 +77,9 @@ export default function TopicPage() {
   const onDeleteSubmit = async () => {
     setIsAppLoading(true);
     try {
-      await deleteTopic(currentTopic!.id, authToken);
+      await deleteTopic(authToken, currentTopic!.id);
       const newTopics = topics.filter((topic) => topic.id !== currentTopic!.id);
-      setTopics([...newTopics]);
+      setTopics(newTopics);
       setCurrentTopic(null);
       setIsShowDeleteDialog(false);
       setAppSuccess();
@@ -92,7 +92,7 @@ export default function TopicPage() {
     setIsLoading(true);
     setError("");
     try {
-      const newTopic = await createTopic(topic, authToken);
+      const newTopic = await createTopic(authToken, topic);
       topics.unshift(newTopic);
       setTopics([...topics]);
       setIsShowCreateDialog(false);

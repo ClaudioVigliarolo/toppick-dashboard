@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles, TextField } from "@material-ui/core";
-import Button from "@/components/ui/buttons/Button";
+import Button from "@/components/ui/button/Button";
 import { auth } from "@/services/firebase";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
 import CustomAlert from "@/components/ui/Alert";
 
 export default function LoginPage() {
-  //renamed  setEmail to setEmailState for context function ovverriding problem
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
@@ -59,9 +58,7 @@ export default function LoginPage() {
   const onSubmit = async (): Promise<void> => {
     setLoading(true);
     try {
-      //pre-validation
       validDateForm();
-      //sign in
       await signIn();
       history.push("/categories");
     } catch (error) {
@@ -76,7 +73,6 @@ export default function LoginPage() {
       <div className={classes.container}>
         <TextField
           onChange={(e) => setEmail(e.currentTarget.value)}
-          id="standard-basic"
           label="Email"
           type="email"
           className={classes.textField}
@@ -85,7 +81,6 @@ export default function LoginPage() {
 
         <TextField
           onChange={(e) => setPassword(e.currentTarget.value)}
-          id="standard-basic"
           label="Password"
           type="password"
           value={password}

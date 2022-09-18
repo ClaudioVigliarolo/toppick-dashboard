@@ -1,19 +1,22 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import React from "react";
-import { AppDialog, TabData } from "../ui/dialog/DialogStyles";
-import Select from "../ui/select/SimpleSelect";
-import { UserDetail, UserRole } from "@toppick/common/build/interfaces";
+import { Dialog, TabData } from "../ui/dialog/Dialog";
+import Select from "../ui/select/Select";
+import { User, UserRole } from "@toppick/common/build/interfaces";
+import { AuthContext } from "@/context/AuthContext";
+import { getUserDetails } from "@toppick/common/build/api";
 
 interface UserDialogProps {
   open: boolean;
-  onConfirm: (user: UserDetail) => void;
+  onConfirm: (user: User) => void;
   onRefuse: () => void;
-  user: UserDetail;
+  userId: string | null;
   headerText: string;
   loading: boolean;
+  error: string;
 }
 
-const NO_USER: UserDetail = {
+const DEFAULT_USER: User = {
   username: "",
   country: "",
   firstname: "",
@@ -41,54 +44,79 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function UserDialog(props: UserDialogProps) {
+export default function UserDialog({
+  headerText,
+  loading,
+  onConfirm,
+  onRefuse,
+  open,
+  userId,
+  error,
+}: UserDialogProps) {
   const classes = useStyles();
-  const [user, setUser] = React.useState<UserDetail>(NO_USER);
+  const { authToken } = React.useContext(AuthContext);
+
+  const [currentUser, setCurrentUser] = React.useState<User>(DEFAULT_USER);
 
   React.useEffect(() => {
-    setUser(props.user);
-  }, [props.user]);
-
-  const onConfirm = () => {
-    props.onConfirm(user);
-  };
+    (async () => {
+      if (userId) {
+        setCurrentUser(
+          await getUserDetails(authToken, {
+            user_id: userId,
+            include_role: true,
+          })
+        );
+      } else {
+        setCurrentUser(DEFAULT_USER);
+      }
+    })();
+  }, [userId, open]);
 
   const isShowSubmit = (): boolean => true;
 
   const handleRoleChange = (e: React.ChangeEvent<any>) => {
-    setUser({ ...user, role: e.target.value });
+    setCurrentUser({ ...currentUser, role: e.target.value });
   };
+
+  const setUsername = (e: React.ChangeEvent<any>) => {
+    setCurrentUser({ ...currentUser, username: e.currentTarget.value });
+  };
+  const setEmail = (e: React.ChangeEvent<any>) => {
+    setCurrentUser({ ...currentUser, email: e.currentTarget.value });
+  };
+
+  const onSubmit = () => {
+    onConfirm(currentUser);
+  };
+
   const tabs: TabData[] = [
     {
       label: "User",
       children: (
         <div className={classes.container}>
           <TextField
-            onChange={(e) =>
-              setUser({ ...user, username: e.currentTarget.value })
-            }
-            id="standard-basic"
+            onChange={setUsername}
             label="Username"
             className={classes.textField}
-            value={user.username}
+            value={currentUser.username}
             disabled={true}
           />
 
           <TextField
-            onChange={(e) => setUser({ ...user, email: e.currentTarget.value })}
+            onChange={setEmail}
             label="Email"
             className={classes.textField}
-            value={user.email}
+            value={currentUser.email}
             disabled={true}
           />
 
           <Select
             handleChange={handleRoleChange}
-            value={user.role}
+            value={currentUser.role!}
             values={Object.values(UserRole)}
             color="black"
-            width={300}
-            defaultValue={user.role}
+            containerClassName={classes.textField}
           />
         </div>
       ),
@@ -96,13 +124,14 @@ export default function UserDialog(props: UserDialogProps) {
   ];
   return (
     <>
-      <AppDialog
-        open={props.open}
-        loading={props.loading}
-        headerText={props.headerText}
+      <Dialog
+        open={open}
+        loading={loading}
+        headerText={headerText}
         minWidth={400}
-        onConfirm={onConfirm}
-        onRefuse={props.onRefuse}
+        onConfirm={onSubmit}
+        error={error}
+        onRefuse={onRefuse}
         tabData={tabs}
         showTabs={false}
         confirmButtonDisabled={!isShowSubmit()}

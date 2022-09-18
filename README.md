@@ -3,16 +3,13 @@
   <a href="https://github.com/ClaudioVigliarolo/top-pick-backend">
     <img src="https://i.ibb.co/9rcHG4t/image.png" alt="Logo">
   </a>
-
-  <h3 align="center">Top Pick front end Dashboard</h3>
-
-<!-- USAGE EXAMPLES -->
+  <h3 align="center">Toppick Dashboard</h3>
 <br />
 <br />
 
 ## Overview
 
-the App is the front end of the Top Pick project. For more details, check out the following <a href="https://github.com/ClaudioVigliarolo/top-pick-frontend"><strong>repo</strong></a> which provides the node back end the app interacts with
+the App is the dashboard for the Toppick Project
 
 <br />
 

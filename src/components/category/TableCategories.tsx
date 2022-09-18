@@ -1,14 +1,16 @@
 import React from "react";
 import {
-  CustomTable,
+  Table,
   StyledEditCell,
   StyledTableRow,
-  useStyles,
+  useTableStyles,
   StyledTableCell,
-} from "../ui/TableStyles";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from "../ui/Table";
 import { CategoryFeatured } from "@toppick/common/build/interfaces";
+import { useAppStyles } from "@/styles/common";
+import { makeStyles } from "@material-ui/core";
+import EditIcon from "../ui/icon/EditIcon";
+import DeleteIcon from "../ui/icon/DeleteIcon";
 
 interface TableCategoriesProps {
   categories: CategoryFeatured[];
@@ -17,13 +19,27 @@ interface TableCategoriesProps {
   searchText: string;
 }
 
+const useStyles = makeStyles(() => ({
+  iconsContainer: {
+    position: "absolute",
+    right: 30,
+    color: "orange",
+    top: "30%",
+    cursor: "pointer",
+    width: 80,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+}));
+
 export default function TableCategories({
   categories,
   searchText,
   onDelete,
   onUpdate,
 }: TableCategoriesProps) {
-  const classes = useStyles();
+  const classes = { ...useTableStyles(), ...useStyles() };
 
   const renderRows = (categories: CategoryFeatured[]) => {
     return categories.map((category: CategoryFeatured, index: number) => {
@@ -34,7 +50,6 @@ export default function TableCategories({
             <StyledEditCell>
               <div className={classes.iconsContainer}>
                 <EditIcon
-                  className={classes.editIcon}
                   onClick={() => {
                     onUpdate(category);
                   }}
@@ -43,7 +58,6 @@ export default function TableCategories({
                   onClick={() => {
                     onDelete(category);
                   }}
-                  className={classes.deleteIcon}
                 />
               </div>
             </StyledEditCell>
@@ -53,7 +67,7 @@ export default function TableCategories({
     });
   };
   return (
-    <CustomTable
+    <Table
       columns={["95%", "5%"]}
       columnNames={["category", ""]}
       body={renderRows(categories)}

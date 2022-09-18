@@ -1,10 +1,10 @@
 import React from "react";
-import { AppDialog, TabData } from "@/components/ui/dialog/DialogStyles";
+import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Related from "./sections/Related";
 import Overview from "./sections/Overview";
 import {
   CategoryCreated,
-  CategoryDetail,
+  Category,
   CategoryFeatured,
   Lang,
   TopicFeatured,
@@ -21,13 +21,13 @@ interface CategoryDialogProps {
   category: CategoryFeatured | null;
 }
 
-const DEFAULT_CATEGORY: CategoryDetail = {
+const DEFAULT_CATEGORY: Category = {
   id: -1,
   title: "",
   slug: "",
   description: "",
   image: "",
-  topicCounter: 0,
+  topicCount: 0,
 };
 
 export default function CategoryDialog({
@@ -40,7 +40,7 @@ export default function CategoryDialog({
   error,
 }: CategoryDialogProps) {
   const [currentCategory, setCurrentCategory] =
-    React.useState<CategoryDetail>(DEFAULT_CATEGORY);
+    React.useState<Category>(DEFAULT_CATEGORY);
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
   const [selectedTopics, setSelectedTopics] = React.useState<TopicFeatured[]>(
     []
@@ -50,7 +50,9 @@ export default function CategoryDialog({
     (async () => {
       try {
         if (category) {
-          const categoryDetail = await getCategoryDetails(category.slug);
+          const categoryDetail = await getCategoryDetails({
+            slug: category.slug,
+          });
           setCurrentCategory(categoryDetail);
           const topics = await getTopics({
             category_id: category.id,
@@ -84,7 +86,6 @@ export default function CategoryDialog({
 
   const onConfirm = async () => {
     const newCategory: CategoryCreated = {
-      id: currentCategory.id,
       description: currentCategory.description,
       image: currentCategory.image,
       slug: currentCategory.slug,
@@ -117,20 +118,16 @@ export default function CategoryDialog({
   };
 
   const isShowSubmit = (): boolean =>
-    currentCategory.description != "" &&
-    currentCategory.image != "" &&
-    selectedTopics.length > 0;
+    currentCategory.description != "" && currentCategory.image != "";
 
-  const handleCategoriesChange = (index: number) => {
+  const handleTopicsChange = (index: number) => {
     const newSelectedTopics = [...selectedTopics];
     const selectedIndex = selectedTopics.findIndex(
       (selected) => topics[index].id === selected.id
     );
     if (selectedIndex < 0) {
-      //selected
       newSelectedTopics.push(topics[index]);
     } else {
-      //select
       newSelectedTopics.splice(selectedIndex, 1);
     }
     setSelectedTopics(newSelectedTopics);
@@ -157,7 +154,7 @@ export default function CategoryDialog({
       children: (
         <Related
           selectedTopics={selectedTopics}
-          handleCategoriesChange={handleCategoriesChange}
+          handleTopicsChange={handleTopicsChange}
           topics={topics}
         />
       ),
@@ -166,7 +163,7 @@ export default function CategoryDialog({
 
   return (
     <>
-      <AppDialog
+      <Dialog
         open={open}
         headerText={headerText}
         minWidth={600}
