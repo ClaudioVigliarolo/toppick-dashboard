@@ -83,16 +83,16 @@ export default function Info({
           containerClassName={classes.fieldContainer}
           header="Featured"
         />
-      </div>
-      <Chip
-        selectedValues={selectedInterests.map((v) => v.title)}
-        values={interests.map((v) => v.title)}
-        header="Topic Interests"
-        handleChange={handleInterestsChange}
-        containerClassName={classes.fieldContainer}
-      />
-      <div className={classes.fieldContainer}>
-        <TagSelector tags={tags} onRemove={onTagRemove} onAdd={onTagAdd} />
+        <Chip
+          selectedValues={selectedInterests.map((v) => v.title)}
+          values={interests.map((v) => v.title)}
+          header="Topic Interests"
+          handleChange={handleInterestsChange}
+          containerClassName={classes.fieldContainer}
+        />
+        <div className={classes.fieldContainer}>
+          <TagSelector tags={tags} onRemove={onTagRemove} onAdd={onTagAdd} />
+        </div>
       </div>
     </>
   );

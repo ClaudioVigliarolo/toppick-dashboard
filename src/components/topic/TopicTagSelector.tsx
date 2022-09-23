@@ -29,15 +29,34 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     display: "flex",
   },
+  tagItemContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    cursor: "pointer",
+    backgroundColor: "orange",
+    color: "white",
+    borderRadius: 5,
+    padding: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    margin: 5,
+  },
+  tagItem: {
+    paddingRight: 5,
+  },
+  deleteIcon: {
+    paddingTop: 3,
+  },
 }));
 
 function TagItem({ onRemove = () => {}, tag, deletable }: TagItemProps) {
   const classes = useStyles();
-
   return (
-    <div className={classes.container}>
-      <div>{tag}</div>
-      <div style={{ marginLeft: 5, marginTop: 2 }}>
+    <div className={classes.tagItemContainer}>
+      <div className={classes.tagItem}>{tag}</div>
+      <div className={classes.deleteIcon}>
         {deletable && <DeleteIcon onClick={onRemove} size={15} />}
       </div>
     </div>
