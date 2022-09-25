@@ -14,6 +14,7 @@ import { getErrorMessage } from "@toppick/common/build/utils";
 import DialogAddButton from "@/components/ui/button/DialogAddButton";
 import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 import DialogEditField from "@/components/ui/button/DialogEditField";
+import { getAuthToken } from "@/utils/auth";
 interface ResourcesProps {
   questionId: number;
 }
@@ -31,8 +32,6 @@ export default function Resources({ questionId }: ResourcesProps) {
   );
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-
-  const { authToken } = React.useContext(AuthContext);
   const classes = useDialogStyles();
 
   React.useEffect(() => {
@@ -41,7 +40,7 @@ export default function Resources({ questionId }: ResourcesProps) {
         setResources([]);
         if (questionId) {
           setResources(
-            await getResources(authToken, {
+            await getResources(await getAuthToken(), {
               question_id: questionId,
             })
           );
@@ -56,7 +55,10 @@ export default function Resources({ questionId }: ResourcesProps) {
     setIsLoading(true);
     setError("");
     try {
-      const resource = await createResource(authToken, createdResource);
+      const resource = await createResource(
+        await getAuthToken(),
+        createdResource
+      );
       setResources([...resources, resource]);
       setCurrentResource(null);
       setIsShowCreateDialog(false);
@@ -70,7 +72,7 @@ export default function Resources({ questionId }: ResourcesProps) {
     setError("");
     try {
       const resource = await updateResource(
-        authToken,
+        await getAuthToken(),
         currentResource!.id,
         updatedResource
       );
@@ -91,7 +93,7 @@ export default function Resources({ questionId }: ResourcesProps) {
     setError("");
     setIsLoading(true);
     try {
-      await deleteResource(authToken, currentResource!.id);
+      await deleteResource(await getAuthToken(), currentResource!.id);
       const newResources = resources.filter(
         (k) => k.id !== currentResource!.id
       );

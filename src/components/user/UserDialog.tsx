@@ -5,6 +5,7 @@ import Select from "../ui/select/Select";
 import { User, UserRole } from "@toppick/common/build/interfaces";
 import { AuthContext } from "@/context/AuthContext";
 import { getUserDetails } from "@toppick/common/build/api";
+import { getAuthToken } from "@/utils/auth";
 
 interface UserDialogProps {
   open: boolean;
@@ -54,15 +55,13 @@ export default function UserDialog({
   error,
 }: UserDialogProps) {
   const classes = useStyles();
-  const { authToken } = React.useContext(AuthContext);
-
   const [currentUser, setCurrentUser] = React.useState<User>(DEFAULT_USER);
 
   React.useEffect(() => {
     (async () => {
       if (userId) {
         setCurrentUser(
-          await getUserDetails(authToken, {
+          await getUserDetails(await getAuthToken(), {
             user_id: userId,
             include_role: true,
           })

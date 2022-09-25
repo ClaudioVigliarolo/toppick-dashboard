@@ -1,12 +1,5 @@
 import React from "react";
 
-export enum Lang {
-  IT = "it",
-  EN = "en",
-  FR = "fr",
-  ES = "es",
-}
-
 export interface SelectValue {
   title: string;
 }

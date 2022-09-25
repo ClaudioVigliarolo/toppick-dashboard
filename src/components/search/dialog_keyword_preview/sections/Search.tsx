@@ -18,6 +18,7 @@ import DragAndDrop from "@/components/ui/DragAndDrop";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import DialogAddButton from "@/components/ui/button/DialogAddButton";
 import { useDialogStyles } from "@/components/ui/dialog/Dialog";
+import { getAuthToken } from "@/utils/auth";
 const useStyles = makeStyles((theme) => ({
   switchContainer: {
     position: "absolute",
@@ -51,12 +52,11 @@ export default function Search({ searchType, topicId }: SearchProps) {
   );
   const [currentKeyword, setCurrentKeyword] =
     React.useState<SearchKeyword | null>(null);
-  const { authToken } = React.useContext(AuthContext);
 
   React.useEffect(() => {
     (async () => {
       try {
-        const keywords = await getSearchKeywords(authToken, {
+        const keywords = await getSearchKeywords(await getAuthToken(), {
           include_inactive: true,
           search_type: searchType,
           topic_id: topicId,
@@ -72,7 +72,10 @@ export default function Search({ searchType, topicId }: SearchProps) {
     setError("");
     setLoading(true);
     try {
-      const keyword = await createSearchKeyword(authToken, createdKeyword);
+      const keyword = await createSearchKeyword(
+        await getAuthToken(),
+        createdKeyword
+      );
       setCurrentKeywords([...currentKeywords, keyword]);
       setIskeywordCreateModal(false);
       setCurrentKeyword(null);
@@ -86,7 +89,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
     setError("");
     setLoading(true);
     try {
-      await deleteSearchKeyword(authToken, currentKeyword!.id);
+      await deleteSearchKeyword(await getAuthToken(), currentKeyword!.id);
       const newKeywords = currentKeywords.filter(
         (k) => k.id !== currentKeyword!.id
       );
@@ -104,7 +107,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
     setLoading(true);
     try {
       const keyword = await updateSearchKeyword(
-        authToken,
+        await getAuthToken(),
         currentKeyword!.id,
         updatedKeyword
       );
@@ -126,7 +129,7 @@ export default function Search({ searchType, topicId }: SearchProps) {
         index: i,
       })
     );
-    await sortSearchKeywords(authToken, sortedKeywords);
+    await sortSearchKeywords(await getAuthToken(), sortedKeywords);
   };
 
   return (

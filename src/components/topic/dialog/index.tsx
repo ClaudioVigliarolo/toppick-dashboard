@@ -17,6 +17,7 @@ import { getTopicDetails, getTopicsInterests } from "@toppick/common/build/api";
 import { getCategories } from "@toppick/common/build/api";
 import { getTopics } from "@toppick/common/build/api";
 import { AuthContext } from "@/context/AuthContext";
+import { getAuthToken } from "@/utils/auth";
 
 const DEFAULT_TOPIC: Topic = {
   id: -1,
@@ -80,7 +81,7 @@ export default function TopicDialog({
     (async () => {
       try {
         if (topic) {
-          const topicDetail = await getTopicDetails(authToken, {
+          const topicDetail = await getTopicDetails(await getAuthToken(), {
             id: topic.id,
             include_interests: true,
             include_categories: true,

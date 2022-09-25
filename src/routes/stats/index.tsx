@@ -1,8 +1,6 @@
 import React from "react";
-import { MaterialUiColor } from "@/interfaces/ui";
 import ChartTab from "@/components/stats/ChartTab";
 import Button from "@/components/ui/button/TabButton";
-import Switch from "@/components/ui/select/Switch";
 import {
   getTodayEnd,
   getTodayStart,
@@ -15,10 +13,8 @@ import {
 import { makeStyles } from "@material-ui/core";
 import { COLORS } from "@/styles/colors";
 import { AuthContext } from "@/context/AuthContext";
-import {
-  getMaintenanceStatus,
-  updateMaintenance,
-} from "@toppick/common/build/api";
+import {} from "@toppick/common/build/api";
+import { getAuthToken } from "@/utils/auth";
 
 interface ChartButton {
   label: string;
@@ -117,42 +113,11 @@ export default function StatsPage() {
   const [dateIndex, setDateIndex] = React.useState<number>(-1);
   const [until, setUntilDate] = React.useState<Date>(DEF_UNTIL_DATE);
   const [from, setFromDate] = React.useState<Date>(DEF_FROM_DATE);
-  const [maintanance, setMaintenance] = React.useState<boolean>(false);
-  const { authToken, currentLanguage } = React.useContext(AuthContext);
-
   const classes = useStyles();
-
-  React.useEffect(() => {
-    (async () => {
-      try {
-        setMaintenance(await getMaintenanceStatus(currentLanguage, authToken));
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [currentLanguage, authToken]);
-
-  const onMaintenanceChange = async (event) => {
-    const newVal = !maintanance;
-    try {
-      await updateMaintenance(newVal, currentLanguage, authToken);
-      setMaintenance(newVal);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <>
       <div className={classes.container}>
-        <div>
-          <Switch
-            text="Maintenance"
-            switchColor={MaterialUiColor.Secondary}
-            handleChange={onMaintenanceChange}
-            value={maintanance}
-          />
-        </div>
         <div className={classes.tabsContainer}>
           {dateButtons.map((u, i) => (
             <Button
@@ -173,12 +138,7 @@ export default function StatsPage() {
             />
           ))}
         </div>
-        <ChartTab
-          currentLanguage={currentLanguage}
-          token={authToken}
-          until={until}
-          from={from}
-        />
+        <ChartTab until={until} from={from} />
       </div>
     </>
   );

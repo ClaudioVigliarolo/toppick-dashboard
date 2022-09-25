@@ -22,7 +22,6 @@ import {
   withStyles,
 } from "@material-ui/core";
 import { getCondition } from "@/navigation";
-import { Lang } from "@/interfaces/ui";
 import { CONSTANTS } from "@/constants/app";
 import { UserRole } from "@toppick/common/build/interfaces";
 import { auth } from "@/services/firebase";
@@ -113,7 +112,6 @@ interface MenuProps {
   children: React.ReactNode;
   userRole: UserRole;
   isAuthenticated: boolean;
-  currentLanguage: Lang;
   loading: boolean;
   username: string;
 }
@@ -122,7 +120,6 @@ export default function Menu({
   children,
   userRole,
   isAuthenticated,
-  currentLanguage,
   loading,
   username,
 }: MenuProps) {
@@ -169,11 +166,7 @@ export default function Menu({
           <Typography variant="h6" noWrap className={classes.appTitle}>
             {appTitle}
           </Typography>
-          {isAuthenticated && (
-            <div className={classes.appLanguage}>
-              {currentLanguage.toUpperCase()}
-            </div>
-          )}
+          {isAuthenticated && <div className={classes.appLanguage}>EN</div>}
         </Toolbar>
         {loading && <StyledLinearProgress />}
       </AppBar>

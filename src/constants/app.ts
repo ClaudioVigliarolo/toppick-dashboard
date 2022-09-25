@@ -1,5 +1,3 @@
-import { Lang } from "../interfaces/ui";
-
 export const DEFAULT_IMAGE_URL =
   "https://icon-library.com/images/add-photo-icon/add-photo-icon-19.jpg";
 
@@ -9,5 +7,4 @@ export const CONSTANTS = {
   DRAWER_WIDTH: 220,
   SMALL_SCREEN: 800,
   DEFAULT_USER_TYPE: "creator",
-  ROOT_LANG: Lang.EN,
 };

@@ -1,12 +1,10 @@
 import React from "react";
 import CardNumber from "./StatsCard";
-import { Lang } from "@/interfaces/ui";
 import { getContentStats } from "@toppick/common/build/api";
 import { makeStyles } from "@material-ui/core";
+import { getAuthToken } from "@/utils/auth";
 
 interface ChartTabProps {
-  currentLanguage: Lang;
-  token: string;
   from: Date;
   until: Date;
 }
@@ -44,12 +42,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ChartTab({
-  currentLanguage,
-  token,
-  from,
-  until,
-}: ChartTabProps) {
+export default function ChartTab({ from, until }: ChartTabProps) {
   const [contentStats, setContentStats] = React.useState<any>({
     categories: 0,
     questions: 0,
@@ -64,8 +57,7 @@ export default function ChartTab({
         const retrievedStats = await getContentStats(
           from,
           until,
-          currentLanguage,
-          token
+          await getAuthToken()
         );
         if (retrievedStats) {
           setContentStats(retrievedStats);
@@ -74,7 +66,7 @@ export default function ChartTab({
         console.log(error);
       }
     })();
-  }, [currentLanguage, from, token, until]);
+  }, [from, until]);
 
   return (
     <div className={classes.container}>

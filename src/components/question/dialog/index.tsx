@@ -10,6 +10,7 @@ import {
   QuestionCreated,
   QuestionType,
 } from "@toppick/common/build/interfaces";
+import { getAuthToken } from "@/utils/auth";
 interface QuestionDialogProps {
   open: boolean;
   onClose: () => void;
@@ -54,14 +55,13 @@ export default function QuestionDialog({
 }: QuestionDialogProps) {
   const [currentQuestion, setCurrentQuestion] =
     React.useState<Question>(DEFAULT_QUESTION);
-  const { authToken, userId } = React.useContext(AuthContext);
 
   React.useEffect(() => {
     (async () => {
       try {
         if (questionId) {
           setCurrentQuestion(
-            await getQuestionDetails(authToken, {
+            await getQuestionDetails(await getAuthToken(), {
               id: questionId,
             })
           );
