@@ -1,76 +1,74 @@
 import React from "react";
-import { Lang } from "@/interfaces/ui";
 import { StatusContext } from "./StatusContext";
 import { UserRole } from "@toppick/common/build/interfaces";
 import { auth } from "@/services/firebase";
 
-interface UserAppState {
+interface UserState {
   displayName: string;
   photoURL: string;
-  token: string;
   uid: string;
-  isAuthenticated: boolean;
   role: UserRole;
+  isAuthenticated: boolean;
 }
 
-export const DEFAULT_USER_APP_STATE: UserAppState = {
+export const DEFAULT_USER_STATE: UserState = {
   displayName: "",
-  isAuthenticated: false,
   photoURL: "",
-  token: "",
   uid: "",
   role: UserRole.Default,
+  isAuthenticated: false,
 };
 
 export const AuthContext = React.createContext({
-  currentLanguage: Lang.EN,
-  username: DEFAULT_USER_APP_STATE.displayName,
-  userId: DEFAULT_USER_APP_STATE.uid,
-  userImage: DEFAULT_USER_APP_STATE.photoURL,
-  isAuthenticated: DEFAULT_USER_APP_STATE.isAuthenticated,
-  authToken: DEFAULT_USER_APP_STATE.token,
-  userRole: DEFAULT_USER_APP_STATE.role,
-  isProduction: true,
-  setIsProduction: (value: boolean) => {},
+  username: DEFAULT_USER_STATE.displayName,
+  userId: DEFAULT_USER_STATE.uid,
+  userImage: DEFAULT_USER_STATE.photoURL,
+  userRole: DEFAULT_USER_STATE.role,
+  isAuthenticated: false,
 });
 
 export const AuthProvider = ({ children }: { children: any }) => {
-  const [user, setUser] = React.useState<UserAppState>(DEFAULT_USER_APP_STATE);
-  const [currentLanguage, setCurrentLanguage] = React.useState<Lang>(Lang.EN);
-  const [isProduction, setIsProduction] = React.useState<boolean>(true);
+  const [user, setUser] = React.useState<UserState>(DEFAULT_USER_STATE);
   const { setIsAppLoading } = React.useContext(StatusContext);
 
   React.useEffect(() => {
     (async () => {
       setIsAppLoading(true);
       try {
-        //authenticate user
         auth.onAuthStateChanged(async (user) => {
-          if (!user) {
-            setUser(DEFAULT_USER_APP_STATE);
-          } else {
+          if (user) {
             const { claims } = await user.getIdTokenResult(true);
             setUser({
               displayName: user.displayName || "",
-              isAuthenticated: true,
               photoURL: user.photoURL || "",
-              token: await user.getIdToken(),
               uid: user.uid,
               role: claims.role,
+              isAuthenticated: true,
             });
           }
-          setIsAppLoading(false);
         });
       } catch {
         console.error("Failed To Connect to Firebase");
       }
+      setIsAppLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSetIsProduction = (value: boolean) => {
-    setIsProduction(value);
-  };
+  // const FIREBASE_TOKEN_REFRESH_MS = 5000; // 600000; //10 minutes
+  // React.useEffect(() => {
+  //   (async () => {
+  //     setInterval(() => {
+  //       auth.onAuthStateChanged(async (newUser) => {
+  //         if (newUser) {
+  //           console.log("sssss", newUser.getIdToken(true));
+  //           // user.token = await newUser.getIdToken(true);
+  //           setUser(user);
+  //         }
+  //       });
+  //     }, FIREBASE_TOKEN_REFRESH_MS);
+  //   })();
+  // }, []);
 
   return (
     <AuthContext.Provider
@@ -79,11 +77,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
         userId: user.uid,
         userImage: user.photoURL,
         isAuthenticated: user.isAuthenticated,
-        authToken: user.token,
         userRole: user.role,
-        currentLanguage,
-        setIsProduction: onSetIsProduction,
-        isProduction,
       }}
     >
       {children}

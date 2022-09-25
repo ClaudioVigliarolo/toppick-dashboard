@@ -35,8 +35,7 @@ export const getCondition = (
 };
 
 export const Navigation = () => {
-  const { isAuthenticated, userRole, username, currentLanguage, authToken } =
-    React.useContext(AuthContext);
+  const { isAuthenticated, userRole, username } = React.useContext(AuthContext);
 
   const { isAppLoading } = React.useContext(StatusContext);
   const location = useLocation();
@@ -46,12 +45,8 @@ export const Navigation = () => {
       userRole={userRole}
       isAuthenticated={isAuthenticated}
       username={username}
-      currentLanguage={currentLanguage}
     >
       <Switch>
-        {!isAuthenticated &&
-          !isAppLoading &&
-          location.pathname !== "/login" && <Redirect to="/login" />}
         {isAuthenticated && <Redirect exact from="/" to="/categories" />}
         {isAuthenticated && <Redirect exact from="/login" to="/categories" />}
         {routes.map((route, index) => (
@@ -60,8 +55,6 @@ export const Navigation = () => {
             path={route.path}
             condition={getCondition(userRole, route.path, isAuthenticated)}
             Component={route.component}
-            token={authToken}
-            currentLanguage={currentLanguage}
           />
         ))}
       </Switch>

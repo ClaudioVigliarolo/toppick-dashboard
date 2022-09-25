@@ -6,7 +6,6 @@ import {
   CategoryCreated,
   Category,
   CategoryFeatured,
-  Lang,
   TopicFeatured,
 } from "@toppick/common/build/interfaces";
 import { getCategoryDetails, getTopics } from "@toppick/common/build/api";
@@ -91,7 +90,6 @@ export default function CategoryDialog({
       slug: currentCategory.slug,
       title: currentCategory.title,
       topics: selectedTopics.map((topic) => ({
-        lang: Lang.EN,
         topic_id: topic.id,
       })),
     };

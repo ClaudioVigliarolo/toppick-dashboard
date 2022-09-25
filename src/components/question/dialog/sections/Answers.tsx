@@ -13,6 +13,7 @@ import { getErrorMessage } from "@toppick/common/build/utils";
 import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 import DialogEditField from "@/components/ui/button/DialogEditField";
 import DialogAddButton from "@/components/ui/button/DialogAddButton";
+import { getAuthToken } from "@/utils/auth";
 interface AnswersProps {
   questionId: number;
 }
@@ -26,8 +27,6 @@ export default function Answers({ questionId }: AnswersProps) {
   const [currentAnswer, setCurrentAnswer] = React.useState<Answer | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-
-  const { authToken } = React.useContext(AuthContext);
   const classes = {
     ...useDialogStyles(),
   };
@@ -37,7 +36,9 @@ export default function Answers({ questionId }: AnswersProps) {
       try {
         setAnswers([]);
         if (questionId) {
-          setAnswers(await getAnswers(authToken, { question_id: questionId }));
+          setAnswers(
+            await getAnswers(await getAuthToken(), { question_id: questionId })
+          );
         }
       } catch (error) {
         console.log(error);
@@ -49,7 +50,7 @@ export default function Answers({ questionId }: AnswersProps) {
     setIsLoading(true);
     setError("");
     try {
-      const answer = await createAnswer(authToken, createdAnswer);
+      const answer = await createAnswer(await getAuthToken(), createdAnswer);
 
       setAnswers([...answers, answer]);
       setCurrentAnswer(null);
@@ -64,7 +65,7 @@ export default function Answers({ questionId }: AnswersProps) {
     setError("");
     try {
       const answer = await updateAnswer(
-        authToken,
+        await getAuthToken(),
         currentAnswer!.id,
         updatedAnswer
       );
@@ -83,7 +84,7 @@ export default function Answers({ questionId }: AnswersProps) {
     setError("");
     setIsLoading(true);
     try {
-      await deleteAnswer(authToken, currentAnswer!.id);
+      await deleteAnswer(await getAuthToken(), currentAnswer!.id);
       const newAnswers = answers.filter((k) => k.id !== currentAnswer!.id);
       setAnswers(newAnswers);
       setIsShowEditDialog(false);

@@ -16,6 +16,7 @@ import { TopicCreated, TopicFeatured } from "@toppick/common/build/interfaces";
 import SearchDialog from "@/components/search/dialog_keyword_preview";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import { getTopics } from "@toppick/common/build/api";
+import { getAuthToken } from "@/utils/auth";
 
 export default function TopicPage() {
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
@@ -34,7 +35,6 @@ export default function TopicPage() {
   const [error, setError] = React.useState<string>("");
   const { setIsAppLoading, setAppSuccess, setAppError } =
     React.useContext(StatusContext);
-  const { authToken, currentLanguage } = React.useContext(AuthContext);
 
   const classes = useAppStyles();
 
@@ -55,13 +55,17 @@ export default function TopicPage() {
       }
       setIsAppLoading(false);
     })();
-  }, [currentLanguage]);
+  }, []);
 
   const onUpdateTopic = async (topic: TopicCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const newTopic = await updateTopic(authToken, currentTopic!.id, topic);
+      const newTopic = await updateTopic(
+        await getAuthToken(),
+        currentTopic!.id,
+        topic
+      );
       const index = topics.findIndex((topic) => topic.id == newTopic.id);
       topics[index] = newTopic;
       setTopics([...topics]);
@@ -77,7 +81,7 @@ export default function TopicPage() {
   const onDeleteSubmit = async () => {
     setIsAppLoading(true);
     try {
-      await deleteTopic(authToken, currentTopic!.id);
+      await deleteTopic(await getAuthToken(), currentTopic!.id);
       const newTopics = topics.filter((topic) => topic.id !== currentTopic!.id);
       setTopics(newTopics);
       setCurrentTopic(null);
@@ -92,7 +96,7 @@ export default function TopicPage() {
     setIsLoading(true);
     setError("");
     try {
-      const newTopic = await createTopic(authToken, topic);
+      const newTopic = await createTopic(await getAuthToken(), topic);
       topics.unshift(newTopic);
       setTopics([...topics]);
       setIsShowCreateDialog(false);

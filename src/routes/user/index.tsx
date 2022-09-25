@@ -13,9 +13,9 @@ import {
 } from "@toppick/common/build/api";
 import { User, UserFeatured } from "@toppick/common/build/interfaces";
 import { getErrorMessage } from "@toppick/common/build/utils";
+import { getAuthToken } from "@/utils/auth";
 
 export default function UsersPage() {
-  const { authToken } = React.useContext(AuthContext);
   const [users, setUsers] = React.useState<UserFeatured[]>([]);
   const [currentUser, setCurrentUser] = React.useState<UserFeatured | null>(
     null
@@ -36,20 +36,19 @@ export default function UsersPage() {
     (async () => {
       setIsAppLoading(true);
       try {
-        setUsers(await getUsers(authToken));
+        setUsers(await getUsers(await getAuthToken()));
       } catch (error) {
         setAppError();
       }
       setIsAppLoading(false);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authToken]);
+  }, []);
 
   const onUpdateUser = async (updatedUser: User) => {
     setIsLoading(true);
     setError("");
     try {
-      await updateUserRole(updatedUser, authToken);
+      await updateUserRole(updatedUser, await getAuthToken());
       setIsShowUpdateDialog(false);
       setCurrentUser(null);
       setAppSuccess();
@@ -72,7 +71,7 @@ export default function UsersPage() {
   const onDeleteSubmit = async () => {
     setIsAppLoading(true);
     try {
-      await deleteUser(currentUser!.uid, authToken);
+      await deleteUser(currentUser!.uid, await getAuthToken());
       const newUsers = users.filter((user) => user.uid !== currentUser!.uid);
       setUsers(newUsers);
       setCurrentUser(null);

@@ -26,6 +26,7 @@ import { getErrorMessage } from "@toppick/common/build/utils";
 import { useDialogStyles } from "@/components/ui/dialog/Dialog";
 import DialogEditField from "@/components/ui/button/DialogEditField";
 import DialogAddButton from "@/components/ui/button/DialogAddButton";
+import { getAuthToken } from "@/utils/auth";
 
 interface ResultsProps {
   keywordId: number;
@@ -42,7 +43,6 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
   const [currentSearchResult, setCurrentSearchResult] =
     React.useState<SearchResultCreated | null>(null);
   const [results, setResults] = React.useState<SearchResultCreated[]>([]);
-  const { authToken } = React.useContext(AuthContext);
   const classes = { ...useDialogStyles() };
 
   React.useEffect(() => {
@@ -51,14 +51,14 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
         switch (searchType) {
           case SearchType.Article:
             setResults(
-              await getSearchResultsArticle(authToken, {
+              await getSearchResultsArticle(await getAuthToken(), {
                 keyword_id: keywordId,
               })
             );
             break;
           case SearchType.Video:
             setResults(
-              await getSearchResultsVideo(authToken, {
+              await getSearchResultsVideo(await getAuthToken(), {
                 keyword_id: keywordId,
               })
             );
@@ -66,7 +66,7 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
 
           case SearchType.Image:
             setResults(
-              await getSearchResultsImage(authToken, {
+              await getSearchResultsImage(await getAuthToken(), {
                 keyword_id: keywordId,
               })
             );
@@ -131,12 +131,24 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
   > => {
     switch (searchType) {
       case SearchType.Article:
-        return await createSearchResultArticle(authToken, link, keywordId);
+        return await createSearchResultArticle(
+          await getAuthToken(),
+          link,
+          keywordId
+        );
       case SearchType.Video:
-        return await createSearchResultVideo(authToken, link, keywordId);
+        return await createSearchResultVideo(
+          await getAuthToken(),
+          link,
+          keywordId
+        );
 
       case SearchType.Image:
-        return await createSearchResultImage(authToken, link, keywordId);
+        return await createSearchResultImage(
+          await getAuthToken(),
+          link,
+          keywordId
+        );
     }
   };
 
@@ -148,25 +160,25 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
   > => {
     switch (searchType) {
       case SearchType.Article:
-        return await updateSearchResultArticle(authToken, id, link);
+        return await updateSearchResultArticle(await getAuthToken(), id, link);
       case SearchType.Video:
-        return await updateSearchResultVideo(authToken, id, link);
+        return await updateSearchResultVideo(await getAuthToken(), id, link);
       case SearchType.Image:
-        return await updateSearchResultImage(authToken, id, link);
+        return await updateSearchResultImage(await getAuthToken(), id, link);
     }
   };
 
   const deleteSearchResult = async (id: number): Promise<void> => {
     switch (searchType) {
       case SearchType.Article:
-        await deleteSearchResultArticle(authToken, id);
+        await deleteSearchResultArticle(await getAuthToken(), id);
         break;
       case SearchType.Video:
-        await deleteSearchResultVideo(authToken, id);
+        await deleteSearchResultVideo(await getAuthToken(), id);
         break;
 
       case SearchType.Image:
-        await deleteSearchResultImage(authToken, id);
+        await deleteSearchResultImage(await getAuthToken(), id);
         break;
       default:
         break;

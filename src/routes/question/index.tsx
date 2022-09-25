@@ -22,6 +22,7 @@ import axios, { AxiosResponse } from "axios";
 import { LibraryParams } from "@toppick/common/build/config/config";
 import NoQuestionAdded from "@/components/question/NoQuestionAdded";
 import DragAndDrop from "@/components/ui/DragAndDrop";
+import { getAuthToken } from "@/utils/auth";
 
 const DEFAULT_TOPIC: TopicFeatured = {
   active: false,
@@ -50,7 +51,6 @@ export default function QuestionPage() {
 
   const [topics, setTopics] = React.useState<TopicFeatured[]>([]);
   const { setIsAppLoading, setAppError } = React.useContext(StatusContext);
-  const { authToken, currentLanguage, userId } = React.useContext(AuthContext);
   const [error, setError] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
@@ -71,7 +71,7 @@ export default function QuestionPage() {
       }
       setIsAppLoading(false);
     })();
-  }, [currentLanguage]);
+  }, []);
 
   const renderHeaderText = () => {
     if (currentTopic !== DEFAULT_TOPIC) {
@@ -94,7 +94,7 @@ export default function QuestionPage() {
     setIsAppLoading(true);
     try {
       setCurrentQuestions(
-        await getQuestions(authToken, {
+        await getQuestions(await getAuthToken(), {
           topic_id: selectedTopic.id,
           include_inactive: true,
         })
@@ -118,7 +118,7 @@ export default function QuestionPage() {
     setIsLoading(true);
     setError("");
     try {
-      await deleteQuestion(authToken, currentQuestion!.id);
+      await deleteQuestion(await getAuthToken(), currentQuestion!.id);
       const questions = currentQuestions.filter(
         (k) => k.id !== currentQuestion!.id
       );
@@ -136,7 +136,7 @@ export default function QuestionPage() {
     setError("");
     try {
       const question = await updateQuestion(
-        authToken,
+        await getAuthToken(),
         currentQuestion!.id,
         updatedQuestion
       );
@@ -183,7 +183,11 @@ export default function QuestionPage() {
       })
     );
     try {
-      await sortQuestions(authToken, currentTopic.id, sortedKeywords);
+      await sortQuestions(
+        await getAuthToken(),
+        currentTopic.id,
+        sortedKeywords
+      );
     } catch (error) {
       setAppError(error);
     }
@@ -194,7 +198,10 @@ export default function QuestionPage() {
     setIsLoading(true);
     setError("");
     try {
-      const question = await createQuestion(authToken, createdQuestion);
+      const question = await createQuestion(
+        await getAuthToken(),
+        createdQuestion
+      );
       setCurrentQuestions([...currentQuestions, question]);
       setIsShowQuestionCreateDialog(false);
       setCurrentQuestion(null);

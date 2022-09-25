@@ -18,6 +18,7 @@ import {
   CategoryCreated,
 } from "@toppick/common/build/interfaces";
 import { getErrorMessage } from "@toppick/common/build/utils";
+import { getAuthToken } from "@/utils/auth";
 
 export default function CategoryPage() {
   const [categories, setCategories] = React.useState<CategoryFeatured[]>([]);
@@ -34,7 +35,6 @@ export default function CategoryPage() {
     React.useState<CategoryFeatured | null>(null);
   const { setIsAppLoading, setAppSuccess, setAppError } =
     React.useContext(StatusContext);
-  const { authToken, currentLanguage } = React.useContext(AuthContext);
   const classes = useAppStyles();
 
   React.useEffect(() => {
@@ -50,15 +50,16 @@ export default function CategoryPage() {
       }
       setIsAppLoading(false);
     })();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLanguage]);
+  }, []);
 
   const onCreateCategory = async (createdCategory: CategoryCreated) => {
     setIsLoading(true);
     setError("");
     try {
-      const newCategory = await createCategory(authToken, createdCategory);
+      const newCategory = await createCategory(
+        await getAuthToken(),
+        createdCategory
+      );
       const newCategories = [...categories];
       newCategories.unshift(newCategory);
       setCategories(newCategories);
@@ -75,7 +76,7 @@ export default function CategoryPage() {
     setError("");
     try {
       const category = await updateCategory(
-        authToken,
+        await getAuthToken(),
         currentCategory!.id,
         updatedCategory
       );
@@ -97,7 +98,7 @@ export default function CategoryPage() {
   const onDeleteCategory = async () => {
     setIsAppLoading(true);
     try {
-      await deleteCategory(authToken, currentCategory!.id);
+      await deleteCategory(await getAuthToken(), currentCategory!.id);
       const newCategories = categories.filter(
         (categ) => categ.id !== currentCategory!.id
       );
