@@ -13,7 +13,7 @@ import {
   sortSearchKeywords,
   updateSearchKeyword,
 } from "@toppick/common/build/api";
-import { AuthContext } from "@/context/AuthContext";
+
 import DragAndDrop from "@/components/ui/DragAndDrop";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import DialogAddButton from "@/components/ui/button/DialogAddButton";

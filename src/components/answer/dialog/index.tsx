@@ -6,6 +6,7 @@ import {
   AnswerCreated,
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
+import { validateAnswerTitle } from "@toppick/common/build/validators";
 
 interface AnswerDialogProps {
   open: boolean;
@@ -26,7 +27,7 @@ const DEFAULT_ANSWER: Answer = {
   status: ValidationStatus.Active,
 };
 
-export default function AnswerDetailDialog({
+export default function AnswerDialog({
   answer,
   questionId,
   error,
@@ -51,6 +52,8 @@ export default function AnswerDetailDialog({
   const setTitle = (e: React.ChangeEvent<any>) => {
     setCurrentAnswer({ ...currentAnswer, title: e.currentTarget.value });
   };
+
+  const isShowSubmit = (): boolean => validateAnswerTitle(currentAnswer.title);
 
   const onConfirm = () => {
     const newAnswer: AnswerCreated = {
@@ -84,6 +87,7 @@ export default function AnswerDetailDialog({
         loading={loading}
         onRefuse={onClose}
         onConfirm={onConfirm}
+        confirmButtonDisabled={!isShowSubmit()}
         error={error}
       />
     </>

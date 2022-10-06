@@ -1,7 +1,6 @@
 import React from "react";
 import { Dialog, TabData } from "@/components/ui/dialog/Dialog";
 import Answers from "./sections/Answers";
-import { AuthContext } from "@/context/AuthContext";
 import Overview from "./sections/Overview";
 import { getQuestionDetails } from "@toppick/common/build/api";
 import Resources from "./sections/Resources";
@@ -9,8 +8,10 @@ import {
   Question,
   QuestionCreated,
   QuestionType,
+  UserRole,
 } from "@toppick/common/build/interfaces";
 import { getAuthToken } from "@/utils/auth";
+import { validateQuestionTitle } from "@toppick/common/build/validators";
 interface QuestionDialogProps {
   open: boolean;
   onClose: () => void;
@@ -34,6 +35,7 @@ const DEFAULT_QUESTION: Question = {
     uid: "",
     username: "",
     email: "",
+    role: UserRole.Default,
   },
   picker_active: false,
   active: true,
@@ -77,6 +79,9 @@ export default function QuestionDialog({
   const setTitle = (e: React.ChangeEvent<any>) => {
     setCurrentQuestion({ ...currentQuestion, title: e.currentTarget.value });
   };
+
+  const isShowSubmit = (): boolean =>
+    validateQuestionTitle(currentQuestion.title);
 
   const handleActiveChange = (e: React.ChangeEvent<any>) => {
     setCurrentQuestion({
@@ -157,6 +162,7 @@ export default function QuestionDialog({
         minWidth={600}
         tabData={tabs}
         minHeight={450}
+        confirmButtonDisabled={!isShowSubmit()}
         onConfirm={onConfirm}
         onRefuse={onClose}
         loading={loading}

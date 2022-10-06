@@ -2,7 +2,7 @@ import React from "react";
 import { useAppStyles } from "@/styles/common";
 import Select from "@/components/ui/select/Select";
 import { StatusContext } from "@/context/StatusContext";
-import { AuthContext } from "@/context/AuthContext";
+
 import Button from "@/components/ui/button/Button";
 import {
   QuestionCreated,

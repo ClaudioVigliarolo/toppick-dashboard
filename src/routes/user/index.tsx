@@ -1,6 +1,5 @@
 import React from "react";
 import TableUsers from "@/components/user/TableUsers";
-import { AuthContext } from "@/context/AuthContext";
 import SearchBar from "@/components/ui/SearchBar";
 import UserDialog from "@/components/user/UserDialog";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
@@ -47,6 +46,7 @@ export default function UsersPage() {
   const onUpdateUser = async (updatedUser: User) => {
     setIsLoading(true);
     setError("");
+    console.log("uppppp", updatedUser, await getAuthToken());
     try {
       await updateUserRole(updatedUser, await getAuthToken());
       setIsShowUpdateDialog(false);
@@ -112,7 +112,7 @@ export default function UsersPage() {
           setCurrentUser(null);
         }}
       />
-
+      {console.log("currrr", currentUser)}
       <DeleteDialog
         open={isShowDeleteDialog}
         onConfirm={onDeleteSubmit}

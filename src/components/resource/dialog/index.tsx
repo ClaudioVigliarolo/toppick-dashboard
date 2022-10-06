@@ -6,6 +6,7 @@ import {
   ResourceCreated,
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
+import { validateURL } from "@toppick/common/build/validators";
 
 interface ResourceDialogProps {
   open: boolean;
@@ -55,6 +56,8 @@ export default function ResourceDialog({
     setCurrentResource({ ...currentResource, url: e.currentTarget.value });
   };
 
+  const isShowSubmit = (): boolean => validateURL(currentResource.url);
+
   const onConfirm = () => {
     const newResource: ResourceCreated = {
       question_id: questionId,
@@ -86,6 +89,7 @@ export default function ResourceDialog({
         showTabs={false}
         loading={loading}
         onRefuse={onClose}
+        confirmButtonDisabled={!isShowSubmit()}
         onConfirm={() => {
           onConfirm();
         }}
