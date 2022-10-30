@@ -6,11 +6,8 @@ import {
   AnswerCreated,
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
-<<<<<<< Updated upstream
-=======
 import { validateAnswerTitle } from "@toppick/common/build/validators";
 import { parseHtml } from "@/utils/utils";
->>>>>>> Stashed changes
 
 interface AnswerDialogProps {
   open: boolean;
@@ -57,12 +54,9 @@ export default function AnswerDetailDialog({
     setCurrentAnswer({ ...currentAnswer, title: newTitle });
   };
 
-<<<<<<< Updated upstream
-=======
   const isShowSubmit = (): boolean =>
     validateAnswerTitle(parseHtml(currentAnswer.title));
 
->>>>>>> Stashed changes
   const onConfirm = () => {
     const newAnswer: AnswerCreated = {
       question_id: questionId,

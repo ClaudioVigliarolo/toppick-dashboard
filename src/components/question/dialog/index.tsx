@@ -29,12 +29,6 @@ const DEFAULT_QUESTION: Question = {
   resources: [],
   title: "",
   user_id: "",
-  users: {
-    image: "",
-    uid: "",
-    username: "",
-    email: "",
-  },
   picker_active: false,
   active: true,
   type: QuestionType.Default,

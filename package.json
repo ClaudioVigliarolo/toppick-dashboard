@@ -25,11 +25,7 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
-<<<<<<< Updated upstream
-    "@toppick/common": "1.1.164",
-=======
     "@toppick/common": "1.1.185",
->>>>>>> Stashed changes
     "axios": "0.21.1",
     "d3-scale-chromatic": "2.0.0",
     "firebase": "9.6.8",
