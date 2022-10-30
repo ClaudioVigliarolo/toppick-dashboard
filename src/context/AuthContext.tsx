@@ -55,21 +55,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const FIREBASE_TOKEN_REFRESH_MS = 5000; // 600000; //10 minutes
-  // React.useEffect(() => {
-  //   (async () => {
-  //     setInterval(() => {
-  //       auth.onAuthStateChanged(async (newUser) => {
-  //         if (newUser) {
-  //           console.log("sssss", newUser.getIdToken(true));
-  //           // user.token = await newUser.getIdToken(true);
-  //           setUser(user);
-  //         }
-  //       });
-  //     }, FIREBASE_TOKEN_REFRESH_MS);
-  //   })();
-  // }, []);
-
   return (
     <AuthContext.Provider
       value={{

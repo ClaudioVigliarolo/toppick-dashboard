@@ -1,0 +1,9 @@
+
+.ql-editor{
+  height: 300px !important;
+}
+
+.ql-snow .ql-tooltip {
+  transform: translate(-50%, -50%);
+  left: 50% !important;
+}

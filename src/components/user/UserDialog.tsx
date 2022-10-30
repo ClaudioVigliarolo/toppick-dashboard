@@ -60,12 +60,24 @@ export default function UserDialog({
   React.useEffect(() => {
     (async () => {
       if (userId) {
+<<<<<<< Updated upstream
         setCurrentUser(
           await getUserDetails(await getAuthToken(), {
             user_id: userId,
             include_role: true,
           })
         );
+=======
+        const token = await getAuthToken();
+        const res = await getUserDetails(await getAuthToken(), {
+          user_id: userId,
+        });
+        try {
+          setCurrentUser(res);
+        } catch (error) {
+          console.log(error);
+        }
+>>>>>>> Stashed changes
       } else {
         setCurrentUser(DEFAULT_USER);
       }

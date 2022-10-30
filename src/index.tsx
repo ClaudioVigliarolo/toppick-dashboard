@@ -6,6 +6,8 @@ import { AuthProvider } from "./context/AuthContext";
 import { StatusProvider } from "./context/StatusContext";
 import { Navigation } from "./navigation";
 
+import "./styles/global.css";
+
 const rootElement = document.getElementById("root");
 
 ToppickLibraryParams.init({

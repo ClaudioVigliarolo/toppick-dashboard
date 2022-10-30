@@ -6,6 +6,11 @@ import {
   AnswerCreated,
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
+<<<<<<< Updated upstream
+=======
+import { validateAnswerTitle } from "@toppick/common/build/validators";
+import { parseHtml } from "@/utils/utils";
+>>>>>>> Stashed changes
 
 interface AnswerDialogProps {
   open: boolean;
@@ -48,10 +53,16 @@ export default function AnswerDetailDialog({
     }
   }, [answer, open]);
 
-  const setTitle = (e: React.ChangeEvent<any>) => {
-    setCurrentAnswer({ ...currentAnswer, title: e.currentTarget.value });
+  const setTitle = (newTitle: string) => {
+    setCurrentAnswer({ ...currentAnswer, title: newTitle });
   };
 
+<<<<<<< Updated upstream
+=======
+  const isShowSubmit = (): boolean =>
+    validateAnswerTitle(parseHtml(currentAnswer.title));
+
+>>>>>>> Stashed changes
   const onConfirm = () => {
     const newAnswer: AnswerCreated = {
       question_id: questionId,
@@ -77,8 +88,8 @@ export default function AnswerDetailDialog({
       <Dialog
         open={open}
         headerText={headerText}
-        minWidth={400}
-        minHeight={100}
+        minWidth={500}
+        minHeight={150}
         tabData={tabs}
         showTabs={false}
         loading={loading}
