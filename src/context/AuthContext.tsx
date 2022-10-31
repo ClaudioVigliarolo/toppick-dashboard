@@ -34,8 +34,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
   React.useEffect(() => {
     (async () => {
       setIsAppLoading(true);
-      try {
-        auth.onAuthStateChanged(async (user) => {
+      auth.onAuthStateChanged(async (user) => {
+        try {
           if (user) {
             const { claims } = await user.getIdTokenResult(true);
             setUser({
@@ -46,13 +46,12 @@ export const AuthProvider = ({ children }: { children: any }) => {
               isAuthenticated: true,
             });
           }
-        });
-      } catch {
-        console.error("Failed To Connect to Firebase");
-      }
-      setIsAppLoading(false);
+        } catch {
+          console.error("Failed To Connect to Firebase");
+        }
+        setIsAppLoading(false);
+      });
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
