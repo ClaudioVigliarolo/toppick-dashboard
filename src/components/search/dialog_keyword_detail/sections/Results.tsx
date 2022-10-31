@@ -20,7 +20,7 @@ import {
   updateSearchResultImage,
   updateSearchResultVideo,
 } from "@toppick/common/build/api";
-
+import { AuthContext } from "@/context/AuthContext";
 import SearchResultDialog from "../../dialog_result";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import { useDialogStyles } from "@/components/ui/dialog/Dialog";

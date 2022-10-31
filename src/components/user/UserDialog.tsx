@@ -3,7 +3,7 @@ import React from "react";
 import { Dialog, TabData } from "../ui/dialog/Dialog";
 import Select from "../ui/select/Select";
 import { User, UserRole } from "@toppick/common/build/interfaces";
-
+import { AuthContext } from "@/context/AuthContext";
 import { getUserDetails } from "@toppick/common/build/api";
 import { getAuthToken } from "@/utils/auth";
 
@@ -59,29 +59,16 @@ export default function UserDialog({
 
   React.useEffect(() => {
     (async () => {
-      console.log("dentrooo", userId);
       if (userId) {
-        console.log("okkkk", userId);
         const token = await getAuthToken();
-        console.log("token", token);
         const res = await getUserDetails(await getAuthToken(), {
           user_id: userId,
-          include_role: true,
         });
-        console.log("rrrrr", res);
         try {
           setCurrentUser(res);
         } catch (error) {
           console.log(error);
         }
-
-        console.log(
-          "rerresss",
-          await getUserDetails(await getAuthToken(), {
-            user_id: userId,
-            include_role: true,
-          })
-        );
       } else {
         setCurrentUser(DEFAULT_USER);
       }

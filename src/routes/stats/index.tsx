@@ -12,8 +12,9 @@ import {
 } from "@/utils/time";
 import { makeStyles } from "@material-ui/core";
 import { COLORS } from "@/styles/colors";
-
+import { AuthContext } from "@/context/AuthContext";
 import {} from "@toppick/common/build/api";
+import { getAuthToken } from "@/utils/auth";
 
 interface ChartButton {
   label: string;

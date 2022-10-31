@@ -46,7 +46,6 @@ export default function UsersPage() {
   const onUpdateUser = async (updatedUser: User) => {
     setIsLoading(true);
     setError("");
-    console.log("uppppp", updatedUser, await getAuthToken());
     try {
       await updateUserRole(updatedUser, await getAuthToken());
       setIsShowUpdateDialog(false);

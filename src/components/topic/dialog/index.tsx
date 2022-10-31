@@ -16,7 +16,7 @@ import {
 import { getTopicDetails, getTopicsInterests } from "@toppick/common/build/api";
 import { getCategories } from "@toppick/common/build/api";
 import { getTopics } from "@toppick/common/build/api";
-
+import { AuthContext } from "@/context/AuthContext";
 import { getAuthToken } from "@/utils/auth";
 
 const DEFAULT_TOPIC: Topic = {

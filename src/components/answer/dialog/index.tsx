@@ -7,6 +7,7 @@ import {
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
 import { validateAnswerTitle } from "@toppick/common/build/validators";
+import { parseHtml } from "@/utils/utils";
 
 interface AnswerDialogProps {
   open: boolean;
@@ -49,8 +50,19 @@ export default function AnswerDialog({
     }
   }, [answer, open]);
 
-  const setTitle = (e: React.ChangeEvent<any>) => {
-    setCurrentAnswer({ ...currentAnswer, title: e.currentTarget.value });
+  const setTitle = (newTitle: string) => {
+    setCurrentAnswer({ ...currentAnswer, title: newTitle });
+  };
+
+  const isShowSubmit = (): boolean =>
+    validateAnswerTitle(parseHtml(currentAnswer.title));
+
+  const onConfirm = () => {
+    const newAnswer: AnswerCreated = {
+      question_id: questionId,
+      title: currentAnswer.title,
+    };
+    onSubmit(newAnswer);
   };
 
   const isShowSubmit = (): boolean => validateAnswerTitle(currentAnswer.title);
@@ -80,14 +92,13 @@ export default function AnswerDialog({
       <Dialog
         open={open}
         headerText={headerText}
-        minWidth={400}
-        minHeight={100}
+        minWidth={500}
+        minHeight={150}
         tabData={tabs}
         showTabs={false}
         loading={loading}
         onRefuse={onClose}
         onConfirm={onConfirm}
-        confirmButtonDisabled={!isShowSubmit()}
         error={error}
       />
     </>

@@ -56,8 +56,6 @@ export default function ResourceDialog({
     setCurrentResource({ ...currentResource, url: e.currentTarget.value });
   };
 
-  const isShowSubmit = (): boolean => validateURL(currentResource.url);
-
   const onConfirm = () => {
     const newResource: ResourceCreated = {
       question_id: questionId,
