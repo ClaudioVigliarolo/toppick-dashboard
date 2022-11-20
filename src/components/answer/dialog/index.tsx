@@ -28,7 +28,7 @@ const DEFAULT_ANSWER: Answer = {
   status: ValidationStatus.Active,
 };
 
-export default function AnswerDialog({
+export default function AnswerDetailDialog({
   answer,
   questionId,
   error,
@@ -56,16 +56,6 @@ export default function AnswerDialog({
 
   const isShowSubmit = (): boolean =>
     validateAnswerTitle(parseHtml(currentAnswer.title));
-
-  const onConfirm = () => {
-    const newAnswer: AnswerCreated = {
-      question_id: questionId,
-      title: currentAnswer.title,
-    };
-    onSubmit(newAnswer);
-  };
-
-  const isShowSubmit = (): boolean => validateAnswerTitle(currentAnswer.title);
 
   const onConfirm = () => {
     const newAnswer: AnswerCreated = {

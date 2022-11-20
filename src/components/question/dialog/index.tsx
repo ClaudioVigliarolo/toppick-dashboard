@@ -72,9 +72,6 @@ export default function QuestionDialog({
     setCurrentQuestion({ ...currentQuestion, title: e.currentTarget.value });
   };
 
-  const isShowSubmit = (): boolean =>
-    validateQuestionTitle(currentQuestion.title);
-
   const handleActiveChange = (e: React.ChangeEvent<any>) => {
     setCurrentQuestion({
       ...currentQuestion,

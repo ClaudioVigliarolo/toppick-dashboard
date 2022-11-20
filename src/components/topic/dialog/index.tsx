@@ -71,7 +71,6 @@ export default function TopicDialog({
   const [selectedTopics, setSelectedTopics] = React.useState<TopicFeatured[]>(
     []
   );
-
   const [selectedCategories, setSelectedCategories] = React.useState<
     CategoryFeatured[]
   >([]);

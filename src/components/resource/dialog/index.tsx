@@ -6,7 +6,6 @@ import {
   ResourceCreated,
   ValidationStatus,
 } from "@toppick/common/build/interfaces";
-import { validateURL } from "@toppick/common/build/validators";
 
 interface ResourceDialogProps {
   open: boolean;
@@ -87,7 +86,6 @@ export default function ResourceDialog({
         showTabs={false}
         loading={loading}
         onRefuse={onClose}
-        confirmButtonDisabled={!isShowSubmit()}
         onConfirm={() => {
           onConfirm();
         }}
