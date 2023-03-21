@@ -5,7 +5,7 @@ import CategoryDialog from "@/components/category/dialog";
 import SearchBar from "@/components/ui/SearchBar";
 import { useAppStyles } from "@/styles/common";
 import { StatusContext } from "@/context/StatusContext";
-import { AuthContext } from "@/context/AuthContext";
+
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import {
   createCategory,

@@ -5,7 +5,7 @@ import SearchBar from "@/components/ui/SearchBar";
 import TopicDialog from "@/components/topic/dialog";
 import DeleteDialog from "@/components/ui/dialog/ConfirmDialog";
 import { useAppStyles } from "@/styles/common";
-import { AuthContext } from "@/context/AuthContext";
+
 import { StatusContext } from "@/context/StatusContext";
 import {
   createTopic,
