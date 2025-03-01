@@ -27,6 +27,7 @@ const DEFAULT_RESOURCE: Resource = {
   snippet: "",
   status: ValidationStatus.Active,
   thumbnail: "",
+  created_by_creator:true
 };
 
 export default function ResourceDialog({

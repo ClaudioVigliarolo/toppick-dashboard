@@ -13,10 +13,7 @@ import {
   TopicType,
   TopicSource,
 } from "@toppick/common/build/interfaces";
-import { getTopicDetails, getTopicsInterests } from "@toppick/common/build/api";
-import { getCategories } from "@toppick/common/build/api";
-import { getTopics } from "@toppick/common/build/api";
-import { AuthContext } from "@/context/AuthContext";
+import { getTopicDetails, getTopicsInterests, getCategories, getTopics } from "@toppick/common/build/api";
 import { getAuthToken } from "@/utils/auth";
 
 const DEFAULT_TOPIC: Topic = {
@@ -28,9 +25,9 @@ const DEFAULT_TOPIC: Topic = {
   image: "",
   level: TopicLevel.Medium,
   questionCount: 0,
-  topics_related_topicsTotopics_related_source_id: [],
+  topics_related_topics_related_source_idTotopics: [],
   topics_categories: [],
-  topic_tags: [],
+  topic_search_tags: [],
   timestamp: new Date(),
   active: false,
   topic_interests: [],
@@ -139,7 +136,7 @@ export default function TopicDialog({
       level: currentTopic.level,
       source: currentTopic.source,
       type: currentTopic.type,
-      topic_tags: currentTopic.topic_tags!,
+      topic_search_tags: currentTopic.topic_search_tags!,
       categories: selectedCategories.map((category) => ({
         category_id: category.id,
       })),
@@ -238,7 +235,7 @@ export default function TopicDialog({
 
   const onTopicTagRemove = (i: number) => {
     const newTopic = { ...currentTopic };
-    newTopic.topic_tags!.splice(i, 1);
+    newTopic.topic_search_tags!.splice(i, 1);
     setCurrentTopic(newTopic);
   };
 
@@ -246,17 +243,17 @@ export default function TopicDialog({
     if (!tag) {
       return;
     }
-    const newTags = currentTopic.topic_tags!.filter((t) => t.title !== tag);
+    const newTags = currentTopic.topic_search_tags!.filter((t) => t.title !== tag);
     newTags.push({
       title: tag,
     });
-    setCurrentTopic({ ...currentTopic, topic_tags: newTags });
+    setCurrentTopic({ ...currentTopic, topic_search_tags: newTags });
   };
 
   const isShowSubmit = (): boolean =>
     currentTopic.title != "" &&
     currentTopic.image !== "" &&
-    currentTopic.topic_tags!.length > 0 &&
+    currentTopic.topic_search_tags!.length > 0 &&
     selectedTopics.length > 0 &&
     selectedCategories.length > 0;
 
@@ -303,7 +300,7 @@ export default function TopicDialog({
           handleInterestsChange={handleInterestsChange}
           level={currentTopic.level}
           source={currentTopic.source}
-          tags={currentTopic.topic_tags!}
+          tags={currentTopic.topic_search_tags!}
           interests={interests}
           selectedInterests={currentTopic.topic_interests!.map(
             (interest, index) => ({

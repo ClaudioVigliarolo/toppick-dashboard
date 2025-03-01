@@ -34,6 +34,7 @@ const DEFAULT_QUESTION: Question = {
   type: QuestionType.Default,
   answer_count: 0,
   resource_count: 0,
+  created_by_creator:true
 };
 
 export default function QuestionDialog({

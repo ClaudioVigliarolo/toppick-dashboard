@@ -73,7 +73,7 @@ export default function SearchDialog({
     } catch (error) {
       console.log(error);
     }
-  }, [keyword, open]);
+  }, [keyword, open, searchType, topicId]);
 
   const onSubmit = async () => {
     onConfirm(currentKeyword);

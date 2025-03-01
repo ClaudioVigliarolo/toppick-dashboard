@@ -26,6 +26,7 @@ const DEFAULT_ANSWER: Answer = {
   user_id: "",
   title: "",
   status: ValidationStatus.Active,
+  created_by_creator:true
 };
 
 export default function AnswerDetailDialog({

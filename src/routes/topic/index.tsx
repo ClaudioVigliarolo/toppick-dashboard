@@ -11,11 +11,11 @@ import {
   createTopic,
   deleteTopic,
   updateTopic,
+  getTopics
 } from "@toppick/common/build/api";
 import { TopicCreated, TopicFeatured } from "@toppick/common/build/interfaces";
 import SearchDialog from "@/components/search/dialog_keyword_preview";
 import { getErrorMessage } from "@toppick/common/build/utils";
-import { getTopics } from "@toppick/common/build/api";
 import { getAuthToken } from "@/utils/auth";
 
 export default function TopicPage() {

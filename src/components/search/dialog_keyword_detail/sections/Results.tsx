@@ -79,7 +79,7 @@ export default function Results({ searchType, keywordId }: ResultsProps) {
         console.log(error);
       }
     })();
-  }, [keywordId]);
+  }, [keywordId, searchType]);
 
   const onCreateSearchResult = async (link: string) => {
     setIsLoading(true);

@@ -2,7 +2,6 @@ import React from "react";
 import { useAppStyles } from "@/styles/common";
 import Select from "@/components/ui/select/Select";
 import { StatusContext } from "@/context/StatusContext";
-import { AuthContext } from "@/context/AuthContext";
 import Button from "@/components/ui/button/Button";
 import {
   QuestionCreated,
@@ -13,10 +12,10 @@ import {
   createQuestion,
   deleteQuestion,
   getQuestions,
+  getTopics,
   updateQuestion,
 } from "@toppick/common/build/api";
 import QuestionDialog from "@/components/question/dialog";
-import { getTopics } from "@toppick/common/build/api";
 import { getErrorMessage } from "@toppick/common/build/utils";
 import axios, { AxiosResponse } from "axios";
 import { LibraryParams } from "@toppick/common/build/config/config";
