@@ -21,9 +21,12 @@ interface InfoProps {
   interests: TopicInterest[];
   selectedInterests: TopicInterest[];
   level: TopicLevel;
-  onTagRemove: (i: number) => void;
-  onTagAdd: (title: string) => void;
-  tags: TopicTag[];
+  onSearchRemove: (i: number) => void;
+  onSearchTagAdd: (title: string) => void;
+  searchTags: TopicTag[];
+  onSocialRemove: (i: number) => void;
+  onSocialTagAdd: (title: string) => void;
+  socialTags: TopicTag[];
   featured: string;
   handleTypeChange: (event: React.ChangeEvent<any>) => void;
   type: TopicType;
@@ -36,10 +39,13 @@ export default function Info({
   selectedInterests,
   handleInterestsChange,
   level,
-  onTagRemove,
-  tags,
+  searchTags,
+  onSearchTagAdd,
+  onSearchRemove,
+  socialTags,
+  onSocialTagAdd,
+  onSocialRemove,
   interests,
-  onTagAdd,
   featured,
   handleFeaturedChange,
   handleTypeChange,
@@ -90,8 +96,23 @@ export default function Info({
           handleChange={handleInterestsChange}
           containerClassName={classes.fieldContainer}
         />
+        <div className={classes.fieldContainer}  style={{ marginBottom: 20, marginTop: 20 }}>
+          <TagSelector 
+            tags={socialTags}
+            onRemove={onSocialRemove}
+            onAdd={onSocialTagAdd} 
+            label="Social tags"
+            placeholder="Add a Social Tag"
+          />
+        </div>
         <div className={classes.fieldContainer}>
-          <TagSelector tags={tags} onRemove={onTagRemove} onAdd={onTagAdd} />
+          <TagSelector 
+            tags={searchTags}
+            onRemove={onSearchRemove}
+            onAdd={onSearchTagAdd} 
+            label="Search tags"
+            placeholder="Add a Search Tag"
+          />
         </div>
       </div>
     </>

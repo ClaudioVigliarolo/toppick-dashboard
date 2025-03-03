@@ -1,35 +1,9 @@
 import React from "react";
 import { DEFAULT_IMAGE_URL } from "@/constants/app";
 import Switch from "@/components/ui/select/Switch";
-import { makeStyles, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import { MaterialUiColor } from "@/interfaces/ui";
 import { useDialogStyles } from "@/components/ui/dialog/Dialog";
-
-// const useStyles = makeStyles((theme) => ({
-//   container: {
-//     display: "flex",
-//     flexDirection: "column",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     marginTop: 20,
-//   },
-//   switchContainer: {
-//     position: "absolute",
-//     top: 20,
-//     right: 20,
-//     cursor: "pointer",
-//     color: "orange",
-//     fontSize: 30,
-//   },
-//   textField: {
-//     marginTop: 20,
-//     width: "90%",
-//   },
-//   image: {
-//     height: 200,
-//     marginTop: 20,
-//   },
-// }));
 
 interface OverviewProps {
   active: boolean;

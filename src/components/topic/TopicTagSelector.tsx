@@ -7,6 +7,8 @@ interface TagSelectorProps {
   tags: TopicTag[];
   onRemove: (index: number) => void;
   onAdd: (tag: string) => void;
+  placeholder:string;
+  label:string;
 }
 
 interface TagItemProps {
@@ -67,6 +69,8 @@ export default function TagSelector({
   tags,
   onRemove,
   onAdd,
+  label,
+  placeholder,
 }: TagSelectorProps) {
   const [title, setTitle] = React.useState("");
   const classes = useStyles();
@@ -92,8 +96,8 @@ export default function TagSelector({
         <TextField
           InputLabelProps={{ shrink: true }}
           onKeyDown={handleKeyDown}
-          label="Tag"
-          placeholder="Type new tag..."
+          label={label}
+          placeholder={placeholder}
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}
           fullWidth

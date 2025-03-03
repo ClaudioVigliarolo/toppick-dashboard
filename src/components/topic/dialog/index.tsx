@@ -28,6 +28,7 @@ const DEFAULT_TOPIC: Topic = {
   topics_related_topics_related_source_idTotopics: [],
   topics_categories: [],
   topic_search_tags: [],
+  topic_social_tags: [],
   timestamp: new Date(),
   active: false,
   topic_interests: [],
@@ -80,9 +81,9 @@ export default function TopicDialog({
             id: topic.id,
             include_interests: true,
             include_categories: true,
-            include_tags: true,
+            include_social_tags: true,
+            include_search_tags: true,
           });
-
           setCurrentTopic(topicDetail);
           const selectedTopics = await getTopics({
             topic_id: topic.id,
@@ -137,6 +138,7 @@ export default function TopicDialog({
       source: currentTopic.source,
       type: currentTopic.type,
       topic_search_tags: currentTopic.topic_search_tags!,
+      topic_social_tags: currentTopic.topic_social_tags!,
       categories: selectedCategories.map((category) => ({
         category_id: category.id,
       })),
@@ -233,27 +235,48 @@ export default function TopicDialog({
     setCurrentTopic({ ...currentTopic, active: !currentTopic.active });
   };
 
-  const onTopicTagRemove = (i: number) => {
+  const onTopicSearchTagRemove = (i: number) => {
     const newTopic = { ...currentTopic };
-    newTopic.topic_search_tags!.splice(i, 1);
+    if (newTopic.topic_search_tags) {
+      newTopic.topic_search_tags.splice(i, 1);
+    }
     setCurrentTopic(newTopic);
   };
 
-  const onTopicTagAdd = (tag: string) => {
+  const onTopicSocialTagRemove = (i: number) => {
+    const newTopic = { ...currentTopic };
+    if (newTopic.topic_social_tags) {
+      newTopic.topic_social_tags.splice(i, 1);
+    }
+    setCurrentTopic(newTopic);
+  };
+
+  const onTopicSearchTagAdd = (tag: string) => {
     if (!tag) {
       return;
     }
-    const newTags = currentTopic.topic_search_tags!.filter((t) => t.title !== tag);
-    newTags.push({
+    const newSearchTags = (currentTopic.topic_search_tags || []).filter((t) => t.title !== tag);
+    newSearchTags.push({
       title: tag,
     });
-    setCurrentTopic({ ...currentTopic, topic_search_tags: newTags });
+    setCurrentTopic({ ...currentTopic, topic_search_tags: newSearchTags });
+  };
+
+  const onTopicSocialTagAdd = (tag: string) => {
+    if (!tag) {
+      return;
+    }
+    const newSocialTags = (currentTopic.topic_social_tags || []).filter((t) => t.title !== tag);
+    newSocialTags.push({
+      title: tag,
+    });
+    setCurrentTopic({ ...currentTopic, topic_social_tags: newSocialTags });
   };
 
   const isShowSubmit = (): boolean =>
     currentTopic.title != "" &&
     currentTopic.image !== "" &&
-    currentTopic.topic_search_tags!.length > 0 &&
+    //currentTopic.topic_search_tags!.length > 0 &&
     selectedTopics.length > 0 &&
     selectedCategories.length > 0;
 
@@ -300,7 +323,6 @@ export default function TopicDialog({
           handleInterestsChange={handleInterestsChange}
           level={currentTopic.level}
           source={currentTopic.source}
-          tags={currentTopic.topic_search_tags!}
           interests={interests}
           selectedInterests={currentTopic.topic_interests!.map(
             (interest, index) => ({
@@ -310,8 +332,12 @@ export default function TopicDialog({
           )}
           handleTypeChange={handleTypeChange}
           type={currentTopic.type!}
-          onTagAdd={onTopicTagAdd}
-          onTagRemove={onTopicTagRemove}
+          searchTags={currentTopic.topic_search_tags || []}
+          onSearchTagAdd={onTopicSearchTagAdd}
+          onSearchRemove={onTopicSearchTagRemove}
+          socialTags={currentTopic.topic_social_tags || []}
+          onSocialTagAdd={onTopicSocialTagAdd}
+          onSocialRemove={onTopicSocialTagRemove}
           featured={currentTopic.featured ? "true" : "false"}
           handleFeaturedChange={handleFeaturedChange}
         />
